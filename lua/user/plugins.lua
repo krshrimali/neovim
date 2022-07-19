@@ -138,15 +138,15 @@ return packer.startup(function(use)
   use "b0o/SchemaStore.nvim"
   use "folke/trouble.nvim"
   -- use "github/copilot.vim"
-  use {
-    "zbirenbaum/copilot.lua",
-    event = { "VimEnter" },
-    config = function()
-      vim.defer_fn(function()
-        require "user.copilot"
-      end, 100)
-    end,
-  }
+  -- use {
+  --   "zbirenbaum/copilot.lua",
+  --   event = { "VimEnter" },
+  --   config = function()
+  --     vim.defer_fn(function()
+  --       require "user.copilot"
+  --     end, 100)
+  --   end,
+  -- }
   use "RRethy/vim-illuminate"
   -- use "stevearc/aerial.nvim"
   use "j-hui/fidget.nvim"
@@ -155,7 +155,7 @@ return packer.startup(function(use)
   use "nvim-lua/lsp_extensions.nvim"
 
   -- Java
-  use "mfussenegger/nvim-jdtls"
+  -- use "mfussenegger/nvim-jdtls"
 
   -- Rust
   use { "christianchiarulli/rust-tools.nvim", branch = "handler_nil_check" }
