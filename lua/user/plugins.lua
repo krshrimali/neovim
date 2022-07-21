@@ -69,7 +69,7 @@ return packer.startup(function(use)
   use "NvChad/nvim-colorizer.lua"
   use "windwp/nvim-spectre"
   use "kevinhwang91/nvim-bqf"
-  use "ThePrimeagen/harpoon"
+  use "christianchiarulli/harpoon"
   use "MattesGroeger/vim-bookmarks"
   -- use "Mephistophiles/surround.nvim"
   use { "michaelb/sniprun", run = "bash ./install.sh" }
@@ -105,7 +105,7 @@ return packer.startup(function(use)
 
   -- Colorschemes
   use "folke/tokyonight.nvim"
-  use "lunarvim/colorschemes" -- A bunch of colorschemes you can try out
+  -- use "lunarvim/colorschemes" -- A bunch of colorschemes you can try out
   use "lunarvim/darkplus.nvim"
   use "lunarvim/onedarker.nvim"
 
@@ -153,13 +153,18 @@ return packer.startup(function(use)
   -- TODO: set this up
   -- use "rmagatti/goto-preview"
   use "nvim-lua/lsp_extensions.nvim"
+  -- use "christianchiarulli/lsp-inlay-hints"
+  use {"christianchiarulli/lsp-inlayhints.nvim", branch="user-config"}
 
   -- Java
   use "mfussenegger/nvim-jdtls"
 
   -- Rust
-  use { "christianchiarulli/rust-tools.nvim", branch = "handler_nil_check" }
+  use { "christianchiarulli/rust-tools.nvim", branch = "modularize_and_inlay_rewrite" }
   use "Saecki/crates.nvim"
+
+  -- Lua
+  use "folke/lua-dev.nvim"
 
   -- Typescript TODO: set this up, also add keybinds to ftplugin
   use "jose-elias-alvarez/typescript.nvim"
