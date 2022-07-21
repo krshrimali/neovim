@@ -12,7 +12,7 @@ telescope.setup {
 
     prompt_prefix = icons.ui.Telescope .. " ",
     selection_caret = " ",
-    path_display = { "smart" },
+    path_display = { "shorten" }, -- do :help telescope.defaults.path_display (options: hidden, tail, smart, shorten, truncate)
     file_ignore_patterns = {
       ".git/",
       "target/",

@@ -16,10 +16,10 @@ cybu.setup {
   },
   display_time = 1750, -- time the cybu window is displayed
   style = {
-    path = "relative", -- absolute, relative, tail (filename only)
+    path = "absolute", -- absolute, relative, tail (filename only)
     border = "rounded", -- single, double, rounded, none
     separator = " ", -- string used as separator
-    prefix = "…", -- string used as prefix for truncated paths
+    -- prefix = "…", -- string used as prefix for truncated paths
     padding = 1, -- left & right padding in number of spaces
     hide_buffer_id = true,
     devicons = {
@@ -28,5 +28,9 @@ cybu.setup {
     },
   },
 }
-vim.keymap.set("n", "<c-k>", "<Plug>(CybuPrev)")
-vim.keymap.set("n", "<c-j>", "<Plug>(CybuNext)")
+vim.keymap.set("n", "K", "<Plug>(CybuPrev)")
+vim.keymap.set("n", "J", "<Plug>(CybuNext)")
+vim.keymap.set({"n", "v"}, "<c-s-tab>", "<plug>(CybuLastusedPrev)")
+vim.keymap.set({"n", "v"}, "<c-tab>", "<plug>(CybuLastusedNext)")
+-- vim.keymap.set("n", "<c-k>", "<Plug>(CybuPrev)")
+-- vim.keymap.set("n", "<c-j>", "<Plug>(CybuNext)")
