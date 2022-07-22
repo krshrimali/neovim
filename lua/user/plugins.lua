@@ -80,7 +80,8 @@ return packer.startup(function(use)
     ft = "markdown",
   }
   -- use "stevearc/stickybuf.nvim"
-  -- use "rmagatti/auto-session"
+  use "rmagatti/auto-session"
+  use "rmagatti/session-lens"
 
   -- UI
   use "stevearc/dressing.nvim"
@@ -155,7 +156,7 @@ return packer.startup(function(use)
   -- use "rmagatti/goto-preview"
   use "nvim-lua/lsp_extensions.nvim"
   -- use "christianchiarulli/lsp-inlay-hints"
-  use {"christianchiarulli/lsp-inlayhints.nvim", branch="user-config"}
+  use { "christianchiarulli/lsp-inlayhints.nvim", branch = "user-config" }
 
   -- Java
   -- use "mfussenegger/nvim-jdtls"
@@ -204,7 +205,7 @@ return packer.startup(function(use)
   -- use "nvim-telescope/telescope-ui-select.nvim"
   -- use "nvim-telescope/telescope-file-browser.nvim"
   -- use 'David-Kunz/cmp-npm' -- doesn't seem to work
-  use { "christianchiarulli/JABS.nvim" }
+  -- use { "christianchiarulli/JABS.nvim" }
   -- use "lunarvim/vim-solidity"
   -- use "tpope/vim-repeat"
   -- use "Shatur/neovim-session-manager"
