@@ -8,7 +8,6 @@ local servers = {
   "cssmodules_ls",
   "emmet_ls",
   "html",
-  "jdtls",
   "jsonls",
   "solc",
   "solidity_ls",
@@ -116,9 +115,9 @@ for _, server in pairs(servers) do
     opts = vim.tbl_deep_extend("force", zk_opts, opts)
   end
 
-  if server == "jdtls" then
-    goto continue
-  end
+  -- if server == "jdtls" then
+  --   goto continue
+  -- end
 
   if server == "rust_analyzer" then
     local rust_opts = require "user.lsp.settings.rust"
