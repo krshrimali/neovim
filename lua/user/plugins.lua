@@ -94,7 +94,13 @@ return packer.startup(function(use)
   use "tversteeg/registers.nvim"
   use "rcarriga/nvim-notify"
   use "kyazdani42/nvim-web-devicons"
-  use "kyazdani42/nvim-tree.lua"
+  use {
+    "kyazdani42/nvim-tree.lua",
+    requires = {
+      "kyazdani42/nvim-web-devicons",
+    },
+    tag = "nightly"
+  }
   use "tamago324/lir.nvim"
   use "goolord/alpha-nvim"
   use "folke/which-key.nvim"
