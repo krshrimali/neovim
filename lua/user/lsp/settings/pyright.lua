@@ -1,5 +1,5 @@
 return {
-  cmd = { "pyright" },
+  -- cmd = { "pyright" },
   settings = {
     python = {
       analysis = {
