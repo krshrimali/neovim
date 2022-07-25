@@ -1,8 +1,3 @@
-local status_ok, lsp_installer = pcall(require, "nvim-lsp-installer")
-if not status_ok then
-  return
-end
-
 local servers = {
   "cssls",
   "cssmodules_ls",
@@ -25,25 +20,23 @@ local servers = {
 }
 
 local settings = {
-  ensure_installed = servers,
   ui = {
-    icons = {},
     border = "rounded",
-    keymaps = {
-      toggle_server_expand = "<CR>",
-      install_server = "i",
-      update_server = "u",
-      check_server_version = "c",
-      update_all_servers = "U",
-      check_outdated_servers = "C",
-      uninstall_server = "X",
+    icons = {
+      package_installed = "◍",
+      package_pending = "◍",
+      package_uninstalled = "◍",
     },
   },
-
   log_level = vim.log.levels.INFO,
+  max_concurrent_installers = 4,
 }
 
-lsp_installer.setup(settings)
+require("mason").setup(settings)
+require("mason-lspconfig").setup {
+  ensure_installed = servers,
+  automatic_installation = true,
+}
 
 local lspconfig_status_ok, lspconfig = pcall(require, "lspconfig")
 if not lspconfig_status_ok then
@@ -75,8 +68,8 @@ for _, server in pairs(servers) do
     if not l_status_ok then
       return
     end
-    local sumneko_opts = require "user.lsp.settings.sumneko_lua"
-    opts = vim.tbl_deep_extend("force", sumneko_opts, opts)
+    -- local sumneko_opts = require "user.lsp.settings.sumneko_lua"
+    -- opts = vim.tbl_deep_extend("force", sumneko_opts, opts)
     -- opts = vim.tbl_deep_extend("force", require("lua-dev").setup(), opts)
     local luadev = lua_dev.setup {
       --   -- add any options here, or leave empty to use the default settings
