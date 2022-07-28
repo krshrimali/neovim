@@ -90,8 +90,8 @@ return packer.startup(function(use)
   use "hrsh7th/cmp-nvim-lsp"
   use "hrsh7th/cmp-emoji"
   use "hrsh7th/cmp-nvim-lua"
-  use "zbirenbaum/copilot-cmp"
-  use { "tzachar/cmp-tabnine", run = "./install.sh" }
+  -- use "zbirenbaum/copilot-cmp"
+  -- use { "tzachar/cmp-tabnine", run = "./install.sh" }
 
   -- Snippet
   use "L3MON4D3/LuaSnip" --snippet engine
@@ -179,7 +179,21 @@ return packer.startup(function(use)
   use "akinsho/toggleterm.nvim"
 
   -- Project
-  -- use "ahmedkhalf/project.nvim"
+  -- Note: https://github.com/ahmedkhalf/project.nvim - Look at the options here if the auto change of cwd irritates me
+  -- use {
+  --   "ahmedkhalf/project.nvim",
+  --   config = function()
+  --     require("project_nvim").setup {
+  --       -- manual_mode = true,
+  --       -- respect_buf_cwd = true,
+  --       -- update_cwd = true,
+  --       -- update_focused_file = {
+  --       --   enable = true,
+  --       --   update_cwd = true
+  --       -- },
+  --     }
+  --   end
+  -- }
   -- use "windwp/nvim-spectre"
 
   -- Session
