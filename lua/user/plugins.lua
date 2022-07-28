@@ -179,12 +179,12 @@ return packer.startup(function(use)
   use "akinsho/toggleterm.nvim"
 
   -- Project
-  use "ahmedkhalf/project.nvim"
-  use "windwp/nvim-spectre"
+  -- use "ahmedkhalf/project.nvim"
+  -- use "windwp/nvim-spectre"
 
   -- Session
-  use "rmagatti/auto-session"
-  use "rmagatti/session-lens"
+  -- use "rmagatti/auto-session"
+  -- use "rmagatti/session-lens"
 
   -- Quickfix
   use "kevinhwang91/nvim-bqf"
