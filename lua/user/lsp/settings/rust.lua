@@ -1,4 +1,12 @@
+local extension_path = vim.env.HOME .. '/.vscode/extensions/vadimcn.vscode-lldb-1.7.3/'
+local codelldb_path = extension_path .. 'adapter/codelldb'
+local liblldb_path = extension_path .. 'lldb/lib/liblldb.so'
+
 return {
+  dap = {
+    adapter = require('rust-tools.dap').get_codelldb_adapter(
+      codelldb_path, liblldb_path)
+  },
   tools = {
     -- autoSetHints = false,
     on_initialized = function()
@@ -13,7 +21,7 @@ return {
     auto = false,
     inlay_hints = {
       -- Only show inlay hints for the current line
-      only_current_line = false,
+      only_current_line = true,
       auto = false,
 
       -- Event which triggers a refersh of the inlay hints.

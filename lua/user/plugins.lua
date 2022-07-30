@@ -90,8 +90,8 @@ return packer.startup(function(use)
   use "hrsh7th/cmp-nvim-lsp"
   use "hrsh7th/cmp-emoji"
   use "hrsh7th/cmp-nvim-lua"
-  use "zbirenbaum/copilot-cmp"
-  use { "tzachar/cmp-tabnine", run = "./install.sh" }
+  -- use "zbirenbaum/copilot-cmp"
+  -- use { "tzachar/cmp-tabnine", run = "./install.sh" }
 
   -- Snippet
   use "L3MON4D3/LuaSnip" --snippet engine
@@ -114,6 +114,7 @@ return packer.startup(function(use)
 
   -- Marks
   use "christianchiarulli/harpoon"
+  -- use "ThePrimeagen/harpoon"
   use "MattesGroeger/vim-bookmarks"
 
   -- Fuzzy Finder/Telescope
@@ -179,12 +180,26 @@ return packer.startup(function(use)
   use "akinsho/toggleterm.nvim"
 
   -- Project
-  use "ahmedkhalf/project.nvim"
-  use "windwp/nvim-spectre"
+  -- Note: https://github.com/ahmedkhalf/project.nvim - Look at the options here if the auto change of cwd irritates me
+  -- use {
+  --   "ahmedkhalf/project.nvim",
+  --   config = function()
+  --     require("project_nvim").setup {
+  --       -- manual_mode = true,
+  --       -- respect_buf_cwd = true,
+  --       -- update_cwd = true,
+  --       -- update_focused_file = {
+  --       --   enable = true,
+  --       --   update_cwd = true
+  --       -- },
+  --     }
+  --   end
+  -- }
+  use "nvim-pack/nvim-spectre"
 
   -- Session
-  use "rmagatti/auto-session"
-  use "rmagatti/session-lens"
+  -- use "rmagatti/auto-session"
+  -- use "rmagatti/session-lens"
 
   -- Quickfix
   use "kevinhwang91/nvim-bqf"
@@ -221,7 +236,8 @@ return packer.startup(function(use)
   use "mfussenegger/nvim-jdtls"
 
   -- Rust
-  use { "christianchiarulli/rust-tools.nvim", branch = "modularize_and_inlay_rewrite" }
+  -- use { "christianchiarulli/rust-tools.nvim", branch = "modularize_and_inlay_rewrite" }
+  use "simrat39/rust-tools.nvim"
   use "Saecki/crates.nvim"
 
   -- Typescript TODO: set this up, also add keybinds to ftplugin
@@ -265,7 +281,7 @@ return packer.startup(function(use)
   -- use "stevearc/stickybuf.nvim"
   -- use "drybalka/tree-climber.nvim"
   -- use "phaazon/hop.nvim"
-  -- use { "michaelb/sniprun", run = "bash ./install.sh" }
+  use { "michaelb/sniprun", run = "bash ./install.sh" }
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
