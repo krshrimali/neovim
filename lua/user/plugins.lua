@@ -114,6 +114,7 @@ return packer.startup(function(use)
 
   -- Marks
   use "christianchiarulli/harpoon"
+  -- use "ThePrimeagen/harpoon"
   use "MattesGroeger/vim-bookmarks"
 
   -- Fuzzy Finder/Telescope
@@ -194,7 +195,7 @@ return packer.startup(function(use)
   --     }
   --   end
   -- }
-  -- use "windwp/nvim-spectre"
+  use "nvim-pack/nvim-spectre"
 
   -- Session
   -- use "rmagatti/auto-session"
@@ -277,7 +278,7 @@ return packer.startup(function(use)
   -- use "stevearc/stickybuf.nvim"
   -- use "drybalka/tree-climber.nvim"
   -- use "phaazon/hop.nvim"
-  -- use { "michaelb/sniprun", run = "bash ./install.sh" }
+  use { "michaelb/sniprun", run = "bash ./install.sh" }
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
