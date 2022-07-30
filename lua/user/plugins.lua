@@ -234,6 +234,9 @@ return packer.startup(function(use)
     ft = "markdown",
   }
 
+  -- Theme
+  use { "bluz71/vim-moonfly-colors" }
+
   -- Graveyard
   -- use "romgrk/nvim-treesitter-context"
   -- use "mizlan/iswap.nvim"
