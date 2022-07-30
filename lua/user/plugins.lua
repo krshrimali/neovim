@@ -34,6 +34,7 @@ end
 packer.init {
   -- snapshot = "july-24",
   snapshot_path = fn.stdpath "config" .. "/snapshots",
+  max_jobs = 50,
   display = {
     open_fn = function()
       return require("packer.util").float { border = "rounded" }
@@ -206,6 +207,10 @@ return packer.startup(function(use)
 
   -- Code Runner
   use "is0n/jaq-nvim"
+  use {
+    "0x100101/lab.nvim",
+    run = "cd js && npm ci",
+  }
 
   -- Git
   use "lewis6991/gitsigns.nvim"
@@ -224,6 +229,7 @@ return packer.startup(function(use)
   use "andymass/vim-matchup"
   use "folke/zen-mode.nvim"
   use "karb94/neoscroll.nvim"
+  use "junegunn/vim-slash"
 
   -- Motion
   use "christianchiarulli/hop.nvim"

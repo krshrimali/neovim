@@ -9,7 +9,13 @@ end
 configs.setup {
   ensure_installed = {"c", "lua", "rust", "cpp"}, -- one of "all" or a list of languages [https://github.com/nvim-treesitter/nvim-treesitter#modules]
   sync_install = false, -- install languages synchronously (only applied to `ensure_installed`)
-  ignore_install = { "javascript" }, -- List of parsers to ignore installing
+  ignore_install = { "" }, -- List of parsers to ignore installing
+  matchup = {
+    enable = true, -- mandatory, false will disable the whole extension
+    -- disable = { "c", "ruby" }, -- optional, list of language that will be disabled
+    -- disable_virtual_text = false,
+    -- include_match_words = false
+  },
   highlight = {
     -- use_languagetree = true,
     enable = true, -- false will disable the whole extension
