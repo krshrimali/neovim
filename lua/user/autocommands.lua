@@ -74,7 +74,7 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
       return project_name
     end
 
-    vim.opt.titlestring = get_project_dir()
+    vim.opt.titlestring = get_project_dir() .. " - nvim"
   end,
 })
 
@@ -124,8 +124,6 @@ vim.api.nvim_create_autocmd({ "CmdWinEnter" }, {
   end,
 })
 
--- require("user.winbar").get_winbar()
-
 if vim.fn.has "nvim-0.8" == 1 then
   vim.api.nvim_create_autocmd(
     { "CursorMoved", "CursorHold", "BufWinEnter", "BufFilePost", "InsertEnter", "BufWritePost", "TabClosed" },
@@ -139,7 +137,6 @@ if vim.fn.has "nvim-0.8" == 1 then
     }
   )
 end
--- require "user.winbar"
 
 vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
   callback = function()
@@ -175,7 +172,10 @@ vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
 
 vim.api.nvim_create_autocmd({ "CursorHold" }, {
   callback = function()
-    local luasnip = require "luasnip"
+    local status_ok, luasnip = pcall(require, "luasnip")
+    if not status_ok then
+      return
+    end
     if luasnip.expand_or_jumpable() then
       -- ask maintainer for option to make this silent
       -- luasnip.unlink_current()

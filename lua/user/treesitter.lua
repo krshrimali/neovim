@@ -12,8 +12,8 @@ configs.setup {
   ignore_install = { "" }, -- List of parsers to ignore installing
   matchup = {
     enable = true, -- mandatory, false will disable the whole extension
-    -- disable = { "c", "ruby" }, -- optional, list of language that will be disabled
-    -- disable_virtual_text = false,
+    disable_virtual_text = true,
+    disable = { "html" }, -- optional, list of language that will be disabled
     -- include_match_words = false
   },
   highlight = {
@@ -39,12 +39,12 @@ configs.setup {
   rainbow = {
     enable = true,
     colors = {
-      "#68a0b0",
-      "#946EaD",
-      "#c7aA6D",
-      -- "Gold",
-      -- "Orchid",
-      -- "DodgerBlue",
+      -- "#68a0b0",
+      -- "#946EaD",
+      -- "#c7aA6D",
+      "Gold",
+      "Orchid",
+      "DodgerBlue",
       -- "Cornsilk",
       -- "Salmon",
       -- "LawnGreen",

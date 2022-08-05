@@ -79,7 +79,8 @@ return packer.startup(function(use)
   -- }
   use "RRethy/vim-illuminate"
   use "j-hui/fidget.nvim"
-  use { "lvimuser/lsp-inlayhints.nvim", branch = "readme" }
+  use "lvimuser/lsp-inlayhints.nvim"
+  -- use "simrat39/inlay-hints.nvim"
   use "https://git.sr.ht/~whynothugo/lsp_lines.nvim"
 
   -- Completion
@@ -92,7 +93,8 @@ return packer.startup(function(use)
   use "hrsh7th/cmp-emoji"
   use "hrsh7th/cmp-nvim-lua"
   -- use "zbirenbaum/copilot-cmp"
-  -- use { "tzachar/cmp-tabnine", run = "./install.sh" }
+  -- use { "tzachar/cmp-tabnine", commit = "1a8fd2795e4317fd564da269cc64a2fa17ee854e", 
+run = "./install.sh" }
 
   -- Snippet
   use "L3MON4D3/LuaSnip" --snippet engine
@@ -132,7 +134,7 @@ return packer.startup(function(use)
 
   -- Colorschemes
   use "lunarvim/onedarker.nvim"
-  -- use "lunarvim/darkplus.nvim"
+  use "lunarvim/darkplus.nvim"
   -- use "folke/tokyonight.nvim"
   -- use "lunarvim/colorschemes"
 
@@ -228,11 +230,12 @@ return packer.startup(function(use)
   use "nacro90/numb.nvim"
   use "andymass/vim-matchup"
   use "folke/zen-mode.nvim"
+  -- use "Pocco81/true-zen.nvim"
   use "karb94/neoscroll.nvim"
   use "junegunn/vim-slash"
 
   -- Motion
-  use "christianchiarulli/hop.nvim"
+  use "phaazon/hop.nvim"
   -- use "jinh0/eyeliner.nvim"
 
   -- Keybinding
