@@ -27,6 +27,7 @@ keymap("n", "<m-h>", "<C-w>h", opts)
 keymap("n", "<m-j>", "<C-w>j", opts)
 keymap("n", "<m-k>", "<C-w>k", opts)
 keymap("n", "<m-l>", "<C-w>l", opts)
+keymap("n", "<m-tab>", "<c-6>", opts)
 
 -- Tabs --
 keymap("n", "<m-t>", ":tabnew %<cr>", opts)
@@ -92,7 +93,7 @@ keymap("v", "p", '"_dP', opts)
 -- keymap("t", "<C-l>", "<C-\\><C-N><C-w>l", term_opts)
 
 -- Custom
-keymap("n", "<c-h>", "<cmd>nohlsearch<cr>", opts)
+-- keymap("n", "<c-h>", "<cmd>nohlsearch<cr>", opts)
 -- NOTE: the fact that tab and ctrl-i are the same is stupid
 -- keymap("n", "<TAB>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
 keymap("n", "Q", "<cmd>Bdelete!<CR>", opts)
@@ -170,9 +171,18 @@ keymap("x", "<m-/>", '<ESC><CMD>lua require("Comment.api").toggle_linewise_op(vi
 
 -- vim.api.nvim_set_keymap("n", "<tab>", "<cmd>lua require('telescope.builtin').extensions.harpoon.marks(require('telescope.themes').get_dropdown{previewer = false, initial_mode='normal'})<cr>", opts)
 
-
-vim.api.nvim_set_keymap("n", "<tab>", "<cmd>lua require('telescope').extensions.harpoon.marks(require('telescope.themes').get_dropdown{previewer = false, initial_mode='normal', prompt_title='Harpoon'})<cr>", opts)
-vim.api.nvim_set_keymap("n", "<s-tab>", "<cmd>lua require('telescope.builtin').buffers(require('telescope.themes').get_dropdown{previewer = false, initial_mode='normal'})<cr>", opts)
+vim.api.nvim_set_keymap(
+  "n",
+  "<tab>",
+  "<cmd>lua require('telescope').extensions.harpoon.marks(require('telescope.themes').get_dropdown{previewer = false, initial_mode='normal', prompt_title='Harpoon'})<cr>",
+  opts
+)
+vim.api.nvim_set_keymap(
+  "n",
+  "<s-tab>",
+  "<cmd>lua require('telescope.builtin').buffers(require('telescope.themes').get_dropdown{previewer = false, initial_mode='normal'})<cr>",
+  opts
+)
 -- vim.api.nvim_set_keymap("n", "<tab>", "<cmd>lua require('harpoon.ui').toggle_quick_menu()<cr>", opts)
 vim.api.nvim_set_keymap("n", "<m-g>", "<cmd>Telescope git_branches<cr>", opts)
 vim.api.nvim_set_keymap("n", "<s-enter>", "<cmd>TodoQuickFix<cr>", opts)
@@ -190,7 +200,5 @@ vim.cmd [[
 
 keymap("n", "<m-q>", ":call QuickFixToggle()<cr>", opts)
 keymap("n", "<c-l>", "<cmd>lua vim.lsp.codelens.run()<cr>", opts)
-
-    -- l = { "<cmd>lua vim.lsp.codelens.run()<cr>", "CodeLens Action" },
 
 return M

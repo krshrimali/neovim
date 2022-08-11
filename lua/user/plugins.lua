@@ -200,8 +200,8 @@ return packer.startup(function(use)
   use "nvim-pack/nvim-spectre"
 
   -- Session
-  -- use "rmagatti/auto-session"
-  -- use "rmagatti/session-lens"
+  use {"rmagatti/auto-session", branch="dir-changed-fixes"}
+  use "rmagatti/session-lens"
 
   -- Quickfix
   use "kevinhwang91/nvim-bqf"
