@@ -70,6 +70,10 @@ cd "$NEOVIM_DIR" 2>/dev/null || terminate_script "Error: neovim directory not fo
 
 make CMAKE_BUILD_TYPE="$BUILD_TYPE"
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8d9bb019ceabf1e590ecf5a6ce5135ab78750eb4
 sudo make install
 cd "$CURRENT_DIR" || terminate_script "Error: not able to change directory to \"$CURRENT_DIR\""
 rm -rf "$NEOVIM_DIR"
