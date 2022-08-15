@@ -240,6 +240,7 @@ cmp.setup {
     select = false,
   },
   window = {
+    documentaton = true,
     documentation = {
       border = "rounded",
       winhighlight = "NormalFloat:Pmenu,NormalFloat:Pmenu,CursorLine:PmenuSel,Search:None",
