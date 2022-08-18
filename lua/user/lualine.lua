@@ -448,6 +448,7 @@ lualine.setup {
   },
   sections = {
     lualine_a = { left_pad, mode, branch, right_pad },
+    -- lualine_a = { 'filename', file_status=true, path=2 },
     lualine_b = { left_pad_alt, diagnostics, right_pad_alt },
     -- lualine_c = {},
     lualine_c = { current_signature },
@@ -455,7 +456,11 @@ lualine.setup {
     -- lualine_x = { diff, lanuage_server, spaces, filetype },
     -- lualine_x = { lanuage_server, spaces, filetype },
     lualine_x = { lanuage_server, spaces, filetype },
-    lualine_y = {},
+    lualine_y = {
+      {
+          'filename', file_status=true, path=2
+      },
+    },
     lualine_z = { location, progress },
   },
   inactive_sections = {

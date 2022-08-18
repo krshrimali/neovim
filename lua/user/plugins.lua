@@ -133,6 +133,7 @@ return packer.startup(function(use)
 
   -- Colorschemes
   use "lunarvim/onedarker.nvim"
+  use {'decaycs/decay.nvim', as = 'decay'}
   use "lunarvim/darkplus.nvim"
   -- use "folke/tokyonight.nvim"
   -- use "lunarvim/colorschemes"
