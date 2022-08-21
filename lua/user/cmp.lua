@@ -18,6 +18,9 @@ local buffer_fts = {
   "toml",
   "yaml",
   "json",
+  -- "cpp",
+  -- "py",
+  -- "c"
 }
 
 local function contains(t, value)
@@ -164,12 +167,18 @@ cmp.setup {
 
       -- NOTE: order matters
       vim_item.menu = ({
-        nvim_lsp = "",
-        nvim_lua = "",
-        luasnip = "",
-        buffer = "",
-        path = "",
-        emoji = "",
+        nvim_lsp = "[LSP]",
+        nvim_lua = "[Nvim]",
+        luasnip = "[Snippet]",
+        buffer = "[Buffer]",
+        path = "[Path]",
+        emoji = "[Emoji]",
+        -- nvim_lsp = "",
+        -- nvim_lua = "",
+        -- luasnip = "",
+        -- buffer = "",
+        -- path = "",
+        -- emoji = "",
       })[entry.source.name]
       return vim_item
     end,
@@ -207,20 +216,21 @@ cmp.setup {
       },
       group_index = 2,
     },
-    {
-      name = "nvim_lsp",
-      filter = function(entry, ctx)
-        local kind = require("cmp.types.lsp").CompletionItemKind[entry:get_kind()]
-        if kind == "Snippet" and ctx.prev_context.filetype == "java" then
-          return true
-        end
-
-        if kind == "Text" then
-          return true
-        end
-      end,
-      group_index = 2,
-    },
+    { name = "nvim_lsp", group_index = 2 },
+    -- {
+    --   name = "nvim_lsp",
+    --   filter = function(entry, ctx)
+    --     local kind = require("cmp.types.lsp").CompletionItemKind[entry:get_kind()]
+    --     if kind == "Snippet" and ctx.prev_context.filetype == "java" then
+    --       return true
+    --     end
+    --
+    --     if kind == "Text" then
+    --       return true
+    --     end
+    --   end,
+    --   group_index = 2,
+    -- },
     { name = "nvim_lua", group_index = 2 },
     { name = "luasnip", group_index = 2 },
     {
@@ -272,6 +282,13 @@ cmp.setup {
       winhighlight = "NormalFloat:Pmenu,NormalFloat:Pmenu,CursorLine:PmenuSel,Search:None",
     },
   },
+  duplicates = {
+    buffer = 1,
+    path = 1,
+    nvim_lsp = 0,
+    luasnip = 1,
+  },
+  duplicates_default = 0,
   experimental = {
     ghost_text = false,
   },
