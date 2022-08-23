@@ -169,7 +169,7 @@ local mappings = {
   --   v = { "<cmd>vsplit<cr>", "VSplit" },
   -- },
 
-  s = {
+  S = {
     name = "Session",
     s = { "<cmd>SaveSession<cr>", "Save" },
     r = { "<cmd>RestoreSession<cr>", "Restore" },
@@ -283,7 +283,9 @@ local mappings = {
       "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>",
       "Prev Diagnostic",
     },
-    v = { "<cmd>lua require('lsp_lines').toggle()<cr>", "Virtual Text" },
+    v = { "<cmd>lua require('lsp_lines').toggle()<cr>", "Virtual Lines" },
+    -- V = { "<cmd>lua vim.lsp.handlers.virtual_l<cr>", "Virtual Text" },
+    V = { function() vim.diagnostic.virtual_text = not vim.diagnostic.virtual_text end, "Virtual Text"},
     l = { "<cmd>lua vim.lsp.codelens.run()<cr>", "CodeLens Action" },
     o = { "<cmd>SymbolsOutline<cr>", "Outline" },
     q = { "<cmd>lua vim.diagnostic.setloclist()<cr>", "Quickfix" },
@@ -298,17 +300,17 @@ local mappings = {
     u = { "<cmd>LuaSnipUnlinkCurrent<cr>", "Unlink Snippet" },
   },
 
-  -- s = {
-  --   name = "Surround",
-  --   ["."] = { "<cmd>lua require('surround').repeat_last()<cr>", "Repeat" },
-  --   a = { "<cmd>lua require('surround').surround_add(true)<cr>", "Add" },
-  --   d = { "<cmd>lua require('surround').surround_delete()<cr>", "Delete" },
-  --   r = { "<cmd>lua require('surround').surround_replace()<cr>", "Replace" },
-  --   q = { "<cmd>lua require('surround').toggle_quotes()<cr>", "Quotes" },
-  --   b = { "<cmd>lua require('surround').toggle_brackets()<cr>", "Brackets" },
-  -- },
+  s = {
+    name = "Surround",
+    ["."] = { "<cmd>lua require('surround').repeat_last()<cr>", "Repeat" },
+    a = { "<cmd>lua require('surround').surround_add(true)<cr>", "Add" },
+    d = { "<cmd>lua require('surround').surround_delete()<cr>", "Delete" },
+    r = { "<cmd>lua require('surround').surround_replace()<cr>", "Replace" },
+    q = { "<cmd>lua require('surround').toggle_quotes()<cr>", "Quotes" },
+    b = { "<cmd>lua require('surround').toggle_brackets()<cr>", "Brackets" },
+  },
 
-  S = {
+  n = {
     -- name = "Session",
     -- s = { "<cmd>SaveSession<cr>", "Save" },
     -- l = { "<cmd>LoadLastSession!<cr>", "Load Last" },
