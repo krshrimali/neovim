@@ -10,9 +10,15 @@ local icons = require "user.icons"
 telescope.setup {
   defaults = {
 
+    -- layout_strategy = "vertical",
+    -- layout_config = {
+    --   vertical = {
+    --     width = 10.0
+    --   }
+    -- },
     prompt_prefix = icons.ui.Telescope .. " ",
     selection_caret = " ",
-    path_display = { "shorten" }, -- do :help telescope.defaults.path_display (options: hidden, tail, smart, shorten, truncate)
+    path_display = { "smart" }, -- do :help telescope.defaults.path_display (options: hidden, tail, smart, shorten, truncate)
     file_ignore_patterns = {
       ".git/",
       "target/",
@@ -149,17 +155,22 @@ telescope.setup {
   pickers = {
 
     live_grep = {
-      theme = "dropdown",
+      -- theme = "dropdown",
+      theme = "ivy"
     },
     grep_string = {
-      theme = "dropdown",
+      -- theme = "dropdown",
+      theme = "ivy"
     },
     find_files = {
-      theme = "dropdown",
+      theme = "ivy",  -- dropdown
       previewer = false,
     },
+    keymaps = {
+      theme = "ivy",
+    },
     buffers = {
-      theme = "dropdown",
+      theme = "ivy",
       previewer = false,
       initial_mode = "normal",
     },
