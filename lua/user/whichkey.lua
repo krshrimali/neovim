@@ -285,7 +285,7 @@ local mappings = {
     },
     v = { "<cmd>lua require('lsp_lines').toggle()<cr>", "Virtual Lines" },
     -- V = { "<cmd>lua vim.lsp.handlers.virtual_l<cr>", "Virtual Text" },
-    V = { function() vim.diagnostic.config.virtual_text = not vim.diagnostic.config.virtual_text end, "Virtual Text"},
+    V = { function() vim.diagnostic.config({ virtual_text = not vim.diagnostic.config().virtual_text }) end, "Virtual Text"},
     o = { "<cmd>SymbolsOutline<cr>", "Outline" },
     q = { "<cmd>lua vim.diagnostic.setloclist()<cr>", "Quickfix" },
     r = { "<cmd>lua vim.lsp.buf.rename()<cr>", "Rename" },
