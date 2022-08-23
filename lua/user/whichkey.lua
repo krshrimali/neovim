@@ -261,7 +261,7 @@ local mappings = {
 
   l = {
     name = "LSP",
-    l = { "<cmd>lua vim.lsp.codelens.run()<CR>" },
+    l = { "<cmd>lua vim.lsp.codelens.run()<cr>", "CodeLens Action" },
     a = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Code Action" },
     c = { "<cmd>lua require('user.lsp').server_capabilities()<cr>", "Get Capabilities" },
     d = { "<cmd>TroubleToggle<cr>", "Diagnostics" },
@@ -285,8 +285,7 @@ local mappings = {
     },
     v = { "<cmd>lua require('lsp_lines').toggle()<cr>", "Virtual Lines" },
     -- V = { "<cmd>lua vim.lsp.handlers.virtual_l<cr>", "Virtual Text" },
-    V = { function() vim.diagnostic.virtual_text = not vim.diagnostic.virtual_text end, "Virtual Text"},
-    l = { "<cmd>lua vim.lsp.codelens.run()<cr>", "CodeLens Action" },
+    V = { function() vim.diagnostic.config.virtual_text = not vim.diagnostic.config.virtual_text end, "Virtual Text"},
     o = { "<cmd>SymbolsOutline<cr>", "Outline" },
     q = { "<cmd>lua vim.diagnostic.setloclist()<cr>", "Quickfix" },
     r = { "<cmd>lua vim.lsp.buf.rename()<cr>", "Rename" },
