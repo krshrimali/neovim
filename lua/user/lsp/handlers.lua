@@ -27,7 +27,7 @@ M.setup = function()
     -- disable virtual text
     virtual_lines = false,
     -- virtual_text = false,
-    virtual_text = true,
+    virtual_text = false,
     -- {
     --   spacing = 7,
     --   -- update_in_insert = false,
@@ -73,19 +73,19 @@ M.setup = function()
     -- height = 30,
   })
 
-  vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-    vim.lsp.diagnostic.on_publish_diagnostics, {
-      -- disable virtual text
-      virtual_text = true,
+  -- vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+  --   vim.lsp.diagnostic.on_publish_diagnostics, {
+  --     -- disable virtual text
+  --     virtual_text = false,
 
-      -- show signs
-      signs = true,
+  --     -- show signs
+  --     signs = true,
 
-      -- delay update diagnostics
-      update_in_insert = false,
-      display_diagnostic_autocmds = { "InsertLeave" },
-    }
-  )
+  --     -- delay update diagnostics
+  --     update_in_insert = false,
+  --     display_diagnostic_autocmds = { "InsertLeave" },
+  --   }
+  -- )
 end
 
 
