@@ -27,17 +27,18 @@ M.setup = function()
     -- disable virtual text
     virtual_lines = false,
     -- virtual_text = false,
-    virtual_text = {
-      spacing = 7,
-      -- update_in_insert = false,
-      severity_sort = true,
-      -- prefix = "<-",
-      prefix = " ●",
-      source = "if_many", -- Or "always"
-      format = function(diag)
-        return diag.message .. "etc."
-      end,
-    },
+    virtual_text = true,
+    -- {
+    --   spacing = 7,
+    --   -- update_in_insert = false,
+    --   severity_sort = true,
+    --   -- prefix = "<-",
+    --   prefix = " ●",
+    --   source = "always", -- Or "always"
+    --   format = function(diag)
+    --     return diag.message
+    --   end,
+    -- },
 
     -- show signs
     signs = {
@@ -71,6 +72,20 @@ M.setup = function()
     -- width = 60,
     -- height = 30,
   })
+
+  vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+    vim.lsp.diagnostic.on_publish_diagnostics, {
+      -- disable virtual text
+      virtual_text = true,
+
+      -- show signs
+      signs = true,
+
+      -- delay update diagnostics
+      update_in_insert = false,
+      display_diagnostic_autocmds = { "InsertLeave" },
+    }
+  )
 end
 
 
