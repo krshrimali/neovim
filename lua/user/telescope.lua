@@ -16,6 +16,9 @@ telescope.setup {
     --     width = 10.0
     --   }
     -- },
+    layout_config = {
+      prompt_position = "top",
+    },
     prompt_prefix = icons.ui.Telescope .. " ",
     selection_caret = " ",
     path_display = { "smart" }, -- do :help telescope.defaults.path_display (options: hidden, tail, smart, shorten, truncate)

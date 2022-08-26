@@ -457,7 +457,7 @@ lualine.setup {
   },
   sections = {
     -- lualine_a = { left_pad, mode, branch, right_pad },
-    lualine_a = { branch, diff },
+    lualine_a = { 'mode', 'branch', diff },
     -- lualine_a = { 'filename', file_status=true, path=2 },
     lualine_b = { diagnostics },
     -- lualine_c = {},
