@@ -115,7 +115,7 @@ return packer.startup(function(use)
   }
 
   -- Marks
-  use "christianchiarulli/harpoon"
+  use "krshrimali/harpoon"
   -- use "ThePrimeagen/harpoon"
   use "MattesGroeger/vim-bookmarks"
 
@@ -262,6 +262,9 @@ return packer.startup(function(use)
 
   -- Theme
   use { "bluz71/vim-moonfly-colors" }
+  use { "navarasu/onedark.nvim" }
+  use { "folke/tokyonight.nvim" }
+  use { "ellisonleao/gruvbox.nvim" }
 
   -- Graveyard
   -- use "romgrk/nvim-treesitter-context"
@@ -292,6 +295,8 @@ return packer.startup(function(use)
   -- use "drybalka/tree-climber.nvim"
   -- use "phaazon/hop.nvim"
   use { "michaelb/sniprun", run = "bash ./install.sh" }
+
+  use { "NoahTheDuke/vim-just" }
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins

@@ -29,7 +29,7 @@ M.winbar_filetype_exclude = {
 }
 
 M.get_filename = function()
-  local filename = vim.fn.expand "%:t"
+  local filename = vim.fn.expand "%:f"
   local extension = vim.fn.expand "%:e"
   local f = require "user.functions"
 
@@ -45,8 +45,8 @@ M.get_filename = function()
       file_icon_color = ""
     end
 
-    local navic_text = vim.api.nvim_get_hl_by_name("NavicText", true)
-    vim.api.nvim_set_hl(0, "Winbar", { fg = navic_text.foreground })
+    -- local navic_text = vim.api.nvim_get_hl_by_name("NavicText", true)
+    -- vim.api.nvim_set_hl(0, "Winbar")
 
     return " " .. "%#" .. hl_group .. "#" .. file_icon .. "%*" .. " " .. "%#Winbar#" .. filename .. "%*"
   end
