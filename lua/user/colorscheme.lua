@@ -1,9 +1,9 @@
-local colorscheme = "darkplus"
--- local colorscheme = "gruvbox"
+-- local colorscheme = "darkplus"
+local colorscheme = "gruvbox"
 
 
 vim.o.background="dark"
-vim.cmd([[colorscheme darkplus]])
+vim.cmd([[colorscheme gruvbox]])
 
 -- vim.g.onedarker_italic_keywords = false
 

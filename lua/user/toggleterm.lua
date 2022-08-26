@@ -8,7 +8,7 @@ toggleterm.setup {
   open_mapping = [[<c-\>]],
   hide_numbers = true,
   shade_filetypes = {},
-  shade_terminals = true,
+  shade_terminals = false,
   shading_factor = 2,
   start_in_insert = true,
   insert_mappings = true,
@@ -39,6 +39,7 @@ end
 vim.cmd "autocmd! TermOpen term://* lua set_terminal_keymaps()"
 
 local Terminal = require("toggleterm.terminal").Terminal
+local TermExec = require("toggleterm.terminal")
 -- FIXME: Not really a good idea on using Lazygit in neovim: https://github.com/jesseduffield/lazygit/issues/996
 -- local lazygit = Terminal:new {
 --   cmd = "lazygit",
@@ -81,10 +82,12 @@ function _HTOP_TOGGLE()
   htop:toggle()
 end
 
-local python = Terminal:new { cmd = "python", hidden = true }
+local make = Terminal:new { 
+  cmd = "./.buildme.sh", hidden = false, close_on_exit = false, start_in_insert=true, persist_mode=true, direction="vertical", auto_scroll=true, open_mapping=[[<c-b>]],terminal_mappings=true, insert_mappings=true,
+}
 
-function _PYTHON_TOGGLE()
-  python:toggle()
+function _MAKE_TOGGLE()
+  make:toggle()
 end
 
 local cargo_run = Terminal:new { cmd = "cargo run", hidden = true }
@@ -176,6 +179,14 @@ vim.api.nvim_set_keymap("i", "<m-2>", "<cmd>lua _VERTICAL_TERM()<CR>", { noremap
 
 local horizontal_term = Terminal:new {
   direction = "horizontal",
+  float_opts = {
+    border = "curved",
+    winblend = 0,
+    highlights = {
+      border = "Normal",
+      background = "Normal",
+    },
+  },
   on_open = function(term)
     vim.cmd "startinsert!"
     vim.api.nvim_buf_set_keymap(
@@ -201,6 +212,10 @@ local horizontal_term = Terminal:new {
     )
     vim.api.nvim_buf_set_keymap(term.bufnr, "", "<m-2>", "<nop>", { noremap = true, silent = true })
   end,
+  -- highlights = {
+  --   border = "Normal",
+  --   background = "Normal",
+  -- },
   count = 3,
 }
 
