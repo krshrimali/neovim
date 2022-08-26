@@ -142,6 +142,7 @@ vim.api.nvim_set_keymap("i", "<m-1>", "<cmd>lua _FLOAT_TERM()<CR>", { noremap = 
 
 local vertical_term = Terminal:new {
   direction = "vertical",
+  vim.wo.signcolumn = "no"
   on_open = function(term)
     vim.cmd "startinsert!"
     vim.api.nvim_buf_set_keymap(
@@ -188,6 +189,7 @@ local horizontal_term = Terminal:new {
     },
   },
   on_open = function(term)
+    vim.wo.signcolumn = "no"
     vim.cmd "startinsert!"
     vim.api.nvim_buf_set_keymap(
       term.bufnr,
