@@ -4,13 +4,13 @@ if not status_ok then
   return
 end
 
--- local lualine_scheme = "darkplus_dark"
+local lualine_scheme = "darkplus_dark"
 -- local lualine_scheme = "onedarker_alt"
 
--- local status_theme_ok, theme = pcall(require, "lualine.themes." .. lualine_scheme)
--- if not status_theme_ok then
---   return
--- end
+local status_theme_ok, theme = pcall(require, "lualine.themes." .. lualine_scheme)
+if not status_theme_ok then
+  return
+end
 
 -- check if value in table
 local function contains(t, value)
@@ -448,8 +448,8 @@ lualine.setup {
   options = {
     globalstatus = true,
     icons_enabled = true,
-    theme = "auto",
-    -- theme = theme,
+    -- theme = "auto",
+    theme = theme,
     component_separators = { left = "", right = "" },
     section_separators = { left = "", right = "" },
     disabled_filetypes = { "alpha", "dashboard" },
