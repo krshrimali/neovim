@@ -39,7 +39,6 @@ end
 vim.cmd "autocmd! TermOpen term://* lua set_terminal_keymaps()"
 
 local Terminal = require("toggleterm.terminal").Terminal
-local TermExec = require("toggleterm.terminal")
 -- FIXME: Not really a good idea on using Lazygit in neovim: https://github.com/jesseduffield/lazygit/issues/996
 -- local lazygit = Terminal:new {
 --   cmd = "lazygit",
@@ -82,7 +81,7 @@ function _HTOP_TOGGLE()
   htop:toggle()
 end
 
-local make = Terminal:new { 
+local make = Terminal:new {
   cmd = "./.buildme.sh", hidden = false, close_on_exit = false, start_in_insert=true, persist_mode=true, direction="vertical", auto_scroll=true, open_mapping=[[<c-b>]],terminal_mappings=true, insert_mappings=true,
 }
 

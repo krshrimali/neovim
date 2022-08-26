@@ -182,8 +182,8 @@ local diagnostics = {
   -- },
   colored = false,
   update_in_insert = false,
-  always_visible = false,
-  padding = 0,
+  always_visible = true,
+  padding = 1,
 }
 
 local diff = {
@@ -457,7 +457,7 @@ lualine.setup {
   },
   sections = {
     -- lualine_a = { left_pad, mode, branch, right_pad },
-    lualine_a = { branch },
+    lualine_a = { branch, diff },
     -- lualine_a = { 'filename', file_status=true, path=2 },
     lualine_b = { diagnostics },
     -- lualine_c = {},
@@ -465,10 +465,11 @@ lualine.setup {
     -- lualine_x = { diff, spaces, "encoding", filetype },
     -- lualine_x = { diff, lanuage_server, spaces, filetype },
     -- lualine_x = { lanuage_server, spaces, filetype },
-    lualine_x = { lanuage_server, spaces, filetype },
+    -- lualine_x = { lanuage_server, spaces, filetype },
+    lualine_x = { lanuage_server, spaces},
     lualine_y = {
       {
-          'filename', file_status=true, path=2
+          'filename', file_status=true, path=3
       },
     },
     lualine_z = { location, progress },
