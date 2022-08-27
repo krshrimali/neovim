@@ -183,6 +183,9 @@ return packer.startup(function(use)
   -- Terminal
   use "akinsho/toggleterm.nvim"
 
+  -- My own plugins
+  use "krshrimali/nvim-autorunner"
+
   -- Project
   -- Note: https://github.com/ahmedkhalf/project.nvim - Look at the options here if the auto change of cwd irritates me
   -- use {
