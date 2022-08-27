@@ -70,3 +70,5 @@ vim.filetype.add {
     conf = "dosini",
   },
 }
+
+vim.cmd([[autocmd TermOpen * setlocal signcolumn=no]])

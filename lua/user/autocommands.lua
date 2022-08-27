@@ -187,3 +187,57 @@ vim.api.nvim_create_autocmd({ "BufWritePost" }, {
     vim.lsp.buf.format { async = true }
   end,
 })
+
+
+local attach_to_buffer = function(output_bufnr, pattern, command)
+  vim.api.nvim_create_autocmd("BufWritePost", {
+    group = vim.api.nvim_create_augroup("krs-autocompile-cpp", { clear = true }),
+    pattern = pattern,
+    callback = function()
+      local append_data = function(_, data)
+        print(data)
+        if data then
+          vim.api.nvim_buf_set_lines(output_bufnr, -1, -1, false, data)
+        end
+      end
+
+      vim.api.nvim_buf_set_lines(output_bufnr, 0, -1, false, { "main.cpp output" })
+      vim.fn.jobstart(command, {
+        stdout_buffered = true,
+        on_stdout = append_data,
+        on_stderr = append_data,
+      })
+    end,
+  })
+end
+
+local call_autorun = function(command)
+  vim.api.nvim_create_autocmd({ "BufEnter" }, {
+    callback = function()
+      vim.cmd "setlocal signcolumn=no nonumber"
+    end,
+  })
+  vim.api.nvim_command("vnew")
+  local output_bufnr = vim.api.nvim_get_current_buf()
+  local append_data = function(_, data)
+    if data then
+      vim.api.nvim_buf_set_lines(output_bufnr, -1, -1, false, data)
+    end
+  end
+
+  vim.api.nvim_buf_set_lines(output_bufnr, 0, -1, false, { "OUTPUT from .buildme.sh" })
+  vim.fn.jobstart(command, {
+    stdout_buffered = true,
+    on_stdout = append_data,
+    on_stderr = append_data,
+  })
+end
+
+vim.api.nvim_create_user_command("AutoRun", function()
+  -- vim.api.nvim_command("vnew")
+  -- call_autorun(vim.api.nvim_get_current_buf(), "./.buildme.sh")
+  call_autorun("./.buildme.sh")
+end, {})
+
+-- See: https://github.com/j-hui/fidget.nvim/issues/86
+vim.api.nvim_create_autocmd("VimLeavePre", { command = [[silent! FidgetClose]] })
