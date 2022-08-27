@@ -180,7 +180,7 @@ telescope.setup {
       show_moon = true,
     },
     colorscheme = {
-      -- enable_preview = true,
+      enable_preview = true,
     },
     lsp_references = {
       theme = "dropdown",
