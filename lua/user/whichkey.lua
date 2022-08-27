@@ -110,7 +110,16 @@ local m_mappings = {
 
 local mappings = {
   -- ["1"] = "which_key_ignore",
-  a = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Action" },
+  -- a = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Action" },
+  a = {
+    name = "AutoRunner",
+    r = { "<cmd>AutoRun<cr>", "AutoRun" },
+    t = { "<cmd>AutoRunToggle<cr>", "AutoRunToggle" },
+    e = { "<cmd>AutoRunEditFile<cr>", "AutoRunEditFile" },
+    a = { "<cmd>AutoRunAddCommand<cr>", "AutoRunAddCommand" },
+    c = { "<cmd>AutoRunClearCommand<cr>", "AutoRunClearCommand" },
+    p = { "<cmd>AutoRunPrint<cr>", "AutoRunPrint" },
+  },
   b = { "<cmd>Telescope buffers<cr>", "Buffers" },
   e = { "<cmd>NvimTreeToggle<cr>", "Explorer" },
   v = { "<cmd>vsplit<cr>", "vsplit" },
@@ -153,14 +162,13 @@ local mappings = {
 
   o = {
     name = "Options",
-    c = { '<cmd>lua vim.g.cmp_active=false<cr>', "Completion off" },
-    C = { '<cmd>lua vim.g.cmp_active=true<cr>', "Completion on" },
+    c = { "<cmd>lua vim.g.cmp_active=false<cr>", "Completion off" },
+    C = { "<cmd>lua vim.g.cmp_active=true<cr>", "Completion on" },
     w = { '<cmd>lua require("user.functions").toggle_option("wrap")<cr>', "Wrap" },
     r = { '<cmd>lua require("user.functions").toggle_option("relativenumber")<cr>', "Relative" },
     l = { '<cmd>lua require("user.functions").toggle_option("cursorline")<cr>', "Cursorline" },
     s = { '<cmd>lua require("user.functions").toggle_option("spell")<cr>', "Spell" },
     t = { '<cmd>lua require("user.functions").toggle_tabline()<cr>', "Tabline" },
-
   },
 
   -- s = {
@@ -291,7 +299,12 @@ local mappings = {
     },
     v = { "<cmd>lua require('lsp_lines').toggle()<cr>", "Virtual Lines" },
     -- V = { "<cmd>lua vim.lsp.handlers.virtual_l<cr>", "Virtual Text" },
-    V = { function() vim.diagnostic.config({ virtual_text = not vim.diagnostic.config().virtual_text }) end, "Virtual Text"},
+    V = {
+      function()
+        vim.diagnostic.config { virtual_text = not vim.diagnostic.config().virtual_text }
+      end,
+      "Virtual Text",
+    },
     o = { "<cmd>SymbolsOutline<cr>", "Outline" },
     q = { "<cmd>lua vim.diagnostic.setloclist()<cr>", "Quickfix" },
     r = { "<cmd>lua vim.lsp.buf.rename()<cr>", "Rename" },
