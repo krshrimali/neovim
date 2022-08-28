@@ -174,6 +174,7 @@ keymap("x", "<m-/>", '<ESC><CMD>lua require("Comment.api").toggle_linewise_op(vi
 vim.api.nvim_set_keymap(
   "n",
   "<tab>",
+  "<C-m>",
   "<cmd>lua require('telescope').extensions.harpoon.marks(require('telescope.themes').get_dropdown{ layout_strategy = 'horizontal', layout_config = { width = function(_, max_columns, _) return math.min(max_columns, 120) end, height= function(_, _, max_lines) return math.min(max_lines, 30) end, }, initial_mode='normal', prompt_title='Harpoon'})<cr>",
   opts
 )
