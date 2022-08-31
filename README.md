@@ -1,11 +1,18 @@
 # My Neovim Config
 
+This is a _heavily_ modified forked from [ChristianChiarulli's neovim](https://github.com/ChristianChiarulli/nvim). You can start-off with my config, and build something of your own from there, but ideally, you should always try writing your own. Using neovim, as [TJ DeVries](https://www.youtube.com/c/TJDeVries) says, usually becomes a PDE (Personal Development Environment). This config, just like any other config, is heavily personalized.
+
+## Key mappings
+
+- The leader key is `space`, and to open whichkey immediately, press: `Ctrl + Space`.
+- To open all the available keymaps, press: "Ctrl + Space" -> "f" -> "k" (you should also see the options you are selecting)
+
 ## Try out this config
 
 Make sure to remove or move your current `nvim` directory
 
 ```sh
-git clone git@github.com:ChristianChiarulli/nvim.git ~/.config/nvim
+git clone git@github.com:krshrimali/nvim.git ~/.config/nvim
 ```
 
 Run `nvim` and wait for the plugins to be installed
