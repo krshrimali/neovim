@@ -198,6 +198,9 @@ telescope.setup {
       theme = "dropdown",
       initial_mode = "normal",
     },
+    diagnostics = {
+      theme = "ivy",
+    },
 
 
     -- Default configuration for builtin pickers goes here:

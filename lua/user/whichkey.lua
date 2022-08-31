@@ -212,7 +212,7 @@ local mappings = {
     p = { ':TermExec cmd="python %<CR>"', "Run python file" },
   },
 
-  d = {
+  D = {
     name = "Debug",
     b = { "<cmd>lua require'dap'.toggle_breakpoint()<cr>", "Breakpoint" },
     c = { "<cmd>lua require'dap'.continue()<cr>", "Continue" },
@@ -223,6 +223,20 @@ local mappings = {
     l = { "<cmd>lua require'dap'.run_last()<cr>", "Last" },
     u = { "<cmd>lua require'dapui'.toggle()<cr>", "UI" },
     x = { "<cmd>lua require'dap'.terminate()<cr>", "Exit" },
+  },
+
+  d = {
+    name = "Diagnostics",
+    c = {
+      "<cmd>lua require('telescope.builtin').diagnostics({ bufnr = 0 })<cr>", "Diagnostics of current buffer"
+    },
+    w = {
+      "<cmd>lua require('telescope.builtin'.diagnostics())<cr>",
+      "Workspace Diagnostics"
+    },
+    u = {
+      "<cmd>lua require('telescope.builtin'.diagnostics({ no_unlisted = true }))<cr>", "Diagnostics from listed buffers"
+    },
   },
 
   -- nnoremap <silent> <leader>B :lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>
@@ -282,6 +296,7 @@ local mappings = {
     },
   },
 
+
   l = {
     name = "LSP",
     l = { "<cmd>lua vim.lsp.codelens.run()<cr>", "CodeLens Action" },
@@ -307,7 +322,6 @@ local mappings = {
       "Prev Diagnostic",
     },
     v = { "<cmd>lua require('lsp_lines').toggle()<cr>", "Virtual Lines" },
-    -- V = { "<cmd>lua vim.lsp.handlers.virtual_l<cr>", "Virtual Text" },
     V = {
       function()
         vim.diagnostic.config { virtual_text = not vim.diagnostic.config().virtual_text }

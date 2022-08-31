@@ -126,7 +126,6 @@ vim.api.nvim_create_autocmd({ "CmdWinEnter" }, {
 
 vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
   callback = function()
-    vim.cmd "set formatoptions+=cro"
     vim.cmd "set formatoptions-=cro"
   end,
 })
@@ -188,10 +187,6 @@ vim.api.nvim_create_autocmd({ "BufWritePost" }, {
     vim.lsp.buf.format { async = true }
   end,
 })
-
--- vim.api.nvim_create_user_command("AutoInitialize", function()
---   vim.api.nvim_augroup
--- end, {})
 
 -- See: https://github.com/j-hui/fidget.nvim/issues/86
 vim.api.nvim_create_autocmd("VimLeavePre", { command = [[silent! FidgetClose]] })

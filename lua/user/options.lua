@@ -62,7 +62,8 @@ vim.cmd "set whichwrap+=<,>,[,],h,l"
 vim.cmd [[set iskeyword+=-]]
 -- vim.cmd [[set iskeyword-=_]]
 
-vim.cmd [[set formatoptions+=cro]] -- TODO: this doesn't seem to work
+-- vim.cmd [[set formatoptions+=cro]] -- TODO: this doesn't seem to work
+vim.cmd [[autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o]] -- this seem to work 
 -- vim.cmd[[set formatoptions-=cro]]
 
 vim.filetype.add {
