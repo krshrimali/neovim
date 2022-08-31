@@ -111,14 +111,22 @@ local m_mappings = {
 local mappings = {
   -- ["1"] = "which_key_ignore",
   -- a = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Action" },
-  a = {
+  A = {
     name = "AutoRunner",
     r = { "<cmd>AutoRunnerRun<cr>", "Run the command" },
     t = { "<cmd>AutoRunnerToggle<cr>", "Toggle output window" },
-    e = { "<cmd>AutoRunnerEditFile<cr>", "Edit build file (if available in runtime directory)" },
+    e = { "<cmd>AutoRunnerEditFile<cr>", "Edit build file/command (if available)" },
     a = { "<cmd>AutoRunnerAddCommand<cr>", "Add/change command" },
-    c = { "<cmd>AutoRunnerClearCommand<cr>", "Clear command" },
+    c = { "<cmd>AutoRunnerClearBuffer<cr>", "Clear buffer" },
     C = { "<cmd>AutoRunnerClearAll<cr>", "Clear all (command and buffers)" },
+    p = { "<cmd>AutoRunnerPrintCommand<cr>", "Print command" },
+  },
+  a = {
+    name = "AutoRunnerTerm",
+    r = { "<cmd>AutoRunnerTermRun<cr>", "Run the command" },
+    t = { "<cmd>AutoRunnerTermToggle<cr>", "Toggle output window" },
+    e = { "<cmd>AutoRunnerEditFile<cr>", "Edit build file/command (if available)" },
+    a = { "<cmd>AutoRunnerAddCommand<cr>", "Add/change command" },
     p = { "<cmd>AutoRunnerPrintCommand<cr>", "Print command" },
   },
   b = { "<cmd>Telescope buffers<cr>", "Buffers" },
