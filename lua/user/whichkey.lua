@@ -142,8 +142,6 @@ local mappings = {
 
   -- :lua require'lir.float'.toggle()
   -- ["f"] = {
-  --   "<cmd>lua require('telescope.builtin').find_files(require('telescope.themes').get_dropdown{previewer = false})<cr>",
-  --   "Find files",
   -- },
   -- ["F"] = { "<cmd>Telescope live_grep theme=ivy<cr>", "Find Text" },
   -- P = { "<cmd>lua require('telescope').extensions.projects.projects()<cr>", "Projects" },
@@ -247,11 +245,13 @@ local mappings = {
 
   f = {
     name = "Find",
-    -- b = { "<cmd>Telescope git_branches<cr>", "Checkout branch" },
+    B = { "<cmd>Telescope git_branches<cr>", "Checkout branch" },
     b = { "<cmd>Telescope buffers<cr>", "Buffers" },
     c = { "<cmd>Telescope colorscheme<cr>", "Colorscheme" },
-    f = { "<cmd>Telescope find_files<cr>", "Find files" },
-    t = { "<cmd>Telescope live_grep<cr>", "Find Text" },
+    f = {"<cmd>lua require('telescope.builtin').find_files(require('user.telescope.user_themes').get_ivy_vertical{})<cr>", "Find files"},
+    -- f = { "<cmd>Telescope find_files<cr>", "Find files" },
+    t = {"<cmd>lua require('telescope.builtin').live_grep(require('user.telescope.user_themes').get_ivy_vertical{})<cr>", "Find files"},
+    -- t = { "<cmd>Telescope live_grep<cr>", "Find Text" },
     s = { "<cmd>Telescope grep_string<cr>", "Find String" },
     h = { "<cmd>Telescope help_tags<cr>", "Help" },
     H = { "<cmd>Telescope highlights<cr>", "Highlights" },

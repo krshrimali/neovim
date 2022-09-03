@@ -72,5 +72,4 @@ surround.setup {
 -- local keymap = vim.api.nvim_set_keymap
 
 -- keymap("n", "<leader>'", [[ysiw']], opts)
-
 vim.cmd [[nmap <leader>' siw']]

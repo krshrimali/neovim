@@ -155,6 +155,8 @@ return packer.startup(function(use)
   -- Debugging
   use "mfussenegger/nvim-dap"
   use "rcarriga/nvim-dap-ui"
+
+  use "mfussenegger/nvim-dap-python"
   -- use "theHamsta/nvim-dap-virtual-text"
   -- use "Pocco81/DAPInstall.nvim"
 
@@ -264,10 +266,12 @@ return packer.startup(function(use)
   }
 
   -- Theme
-  use { "bluz71/vim-moonfly-colors" }
+  -- use { "bluz71/vim-moonfly-colors" }
+  use { "krshrimali/vim-moonfly-colors" }  -- personalized, this one is very dark :D
   use { "navarasu/onedark.nvim" }
   use { "folke/tokyonight.nvim" }
   use { "ellisonleao/gruvbox.nvim" }
+  use { "Shadorain/shadotheme" }
 
   -- Graveyard
   -- use "romgrk/nvim-treesitter-context"

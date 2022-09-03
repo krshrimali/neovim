@@ -1,7 +1,7 @@
 M = {}
 local opts = { noremap = true, silent = true }
-
 local term_opts = { silent = true }
+
 
 -- Shorten function name
 local keymap = vim.api.nvim_set_keymap
@@ -54,14 +54,12 @@ keymap("n", "<C-Right>", ":vertical resize +2<CR>", opts)
 -- keymap("n", "N", "Nzzzv", opts)
 
 -- Naviagate buffers
--- keymap("n", "<S-l>", ":bnext<CR>", opts)
--- keymap("n", "<S-h>", ":bprevious<CR>", opts)
+keymap("n", "<S-l>", ":bnext<CR>", opts)
+keymap("n", "<S-h>", ":bprevious<CR>", opts)
 
 -- keymap("n", "<RightMouse>", ":Alpha<CR>", opts)
 
 -- Move text up and down
--- keymap("n", "<A-j>", "<Esc>:m .+1<CR>==gi", opts)
--- keymap("n", "<A-k>", "<Esc>:m .-2<CR>==gi", opts)
 keymap("n", "<S-f>", "<Esc>:m .+1<CR>", opts)
 keymap("n", "<S-u>", "<Esc>:m .-2<CR>", opts)
 
@@ -156,8 +154,8 @@ vim.api.nvim_set_keymap("n", "K", ":lua require('user.keymaps').show_documentati
 -- vim.api.nvim_set_keymap("n", "<m-e>", "NvimTreeToggle<cr>", opts)
 -- vim.api.nvim_set_keymap(
 --   "n",
---   "<m-f>",
---   "<cmd>lua require('telescope.builtin').find_files(require('telescope.themes').get_dropdown{previewer = false})<cr>",
+--   "<>",
+--   "<cmd>lua require('telescope.builtin').find_files(require('user.telescope.themes').get_ivy_vertical{})<cr>",
 --   opts
 -- )
 -- Comment
@@ -203,9 +201,8 @@ vim.cmd [[
 
 keymap("n", "<m-q>", ":call QuickFixToggle()<cr>", opts)
 -- keymap("n", "<m-l>", "<cmd>lua vim.lsp.codelens.run()<cr>", opts)
---
 
--- keymap("n", "q", ":AutoRunnerClearBuffer<cr>", opts)
--- keymap("n", "<Esc>", ":AutoRunnerClearBuffer<cr>", opts)
+-- nnoremap <S-Up> :m .+1<CR>
+-- nnoremap <S-Down> :m+<CR>
 
 return M

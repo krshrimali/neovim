@@ -6,6 +6,7 @@ end
 local actions = require "telescope.actions"
 telescope.load_extension "media_files"
 local icons = require "user.icons"
+local themes = require "user.telescope.user_themes"
 
 telescope.setup {
   defaults = {
@@ -110,7 +111,7 @@ telescope.setup {
         ["<M-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
         ["<C-l>"] = actions.complete_tag,
         ["<C-h>"] = actions.which_key, -- keys from pressing <C-h>
-        ["<esc>"] = actions.close,
+        -- ["<esc>"] = actions.close,
       },
 
       n = {
@@ -158,15 +159,16 @@ telescope.setup {
   pickers = {
 
     live_grep = {
-      -- theme = "dropdown",
-      theme = "ivy"
+      theme = "ivy",
+      -- theme = "ivy_vertical"
+      -- theme = themes.get_ivy_vertical({}),
     },
     grep_string = {
       -- theme = "dropdown",
       theme = "ivy"
     },
     find_files = {
-      theme = "ivy",  -- dropdown
+      theme = "dropdown",  -- dropdown
     },
     keymaps = {
       theme = "ivy",
