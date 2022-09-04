@@ -202,6 +202,7 @@ telescope.setup {
     },
     diagnostics = {
       theme = "ivy",
+      initial_mode = "normal",
     },
 
 

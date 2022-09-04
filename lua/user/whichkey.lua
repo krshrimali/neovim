@@ -341,15 +341,16 @@ local mappings = {
     u = { "<cmd>LuaSnipUnlinkCurrent<cr>", "Unlink Snippet" },
   },
 
-  s = {
-    name = "Surround",
-    ["."] = { "<cmd>lua require('surround').repeat_last()<cr>", "Repeat" },
-    a = { "<cmd>lua require('surround').surround_add(true)<cr>", "Add" },
-    d = { "<cmd>lua require('surround').surround_delete()<cr>", "Delete" },
-    r = { "<cmd>lua require('surround').surround_replace()<cr>", "Replace" },
-    q = { "<cmd>lua require('surround').toggle_quotes()<cr>", "Quotes" },
-    b = { "<cmd>lua require('surround').toggle_brackets()<cr>", "Brackets" },
-  },
+  -- TODO: Replace these with nvim-surround keymaps
+  -- s = {
+  --   name = "Surround",
+  --   ["."] = { "<cmd>lua require('surround').repeat_last()<cr>", "Repeat" },
+  --   a = { "<cmd>lua require('surround').surround_add(true)<cr>", "Add" },
+  --   d = { "<cmd>lua require('surround').surround_delete()<cr>", "Delete" },
+  --   r = { "<cmd>lua require('surround').surround_replace()<cr>", "Replace" },
+  --   q = { "<cmd>lua require('surround').toggle_quotes()<cr>", "Quotes" },
+  --   b = { "<cmd>lua require('surround').toggle_brackets()<cr>", "Brackets" },
+  -- },
 
   n = {
     -- name = "Session",

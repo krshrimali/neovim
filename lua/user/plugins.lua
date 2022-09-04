@@ -108,7 +108,15 @@ return packer.startup(function(use)
   use "nvim-treesitter/nvim-treesitter-textobjects"
   -- use "wellle/targets.vim"
   -- use "RRethy/nvim-treesitter-textsubjects"
-  use "kylechui/nvim-surround"
+  use({
+    "kylechui/nvim-surround",
+    -- tag = "*", -- Use for stability; omit to use `main` branch for the latest features
+    config = function()
+        require("nvim-surround").setup({
+            -- Configuration here, or leave empty to use defaults
+        })
+    end
+  })
   use {
     "abecodes/tabout.nvim",
     wants = { "nvim-treesitter" }, -- or require if not used so far
@@ -133,7 +141,7 @@ return packer.startup(function(use)
 
   -- Colorschemes
   -- use "lunarvim/onedarker.nvim"
-  use {'decaycs/decay.nvim', as = 'decay'}
+  use { "decaycs/decay.nvim", as = "decay" }
   use "lunarvim/darkplus.nvim"
   -- use "folke/tokyonight.nvim"
   -- use "lunarvim/colorschemes"
@@ -267,11 +275,23 @@ return packer.startup(function(use)
 
   -- Theme
   -- use { "bluz71/vim-moonfly-colors" }
-  use { "krshrimali/vim-moonfly-colors" }  -- personalized, this one is very dark :D
+  use { "krshrimali/vim-moonfly-colors" } -- personalized, this one is very dark :D
   use { "navarasu/onedark.nvim" }
   use { "folke/tokyonight.nvim" }
   use { "ellisonleao/gruvbox.nvim" }
   use { "Shadorain/shadotheme" }
+
+  -- clip
+  use {
+    "AckslD/nvim-neoclip.lua",
+    requires = {
+      { 'kkharji/sqlite.lua', module = 'sqlite' },
+      { 'nvim-telescope/telescope.nvim' },
+    },
+    config = function()
+      require("neoclip").setup()
+    end,
+  }
 
   -- Graveyard
   -- use "romgrk/nvim-treesitter-context"
