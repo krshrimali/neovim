@@ -6,3 +6,7 @@
 
 1. [lspkind](https://github.com/onsails/lspkind.nvim)
 2. [nvim-ufo](https://github.com/kevinhwang91/nvim-ufo)
+
+## Known to issues
+
+1. [Invalid indents for python](https://github.com/nvim-treesitter/nvim-treesitter/issues/1136)
