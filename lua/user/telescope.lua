@@ -41,7 +41,7 @@ telescope.setup {
       "%.ttf",
       "%.webp",
       ".dart_tool/",
-      ".github/",
+      -- ".github/",
       ".gradle/",
       ".idea/",
       ".settings/",
@@ -169,6 +169,7 @@ telescope.setup {
     },
     find_files = {
       theme = "dropdown",  -- dropdown
+      initial_mode = "insert",
     },
     keymaps = {
       theme = "ivy",

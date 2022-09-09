@@ -22,7 +22,8 @@ dashboard.section.header.val = {
   [[ \/_/\/_/\/____/\/___/  \/__/    \/_/\/_/\/_/\/_/]],
 }
 dashboard.section.buttons.val = {
-  button("f", icons.documents.Files .. " Find file", ":Telescope find_files <CR>"),
+  -- button("f", icons.documents.Files .. " Find file", ":Telescope find_files <CR>"),
+  button("f", icons.documents.Files .. " Find file", ":lua require('telescope.builtin').find_files(require('user.telescope.user_themes').get_ivy_vertical{})<CR>"),
   button("e", icons.ui.NewFile .. " New file", ":ene <BAR> startinsert <CR>"),
   button("p", icons.git.Repo .. " Find project", ":lua require('telescope').extensions.projects.projects()<CR>"),
   button("r", icons.ui.History .. " Recent files", ":Telescope oldfiles <CR>"),

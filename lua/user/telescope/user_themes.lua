@@ -16,7 +16,7 @@ function themes.get_ivy_vertical(opts)
     },
 
     wrap_results = true,
-    path_display = "absolute",
+    path_display = { "absolute" },
 
     border = true,
     borderchars = {
