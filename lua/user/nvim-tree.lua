@@ -27,10 +27,10 @@ nvim_tree.setup {
     "dashboard",
     "alpha",
   },
-  filters = {
-    custom = { ".git" },
-    exclude = { ".gitignore" },
-  },
+  -- filters = {
+  --   custom = { ".git" },
+  --   -- exclude = { ".gitignore" },
+  -- },
   -- auto_close = true,
   -- open_on_tab = false,
   -- hijack_cursor = false,
@@ -48,7 +48,7 @@ nvim_tree.setup {
     add_trailing = false,
     group_empty = false,
     highlight_git = false,
-    highlight_opened_files = "none",
+    -- highlight_opened_files = "none",
     root_folder_modifier = ":t",
     indent_markers = {
       enable = false,
@@ -118,7 +118,7 @@ nvim_tree.setup {
   -- },
   git = {
     enable = true,
-    ignore = true,
+    ignore = false,
     timeout = 500,
   },
   view = {
