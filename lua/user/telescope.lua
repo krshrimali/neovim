@@ -10,16 +10,11 @@ local themes = require "user.telescope.user_themes"
 
 telescope.setup {
   defaults = {
-
-    -- layout_strategy = "vertical",
-    -- layout_config = {
-    --   vertical = {
-    --     width = 10.0
-    --   }
-    -- },
     layout_config = {
       prompt_position = "top",
+      height = 50,
     },
+    layout_strategy = "horizontal",
     prompt_prefix = icons.ui.Telescope .. " ",
     selection_caret = " ",
     path_display = { "smart" }, -- do :help telescope.defaults.path_display (options: hidden, tail, smart, shorten, truncate)
@@ -161,8 +156,8 @@ telescope.setup {
       -- theme = themes.get_ivy_vertical({}),
     },
     grep_string = {
-      -- theme = "dropdown",
-      theme = "ivy"
+      theme = "ivy",
+      -- theme = "ivy"
     },
     find_files = {
       theme = "ivy",  -- dropdown
