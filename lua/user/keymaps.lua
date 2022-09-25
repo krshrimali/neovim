@@ -2,14 +2,13 @@ M = {}
 local opts = { noremap = true, silent = true }
 local term_opts = { silent = true }
 
-
 local keymap = vim.api.nvim_set_keymap
 -- Shorten function name
 
 --Remap space as leader key
 keymap("n", "<Space>", "", opts)
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+vim.g.mapleader = ","
+vim.g.maplocalleader = ","
 keymap("n", "<C-Space>", "<cmd>WhichKey \\<leader><cr>", opts)
 keymap("n", "<C-i>", "<C-i>", opts)
 
@@ -76,16 +75,14 @@ keymap("v", ">", ">gv", opts)
 -- keymap("v", "<A-j>", ":m .+1<CR>==", opts)
 -- keymap("v", "<A-k>", ":m .-2<CR>==", opts)
 
-local Remap = require("user.keymap")
-local nnoremap = Remap.nnoremap
-local vnoremap = Remap.vnoremap
--- local inoremap = Remap.inoremap
-local xnoremap = Remap.xnoremap
-
 keymap("v", "p", '"_dP', opts)
 
 keymap('v', "J", ":m '>+1<CR>gv=gv", opts)
 keymap('v', "K", ":m '<-2<CR>gv=gv", opts)
+
+keymap('n', '<leader>d', '"_d', opts)
+keymap('x', '<leader>d', '"_d', opts)
+keymap('x', '<leader>p', '"_dP', opts)
 
 -- keymap("n", "n", "nzzzv", opts)
 -- keymap('n', "N", "Nzzzv", opts)
