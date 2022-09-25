@@ -3,8 +3,8 @@ local opts = { noremap = true, silent = true }
 local term_opts = { silent = true }
 
 
--- Shorten function name
 local keymap = vim.api.nvim_set_keymap
+-- Shorten function name
 
 --Remap space as leader key
 keymap("n", "<Space>", "", opts)
@@ -67,15 +67,34 @@ keymap("n", "<S-u>", "<Esc>:m .-2<CR>", opts)
 -- Press jk fast to enter
 -- keymap("i", "jk", "<ESC>", opts)
 
--- Visual --
 -- Stay in indent mode
+-- Visual --
 keymap("v", "<", "<gv", opts)
 keymap("v", ">", ">gv", opts)
 
 -- Move text up and down
 -- keymap("v", "<A-j>", ":m .+1<CR>==", opts)
 -- keymap("v", "<A-k>", ":m .-2<CR>==", opts)
+
+local Remap = require("user.keymap")
+local nnoremap = Remap.nnoremap
+local vnoremap = Remap.vnoremap
+-- local inoremap = Remap.inoremap
+local xnoremap = Remap.xnoremap
+
 keymap("v", "p", '"_dP', opts)
+
+keymap('v', "J", ":m '>+1<CR>gv=gv", opts)
+keymap('v', "K", ":m '<-2<CR>gv=gv", opts)
+
+-- keymap("n", "n", "nzzzv", opts)
+-- keymap('n', "N", "Nzzzv", opts)
+-- keymap('n', "J", "mzJ`z", opts)
+
+keymap("x", "<leader>p", "\"_dP", opts)
+-- keymap("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>", opts)
+keymap("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>//gI<Left><Left><Left>", opts)
+
 -- keymap("v", "P", '"_dP', opts)
 
 -- Visual Block --

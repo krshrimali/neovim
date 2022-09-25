@@ -86,8 +86,7 @@ telescope.setup {
         ["<C-j>"] = actions.move_selection_next,
         ["<C-k>"] = actions.move_selection_previous,
 
-        ["<C-b>"] = actions.results_scrolling_up,
-        ["<C-f>"] = actions.results_scrolling_down,
+        -- ["<C-b>"] = actions.results_scrolling_up,
 
         ["<C-c>"] = actions.close,
 
@@ -99,10 +98,10 @@ telescope.setup {
         ["<C-v>"] = actions.select_vertical,
         ["<C-t>"] = actions.select_tab,
 
-        ["<c-d>"] = require("telescope.actions").delete_buffer,
+        -- ["<c-d>"] = require("telescope.actions").delete_buffer,
 
-        -- ["<C-u>"] = actions.preview_scrolling_up,
-        -- ["<C-d>"] = actions.preview_scrolling_down,
+        ["<C-u>"] = actions.preview_scrolling_up,
+        ["<C-d>"] = actions.preview_scrolling_down,
 
         -- ["<Tab>"] = actions.toggle_selection + actions.move_selection_worse,
         ["<Tab>"] = actions.close,
@@ -142,11 +141,7 @@ telescope.setup {
         ["v"] = actions.select_vertical,
         ["t"] = actions.select_tab,
 
-        ["<Down>"] = actions.move_selection_next,
-        ["<Up>"] = actions.move_selection_previous,
-        ["gg"] = actions.move_to_top,
-        ["G"] = actions.move_to_bottom,
-
+        ["<Down>"] = actions.move_selection_next, ["<Up>"] = actions.move_selection_previous, ["gg"] = actions.move_to_top, ["G"] = actions.move_to_bottom,
         ["<C-u>"] = actions.preview_scrolling_up,
         ["<C-d>"] = actions.preview_scrolling_down,
 
@@ -160,6 +155,7 @@ telescope.setup {
   pickers = {
 
     live_grep = {
+      -- theme = "ivy",
       theme = "ivy",
       -- theme = "ivy_vertical"
       -- theme = themes.get_ivy_vertical({}),
@@ -169,7 +165,7 @@ telescope.setup {
       theme = "ivy"
     },
     find_files = {
-      theme = "dropdown",  -- dropdown
+      theme = "ivy",  -- dropdown
       initial_mode = "insert",
       find_command = { 'rg', '--files', '--iglob', '!.git', '--hidden' },
     },
