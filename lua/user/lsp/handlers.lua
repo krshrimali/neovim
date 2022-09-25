@@ -129,9 +129,9 @@ M.on_attach = function(client, bufnr)
   lsp_keymaps(bufnr)
   attach_navic(client, bufnr)
 
-  if client.name == "tsserver" then
-    require("lsp-inlayhints").on_attach(client, buffnr)
-  end
+  -- if client.name == "tsserver" then
+  --   require("lsp-inlayhints").on_attach(client, buffnr)
+  -- end
 
 end
 

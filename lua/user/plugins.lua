@@ -127,6 +127,8 @@ return packer.startup(function(use)
   -- use "ThePrimeagen/harpoon"
   use "MattesGroeger/vim-bookmarks"
 
+  use "mbbill/undotree"
+
   -- Fuzzy Finder/Telescope
   use "nvim-telescope/telescope.nvim"
   use "nvim-telescope/telescope-media-files.nvim"
@@ -280,6 +282,7 @@ return packer.startup(function(use)
   use { "folke/tokyonight.nvim" }
   use { "ellisonleao/gruvbox.nvim" }
   use { "Shadorain/shadotheme" }
+  use { "catppuccin/nvim", as = "catppuccin" }
 
   -- clip
   use {

@@ -81,7 +81,7 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
 vim.api.nvim_create_autocmd({ "BufEnter" }, {
   pattern = { "term://*" },
   callback = function()
-    vim.cmd "startinsert!"
+    -- vim.cmd "startinsert!"
     -- TODO: if java = 2
     vim.cmd "set cmdheight=1"
   end,
