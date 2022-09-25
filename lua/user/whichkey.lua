@@ -206,7 +206,7 @@ local mappings = {
 
   R = {
     name = "Code Runner",
-    b = { ':TermExec cmd=./.buildme.sh<CR>', "Build the project" },
+    b = { ":TermExec cmd=./.buildme.sh<CR>", "Build the project" },
     p = { ':TermExec cmd="python %<CR>"', "Run python file" },
   },
 
@@ -226,14 +226,16 @@ local mappings = {
   d = {
     name = "Diagnostics",
     c = {
-      "<cmd>lua require('telescope.builtin').diagnostics({ bufnr = 0 })<cr>", "Diagnostics of current buffer"
+      "<cmd>lua require('telescope.builtin').diagnostics({ bufnr = 0 })<cr>",
+      "Diagnostics of current buffer",
     },
     w = {
       "<cmd>lua require('telescope.builtin'.diagnostics())<cr>",
-      "Workspace Diagnostics"
+      "Workspace Diagnostics",
     },
     u = {
-      "<cmd>lua require('telescope.builtin'.diagnostics({ no_unlisted = true }))<cr>", "Diagnostics from listed buffers"
+      "<cmd>lua require('telescope.builtin'.diagnostics({ no_unlisted = true }))<cr>",
+      "Diagnostics from listed buffers",
     },
   },
 
@@ -250,7 +252,7 @@ local mappings = {
     c = { "<cmd>Telescope colorscheme<cr>", "Colorscheme" },
     -- f = {"<cmd>lua require('telescope.builtin').find_files(require('user.telescope.user_themes').get_ivy_vertical{})<cr>", "Find files"},
     f = { "<cmd>Telescope find_files<cr>", "Find files" },
-    g = { "<cmd>Telescope git_files<cr>", "Git Files"},
+    g = { "<cmd>Telescope git_files<cr>", "Git Files" },
     -- t = {"<cmd>lua require('telescope.builtin').live_grep(require('user.telescope.user_themes').get_ivy_vertical{})<cr>", "Find files"},
     t = { "<cmd>Telescope live_grep<cr>", "Find Text" },
     s = { "<cmd>Telescope grep_string<cr>", "Find String" },
@@ -297,6 +299,12 @@ local mappings = {
     },
   },
 
+  -- GitBlame
+  G = {
+    t = { "<cmd>GitBlameToggle<cr>", "Blame Toggle" },
+    c = { "<cmd>GitBlameCopySHA<cr>", "Copy SHA URL of the commit" },
+    o = { "<cmd>GitBlameOpenCommitURL<cr>", "Open commit URL" },
+  },
 
   l = {
     name = "LSP",
