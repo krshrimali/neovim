@@ -103,6 +103,8 @@ end
 --   ["!"] = "#46a6b2",
 --   t = red,
 -- }
+-- local sl_hl = vim.api.nvim_get_hl_by_name("StatusLine", true)
+-- local sl_hl_sep = vim.api.nvim_get_hl_by_name("StatusLineSeparator", true)
 
 -- local left_pad = {
 --   function()

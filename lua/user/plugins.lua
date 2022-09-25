@@ -139,13 +139,14 @@ return packer.startup(function(use)
 
   -- Color
   use "NvChad/nvim-colorizer.lua"
-  use "ziontee113/color-picker.nvim"
+  -- use "ziontee113/color-picker.nvim"
+  use "nvim-colortils/colortils.nvim"
 
   -- Colorschemes
   -- use "lunarvim/onedarker.nvim"
   use { "decaycs/decay.nvim", as = "decay" }
   use "lunarvim/darkplus.nvim"
-  -- use "folke/tokyonight.nvim"
+  use "folke/tokyonight.nvim"
   -- use "lunarvim/colorschemes"
 
   -- Utility
@@ -189,8 +190,7 @@ return packer.startup(function(use)
 
   -- Comment
   use "numToStr/Comment.nvim"
-  -- use "folke/todo-comments.nvim"
-  use "B4mbus/todo-comments.nvim"
+  use "folke/todo-comments.nvim"
 
   -- Terminal
   use "akinsho/toggleterm.nvim"
