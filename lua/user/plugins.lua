@@ -225,10 +225,10 @@ return packer.startup(function(use)
 
   -- Code Runner
   use "is0n/jaq-nvim"
-  use {
-    "0x100101/lab.nvim",
-    run = "cd js && npm ci",
-  }
+  -- use {
+  --   "0x100101/lab.nvim",
+  --   run = "cd js && npm ci",
+  -- }
 
   -- Git
   use "lewis6991/gitsigns.nvim"
@@ -279,7 +279,6 @@ return packer.startup(function(use)
   -- use { "bluz71/vim-moonfly-colors" }
   use { "krshrimali/vim-moonfly-colors" } -- personalized, this one is very dark :D
   use { "navarasu/onedark.nvim" }
-  use { "folke/tokyonight.nvim" }
   use { "ellisonleao/gruvbox.nvim" }
   use { "Shadorain/shadotheme" }
   use { "catppuccin/nvim", as = "catppuccin" }
