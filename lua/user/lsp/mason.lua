@@ -15,7 +15,6 @@ local servers = {
   "html",
   "jsonls",
   "solc",
-  "solidity_ls",
   "sumneko_lua",
   "tflint",
   "terraformls",
