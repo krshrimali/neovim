@@ -12,7 +12,7 @@ local icons = require "user.icons"
 
 local tree_cb = nvim_tree_config.nvim_tree_callback
 
-local utils = require "nvim-tree.utils"
+local notify = require "nvim-tree.notify"
 
 ---@diagnostic disable-next-line: unused-local
 local function notify_level(level)
@@ -23,10 +23,10 @@ local function notify_level(level)
   end
 end
 
-utils.notify.warn = notify_level(vim.log.levels.WARN)
-utils.notify.error = notify_level(vim.log.levels.ERROR)
-utils.notify.info = notify_level(vim.log.levels.INFO)
-utils.notify.debug = notify_level(vim.log.levels.DEBUG)
+notify.WARN = notify_level(vim.log.levels.WARN)
+notify.ERROR = notify_level(vim.log.levels.ERROR)
+notify.INFO = notify_level(vim.log.levels.INFO)
+notify.DEBUG = notify_level(vim.log.levels.DEBUG)
 
 nvim_tree.setup {
   hijack_directories = {
