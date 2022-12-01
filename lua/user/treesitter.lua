@@ -7,7 +7,7 @@ end
 -- ft_to_parser.motoko = "typescript"
 
 configs.setup {
-  ensure_installed = {"c", "lua", "rust", "cpp"}, -- one of "all" or a list of languages [https://github.com/nvim-treesitter/nvim-treesitter#modules]
+  ensure_installed = {"c", "lua", "rust", "cpp", "go"}, -- one of "all" or a list of languages [https://github.com/nvim-treesitter/nvim-treesitter#modules]
   sync_install = false, -- install languages synchronously (only applied to `ensure_installed`)
   ignore_install = { "" }, -- List of parsers to ignore installing
   matchup = {
