@@ -23,10 +23,10 @@ local function notify_level(level)
   end
 end
 
-notify.WARN = notify_level(vim.log.levels.WARN)
-notify.ERROR = notify_level(vim.log.levels.ERROR)
-notify.INFO = notify_level(vim.log.levels.INFO)
-notify.DEBUG = notify_level(vim.log.levels.DEBUG)
+-- utils.notify.warn = notify_level(vim.log.levels.WARN)
+-- utils.notify.error = notify_level(vim.log.levels.ERROR)
+-- utils.notify.info = notify_level(vim.log.levels.INFO)
+-- utils.notify.debug = notify_level(vim.log.levels.DEBUG)
 
 nvim_tree.setup {
   hijack_directories = {
