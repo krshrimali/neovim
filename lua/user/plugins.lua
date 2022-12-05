@@ -78,7 +78,7 @@ return packer.startup(function(use)
   --   end,
   -- }
   use "RRethy/vim-illuminate"
-  use "j-hui/fidget.nvim"
+  -- use "j-hui/fidget.nvim"
   use "lvimuser/lsp-inlayhints.nvim"
   -- use "simrat39/inlay-hints.nvim"
   use "https://git.sr.ht/~whynothugo/lsp_lines.nvim"
@@ -126,6 +126,8 @@ return packer.startup(function(use)
   use "krshrimali/harpoon"
   -- use "ThePrimeagen/harpoon"
   use "MattesGroeger/vim-bookmarks"
+  use "TimUntersberger/neogit"
+  -- use "petertriho/nvim-scrollbar"
 
   use "mbbill/undotree"
 
