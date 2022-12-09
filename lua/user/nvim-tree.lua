@@ -12,7 +12,7 @@ local icons = require "user.icons"
 
 local tree_cb = nvim_tree_config.nvim_tree_callback
 
-local utils = require "nvim-tree.utils"
+local notify = require "nvim-tree.notify"
 
 ---@diagnostic disable-next-line: unused-local
 local function notify_level(level)
