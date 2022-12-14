@@ -175,6 +175,7 @@ return packer.startup(function(use)
 
   -- Tabline
   -- use "akinsho/bufferline.nvim"
+  use "akinsho/bufferline.nvim"
   -- use "tiagovla/scope.nvim"
 
   -- Statusline

@@ -3,11 +3,12 @@
 -- local colorscheme = "gruvbox"
 
 -- for catppuccin
-local colorscheme = "catppuccin"
-vim.g.catppuccin_flavour = "mocha"
+-- local colorscheme = "catppuccin"
+-- vim.g.catppuccin_flavour = "mocha"
+local colorscheme = "darkplus"
 
 -- vim.o.background="dark"
-vim.cmd [[colorscheme catppuccin]]
+vim.cmd [[colorscheme darkplus]]
 
 -- vim.g.onedarker_italic_keywords = false
 

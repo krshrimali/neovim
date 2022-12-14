@@ -27,7 +27,7 @@ local servers = {
   "taplo",
   "zk@v0.10.1",
   "lemminx",
-  "gopls"
+  "gopls",
 }
 
 local settings = {
