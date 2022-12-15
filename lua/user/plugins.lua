@@ -174,7 +174,6 @@ return packer.startup(function(use)
   -- use "Pocco81/DAPInstall.nvim"
 
   -- Tabline
-  -- use "akinsho/bufferline.nvim"
   use "akinsho/bufferline.nvim"
   -- use "tiagovla/scope.nvim"
 
@@ -203,20 +202,20 @@ return packer.startup(function(use)
 
   -- Project
   -- Note: https://github.com/ahmedkhalf/project.nvim - Look at the options here if the auto change of cwd irritates me
-  -- use {
-  --   "ahmedkhalf/project.nvim",
-  --   config = function()
-  --     require("project_nvim").setup {
-  --       -- manual_mode = true,
-  --       -- respect_buf_cwd = true,
-  --       -- update_cwd = true,
-  --       -- update_focused_file = {
-  --       --   enable = true,
-  --       --   update_cwd = true
-  --       -- },
-  --     }
-  --   end
-  -- }
+  use {
+    "ahmedkhalf/project.nvim",
+    config = function()
+      require("project_nvim").setup {
+        -- manual_mode = true,
+        -- respect_buf_cwd = true,
+        -- update_cwd = true,
+        -- update_focused_file = {
+        --   enable = true,
+        --   update_cwd = true
+        -- },
+      }
+    end
+  }
   use "nvim-pack/nvim-spectre"
 
   -- Session
