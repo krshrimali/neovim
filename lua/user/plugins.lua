@@ -108,15 +108,15 @@ return packer.startup(function(use)
   use "nvim-treesitter/nvim-treesitter-textobjects"
   -- use "wellle/targets.vim"
   -- use "RRethy/nvim-treesitter-textsubjects"
-  use({
+  use {
     "kylechui/nvim-surround",
     -- tag = "*", -- Use for stability; omit to use `main` branch for the latest features
     config = function()
-        require("nvim-surround").setup({
-            -- Configuration here, or leave empty to use defaults
-        })
-    end
-  })
+      require("nvim-surround").setup {
+        -- Configuration here, or leave empty to use defaults
+      }
+    end,
+  }
   use {
     "abecodes/tabout.nvim",
     wants = { "nvim-treesitter" }, -- or require if not used so far
@@ -127,7 +127,15 @@ return packer.startup(function(use)
   -- use "ThePrimeagen/harpoon"
   use "MattesGroeger/vim-bookmarks"
   use "TimUntersberger/neogit"
+  use "xiyaowong/nvim-transparent"
   -- use "petertriho/nvim-scrollbar"
+  -- use "rmagatti/goto-preview"
+  use {
+    "rmagatti/goto-preview",
+    config = function()
+      require("goto-preview").setup {}
+    end,
+  }
 
   use "mbbill/undotree"
 
@@ -214,7 +222,7 @@ return packer.startup(function(use)
         --   update_cwd = true
         -- },
       }
-    end
+    end,
   }
   use "nvim-pack/nvim-spectre"
 
@@ -289,8 +297,8 @@ return packer.startup(function(use)
   use {
     "AckslD/nvim-neoclip.lua",
     requires = {
-      { 'kkharji/sqlite.lua', module = 'sqlite' },
-      { 'nvim-telescope/telescope.nvim' },
+      { "kkharji/sqlite.lua", module = "sqlite" },
+      { "nvim-telescope/telescope.nvim" },
     },
     config = function()
       require("neoclip").setup()

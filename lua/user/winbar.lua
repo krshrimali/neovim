@@ -117,8 +117,8 @@ M.get_winbar = function()
   local gps_added = false
   if not f.isempty(value) then
     local gps_value = get_gps()
-    -- value = value .. " " .. gps_value
-    value = " | " .. gps_value
+    value = value .. " " .. gps_value
+    -- value = " | " .. gps_value
     if not f.isempty(gps_value) then
       gps_added = true
     end

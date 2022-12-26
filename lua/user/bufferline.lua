@@ -5,7 +5,7 @@ end
 
 bufferline.setup {
   options = {
-    numbers = "ordinal", -- | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
+    numbers = "both", -- | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
     close_command = "Bdelete! %d", -- can be a string | function, see "Mouse actions"
     right_mouse_command = "Bdelete! %d", -- can be a string | function, see "Mouse actions"
     left_mouse_command = "buffer %d", -- can be a string | function, see "Mouse actions"
@@ -15,7 +15,7 @@ bufferline.setup {
     -- as an escape hatch for people who cannot bear it for whatever reason
     indicator = {
       type = "icon",
-      icon = "||",
+      icon = "|",
     },
     buffer_close_icon = "",
     -- buffer_close_icon = '',

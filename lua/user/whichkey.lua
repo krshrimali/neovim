@@ -346,6 +346,30 @@ local mappings = {
       "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>",
       "Workspace Symbols",
     },
+    g = {
+      name = "Goto Preview",
+      g = {
+        "<cmd>lua require('goto-preview').goto_preview_definition()<cr>",
+        "Definition",
+      },
+      t = {
+        "<cmd>lua require('goto-preview').goto_preview_type_definition()<cr>",
+        "Type Definition",
+      },
+      i = {
+        "<cmd>lua require('goto-preview').goto_preview_implementation()<cr>",
+        "Implementation",
+      },
+      -- Requires telescope
+      r = {
+        "<cmd>lua require('goto-preview').goto_preview_references()<cr>",
+        "References",
+      },
+      c = {
+        "<cmd>lua require('goto-preview').close_all_win()<cr>",
+        "Close all windows",
+      },
+    },
     t = { '<cmd>lua require("user.functions").toggle_diagnostics()<cr>', "Toggle Diagnostics" },
     u = { "<cmd>LuaSnipUnlinkCurrent<cr>", "Unlink Snippet" },
   },
@@ -406,6 +430,10 @@ local mappings = {
   --   n = { "<cmd>TZNarrow<cr>", "Narrow" },
   --   f = { "<cmd>TZFocus<cr>", "Focus" },
   -- },
+  x = {
+    name = "Transparent",
+    t = { "<cmd>TransparentToggle<cr>", "Toggle transparency" },
+  },
 }
 
 local vopts = {
