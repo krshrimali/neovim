@@ -73,3 +73,4 @@ vim.filetype.add {
 }
 
 vim.cmd([[autocmd TermOpen * setlocal signcolumn=no]])
+vim.cmd([[let g:python_recommended_style = 0]])
