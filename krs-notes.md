@@ -6,6 +6,7 @@
 
 1. [lspkind](https://github.com/onsails/lspkind.nvim)
 2. [nvim-ufo](https://github.com/kevinhwang91/nvim-ufo)
+3. [mind.nvim](https://github.com/phaazon/mind.nvim)
 
 ## Known issues
 
