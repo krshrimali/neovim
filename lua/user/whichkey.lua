@@ -308,7 +308,7 @@ local mappings = {
 
   l = {
     name = "LSP",
-    l = { "<cmd>lua vim.lsp.codelens.run()<cr>", "CodeLens Action" },
+    A = { "<cmd>lua vim.lsp.codelens.run()<cr>", "CodeLens Action" },
     a = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Code Action" },
     c = { "<cmd>lua require('user.lsp').server_capabilities()<cr>", "Get Capabilities" },
     d = { "<cmd>TroubleToggle<cr>", "Diagnostics" },
@@ -338,7 +338,8 @@ local mappings = {
       "Virtual Text",
     },
     o = { "<cmd>SymbolsOutline<cr>", "Outline" },
-    q = { "<cmd>lua vim.diagnostic.setloclist()<cr>", "Quickfix" },
+    q = { "<cmd>lua vim.diagnostic.setloclist()<cr>", "Quickfix (Diagnostics)" },
+    Q = { "<cmd>lua require('telescope.builtin').quickfix()<cr>", "Quickfix (Telescope)" },
     r = { "<cmd>lua vim.lsp.buf.rename()<cr>", "Rename" },
     R = { "<cmd>TroubleToggle lsp_references<cr>", "References" },
     s = { "<cmd>Telescope lsp_document_symbols<cr>", "Document Symbols" },
@@ -401,7 +402,7 @@ local mappings = {
     x = { "<cmd>SnipTerminate<cr>", "Terminate" },
   },
 
-  t = {
+  T = {
     name = "Terminal",
     ["1"] = { ":1ToggleTerm<cr>", "1" },
     ["2"] = { ":2ToggleTerm<cr>", "2" },
@@ -416,11 +417,31 @@ local mappings = {
     v = { "<cmd>ToggleTerm size=80 direction=vertical<cr>", "Vertical" },
   },
 
-  T = {
-    name = "Treesitter",
-    h = { "<cmd>TSHighlightCapturesUnderCursor<cr>", "Highlight" },
-    p = { "<cmd>TSPlaygroundToggle<cr>", "Playground" },
-    r = { "<cmd>TSToggle rainbow<cr>", "Rainbow" },
+  t = {
+    name = "Telescope",
+    c = { "<cmd>Telescope commands<cr>", "Commands" },
+    p = { "<cmd>Telescope projects<cr>", "Projects" },
+    d = { "<cmd>Telescope diagnostics<cr>", "Diagnostics" },
+    m = { "<cmd>Telescope media_files<cr>", "Media Files" },
+    g = {
+      name = "Git",
+      c = { "<cmd>Telescope git_commits<cr>", "Git Commits" },
+      b = { "<cmd>Telescope git_branches<cr>", "Git Branches" },
+      s = { "<cmd>Telescope git_status<cr>", "Git Status" },
+      S = { "<cmd>Telescope git_stash<cr>", "Git Stash" },
+    },
+    f = {
+      "<cmd>Telescope find_files<cr>",
+      "Find Files",
+    },
+    C = { "<cmd>Telescope command_history<cr>", "Command History" },
+    j = { "<cmd>Telescope jumplist<cr>", "Jumplist" },
+    r = { "<cmd>Telescope resume<cr>", "Resume" },
+    s = { "<cmd>Telescope symbols<cr>", "Symbols" },
+    h = { "<cmd>Telescope search_history<cr>", "Search History" },
+    -- h = { "<cmd>TSHighlightCapturesUnderCursor<cr>", "Highlight" },
+    -- p = { "<cmd>TSPlaygroundToggle<cr>", "Playground" },
+    -- r = { "<cmd>TSToggle rainbow<cr>", "Rainbow" },
   },
 
   -- z = {

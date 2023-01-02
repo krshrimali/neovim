@@ -159,10 +159,20 @@ telescope.setup {
       theme = "ivy",
       -- theme = "ivy"
     },
+    quickfix = {
+      theme = "ivy",
+      initial_mode = "normal",
+    },
+    loclist = {
+      theme = "ivy",
+    },
     find_files = {
       theme = "ivy",  -- dropdown
       initial_mode = "insert",
       find_command = { 'rg', '--files', '--iglob', '!.git', '--hidden' },
+    },
+    projects = {
+      enable_preview = true,
     },
     keymaps = {
       theme = "ivy",
@@ -187,7 +197,7 @@ telescope.setup {
       initial_mode = "normal",
     },
     lsp_declarations = {
-      heme = "dropdown",
+      theme = "dropdown",
       initial_mode = "normal",
     },
     lsp_implementations = {
