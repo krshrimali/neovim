@@ -336,6 +336,24 @@ return packer.startup(function(use)
   use { "michaelb/sniprun", run = "bash ./install.sh" }
   use { "numToStr/Navigator.nvim" }
 
+  -- folding
+  use {
+    "anuvyklack/pretty-fold.nvim",
+    config = function()
+      require("pretty-fold").setup()
+    end,
+  }
+
+  use {
+    "anuvyklack/fold-preview.nvim",
+    requires = "anuvyklack/keymap-amend.nvim",
+    config = function()
+      require("fold-preview").setup {
+        -- Your configuration goes here.
+      }
+    end,
+  }
+
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
   if PACKER_BOOTSTRAP then

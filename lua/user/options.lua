@@ -51,6 +51,7 @@ vim.opt.fillchars = vim.opt.fillchars + 'eob: '
 vim.opt.fillchars:append {
   stl = ' ',
 }
+vim.opt.fillchars:append('fold:•')
 
 vim.opt.shortmess:append "c"
 
@@ -74,3 +75,6 @@ vim.filetype.add {
 
 vim.cmd([[autocmd TermOpen * setlocal signcolumn=no]])
 vim.cmd([[let g:python_recommended_style = 0]])
+
+vim.opt.foldmethod = 'expr'
+vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
