@@ -1,4 +1,4 @@
-require('pretty-fold').setup{
+require('pretty-fold').setup {
    keep_indentation = true,
    fill_char = '•',
    sections = {
