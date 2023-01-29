@@ -246,7 +246,7 @@ local mappings = {
   -- require("dapui").toggle()
 
   f = {
-    name = "Find",
+    name = "Find using Telescope",
     B = { "<cmd>Telescope git_branches<cr>", "Checkout branch" },
     b = { "<cmd>Telescope buffers<cr>", "Buffers" },
     c = { "<cmd>Telescope colorscheme<cr>", "Colorscheme" },
@@ -403,7 +403,7 @@ local mappings = {
     x = { "<cmd>SnipTerminate<cr>", "Terminate" },
   },
 
-  T = {
+  t = {
     name = "Terminal",
     ["1"] = { ":1ToggleTerm<cr>", "1" },
     ["2"] = { ":2ToggleTerm<cr>", "2" },
@@ -418,7 +418,7 @@ local mappings = {
     v = { "<cmd>ToggleTerm size=80 direction=vertical<cr>", "Vertical" },
   },
 
-  t = {
+  T = {
     name = "Telescope",
     c = { "<cmd>Telescope commands<cr>", "Commands" },
     p = { "<cmd>Telescope projects<cr>", "Projects" },

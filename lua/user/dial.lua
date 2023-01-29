@@ -57,7 +57,7 @@ local map = require "dial.map"
 vim.api.nvim_set_keymap("n", "<C-a>", map.inc_normal "mygroup", { noremap = true })
 vim.api.nvim_set_keymap("n", "<C-x>", map.dec_normal "mygroup", { noremap = true })
 vim.api.nvim_set_keymap("v", "<C-a>", map.inc_normal "visual", { noremap = true })
-vim.api.nvim_set_keymap("v", "<C-x>", map.dec_normal "visual", { noremap = true })
+vim.api.nvim_set_keymap("v", "<C-x>", map.dec_normal "visual", { noremap = false })
 
 vim.cmd [[
   " enable only for specific FileType
