@@ -75,6 +75,6 @@ vim.filetype.add {
 vim.cmd [[autocmd TermOpen * setlocal signcolumn=no]]
 vim.cmd [[let g:python_recommended_style = 0]]
 
--- vim.opt.foldmethod = 'expr'
-vim.opt.foldmethod = "expr"
+vim.opt.foldmethod = 'expr'
+-- vim.opt.foldmethod = "expr"
 vim.wo.foldexpr = "nvim_treesitter#foldexpr()"

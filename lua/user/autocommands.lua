@@ -1,12 +1,3 @@
--- vim.api.nvim_create_autocmd({ "User" }, {
---   pattern = { "AlphaReady" },
---   callback = function()
---     vim.cmd [[
---       set showtabline=0 | autocmd BufUnload <buffer> set showtabline=2
---     ]]
---   end,
--- })
-
 vim.api.nvim_create_autocmd({ "User" }, {
   pattern = { "AlphaReady" },
   callback = function()
@@ -18,7 +9,7 @@ vim.api.nvim_create_autocmd({ "User" }, {
 
 vim.api.nvim_create_autocmd({ "FileType" }, {
   pattern = {
-    "Jaq",
+    -- "Jaq",
     "qf",
     "help",
     "man",
@@ -33,17 +24,6 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
     vim.cmd [[
       nnoremap <silent> <buffer> q :close<CR> 
       nnoremap <silent> <buffer> <esc> :close<CR> 
-      set nobuflisted 
-    ]]
-  end,
-})
-
-vim.api.nvim_create_autocmd({ "FileType" }, {
-  pattern = { "Jaq" },
-  callback = function()
-    vim.cmd [[
-      nnoremap <silent> <buffer> <m-r> :close<CR>
-      " nnoremap <silent> <buffer> <m-r> <NOP> 
       set nobuflisted 
     ]]
   end,
@@ -81,8 +61,6 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
 vim.api.nvim_create_autocmd({ "BufEnter" }, {
   pattern = { "term://*" },
   callback = function()
-    -- vim.cmd "startinsert!"
-    -- TODO: if java = 2
     vim.cmd "set cmdheight=1"
   end,
 })
@@ -104,19 +82,6 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 })
 
 vim.cmd "autocmd BufEnter * ++nested if winnr('$') == 1 && bufname() == 'NvimTree_' . tabpagenr() | quit | endif"
--- vim.api.nvim_create_autocmd({ "BufEnter" }, {
---   callback = function()
---     vim.cmd [[
---       if winnr('$') == 1 && bufname() == 'NvimTree_' . tabpagenr() | quit | endif
---     ]]
---   end,
--- })
-
-vim.api.nvim_create_autocmd({ "VimResized" }, {
-  callback = function()
-    vim.cmd "tabdo wincmd ="
-  end,
-})
 
 vim.api.nvim_create_autocmd({ "CmdWinEnter" }, {
   callback = function()
@@ -133,13 +98,6 @@ vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
 vim.api.nvim_create_autocmd({ "TextYankPost" }, {
   callback = function()
     vim.highlight.on_yank { higroup = "Visual", timeout = 200 }
-  end,
-})
-
-vim.api.nvim_create_autocmd({ "BufWritePost" }, {
-  pattern = { "*.java" },
-  callback = function()
-    vim.lsp.codelens.refresh()
   end,
 })
 
@@ -167,24 +125,6 @@ vim.api.nvim_create_autocmd({ "CursorHold" }, {
       -- luasnip.unlink_current()
       vim.cmd [[silent! lua require("luasnip").unlink_current()]]
     end
-  end,
-})
-
--- vim.api.nvim_create_autocmd({ "ModeChanged" }, {
---   callback = function()
---     local luasnip = require "luasnip"
---     if luasnip.expand_or_jumpable() then
---       -- ask maintainer for option to make this silent
---       -- luasnip.unlink_current()
---       vim.cmd [[silent! lua require("luasnip").unlink_current()]]
---     end
---   end,
--- })
-
-vim.api.nvim_create_autocmd({ "BufWritePost" }, {
-  pattern = { "*.ts" },
-  callback = function()
-    vim.lsp.buf.format { async = true }
   end,
 })
 

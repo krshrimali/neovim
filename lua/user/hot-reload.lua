@@ -1,20 +1,8 @@
 local M = {}
 
--- revisit this
--- function prequire(package)
---   local status, lib = pcall(require, package)
---   if status then
---     return lib
---   else
---     vim.notify("Failed to require '" .. package .. "' from " .. debug.getinfo(2).source)
---     return nil
---   end
--- end
-
 local function _assign(old, new, k)
   local otype = type(old[k])
   local ntype = type(new[k])
-  -- print("hi")
   if (otype == "thread" or otype == "userdata") or (ntype == "thread" or ntype == "userdata") then
     vim.notify(string.format("warning: old or new attr %s type be thread or userdata", k))
   end
@@ -60,7 +48,6 @@ function reload(mod)
     local m = require(mod)
     return m
   end
-  -- vim.notify "begin reload!!!"
 
   local old = package.loaded[mod]
   package.loaded[mod] = nil
@@ -73,7 +60,6 @@ function reload(mod)
   end
 
   package.loaded[mod] = old
-  -- vim.notify "finish reload!!!"
   return old
 end
 

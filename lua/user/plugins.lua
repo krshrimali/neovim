@@ -140,9 +140,18 @@ return packer.startup(function(use)
   use "mbbill/undotree"
 
   -- Fuzzy Finder/Telescope
-  use "nvim-telescope/telescope.nvim"
+  -- use "nvim-telescope/telescope.nvim"
   use "nvim-telescope/telescope-media-files.nvim"
   use "tom-anders/telescope-vim-bookmarks.nvim"
+  use {
+    "nvim-telescope/telescope.nvim",
+    requires = {
+      { "nvim-telescope/telescope-live-grep-args.nvim" },
+    },
+    config = function()
+      require("telescope").load_extension "live_grep_args"
+    end,
+  }
 
   -- Note Taking
   use "mickael-menu/zk-nvim"
