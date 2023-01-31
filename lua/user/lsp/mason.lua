@@ -3,6 +3,11 @@ if not status_ok then
   return
 end
 
+local status_ok_lspconfig, nvim_lsp = pcall(require, "lspconfig")
+if not status_ok_lspconfig then
+  return
+end
+
 local status_ok_1, mason_lspconfig = pcall(require, "mason-lspconfig")
 if not status_ok_1 then
   return
@@ -60,6 +65,9 @@ for _, server in pairs(servers) do
   opts = {
     on_attach = require("user.lsp.handlers").on_attach,
     capabilities = require("user.lsp.handlers").capabilities,
+    root_dir = function(fname)
+      return nvim_lsp.util.find_git_ancestor(fname)
+    end;
   }
 
   server = vim.split(server, "@")[1]
