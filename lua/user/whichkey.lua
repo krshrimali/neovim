@@ -246,7 +246,7 @@ local mappings = {
   -- require("dapui").toggle()
 
   f = {
-    name = "Find",
+    name = "Find using Telescope",
     B = { "<cmd>Telescope git_branches<cr>", "Checkout branch" },
     b = { "<cmd>Telescope buffers<cr>", "Buffers" },
     c = { "<cmd>Telescope colorscheme<cr>", "Colorscheme" },
@@ -254,7 +254,8 @@ local mappings = {
     f = { "<cmd>Telescope find_files<cr>", "Find files" },
     g = { "<cmd>Telescope git_files<cr>", "Git Files" },
     -- t = {"<cmd>lua require('telescope.builtin').live_grep(require('user.telescope.user_themes').get_ivy_vertical{})<cr>", "Find files"},
-    t = { "<cmd>Telescope live_grep<cr>", "Find Text" },
+    t = { "<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args()<cr>", "Find text (live grep args)" },
+    T = { "<cmd>Telescope live_grep<cr>", "Find Text" },
     s = { "<cmd>Telescope grep_string<cr>", "Find String" },
     h = { "<cmd>Telescope help_tags<cr>", "Help" },
     H = { "<cmd>Telescope highlights<cr>", "Highlights" },
@@ -308,7 +309,7 @@ local mappings = {
 
   l = {
     name = "LSP",
-    l = { "<cmd>lua vim.lsp.codelens.run()<cr>", "CodeLens Action" },
+    A = { "<cmd>lua vim.lsp.codelens.run()<cr>", "CodeLens Action" },
     a = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Code Action" },
     c = { "<cmd>lua require('user.lsp').server_capabilities()<cr>", "Get Capabilities" },
     d = { "<cmd>TroubleToggle<cr>", "Diagnostics" },
@@ -338,7 +339,8 @@ local mappings = {
       "Virtual Text",
     },
     o = { "<cmd>SymbolsOutline<cr>", "Outline" },
-    q = { "<cmd>lua vim.diagnostic.setloclist()<cr>", "Quickfix" },
+    q = { "<cmd>lua vim.diagnostic.setloclist()<cr>", "Quickfix (Diagnostics)" },
+    Q = { "<cmd>lua require('telescope.builtin').quickfix()<cr>", "Quickfix (Telescope)" },
     r = { "<cmd>lua vim.lsp.buf.rename()<cr>", "Rename" },
     R = { "<cmd>TroubleToggle lsp_references<cr>", "References" },
     s = { "<cmd>Telescope lsp_document_symbols<cr>", "Document Symbols" },
@@ -417,10 +419,30 @@ local mappings = {
   },
 
   T = {
-    name = "Treesitter",
-    h = { "<cmd>TSHighlightCapturesUnderCursor<cr>", "Highlight" },
-    p = { "<cmd>TSPlaygroundToggle<cr>", "Playground" },
-    r = { "<cmd>TSToggle rainbow<cr>", "Rainbow" },
+    name = "Telescope",
+    c = { "<cmd>Telescope commands<cr>", "Commands" },
+    p = { "<cmd>Telescope projects<cr>", "Projects" },
+    d = { "<cmd>Telescope diagnostics<cr>", "Diagnostics" },
+    m = { "<cmd>Telescope media_files<cr>", "Media Files" },
+    g = {
+      name = "Git",
+      c = { "<cmd>Telescope git_commits<cr>", "Git Commits" },
+      b = { "<cmd>Telescope git_branches<cr>", "Git Branches" },
+      s = { "<cmd>Telescope git_status<cr>", "Git Status" },
+      S = { "<cmd>Telescope git_stash<cr>", "Git Stash" },
+    },
+    f = {
+      "<cmd>Telescope find_files<cr>",
+      "Find Files",
+    },
+    C = { "<cmd>Telescope command_history<cr>", "Command History" },
+    j = { "<cmd>Telescope jumplist<cr>", "Jumplist" },
+    r = { "<cmd>Telescope resume<cr>", "Resume" },
+    s = { "<cmd>Telescope symbols<cr>", "Symbols" },
+    h = { "<cmd>Telescope search_history<cr>", "Search History" },
+    -- h = { "<cmd>TSHighlightCapturesUnderCursor<cr>", "Highlight" },
+    -- p = { "<cmd>TSPlaygroundToggle<cr>", "Playground" },
+    -- r = { "<cmd>TSToggle rainbow<cr>", "Rainbow" },
   },
 
   -- z = {

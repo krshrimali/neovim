@@ -4,6 +4,7 @@ if not status_ok then
 end
 
 local actions = require "telescope.actions"
+local lga_actions = require("telescope-live-grep-args.actions")
 telescope.load_extension "media_files"
 local icons = require "user.icons"
 local themes = require "user.telescope.user_themes"
@@ -159,10 +160,20 @@ telescope.setup {
       theme = "ivy",
       -- theme = "ivy"
     },
+    quickfix = {
+      theme = "ivy",
+      initial_mode = "normal",
+    },
+    loclist = {
+      theme = "ivy",
+    },
     find_files = {
       theme = "ivy",  -- dropdown
       initial_mode = "insert",
       find_command = { 'rg', '--files', '--iglob', '!.git', '--hidden' },
+    },
+    projects = {
+      enable_preview = true,
     },
     keymaps = {
       theme = "ivy",
@@ -187,7 +198,7 @@ telescope.setup {
       initial_mode = "normal",
     },
     lsp_declarations = {
-      heme = "dropdown",
+      theme = "dropdown",
       initial_mode = "normal",
     },
     lsp_implementations = {
@@ -214,6 +225,15 @@ telescope.setup {
       -- defaults to {"png", "jpg", "mp4", "webm", "pdf"}
       filetypes = { "png", "webp", "jpg", "jpeg" },
       find_cmd = "rg", -- find command (defaults to `fd`)
+    },
+    live_grep_args = {
+      auto_quoting = true,
+      -- mappings = {
+      --   i = {
+      --     ["<C-k>"] = lga_actions.quote_prompt(),
+      --     ["<C-i>"] = lga_actions.quote_prompt({ postfix = " --iglob "})
+      --   },
+      -- },
     },
   },
 }

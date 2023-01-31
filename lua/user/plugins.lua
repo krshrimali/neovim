@@ -140,9 +140,18 @@ return packer.startup(function(use)
   use "mbbill/undotree"
 
   -- Fuzzy Finder/Telescope
-  use "nvim-telescope/telescope.nvim"
+  -- use "nvim-telescope/telescope.nvim"
   use "nvim-telescope/telescope-media-files.nvim"
   use "tom-anders/telescope-vim-bookmarks.nvim"
+  use {
+    "nvim-telescope/telescope.nvim",
+    requires = {
+      { "nvim-telescope/telescope-live-grep-args.nvim" },
+    },
+    config = function()
+      require("telescope").load_extension "live_grep_args"
+    end,
+  }
 
   -- Note Taking
   use "mickael-menu/zk-nvim"
@@ -335,6 +344,24 @@ return packer.startup(function(use)
   -- use "phaazon/hop.nvim"
   use { "michaelb/sniprun", run = "bash ./install.sh" }
   use { "numToStr/Navigator.nvim" }
+
+  -- folding
+  use {
+    "anuvyklack/pretty-fold.nvim",
+    config = function()
+      require("pretty-fold").setup()
+    end,
+  }
+
+  use {
+    "anuvyklack/fold-preview.nvim",
+    requires = "anuvyklack/keymap-amend.nvim",
+    config = function()
+      require("fold-preview").setup {
+        -- Your configuration goes here.
+      }
+    end,
+  }
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
