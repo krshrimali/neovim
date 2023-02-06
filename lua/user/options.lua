@@ -25,7 +25,7 @@ local options = {
   expandtab = true, -- convert tabs to spaces
   shiftwidth = 2, -- the number of spaces inserted for each indentation
   tabstop = 2, -- insert 2 spaces for a tab
-  cursorline = true, -- highlight the current line
+  cursorline = false, -- highlight the current line
   number = true, -- set numbered lines
   laststatus = 3,
   showcmd = true,
@@ -78,3 +78,5 @@ vim.cmd [[let g:python_recommended_style = 0]]
 vim.opt.foldmethod = "expr"
 -- vim.opt.foldmethod = "expr"
 vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
+
+vim.cmd [[hi Search guibg=peru guifg=wheat]]

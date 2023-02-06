@@ -127,7 +127,7 @@ return packer.startup(function(use)
   -- use "ThePrimeagen/harpoon"
   use "MattesGroeger/vim-bookmarks"
   use "TimUntersberger/neogit"
-  use "xiyaowong/nvim-transparent"
+  use { "krshrimali/nvim-transparent", branch="fix/highlight-search" }
   -- use "petertriho/nvim-scrollbar"
   -- use "rmagatti/goto-preview"
   use {
