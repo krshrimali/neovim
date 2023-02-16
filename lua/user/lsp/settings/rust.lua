@@ -1,11 +1,10 @@
-local extension_path = vim.env.HOME .. '/.vscode/extensions/vadimcn.vscode-lldb-1.7.3/'
-local codelldb_path = extension_path .. 'adapter/codelldb'
-local liblldb_path = extension_path .. 'lldb/lib/liblldb.so'
+local extension_path = vim.env.HOME .. "/.vscode/extensions/vadimcn.vscode-lldb-1.7.3/"
+local codelldb_path = extension_path .. "adapter/codelldb"
+local liblldb_path = extension_path .. "lldb/lib/liblldb.so"
 
 return {
   dap = {
-    adapter = require('rust-tools.dap').get_codelldb_adapter(
-      codelldb_path, liblldb_path)
+    adapter = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path),
   },
   tools = {
     -- autoSetHints = false,
@@ -78,7 +77,8 @@ return {
         $ chmod +x ~/.local/bin/rust-analyzer
     --]]
     -- cmd = { os.getenv "HOME" .. "/.local/bin/rust-analyzer" },
-    cmd = { "rustup", "run", "nightly", "/usr/bin/rust-analyzer" },
+    -- cmd = { "rustup", "run", "nightly", "/usr/bin/rust-analyzer" },
+    cmd = { "/opt/homebrew/bin/rust-analyzer" },
     on_attach = require("user.lsp.handlers").on_attach,
     capabilities = require("user.lsp.handlers").capabilities,
 
