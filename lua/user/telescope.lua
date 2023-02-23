@@ -4,7 +4,7 @@ if not status_ok then
 end
 
 local actions = require "telescope.actions"
-local lga_actions = require("telescope-live-grep-args.actions")
+local lga_actions = require "telescope-live-grep-args.actions"
 telescope.load_extension "media_files"
 local icons = require "user.icons"
 local themes = require "user.telescope.user_themes"
@@ -137,7 +137,10 @@ telescope.setup {
         ["v"] = actions.select_vertical,
         ["t"] = actions.select_tab,
 
-        ["<Down>"] = actions.move_selection_next, ["<Up>"] = actions.move_selection_previous, ["gg"] = actions.move_to_top, ["G"] = actions.move_to_bottom,
+        ["<Down>"] = actions.move_selection_next,
+        ["<Up>"] = actions.move_selection_previous,
+        ["gg"] = actions.move_to_top,
+        ["G"] = actions.move_to_bottom,
         ["<C-u>"] = actions.preview_scrolling_up,
         ["<C-d>"] = actions.preview_scrolling_down,
 
@@ -156,6 +159,9 @@ telescope.setup {
       -- theme = "ivy_vertical"
       -- theme = themes.get_ivy_vertical({}),
     },
+    live_grep_args = {
+      theme = "ivy",
+    },
     grep_string = {
       theme = "ivy",
       -- theme = "ivy"
@@ -168,9 +174,9 @@ telescope.setup {
       theme = "ivy",
     },
     find_files = {
-      theme = "ivy",  -- dropdown
+      theme = "ivy", -- dropdown
       initial_mode = "insert",
-      find_command = { 'rg', '--files', '--iglob', '!.git', '--hidden' },
+      find_command = { "rg", "--files", "--iglob", "!.git", "--hidden" },
     },
     projects = {
       enable_preview = true,
@@ -181,6 +187,7 @@ telescope.setup {
     buffers = {
       theme = "ivy",
       initial_mode = "insert",
+      preview = true,
     },
     planets = {
       show_pluto = true,
@@ -208,8 +215,8 @@ telescope.setup {
     diagnostics = {
       theme = "ivy",
       initial_mode = "normal",
+      preview = true,
     },
-
 
     -- Default configuration for builtin pickers goes here:
     -- picker_name = {
