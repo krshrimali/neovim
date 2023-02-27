@@ -79,4 +79,8 @@ vim.opt.foldmethod = "expr"
 -- vim.opt.foldmethod = "expr"
 vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
 
+-- Default: don't enable fold
+-- vim.cmd [[set nofoldenable]]
+
 vim.cmd [[hi Search guibg=peru guifg=wheat]]
+vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1e222a" })
