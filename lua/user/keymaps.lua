@@ -38,7 +38,8 @@ keymap("n", "<S-h>", ":bprevious<CR>", opts)
 -- keymap("n", "<RightMouse>", ":Alpha<CR>", opts)
 
 -- Move text up and down
-keymap("n", "<S-f>", "<Esc>:m .+1<CR>", opts)
+-- keymap("n", "<S-f>", "<Esc>:m .+1<CR>", opts)
+keymap("n", "<S-d>", "<Esc>:m .+1<CR>", opts)
 keymap("n", "<S-u>", "<Esc>:m .-2<CR>", opts)
 
 -- Insert --
