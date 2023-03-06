@@ -16,6 +16,8 @@ local keymap = vim.api.nvim_set_keymap
 --Remap comma as leader key
 vim.g.mapleader = ","
 vim.g.maplocalleader = ","
+vim.g.mkdp_browser = "microsoft-edge"
+
 
 -- Normal --
 -- Better window navigation
