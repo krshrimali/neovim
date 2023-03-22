@@ -5,11 +5,14 @@
 -- for catppuccin
 -- local colorscheme = "catppuccin"
 -- vim.g.catppuccin_flavour = "mocha"
-local colorscheme = "darkplus"
--- local colorscheme = "oxocarbon"
+-- local colorscheme = "darkplus"
+-- -- local colorscheme = "oxocarbon"
 
--- vim.o.background="dark"
-vim.cmd [[colorscheme darkplus]]
+-- -- vim.o.background="dark"
+-- vim.cmd [[colorscheme darkplus]]
+
+local colorscheme = "bluloco-dark"
+vim.cmd [[colorscheme bluloco-dark]]
 -- vim.cmd [[ colorscheme oxocarbon ]]
 
 -- vim.g.onedarker_italic_keywords = false

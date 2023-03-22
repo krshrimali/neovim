@@ -127,7 +127,8 @@ return packer.startup(function(use)
   -- use "ThePrimeagen/harpoon"
   use "MattesGroeger/vim-bookmarks"
   use "TimUntersberger/neogit"
-  use { "krshrimali/nvim-transparent", branch="fix/highlight-search" }
+  -- use { "krshrimali/nvim-transparent", branch = "fix/highlight-search" }
+  use { "xiyaowong/transparent.nvim" }
   -- use "petertriho/nvim-scrollbar"
   -- use "rmagatti/goto-preview"
   use {
@@ -166,6 +167,10 @@ return packer.startup(function(use)
   use { "decaycs/decay.nvim", as = "decay" }
   use "lunarvim/darkplus.nvim"
   use "folke/tokyonight.nvim"
+  use {
+    'uloco/bluloco.nvim',
+    requires = { 'rktjmp/lush.nvim' }
+  }
   -- use "lunarvim/colorschemes"
 
   -- Utility
@@ -196,6 +201,7 @@ return packer.startup(function(use)
 
   -- Statusline
   use "christianchiarulli/lualine.nvim"
+  use 'freddiehaddad/feline.nvim'
 
   -- Startup
   use "goolord/alpha-nvim"
@@ -216,6 +222,19 @@ return packer.startup(function(use)
 
   -- My own plugins
   use "krshrimali/nvim-autorunner"
+
+  use {
+    "Wansmer/treesj",
+    requires = { "nvim-treesitter" },
+    config = function()
+      require("treesj").setup {--[[ your config ]]
+      }
+    end,
+  }
+
+
+  -- use 'echasnovski/mini.nvim'
+  use 'echasnovski/mini.bracketed'
 
   -- Project
   -- Note: https://github.com/ahmedkhalf/project.nvim - Look at the options here if the auto change of cwd irritates me
@@ -291,7 +310,9 @@ return packer.startup(function(use)
   use {
     "iamcco/markdown-preview.nvim",
     run = "cd app && npm install",
-    setup = function() vim.g.mkdp_filetypes = { "markdown" } end,
+    setup = function()
+      vim.g.mkdp_filetypes = { "markdown" }
+    end,
     ft = "markdown",
   }
 
