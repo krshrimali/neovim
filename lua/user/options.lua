@@ -25,7 +25,8 @@ local options = {
   expandtab = true, -- convert tabs to spaces
   shiftwidth = 2, -- the number of spaces inserted for each indentation
   tabstop = 2, -- insert 2 spaces for a tab
-  cursorline = false, -- highlight the current line
+  cursorline = true, -- highlight the current line
+  -- cursorlineopt = "number",
   number = true, -- set numbered lines
   laststatus = 3,
   showcmd = true,
@@ -82,6 +83,6 @@ vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
 -- Default: don't enable fold
 -- vim.cmd [[set nofoldenable]]
 
-vim.cmd [[hi Search guibg=peru guifg=wheat]]
+-- vim.cmd [[hi Search guibg=peru guifg=wheat]]
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1e222a" })
 vim.opt.whichwrap:append("<>[]hl")
