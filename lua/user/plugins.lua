@@ -291,6 +291,7 @@ return packer.startup(function(use)
   use {
     "iamcco/markdown-preview.nvim",
     run = "cd app && npm install",
+    setup = function() vim.g.mkdp_filetypes = { "markdown" } end,
     ft = "markdown",
   }
 
@@ -301,6 +302,7 @@ return packer.startup(function(use)
   use { "ellisonleao/gruvbox.nvim" }
   use { "Shadorain/shadotheme" }
   use { "catppuccin/nvim", as = "catppuccin" }
+  use { "nyoom-engineering/oxocarbon.nvim" }
 
   -- clip
   use {

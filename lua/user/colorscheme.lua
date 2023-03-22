@@ -6,9 +6,11 @@
 -- local colorscheme = "catppuccin"
 -- vim.g.catppuccin_flavour = "mocha"
 local colorscheme = "darkplus"
+-- local colorscheme = "oxocarbon"
 
 -- vim.o.background="dark"
 vim.cmd [[colorscheme darkplus]]
+-- vim.cmd [[ colorscheme oxocarbon ]]
 
 -- vim.g.onedarker_italic_keywords = false
 
