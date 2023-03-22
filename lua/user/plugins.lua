@@ -153,6 +153,17 @@ return packer.startup(function(use)
       require("telescope").load_extension "live_grep_args"
     end,
   }
+  use({
+        "aaronhallaert/advanced-git-search.nvim",
+        config = function()
+            require("telescope").load_extension("advanced_git_search")
+        end,
+        requires = {
+            "nvim-telescope/telescope.nvim",
+            -- to show diff splits and open commits in browser
+            "tpope/vim-fugitive",
+        },
+    })
 
   -- Note Taking
   use "mickael-menu/zk-nvim"
