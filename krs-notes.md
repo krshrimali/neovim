@@ -8,6 +8,8 @@
 2. [nvim-ufo](https://github.com/kevinhwang91/nvim-ufo)
 3. [mind.nvim](https://github.com/phaazon/mind.nvim)
 4. [markdown preview](https://github.com/iamcco/markdown-preview.nvim)
+5. [portal neovim](https://github.com/cbochs/portal.nvim)
+6. [telescope advanced git search](https://github.com/aaronhallaert/advanced-git-search.nvim)
 
 ## Known issues
 
