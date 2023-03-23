@@ -201,7 +201,8 @@ local mappings = {
     name = "Replace",
     r = { "<cmd>lua require('spectre').open()<cr>", "Replace" },
     w = { "<cmd>lua require('spectre').open_visual({select_word=true})<cr>", "Replace Word (Workspace)" },
-    f = { "<cmd>lua require('spectre').open_file_search({select_word=true})<cr>", "Replace Buffer" },
+    f = { "<cmd>lua require('spectre').open_file_search({select_word=true})<cr>", "Replace Word (Buffer)" },
+    b = { "<cmd>lua require('spectre').open_file_search()<cr>", "Replace Buffer" },
   },
 
   R = {
