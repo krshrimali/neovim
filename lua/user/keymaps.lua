@@ -103,6 +103,10 @@ vim.api.nvim_set_keymap("n", "K", ":lua require('user.keymaps').show_documentati
 vim.api.nvim_set_keymap("n", "<s-t>", "<cmd>TodoQuickFix<cr>", opts)
 vim.api.nvim_set_keymap("n", "<m-t>", "<cmd>TodoQuickFix<cr>", opts)
 
+
+vim.api.nvim_set_keymap("n", "<leader>o", "<cmd>Portal jumplist backward<cr>", opts)
+vim.api.nvim_set_keymap("n", "<leader>i", "<cmd>Portal jumplist forward<cr>", opts)
+
 vim.cmd [[
   function! QuickFixToggle()
     if empty(filter(getwininfo(), 'v:val.quickfix'))

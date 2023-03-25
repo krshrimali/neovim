@@ -138,19 +138,18 @@ return packer.startup(function(use)
     end,
   }
   use {
-  'mawkler/modicator.nvim',
-  after = 'bluloco.nvim', -- Add your colorscheme plugin here
-  setup = function()
-    -- These are required for Modicator to work
-    vim.o.cursorline = true
-    vim.o.number = true
-    vim.o.termguicolors = true
-  end,
-  config = function()
-    require('modicator').setup({
-    })
-  end
-}
+    "mawkler/modicator.nvim",
+    after = "bluloco.nvim", -- Add your colorscheme plugin here
+    setup = function()
+      -- These are required for Modicator to work
+      vim.o.cursorline = true
+      vim.o.number = true
+      vim.o.termguicolors = true
+    end,
+    config = function()
+      require("modicator").setup {}
+    end,
+  }
 
   use "mbbill/undotree"
 
@@ -167,17 +166,17 @@ return packer.startup(function(use)
       require("telescope").load_extension "live_grep_args"
     end,
   }
-  use({
-        "aaronhallaert/advanced-git-search.nvim",
-        config = function()
-            require("telescope").load_extension("advanced_git_search")
-        end,
-        requires = {
-            "nvim-telescope/telescope.nvim",
-            -- to show diff splits and open commits in browser
-            "tpope/vim-fugitive",
-        },
-    })
+  use {
+    "aaronhallaert/advanced-git-search.nvim",
+    config = function()
+      require("telescope").load_extension "advanced_git_search"
+    end,
+    requires = {
+      "nvim-telescope/telescope.nvim",
+      -- to show diff splits and open commits in browser
+      "tpope/vim-fugitive",
+    },
+  }
 
   -- Note Taking
   use "mickael-menu/zk-nvim"
@@ -193,8 +192,8 @@ return packer.startup(function(use)
   use "lunarvim/darkplus.nvim"
   use "folke/tokyonight.nvim"
   use {
-    'uloco/bluloco.nvim',
-    requires = { 'rktjmp/lush.nvim' }
+    "uloco/bluloco.nvim",
+    requires = { "rktjmp/lush.nvim" },
   }
   -- use "lunarvim/colorschemes"
 
@@ -226,7 +225,7 @@ return packer.startup(function(use)
 
   -- Statusline
   use "christianchiarulli/lualine.nvim"
-  use 'freddiehaddad/feline.nvim'
+  use "freddiehaddad/feline.nvim"
 
   -- Startup
   use "goolord/alpha-nvim"
@@ -257,9 +256,8 @@ return packer.startup(function(use)
     end,
   }
 
-
   -- use 'echasnovski/mini.nvim'
-  use 'echasnovski/mini.bracketed'
+  use "echasnovski/mini.bracketed"
 
   -- Project
   -- Note: https://github.com/ahmedkhalf/project.nvim - Look at the options here if the auto change of cwd irritates me
@@ -392,6 +390,14 @@ return packer.startup(function(use)
   -- use "phaazon/hop.nvim"
   use { "michaelb/sniprun", run = "bash ./install.sh" }
   use { "numToStr/Navigator.nvim" }
+  use {
+    "cbochs/portal.nvim",
+    -- Optional dependencies
+    requires = {
+      "cbochs/grapple.nvim",
+      "ThePrimeagen/harpoon",
+    },
+  }
 
   -- folding
   use {

@@ -11,9 +11,11 @@
 -- -- vim.o.background="dark"
 -- vim.cmd [[colorscheme darkplus]]
 
-local colorscheme = "bluloco-dark"
-vim.cmd [[colorscheme bluloco-dark]]
--- vim.cmd [[ colorscheme oxocarbon ]]
+-- local colorscheme = "bluloco-dark"
+-- vim.cmd [[colorscheme bluloco-dark]]
+local colorscheme = "darkplus"
+vim.cmd [[colorscheme darkplus]]
+-- -- vim.cmd [[ colorscheme oxocarbon ]]
 
 -- vim.g.onedarker_italic_keywords = false
 
