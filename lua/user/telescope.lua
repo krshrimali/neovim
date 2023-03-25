@@ -11,6 +11,7 @@ local themes = require "user.telescope.user_themes"
 
 telescope.setup {
   defaults = {
+    wrap_results = true,
     layout_config = {
       prompt_position = "top",
       height = 50,
