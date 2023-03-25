@@ -3,8 +3,8 @@
 -- local colorscheme = "gruvbox"
 
 -- for catppuccin
--- local colorscheme = "catppuccin"
--- vim.g.catppuccin_flavour = "mocha"
+local colorscheme = "catppuccin"
+vim.g.catppuccin_flavour = "mocha"
 -- local colorscheme = "darkplus"
 -- -- local colorscheme = "oxocarbon"
 
@@ -13,8 +13,8 @@
 
 -- local colorscheme = "bluloco-dark"
 -- vim.cmd [[colorscheme bluloco-dark]]
-local colorscheme = "darkplus"
-vim.cmd [[colorscheme darkplus]]
+-- local colorscheme = "darkplus"
+-- vim.cmd [[colorscheme darkplus]]
 -- -- vim.cmd [[ colorscheme oxocarbon ]]
 
 -- vim.g.onedarker_italic_keywords = false
