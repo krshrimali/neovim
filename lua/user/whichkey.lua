@@ -231,7 +231,7 @@ local mappings = {
       "Diagnostics of current buffer",
     },
     w = {
-      "<cmd>lua require('telescope.builtin'.diagnostics())<cr>",
+      "<cmd>lua require('telescope.builtin').diagnostics()<cr>",
       "Workspace Diagnostics",
     },
     u = {
@@ -320,7 +320,7 @@ local mappings = {
       "Document diagnostics",
     },
     w = {
-      "<cmd>Telescope diagnostics<cr>",
+      "<cmd>lua require('telescope.builtin').diagnostics()<cr>",
       "Workspace Diagnostics",
     },
     f = { "<cmd>lua vim.lsp.buf.format({ async = true })<cr>", "Format" },
