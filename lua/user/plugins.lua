@@ -150,6 +150,12 @@ return packer.startup(function(use)
       require("modicator").setup {}
     end,
   }
+  use { "chrisgrieser/nvim-spider" }
+  use {
+    "mrjones2014/legendary.nvim",
+    -- sqlite is only needed if you want to use frecency sorting
+    requires = 'kkharji/sqlite.lua'
+  }
 
   use "mbbill/undotree"
 
@@ -403,7 +409,7 @@ return packer.startup(function(use)
   use {
     "anuvyklack/pretty-fold.nvim",
     config = function()
-      require("pretty-fold").setup()
+      require("pretty-fold").setup {}
     end,
   }
 
