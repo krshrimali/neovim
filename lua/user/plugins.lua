@@ -406,12 +406,14 @@ return packer.startup(function(use)
   }
 
   -- folding
-  use {
-    "anuvyklack/pretty-fold.nvim",
-    config = function()
-      require("pretty-fold").setup {}
-    end,
-  }
+  -- use {
+  --   "anuvyklack/pretty-fold.nvim",
+  --   config = function()
+  --     require("pretty-fold").setup {}
+  --   end,
+  -- }
+  
+  use {'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async'}
 
   use {
     "anuvyklack/fold-preview.nvim",

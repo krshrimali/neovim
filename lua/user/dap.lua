@@ -65,6 +65,24 @@ dapui.setup {
   },
 }
 
+dap.configurations.python = {
+  {
+    type = "python",
+    request = "launch",
+    name = "Launch file",
+    program = "${file}",
+    pythonPath = function()
+      return "/home/linuxbrew/.linuxbrew/bin//python3"
+    end,
+  },
+}
+
+dap.adapters.python = {
+  type = "executable",
+  command = "/home/krshrimali/.virtualenvs/debugpy/bin/python",
+  args = { "-m", "debugpy.adapter" },
+}
+
 local icons = require "user.icons"
 
 vim.fn.sign_define("DapBreakpoint", { text = icons.ui.Bug, texthl = "DiagnosticSignError", linehl = "", numhl = "" })
