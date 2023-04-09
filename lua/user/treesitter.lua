@@ -10,7 +10,16 @@ configs.setup {
   fold = {
     fold_one_line_after = true,
   },
-  ensure_installed = {"c", "lua", "rust", "cpp", "go"}, -- one of "all" or a list of languages [https://github.com/nvim-treesitter/nvim-treesitter#modules]
+  incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = "<c-space>",
+      node_incremental = "<c-space>",
+      scope_incremental = "<c-s>",
+      node_decremental = "<c-backspace>",
+    },
+  },
+  ensure_installed = { "c", "lua", "rust", "cpp", "go" }, -- one of "all" or a list of languages [https://github.com/nvim-treesitter/nvim-treesitter#modules]
   sync_install = false, -- install languages synchronously (only applied to `ensure_installed`)
   ignore_install = { "" }, -- List of parsers to ignore installing
   matchup = {

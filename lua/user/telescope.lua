@@ -12,14 +12,49 @@ local themes = require "user.telescope.user_themes"
 telescope.setup {
   defaults = {
     wrap_results = true,
+    -- layout_config = {
+    --   prompt_position = "bottom",
+    --   height = 80,
+    -- },
     layout_config = {
-      prompt_position = "top",
-      height = 50,
+      width = 0.95,
+      height = 0.85,
+      -- preview_cutoff = 120,
+      prompt_position = "bottom",
+
+      horizontal = {
+        preview_width = function(_, cols, _)
+          if cols > 200 then
+            return math.floor(cols * 0.4)
+          else
+            return math.floor(cols * 0.6)
+          end
+        end,
+      },
+
+      vertical = {
+        width = 0.9,
+        height = 0.95,
+        preview_height = 0.5,
+      },
+
+      flex = {
+        horizontal = {
+          preview_width = 0.9,
+        },
+      },
     },
+
     layout_strategy = "horizontal",
     prompt_prefix = icons.ui.Telescope .. " ",
     selection_caret = " ",
     path_display = { "smart" }, -- do :help telescope.defaults.path_display (options: hidden, tail, smart, shorten, truncate)
+
+    selection_strategy = "reset",
+    sorting_strategy = "descending",
+    scroll_strategy = "cycle",
+    color_devicons = true,
+
     -- file_ignore_patterns = { },
     file_ignore_patterns = {
       ".git/",
@@ -157,15 +192,13 @@ telescope.setup {
     live_grep = {
       -- theme = "ivy",
       theme = "ivy",
+      find_command = { "rg", "--no-heading", "--with-filename", "--line-number", "--column", "--smart-case" },
+      path_display = { "absolute" },
       -- theme = "ivy_vertical"
       -- theme = themes.get_ivy_vertical({}),
     },
-    live_grep_args = {
-      theme = "ivy",
-    },
     grep_string = {
       theme = "ivy",
-      -- theme = "ivy"
     },
     quickfix = {
       theme = "ivy",
@@ -189,6 +222,8 @@ telescope.setup {
       theme = "ivy",
       initial_mode = "insert",
       preview = true,
+      sort_lastused = true,
+      sort_mru = true,
     },
     planets = {
       show_pluto = true,
@@ -243,7 +278,10 @@ telescope.setup {
       find_cmd = "rg", -- find command (defaults to `fd`)
     },
     live_grep_args = {
-      auto_quoting = true,
+      auto_quoting = false,
+      find_command = "rg",
+      theme = "ivy",
+      path_display = { "absolute" },
       -- mappings = {
       --   i = {
       --     ["<C-k>"] = lga_actions.quote_prompt(),
