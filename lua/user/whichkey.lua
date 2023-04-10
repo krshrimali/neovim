@@ -235,7 +235,7 @@ local mappings = {
       "Workspace Diagnostics",
     },
     u = {
-      "<cmd>lua require('telescope.builtin'.diagnostics({ no_unlisted = true }))<cr>",
+      "<cmd>lua require('telescope.builtin').diagnostics({ no_unlisted = true })<cr>",
       "Diagnostics from listed buffers",
     },
   },
@@ -307,7 +307,7 @@ local mappings = {
 
   -- GitBlame
   G = {
-    t = { "<cmd>GitBlameToggle<cr>", "Blame Toggle" },
+    l = { "<cmd>GitBlameToggle<cr>", "Blame Toggle" },
     c = { "<cmd>GitBlameCopySHA<cr>", "Copy SHA URL of the commit" },
     o = { "<cmd>GitBlameOpenCommitURL<cr>", "Open commit URL" },
   },
@@ -330,7 +330,7 @@ local mappings = {
     F = { "<cmd>LspToggleAutoFormat<cr>", "Toggle Autoformat" },
     i = { "<cmd>MasonLog<cr>", "Info" },
     h = { "<cmd>lua require('lsp-inlayhints').toggle()<cr>", "Toggle Hints" },
-    H = { "<cmd>IlluminationToggle<cr>", "Toggle Doc HL" },
+    H = { "<cmd>IlluminateToggle<cr>", "Toggle Doc HL" },
     I = { "<cmd>Mason<cr>", "Installer Info" },
     j = {
       "<cmd>lua vim.diagnostic.goto_next({buffer=0})<CR>",
@@ -384,17 +384,6 @@ local mappings = {
     t = { '<cmd>lua require("user.functions").toggle_diagnostics()<cr>', "Toggle Diagnostics" },
     u = { "<cmd>LuaSnipUnlinkCurrent<cr>", "Unlink Snippet" },
   },
-
-  -- TODO: Replace these with nvim-surround keymaps
-  -- s = {
-  --   name = "Surround",
-  --   ["."] = { "<cmd>lua require('surround').repeat_last()<cr>", "Repeat" },
-  --   a = { "<cmd>lua require('surround').surround_add(true)<cr>", "Add" },
-  --   d = { "<cmd>lua require('surround').surround_delete()<cr>", "Delete" },
-  --   r = { "<cmd>lua require('surround').surround_replace()<cr>", "Replace" },
-  --   q = { "<cmd>lua require('surround').toggle_quotes()<cr>", "Quotes" },
-  --   b = { "<cmd>lua require('surround').toggle_brackets()<cr>", "Brackets" },
-  -- },
 
   n = {
     -- name = "Session",
