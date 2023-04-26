@@ -86,3 +86,5 @@ vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
 -- vim.cmd [[hi Search guibg=peru guifg=wheat]]
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1e222a" })
 vim.opt.whichwrap:append("<>[]hl")
+
+vim.g.transparent_enabled = false
