@@ -154,7 +154,7 @@ return packer.startup(function(use)
   use {
     "mrjones2014/legendary.nvim",
     -- sqlite is only needed if you want to use frecency sorting
-    requires = 'kkharji/sqlite.lua'
+    requires = "kkharji/sqlite.lua",
   }
 
   use "mbbill/undotree"
@@ -231,7 +231,7 @@ return packer.startup(function(use)
 
   -- Statusline
   use "christianchiarulli/lualine.nvim"
-  use "freddiehaddad/feline.nvim"
+  --[[ use "freddiehaddad/feline.nvim" ]]
 
   -- Startup
   use "goolord/alpha-nvim"
@@ -350,6 +350,7 @@ return packer.startup(function(use)
   use { "krshrimali/vim-moonfly-colors" } -- personalized, this one is very dark :D
   use { "navarasu/onedark.nvim" }
   use { "ellisonleao/gruvbox.nvim" }
+  use { "sainnhe/gruvbox-material" }
   use { "Shadorain/shadotheme" }
   use { "catppuccin/nvim", as = "catppuccin" }
   use { "nyoom-engineering/oxocarbon.nvim" }
@@ -412,8 +413,8 @@ return packer.startup(function(use)
   --     require("pretty-fold").setup {}
   --   end,
   -- }
-  
-  use {'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async'}
+
+  use { "kevinhwang91/nvim-ufo", requires = "kevinhwang91/promise-async" }
 
   use {
     "anuvyklack/fold-preview.nvim",
