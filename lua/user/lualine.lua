@@ -457,7 +457,7 @@ lualine.setup {
     -- theme = "shado",
     -- theme = "catppuccin",
     -- theme = "darkplus",
-    theme = "auto",
+    theme = "gruvbox-material",
     component_separators = { left = "", right = "" },
     section_separators = { left = "", right = "" },
     disabled_filetypes = { "alpha", "dashboard" },

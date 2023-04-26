@@ -3,12 +3,14 @@
 -- local colorscheme = "gruvbox"
 
 -- for catppuccin
-local colorscheme = "catppuccin"
-vim.g.catppuccin_flavour = "mocha"
+-- local colorscheme = "catppuccin"
+-- vim.g.catppuccin_flavour = "mocha"
+local colorscheme = "gruvbox-material"
 -- local colorscheme = "darkplus"
 -- -- local colorscheme = "oxocarbon"
 
 -- -- vim.o.background="dark"
+-- vim.g.gruvbox_material_background = "hard"
 -- vim.cmd [[colorscheme darkplus]]
 
 -- local colorscheme = "bluloco-dark"
