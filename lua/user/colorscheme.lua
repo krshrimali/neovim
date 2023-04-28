@@ -5,7 +5,7 @@
 -- for catppuccin
 -- local colorscheme = "catppuccin"
 -- vim.g.catppuccin_flavour = "mocha"
-local colorscheme = "gruvbox-material"
+local colorscheme = "gruvbox"
 -- local colorscheme = "darkplus"
 -- -- local colorscheme = "oxocarbon"
 
