@@ -26,9 +26,29 @@ cybu.setup {
       enabled = true, -- enable or disable web dev icons
       colored = true, -- enable color for web dev icons
     },
+    highlights = {
+      current_buffer = "CybuFocus",
+      adjacent_buffers = "CybuAdjacent",
+      background = "CybuBackground",
+      border = "CybuBorder",
+    },
+    behavior = {
+      mode = {
+        default = {
+          switch = "immediate",
+          view = "rolling",
+        },
+        auto = {
+          view = "rolling",
+        },
+      },
+      show_on_autocmd = false,
+    }
   },
 }
 -- vim.keymap.set("n", "<up>", "<Plug>(CybuPrev)")
 -- vim.keymap.set("n", "<down>", "<Plug>(CybuNext)")
-vim.keymap.set("n", "<c-h>", "<Plug>(CybuPrev)")
-vim.keymap.set("n", "<c-l>", "<Plug>(CybuNext)")
+vim.keymap.set("n", "<C-S-h>", "<Plug>(CybuLastusedPrev)")
+vim.keymap.set("n", "<C-S-l>", "<Plug>(CybuLastusedNext)")
+vim.keymap.set("n", "<C-h>", "<Plug>(CybuPrev)")
+vim.keymap.set("n", "<C-l>", "<Plug>(CybuNext)")
