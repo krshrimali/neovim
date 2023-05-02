@@ -33,6 +33,7 @@ local servers = {
   "zk@v0.10.1",
   "lemminx",
   "gopls",
+  "ruff_lsp",
 }
 
 local settings = {
@@ -111,6 +112,23 @@ for _, server in pairs(servers) do
   if server == "pyright" then
     local pyright_opts = require "user.lsp.settings.pyright"
     opts = vim.tbl_deep_extend("force", pyright_opts, opts)
+  end
+
+  if server == "ruff_lsp" then
+    local ruff_on_attach = function(client, bufnr)
+      client.server_capabilities.hoverProvider = false
+    end
+
+    local ruff_opts = require "user.lsp.settings.ruff"
+    -- opts = vim.tbl_deep_extend("force", ruff_opts, opts)
+    local ruff = {
+      on_attach = ruff_on_attach,
+      capabilities = opts.capabilities,
+      opts = ruff_opts,
+      --   -- settings = opts.settings,
+    }
+    lspconfig.ruff_lsp.setup(ruff)
+    goto continue
   end
 
   if server == "solc" then
