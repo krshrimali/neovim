@@ -104,6 +104,11 @@ for _, server in pairs(servers) do
     goto continue
   end
 
+  if server == "clangd" then
+    -- set capabilities to only utf-16
+    opts.capabilities.offsetEncoding = { "utf-16" }
+  end
+
   if server == "tsserver" then
     local tsserver_opts = require "user.lsp.settings.tsserver"
     opts = vim.tbl_deep_extend("force", tsserver_opts, opts)

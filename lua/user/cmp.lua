@@ -50,10 +50,10 @@ local icons = require "user.icons"
 
 local kind_icons = icons.kind
 
--- vim.api.nvim_set_hl(0, "CmpItemKindCopilot", { fg = "#6CC644" })
--- vim.api.nvim_set_hl(0, "CmpItemKindTabnine", { fg = "#CA42F0" })
--- vim.api.nvim_set_hl(0, "CmpItemKindEmoji", { fg = "#FDE030" })
--- vim.api.nvim_set_hl(0, "CmpItemKindCrate", { fg = "#F64D00" })
+vim.api.nvim_set_hl(0, "CmpItemKindCopilot", { fg = "#6CC644" })
+vim.api.nvim_set_hl(0, "CmpItemKindTabnine", { fg = "#CA42F0" })
+vim.api.nvim_set_hl(0, "CmpItemKindEmoji", { fg = "#FDE030" })
+vim.api.nvim_set_hl(0, "CmpItemKindCrate", { fg = "#F64D00" })
 
 vim.g.cmp_active = true
 
@@ -72,6 +72,22 @@ cmp.setup {
     end,
   },
   mapping = cmp.mapping.preset.insert {
+    -- ["<C-m>"] = cmp.mapping(function(fallback)
+    --   local suggestion = require("copilot.suggestion")
+    --   if suggestion.is_visible() then
+    --     suggestion.accept()
+    --   elseif cmp.visible() then
+    --       cmp.confirm({ select = true })
+    --   elseif luasnip.expand_or_jumpable() then
+    --     luasnip.expand_or_jump()
+    --   elseif check_backspace() then
+    --     cmp.complete()
+    --     fallback()
+    --   else
+    --     fallback()
+    --   end
+    -- end, { "i", "c" }
+    -- ),
     ["<C-k>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),
     ["<C-j>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }),
     ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-1), { "i", "c" }),
@@ -102,7 +118,29 @@ cmp.setup {
     },
     -- Accept currently selected item. If none selected, `select` first item.
     -- Set `select` to `false` to only confirm explicitly selected items.
-    ["<CR>"] = cmp.mapping.confirm { select = false },
+    -- ["<CR>"] = cmp.mapping.confirm { select = false },
+    ["<CR>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        -- local confirm_opts = vim.deepcopy(confirm_opts) -- avoid mutating the original opts below
+        local confirm_opts = vim.deepcopy({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+        local is_insert_mode = function()
+          return vim.api.nvim_get_mode().mode:sub(1, 1) == "i"
+        end
+        if is_insert_mode() then -- prevent overwriting brackets
+          confirm_opts.behavior = cmp.ConfirmBehavior.Insert
+        end
+        local entry = cmp.get_selected_entry()
+        local is_copilot = entry and entry.source.name == "copilot"
+        if is_copilot then
+          confirm_opts.behavior = cmp.ConfirmBehavior.Replace
+          confirm_opts.select = true
+        end
+        if cmp.confirm(confirm_opts) then
+          return -- success, exit early
+        end
+      end
+      fallback() -- if not exited early, always fallback
+    end),
     ["<Right>"] = cmp.mapping.confirm { select = true },
     ["<Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
@@ -123,21 +161,21 @@ cmp.setup {
       "i",
       "s",
     }),
-    ["<S-Tab>"] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      elseif luasnip.jumpable(-1) then
-        luasnip.jump(-1)
-      else
-        fallback()
-      end
-    end, {
-      "i",
-      "s",
-    }),
+    -- ["<S-Tab>"] = cmp.mapping(function(fallback)
+    --   if cmp.visible() then
+    --     cmp.select_prev_item()
+    --   elseif luasnip.jumpable(-1) then
+    --     luasnip.jump(-1)
+    --   else
+    --     fallback()
+    --   end
+    -- end, {
+    --   "i",
+    --   "s",
+    -- }),
   },
   formatting = {
-    fields = { "abbr", "menu", "kind"  },
+    fields = { "abbr", "menu", "kind" },
     format = function(entry, vim_item)
       -- Kind icons
       -- vim_item.kind = kind_icons[vim_item.kind]
@@ -146,10 +184,10 @@ cmp.setup {
       --   vim_item.kind = icons.misc.Robot
       --   vim_item.kind_hl_group = "CmpItemKindTabnine"
       -- end
-      -- if entry.source.name == "copilot" then
-      --   vim_item.kind = icons.git.Octoface
-      --   vim_item.kind_hl_group = "CmpItemKindCopilot"
-      -- end
+      if entry.source.name == "copilot" then
+        vim_item.kind = icons.git.Octoface
+        vim_item.kind_hl_group = "CmpItemKindCopilot"
+      end
 
       -- if entry.source.name == "emoji" then
       --   vim_item.kind = icons.misc.Smiley

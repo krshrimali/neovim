@@ -18,7 +18,6 @@ vim.g.mapleader = ","
 vim.g.maplocalleader = ","
 vim.g.mkdp_browser = "microsoft-edge"
 
-
 -- Normal --
 -- Better window navigation
 keymap("n", "<m-h>", "<C-w>h", opts)
@@ -57,14 +56,14 @@ keymap("v", ">", ">gv", opts)
 
 keymap("v", "p", '"_dP', opts)
 
-keymap('v', "F", ":m '>+1<CR>gv=gv", opts)
-keymap('v', "U", ":m '<-2<CR>gv=gv", opts)
+keymap("v", "F", ":m '>+1<CR>gv=gv", opts)
+keymap("v", "U", ":m '<-2<CR>gv=gv", opts)
 
-keymap('n', '<leader>d', '"_d', opts)
-keymap('x', '<leader>d', '"_d', opts)
-keymap('x', '<leader>p', '"_dP', opts)
+keymap("n", "<leader>d", '"_d', opts)
+keymap("x", "<leader>d", '"_d', opts)
+keymap("x", "<leader>p", '"_dP', opts)
 
-keymap("x", "<leader>p", "\"_dP", opts)
+keymap("x", "<leader>p", '"_dP', opts)
 -- keymap("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>", opts)
 keymap("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>//gI<Left><Left><Left>", opts)
 
@@ -107,7 +106,6 @@ vim.api.nvim_set_keymap("n", "K", ":lua require('user.keymaps').show_documentati
 vim.api.nvim_set_keymap("n", "<s-t>", "<cmd>TodoQuickFix<cr>", opts)
 vim.api.nvim_set_keymap("n", "<m-t>", "<cmd>TodoQuickFix<cr>", opts)
 
-
 vim.api.nvim_set_keymap("n", "<leader>o", "<cmd>Portal jumplist backward<cr>", opts)
 vim.api.nvim_set_keymap("n", "<leader>i", "<cmd>Portal jumplist forward<cr>", opts)
 
@@ -122,11 +120,37 @@ vim.cmd [[
 ]]
 
 -- nvim-spider
-vim.keymap.set({"n", "o", "x"}, "w", function() require("spider").motion("w") end, { desc = "Spider-w" })
-vim.keymap.set({"n", "o", "x"}, "e", function() require("spider").motion("e") end, { desc = "Spider-e" })
-vim.keymap.set({"n", "o", "x"}, "b", function() require("spider").motion("b") end, { desc = "Spider-b" })
-vim.keymap.set({"n", "o", "x"}, "ge", function() require("spider").motion("ge") end, { desc = "Spider-ge" })
+vim.keymap.set({ "n", "o", "x" }, "w", function()
+  require("spider").motion "w"
+end, { desc = "Spider-w" })
+vim.keymap.set({ "n", "o", "x" }, "e", function()
+  require("spider").motion "e"
+end, { desc = "Spider-e" })
+vim.keymap.set({ "n", "o", "x" }, "b", function()
+  require("spider").motion "b"
+end, { desc = "Spider-b" })
+vim.keymap.set({ "n", "o", "x" }, "ge", function()
+  require("spider").motion "ge"
+end, { desc = "Spider-ge" })
 
 keymap("n", "<m-q>", ":call QuickFixToggle()<cr>", opts)
+
+-- imap <silent><script><expr> <C-M> copilot#Accept("\<CR>")
+-- vim.keymap.set({"i", "C", "M"}, )
+-- vim.api.nvim_set_keymap("i", "<C-M>", "<cmd>copilot#Accept('<CR>')<cr>", opts)
+-- vim.api.nvim_set_keymap("n", "<C-M>", "<cmd>copilot#Accept('<CR>')<cr>", opts)
+-- vim.api.nvim_set_keymap("i", "<C-N>", "<cmd>copilot#Next()<cr>", opts)
+-- vim.api.nvim_set_keymap("n", "<C-N>", "<cmd>copilot#Next()<cr>", opts)
+-- vim.api.nvim_set_keymap("i", "<C-P>", "<cmd>copilot#Prev()<cr>", opts)
+-- vim.api.nvim_set_keymap("n", "<C-P>", "<cmd>copilot#Prev()<cr>", opts)
+-- map copilot#Accept
+-- vim.api.nvim_set_keymap("i", "<C-M>", "<cmd>copilot#Accept('<CR>')<cr>", opts)
+-- vim.api.nvim_set_keymap("n", "<C-M>", "<cmd>copilot#Accept('<CR>')<cr>", opts)
+-- let g:copilot_no_tab_map = v:true
+
+vim.cmd [[
+  imap <silent><script><expr> <C-A> copilot#Accept("\<CR>")
+  let g:copilot_no_tab_map = v:true
+]]
 
 return M
