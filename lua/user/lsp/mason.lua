@@ -68,7 +68,7 @@ for _, server in pairs(servers) do
     capabilities = require("user.lsp.handlers").capabilities,
     root_dir = function(fname)
       return nvim_lsp.util.find_git_ancestor(fname)
-    end;
+    end,
   }
 
   server = vim.split(server, "@")[1]
@@ -84,6 +84,8 @@ for _, server in pairs(servers) do
   end
 
   if server == "lua_ls" then
+    -- local sumneko_lsp_opts = require "user.lsp.settings.sumneko_lua"
+    -- opts = vim.tbl_deep_extend("force", sumneko_lsp_opts, opts)
     local l_status_ok, lua_dev = pcall(require, "lua-dev")
     if not l_status_ok then
       return
@@ -98,6 +100,14 @@ for _, server in pairs(servers) do
         on_attach = opts.on_attach,
         capabilities = opts.capabilities,
         --   -- settings = opts.settings,
+        settings = {
+          Lua = {
+            workspace = {
+              library = vim.api.nvim_get_runtime_file("", true),
+              checkThirdParty = false,
+            },
+          },
+        },
       },
     }
     lspconfig.lua_ls.setup(luadev)
