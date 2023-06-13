@@ -74,7 +74,6 @@ vim.o.statusline = vim.o.tabline
 --   return "%#" .. hl .. "#" .. str .. "%*"
 -- end
 
-
 local hl_str = function(str)
   return "%#" .. "#" .. str .. "%*"
 end
@@ -192,7 +191,7 @@ local diagnostics = {
 
 local diff = {
   "diff",
-  colored = false,
+  colored = true,
   symbols = { added = icons.git.Add .. " ", modified = icons.git.Mod .. " ", removed = icons.git.Remove .. " " }, -- changes diff symbols
   cond = hide_in_width_60,
   separator = "│ " .. "%*",
@@ -218,7 +217,7 @@ local filetype = {
 
     local return_val = function(str_)
       -- return hl_str(" ", "SLSep") .. hl_str(str, "SLFT") .. hl_str("", "SLSep")
-      return hl_str(" (") .. hl_str(str_) .. hl_str(")")
+      return hl_str " (" .. hl_str(str_) .. hl_str ")"
     end
 
     if str == "TelescopePrompt" then
@@ -271,7 +270,7 @@ local progress = {
   "progress",
   fmt = function(str)
     -- return "▊"
-    return hl_str("(") .. hl_str("%P/%L") .. hl_str(") ")
+    return hl_str "(" .. hl_str "%P/%L" .. hl_str ") "
     -- return "  "
   end,
   -- color = "SLProgress",
@@ -343,7 +342,7 @@ local spaces = {
     end
 
     -- TODO: update codicons and use their indent
-    return hl_str(" (") .. hl_str(" " .. shiftwidth .. space) .. hl_str(")")
+    return hl_str " (" .. hl_str("Spaces: " .. shiftwidth .. space) .. hl_str ")"
   end,
   padding = 0,
   -- separator = "%#SLSeparator#" .. " │" .. "%*",
@@ -419,7 +418,7 @@ local lanuage_server = {
     local language_servers = ""
     local client_names_str_len = #client_names_str
     if client_names_str_len ~= 0 then
-      language_servers = hl_str("") .. hl_str(client_names_str) .. hl_str("")
+      language_servers = hl_str "" .. hl_str(client_names_str) .. hl_str ""
     end
     if copilot_active then
       language_servers = language_servers .. " " .. icons.git.Octoface .. "%*"
@@ -441,7 +440,7 @@ local location = {
   "location",
   fmt = function(str)
     -- return "▊"
-    return hl_str(" (") .. hl_str(str) .. hl_str(") ")
+    return hl_str " (" .. hl_str(str) .. hl_str ") "
     -- return hl_str(" (") .. hl_str(str) .. hl_str(") ")
     -- return "  "
   end,
@@ -465,41 +464,41 @@ lualine.setup {
   },
   sections = {
     -- lualine_a = { left_pad, mode, branch, right_pad },
-    lualine_a = { 'mode', 'branch', diff },
+    -- lualine_a = { "mode", "branch", diff },
     -- lualine_a = { 'filename', file_status=true, path=2 },
-    lualine_b = { diagnostics },
+    -- lualine_b = { diagnostics },
     -- lualine_c = {},
     lualine_c = { current_signature },
     -- lualine_x = { diff, spaces, "encoding", filetype },
     -- lualine_x = { diff, lanuage_server, spaces, filetype },
     -- lualine_x = { lanuage_server, spaces, filetype },
     -- lualine_x = { lanuage_server, spaces, filetype },
-    lualine_x = { lanuage_server, spaces},
+    lualine_x = { lanuage_server, spaces },
     lualine_y = {
-    -- {
-    --   'buffers',
-    --   show_filename_only = true,
-    --   show_modified_status = true,
+      "buffers",
+      show_filename_only = true,
+      show_modified_status = true,
 
-    --   mode = 0,
-    --   max_length = vim.o.columns * 2 / 3,
+      mode = 0,
+      max_length = vim.o.columns * 2 / 3,
 
-    --   buffer_color = {
-    --     active = 'lualine_x_normal',
-    --     inactive = 'lualine_x_inactive',
-    --   }
-    -- }
-      {
-          'filename', file_status=true, path=3
+      buffer_color = {
+        active = "lualine_x_normal",
+        inactive = "lualine_x_inactive",
       },
     },
+    -- {
+    --   "filename",
+    --   file_status = true,
+    --   path = 3,
+    -- },
     lualine_z = { location, progress },
   },
   inactive_sections = {
     lualine_a = {},
     lualine_b = {},
     lualine_c = {},
-    lualine_x = { "location" },
+    lualine_x = {},
     lualine_y = {},
     lualine_z = {},
   },
