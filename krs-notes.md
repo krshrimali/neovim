@@ -11,6 +11,7 @@
 5. [portal neovim](https://github.com/cbochs/portal.nvim)
 6. [telescope advanced git search](https://github.com/aaronhallaert/advanced-git-search.nvim)
 7. [NeoComposer: Neovim plugin that simplifies macros, enhancing productivity with harmony](https://github.com/ecthelionvi/NeoComposer.nvim)
+8. https://github.com/folke/flash.nvim
 
 ## Known issues
 
