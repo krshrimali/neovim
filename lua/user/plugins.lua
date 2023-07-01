@@ -68,24 +68,39 @@ return packer.startup(function(use)
   use "folke/trouble.nvim"
 
   -- use "github/copilot.vim"
-use {
-    "zbirenbaum/copilot.lua",
-    event = { "VimEnter" },
+  -- use {
+  --   "zbirenbaum/copilot.lua",
+  --   event = { "VimEnter" },
+  --   config = function()
+  --     vim.defer_fn(function()
+  --       require "user.copilot"
+  --     end, 100)
+  --   end,
+  -- }
+  -- use {
+  --   "zbirenbaum/copilot.lua",
+  --   cmd = "Copilot",
+  --   event = "InsertEnter",
+  --   config = function()
+  --     require("copilot").setup({})
+  --   end,
+  -- }
+  use {
+    "zbirenbaum/copilot-cmp",
+    after = { "copilot.lua" },
     config = function()
-      vim.defer_fn(function()
-        require "user.copilot"
-      end, 100)
+      require("copilot_cmp").setup()
     end,
   }
-  -- use {
-  -- 	"zbirenbaum/copilot.lua",
-  -- 	event = { "VimEnter" },
-  -- 	config = function()
-  -- 		vim.defer_fn(function()
-  -- 		require "user.copilot"
-  -- 	end, 100)
-  -- 	end,
- 	-- }
+  use {
+  	"zbirenbaum/copilot.lua",
+  	event = { "VimEnter" },
+  	config = function()
+  		vim.defer_fn(function()
+  		require "user.copilot"
+  	end, 100)
+  	end,
+  }
   use "RRethy/vim-illuminate"
   -- use "j-hui/fidget.nvim"
   use "lvimuser/lsp-inlayhints.nvim"
@@ -309,7 +324,7 @@ use {
   -- Git
   use "lewis6991/gitsigns.nvim"
   use "f-person/git-blame.nvim"
-  use "ruifm/gitlinker.nvim"
+  -- use "ruifm/gitlinker.nvim"
   use "mattn/vim-gist"
   use "mattn/webapi-vim"
 
@@ -434,6 +449,23 @@ use {
       }
     end,
   }
+
+  use {
+    "krshrimali/context-pilot.nvim",
+    requires = {
+      "nvim-telescope/telescope.nvim",
+      "nvim-telescope/telescope-fzy-native.nvim",
+    },
+  }
+
+  use {
+    'linrongbin16/gitlinker.nvim',
+    requires = { 'nvim-lua/plenary.nvim' },
+    branch = 'master',
+    config = function()
+        require('gitlinker').setup()
+    end,
+}
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins

@@ -207,6 +207,10 @@ telescope.setup {
     loclist = {
       theme = "ivy",
     },
+    jumplist = {
+      initial_mode = "normal",
+      wrap_results = true,
+    },
     find_files = {
       theme = "ivy", -- dropdown
       initial_mode = "insert",

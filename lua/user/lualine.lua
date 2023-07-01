@@ -475,17 +475,17 @@ lualine.setup {
     -- lualine_x = { lanuage_server, spaces, filetype },
     lualine_x = { lanuage_server, spaces },
     lualine_y = {
-      "buffers",
-      show_filename_only = true,
-      show_modified_status = true,
+      -- "buffers",
+      -- show_filename_only = true,
+      -- show_modified_status = true,
 
-      mode = 0,
-      max_length = vim.o.columns * 2 / 3,
+      -- mode = 0,
+      -- max_length = vim.o.columns * 2 / 3,
 
-      buffer_color = {
-        active = "lualine_x_normal",
-        inactive = "lualine_x_inactive",
-      },
+      -- buffer_color = {
+      --   active = "lualine_x_normal",
+      --   inactive = "lualine_x_inactive",
+      -- },
     },
     -- {
     --   "filename",

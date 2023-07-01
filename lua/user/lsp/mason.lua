@@ -33,7 +33,7 @@ local servers = {
   "zk@v0.10.1",
   "lemminx",
   "gopls",
-  "ruff_lsp",
+  -- "ruff_lsp",
 }
 
 local settings = {

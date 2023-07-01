@@ -93,7 +93,14 @@ cmp.setup {
     ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-1), { "i", "c" }),
     ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(1), { "i", "c" }),
     ["<C-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-1), { "i", "c" }),
-    ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
+    ["<C-Space>"] = cmp.mapping(
+      cmp.mapping.complete {
+        config = {
+          sources = { { name = "copilot", group_index = 1, keyword_length = 0 }, { name = "buffer", group_index = 2 } },
+        },
+      },
+      { "i", "c" }
+    ),
     ["<m-o>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
     -- ["<C-y>"] = cmp.config.disable, -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
     ["<C-c>"] = cmp.mapping {
@@ -122,7 +129,7 @@ cmp.setup {
     ["<CR>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         -- local confirm_opts = vim.deepcopy(confirm_opts) -- avoid mutating the original opts below
-        local confirm_opts = vim.deepcopy({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+        local confirm_opts = vim.deepcopy { behavior = cmp.ConfirmBehavior.Replace, select = false }
         local is_insert_mode = function()
           return vim.api.nvim_get_mode().mode:sub(1, 1) == "i"
         end
@@ -227,49 +234,31 @@ cmp.setup {
     {
       name = "copilot",
       -- keyword_length = 0,
-      max_item_count = 3,
-      trigger_characters = {
-        {
-          ".",
-          ":",
-          "(",
-          "'",
-          '"',
-          "[",
-          ",",
-          "#",
-          "*",
-          "@",
-          "|",
-          "=",
-          "-",
-          "{",
-          "/",
-          "\\",
-          "+",
-          "?",
-          " ",
-          -- "\t",
-          -- "\n",
-        },
-      },
-      group_index = 2,
+      -- trigger_characters = {
+      --   {
+      --     ".",
+      --     ":",
+      --     "(",
+      --     "'",
+      --     '"',
+      --     "[",
+      --     ",",
+      --     "#",
+      --     "*",
+      --     "@",
+      --     "|",
+      --     "=",
+      --     "-",
+      --     "{",
+      --     "/",
+      --     "\\",
+      --     "+",
+      --     "?",
+      --     " ",
+      --   },
+      -- },
     },
     { name = "nvim_lsp", group_index = 2 },
-    -- {
-    --   name = "nvim_lsp",
-    --   filter = function(entry, ctx)
-    --     local kind = require("cmp.types.lsp").CompletionItemKind[entry:get_kind()]
-    --     if kind == "Snippet" and ctx.prev_context.filetype == "java" then
-    --       return true
-    --     end
-    --
-    --     if kind == "Text" then
-    --       return true
-    --     end
-    --   end,
-    --   group_index = 2,
-    -- },
     { name = "nvim_lua", group_index = 2 },
     { name = "luasnip", group_index = 2 },
     {
@@ -334,4 +323,12 @@ cmp.setup {
   experimental = {
     ghost_text = false,
   },
+  -- completion = {
+  --   autocomplete = {
+  --     cmp.TriggerEvent.TextChanged,
+  --     cmp.TriggerEvent.InsertEnter,
+  --   },
+  --   completeopt = "menuone,noinsert,noselect",
+  --   keyword_length=0,
+  -- },
 }
