@@ -276,6 +276,7 @@ local mappings = {
   g = {
     name = "Git",
     -- TODO: Not really a good idea to use lazygit within neovim: https://github.com/jesseduffield/lazygit/issues/996
+    g = { "<cmd>lua require ('user.terminal').lazygit_toggle()<cr>", "Lazygit" },
     j = { "<cmd>lua require 'gitsigns'.next_hunk()<cr>", "Next Hunk" },
     k = { "<cmd>lua require 'gitsigns'.prev_hunk()<cr>", "Prev Hunk" },
     l = { "<cmd>GitBlameToggle<cr>", "Blame" },
