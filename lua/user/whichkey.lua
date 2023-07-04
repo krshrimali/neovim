@@ -241,6 +241,19 @@ local mappings = {
   -- require("dapui").open()
   -- require("dapui").close()
   -- require("dapui").toggle()
+  -- s = {
+  --   -- vim.api.nvim_set_keymap("n", "s", "<cmd>lua require('flash').jump()<CR>", opts)
+  --   -- vim.api.nvim_set_keymap("n", "S", "<cmd>lua require('flash').treesitter()<CR>", opts)
+  --   -- vim.api.nvim_set_keymap("o", "r", "<cmd>lua require('flash').remote()<CR>", opts)
+  --   -- vim.api.nvim_set_keymap("o", "R", "<cmd>lua require('flash').tresitter_search()<CR>", opts)
+  --   -- vim.api.nvim_set_keymap("c", "<C-s>", "<cmd>lua require('flash').toggle()<CR>", opts)
+  --   name = "Flash NeoVim",
+  --   s = { "<cmd>lua require('flash').jump()<CR>", "Jump" },
+  --   S = { "<cmd>lua require('flash').treesitter()<CR>", "Treesitter" },
+  --   r = { "<cmd>lua require('flash').remote()<CR>", "Remote" },
+  --   R = { "<cmd>lua require('flash').treesitter_search()<CR>", "Treesitter Search" },
+  --   ["<C-s>"] = { "<cmd>lua require('flash').toggle()<CR>", "Toggle" },
+  -- },
 
   f = {
     name = "Find using Telescope",
@@ -272,6 +285,7 @@ local mappings = {
   g = {
     name = "Git",
     -- TODO: Not really a good idea to use lazygit within neovim: https://github.com/jesseduffield/lazygit/issues/996
+    g = { "<cmd>lua require ('user.terminal').lazygit_toggle()<cr>", "Lazygit" },
     j = { "<cmd>lua require 'gitsigns'.next_hunk()<cr>", "Next Hunk" },
     k = { "<cmd>lua require 'gitsigns'.prev_hunk()<cr>", "Prev Hunk" },
     l = { "<cmd>GitBlameToggle<cr>", "Blame" },

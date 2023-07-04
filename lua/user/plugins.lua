@@ -93,13 +93,13 @@ return packer.startup(function(use)
     end,
   }
   use {
-  	"zbirenbaum/copilot.lua",
-  	event = { "VimEnter" },
-  	config = function()
-  		vim.defer_fn(function()
-  		require "user.copilot"
-  	end, 100)
-  	end,
+    "zbirenbaum/copilot.lua",
+    event = { "VimEnter" },
+    config = function()
+      vim.defer_fn(function()
+        require "user.copilot"
+      end, 100)
+    end,
   }
   use "RRethy/vim-illuminate"
   -- use "j-hui/fidget.nvim"
@@ -458,14 +458,42 @@ return packer.startup(function(use)
     },
   }
 
+  -- nvim v0.7.2
+  -- use({
+  --     "kdheepak/lazygit.nvim",
+  --     -- optional for floating window border decoration
+  --     requires = {
+  --         "nvim-lua/plenary.nvim",
+  --     },
+  -- })
+
+  -- nvim v0.7.2
   use {
-    'linrongbin16/gitlinker.nvim',
-    requires = { 'nvim-lua/plenary.nvim' },
-    branch = 'master',
+    "kdheepak/lazygit.nvim",
+    requires = {
+      "nvim-telescope/telescope.nvim",
+      "nvim-lua/plenary.nvim",
+    },
     config = function()
-        require('gitlinker').setup()
+      require("telescope").load_extension "lazygit"
     end,
-}
+  }
+
+  use {
+    "linrongbin16/gitlinker.nvim",
+    requires = { "nvim-lua/plenary.nvim" },
+    branch = "master",
+    config = function()
+      require("gitlinker").setup()
+    end,
+  }
+
+  -- use {
+  --   "folke/flash.nvim",
+  --   config = function()
+  --     require("flash").setup({})
+  --   end,
+  -- }
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins

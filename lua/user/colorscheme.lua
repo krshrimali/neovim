@@ -11,7 +11,7 @@
 -- -- local colorscheme = "oxocarbon"
 
 -- local colorscheme = "gruvbox-light"
-local colorscheme = "catppuccin"
+-- local colorscheme = "catppuccin"
 -- vim.o.background="light"
 -- vim.g.gruvbox_material_background = "hard"
 -- vim.cmd [[colorscheme darkplus]]
@@ -31,6 +31,10 @@ local colorscheme = "catppuccin"
 -- vim.g.onedarker_italic_loops = false
 
 -- vim.g.onedarker_italic_conditionals = false
+
+-- wezterm.gui is not available to the mux server, so take care to
+-- do something reasonable when this config is evaluated by the mux
+local colorscheme = "darkplus"
 
 local status_ok, _ = pcall(vim.cmd, "colorscheme " .. colorscheme)
 if not status_ok then
