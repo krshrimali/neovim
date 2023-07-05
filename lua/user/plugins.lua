@@ -50,8 +50,8 @@ return packer.startup(function(use)
 
   -- Lua Development
   use "nvim-lua/plenary.nvim" -- Useful lua functions used ny lots of plugins
-  use "nvim-lua/popup.nvim"
-  use "christianchiarulli/lua-dev.nvim"
+  -- use "nvim-lua/popup.nvim"
+  -- use "christianchiarulli/lua-dev.nvim"
   -- use "folke/lua-dev.nvim"
 
   -- LSP
@@ -67,8 +67,14 @@ return packer.startup(function(use)
   -- bringing it back
   use "folke/trouble.nvim"
 
-  -- use "github/copilot.vim"
-use {
+  use {
+    "zbirenbaum/copilot-cmp",
+    after = { "copilot.lua" },
+    config = function()
+      require("copilot_cmp").setup()
+    end,
+  }
+  use {
     "zbirenbaum/copilot.lua",
     event = { "VimEnter" },
     config = function()
@@ -77,17 +83,8 @@ use {
       end, 100)
     end,
   }
-  -- use {
-  -- 	"zbirenbaum/copilot.lua",
-  -- 	event = { "VimEnter" },
-  -- 	config = function()
-  -- 		vim.defer_fn(function()
-  -- 		require "user.copilot"
-  -- 	end, 100)
-  -- 	end,
- 	-- }
+
   use "RRethy/vim-illuminate"
-  -- use "j-hui/fidget.nvim"
   use "lvimuser/lsp-inlayhints.nvim"
   -- use "simrat39/inlay-hints.nvim"
   use "https://git.sr.ht/~whynothugo/lsp_lines.nvim"
@@ -126,15 +123,15 @@ use {
       }
     end,
   }
-  use {
-    "abecodes/tabout.nvim",
-    wants = { "nvim-treesitter" }, -- or require if not used so far
-  }
+  -- use {
+  --   "abecodes/tabout.nvim",
+  --   wants = { "nvim-treesitter" }, -- or require if not used so far
+  -- }
 
   -- Marks
   use "krshrimali/harpoon"
   -- use "ThePrimeagen/harpoon"
-  use "MattesGroeger/vim-bookmarks"
+  -- use "MattesGroeger/vim-bookmarks"
   use "TimUntersberger/neogit"
   -- use { "krshrimali/nvim-transparent", branch = "fix/highlight-search" }
   use { "xiyaowong/transparent.nvim" }
@@ -171,7 +168,7 @@ use {
   -- Fuzzy Finder/Telescope
   -- use "nvim-telescope/telescope.nvim"
   use "nvim-telescope/telescope-media-files.nvim"
-  use "tom-anders/telescope-vim-bookmarks.nvim"
+  -- use "tom-anders/telescope-vim-bookmarks.nvim"
   use {
     "nvim-telescope/telescope.nvim",
     requires = {
@@ -193,9 +190,6 @@ use {
     },
   }
 
-  -- Note Taking
-  use "mickael-menu/zk-nvim"
-
   -- Color
   use "NvChad/nvim-colorizer.lua"
   -- use "ziontee113/color-picker.nvim"
@@ -216,9 +210,7 @@ use {
   use "rcarriga/nvim-notify"
   use "stevearc/dressing.nvim"
   use "ghillb/cybu.nvim"
-  use "moll/vim-bbye"
-  use "lewis6991/impatient.nvim"
-  use "lalitmee/browse.nvim"
+  -- use "lalitmee/browse.nvim"
 
   -- Registers
   use "tversteeg/registers.nvim"
@@ -234,7 +226,6 @@ use {
   -- use "theHamsta/nvim-dap-virtual-text"
   -- use "Pocco81/DAPInstall.nvim"
 
-  -- Tabline
   use "akinsho/bufferline.nvim"
   -- use "tiagovla/scope.nvim"
 
@@ -267,14 +258,6 @@ use {
   -- My own plugins
   use "krshrimali/nvim-autorunner"
 
-  use {
-    "Wansmer/treesj",
-    requires = { "nvim-treesitter" },
-    config = function()
-      require("treesj").setup {--[[ your config ]]
-      }
-    end,
-  }
 
   -- use 'echasnovski/mini.nvim'
   use "echasnovski/mini.bracketed"
@@ -304,8 +287,6 @@ use {
   -- Quickfix
   use "kevinhwang91/nvim-bqf"
 
-  -- Code Runner
-  use "is0n/jaq-nvim"
   -- use {
   --   "0x100101/lab.nvim",
   --   run = "cd js && npm ci",
@@ -314,7 +295,7 @@ use {
   -- Git
   use "lewis6991/gitsigns.nvim"
   use "f-person/git-blame.nvim"
-  use "ruifm/gitlinker.nvim"
+  -- use "ruifm/gitlinker.nvim"
   use "mattn/vim-gist"
   use "mattn/webapi-vim"
 
@@ -368,6 +349,7 @@ use {
   use { "Shadorain/shadotheme" }
   use { "catppuccin/nvim", as = "catppuccin" }
   use { "nyoom-engineering/oxocarbon.nvim" }
+  use { "projekt0n/github-nvim-theme" }
 
   -- clip
   use {
@@ -439,6 +421,51 @@ use {
       }
     end,
   }
+
+  use {
+    "krshrimali/context-pilot.nvim",
+    requires = {
+      "nvim-telescope/telescope.nvim",
+      "nvim-telescope/telescope-fzy-native.nvim",
+    },
+  }
+
+  -- nvim v0.7.2
+  -- use({
+  --     "kdheepak/lazygit.nvim",
+  --     -- optional for floating window border decoration
+  --     requires = {
+  --         "nvim-lua/plenary.nvim",
+  --     },
+  -- })
+
+  -- nvim v0.7.2
+  use {
+    "kdheepak/lazygit.nvim",
+    requires = {
+      "nvim-telescope/telescope.nvim",
+      "nvim-lua/plenary.nvim",
+    },
+    config = function()
+      require("telescope").load_extension "lazygit"
+    end,
+  }
+
+  use {
+    "linrongbin16/gitlinker.nvim",
+    requires = { "nvim-lua/plenary.nvim" },
+    branch = "master",
+    config = function()
+      require("gitlinker").setup()
+    end,
+  }
+
+  -- use {
+  --   "folke/flash.nvim",
+  --   config = function()
+  --     require("flash").setup({})
+  --   end,
+  -- }
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins

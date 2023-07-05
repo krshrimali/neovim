@@ -89,6 +89,15 @@ vim.opt.whichwrap:append("<>[]hl")
 
 vim.g.transparent_enabled = true
 
+-- vim.g.transparent_groups = vim.list_extend(vim.g.transparent_groups or {}, { "BufferLineFill", "BufferLineTabClose", "BufferLineBufferSelected", "BufferLineBackground", "BufferLineSeparator", "BufferLineIndicatorSelected" })
+
+-- vim.g.transparent_groups = vim.list_extend(
+--   vim.g.transparent_groups or {},
+--   vim.tbl_map(function(v)
+--     return v.hl_group
+--   end, vim.tbl_values(require('bufferline.config').highlights))
+-- )
+
 -- vim.g.copilot_no_tab_map = true
 -- vim.g.copilot_assume_mapped = true
 -- vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })

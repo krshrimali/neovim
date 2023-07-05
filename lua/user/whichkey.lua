@@ -186,15 +186,11 @@ local mappings = {
 
   S = {
     name = "Session",
-    s = { "<cmd>SaveSession<cr>", "Save" },
-    r = { "<cmd>RestoreSession<cr>", "Restore" },
-    x = { "<cmd>DeleteSession<cr>", "Delete" },
+    s = { "<cmd>SessionSave<cr>", "Save" },
+    r = { "<cmd>SessionRestore<cr>", "Restore" },
+    x = { "<cmd>SessionDelete<cr>", "Delete" },
     f = { "<cmd>Autosession search<cr>", "Find" },
     d = { "<cmd>Autosession delete<cr>", "Find Delete" },
-    -- a = { ":SaveSession<cr>", "test" },
-    -- a = { ":RestoreSession<cr>", "test" },
-    -- a = { ":RestoreSessionFromFile<cr>", "test" },
-    -- a = { ":DeleteSession<cr>", "test" },
   },
 
   r = {
@@ -245,6 +241,19 @@ local mappings = {
   -- require("dapui").open()
   -- require("dapui").close()
   -- require("dapui").toggle()
+  -- s = {
+  --   -- vim.api.nvim_set_keymap("n", "s", "<cmd>lua require('flash').jump()<CR>", opts)
+  --   -- vim.api.nvim_set_keymap("n", "S", "<cmd>lua require('flash').treesitter()<CR>", opts)
+  --   -- vim.api.nvim_set_keymap("o", "r", "<cmd>lua require('flash').remote()<CR>", opts)
+  --   -- vim.api.nvim_set_keymap("o", "R", "<cmd>lua require('flash').tresitter_search()<CR>", opts)
+  --   -- vim.api.nvim_set_keymap("c", "<C-s>", "<cmd>lua require('flash').toggle()<CR>", opts)
+  --   name = "Flash NeoVim",
+  --   s = { "<cmd>lua require('flash').jump()<CR>", "Jump" },
+  --   S = { "<cmd>lua require('flash').treesitter()<CR>", "Treesitter" },
+  --   r = { "<cmd>lua require('flash').remote()<CR>", "Remote" },
+  --   R = { "<cmd>lua require('flash').treesitter_search()<CR>", "Treesitter Search" },
+  --   ["<C-s>"] = { "<cmd>lua require('flash').toggle()<CR>", "Toggle" },
+  -- },
 
   f = {
     name = "Find using Telescope",
@@ -402,7 +411,7 @@ local mappings = {
     x = { "<cmd>SnipTerminate<cr>", "Terminate" },
   },
 
-  t = {
+  T = {
     name = "Terminal",
     ["1"] = { ":1ToggleTerm<cr>", "1" },
     ["2"] = { ":2ToggleTerm<cr>", "2" },
@@ -417,7 +426,7 @@ local mappings = {
     v = { "<cmd>ToggleTerm size=80 direction=vertical<cr>", "Vertical" },
   },
 
-  T = {
+  t = {
     name = "Telescope",
     c = { "<cmd>Telescope commands<cr>", "Commands" },
     p = { "<cmd>Telescope projects<cr>", "Projects" },
@@ -439,9 +448,9 @@ local mappings = {
     r = { "<cmd>Telescope resume<cr>", "Resume" },
     s = { "<cmd>Telescope symbols<cr>", "Symbols" },
     h = { "<cmd>Telescope search_history<cr>", "Search History" },
-    -- h = { "<cmd>TSHighlightCapturesUnderCursor<cr>", "Highlight" },
-    -- p = { "<cmd>TSPlaygroundToggle<cr>", "Playground" },
-    -- r = { "<cmd>TSToggle rainbow<cr>", "Rainbow" },
+    b = { "<cmd>Telescope builtin<cr>", "Builtin" },
+    B = { "<cmd>Telescope Buffers<cr>", "buffers" },
+    S = { "<cmd>Telescope current_buffer_fuzzy_find<cr>", "Search Buffer" },
   },
 
   -- z = {

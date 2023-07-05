@@ -33,7 +33,7 @@ local servers = {
   "zk@v0.10.1",
   "lemminx",
   "gopls",
-  "ruff_lsp",
+  -- "ruff_lsp",
 }
 
 local settings = {
@@ -84,6 +84,8 @@ for _, server in pairs(servers) do
   end
 
   if server == "lua_ls" then
+    -- local sumneko_lsp_opts = require "user.lsp.settings.sumneko_lua"
+    -- opts = vim.tbl_deep_extend("force", sumneko_lsp_opts, opts)
     local l_status_ok, lua_dev = pcall(require, "lua-dev")
     if not l_status_ok then
       return
