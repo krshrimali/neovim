@@ -132,7 +132,7 @@ return packer.startup(function(use)
   use "krshrimali/harpoon"
   -- use "ThePrimeagen/harpoon"
   -- use "MattesGroeger/vim-bookmarks"
-  use "TimUntersberger/neogit"
+  use "NeogitOrg/neogit"
   -- use { "krshrimali/nvim-transparent", branch = "fix/highlight-search" }
   use { "xiyaowong/transparent.nvim" }
   -- use "petertriho/nvim-scrollbar"
