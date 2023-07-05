@@ -32,9 +32,7 @@
 
 -- vim.g.onedarker_italic_conditionals = false
 
--- wezterm.gui is not available to the mux server, so take care to
--- do something reasonable when this config is evaluated by the mux
-local colorscheme = "darkplus"
+local colorscheme = "github_dark_dimmed"
 
 local status_ok, _ = pcall(vim.cmd, "colorscheme " .. colorscheme)
 if not status_ok then

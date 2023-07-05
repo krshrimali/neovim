@@ -50,8 +50,8 @@ return packer.startup(function(use)
 
   -- Lua Development
   use "nvim-lua/plenary.nvim" -- Useful lua functions used ny lots of plugins
-  use "nvim-lua/popup.nvim"
-  use "christianchiarulli/lua-dev.nvim"
+  -- use "nvim-lua/popup.nvim"
+  -- use "christianchiarulli/lua-dev.nvim"
   -- use "folke/lua-dev.nvim"
 
   -- LSP
@@ -67,24 +67,6 @@ return packer.startup(function(use)
   -- bringing it back
   use "folke/trouble.nvim"
 
-  -- use "github/copilot.vim"
-  -- use {
-  --   "zbirenbaum/copilot.lua",
-  --   event = { "VimEnter" },
-  --   config = function()
-  --     vim.defer_fn(function()
-  --       require "user.copilot"
-  --     end, 100)
-  --   end,
-  -- }
-  -- use {
-  --   "zbirenbaum/copilot.lua",
-  --   cmd = "Copilot",
-  --   event = "InsertEnter",
-  --   config = function()
-  --     require("copilot").setup({})
-  --   end,
-  -- }
   use {
     "zbirenbaum/copilot-cmp",
     after = { "copilot.lua" },
@@ -101,8 +83,8 @@ return packer.startup(function(use)
       end, 100)
     end,
   }
+
   use "RRethy/vim-illuminate"
-  -- use "j-hui/fidget.nvim"
   use "lvimuser/lsp-inlayhints.nvim"
   -- use "simrat39/inlay-hints.nvim"
   use "https://git.sr.ht/~whynothugo/lsp_lines.nvim"
@@ -141,15 +123,15 @@ return packer.startup(function(use)
       }
     end,
   }
-  use {
-    "abecodes/tabout.nvim",
-    wants = { "nvim-treesitter" }, -- or require if not used so far
-  }
+  -- use {
+  --   "abecodes/tabout.nvim",
+  --   wants = { "nvim-treesitter" }, -- or require if not used so far
+  -- }
 
   -- Marks
   use "krshrimali/harpoon"
   -- use "ThePrimeagen/harpoon"
-  use "MattesGroeger/vim-bookmarks"
+  -- use "MattesGroeger/vim-bookmarks"
   use "TimUntersberger/neogit"
   -- use { "krshrimali/nvim-transparent", branch = "fix/highlight-search" }
   use { "xiyaowong/transparent.nvim" }
@@ -186,7 +168,7 @@ return packer.startup(function(use)
   -- Fuzzy Finder/Telescope
   -- use "nvim-telescope/telescope.nvim"
   use "nvim-telescope/telescope-media-files.nvim"
-  use "tom-anders/telescope-vim-bookmarks.nvim"
+  -- use "tom-anders/telescope-vim-bookmarks.nvim"
   use {
     "nvim-telescope/telescope.nvim",
     requires = {
@@ -208,9 +190,6 @@ return packer.startup(function(use)
     },
   }
 
-  -- Note Taking
-  use "mickael-menu/zk-nvim"
-
   -- Color
   use "NvChad/nvim-colorizer.lua"
   -- use "ziontee113/color-picker.nvim"
@@ -231,9 +210,7 @@ return packer.startup(function(use)
   use "rcarriga/nvim-notify"
   use "stevearc/dressing.nvim"
   use "ghillb/cybu.nvim"
-  use "moll/vim-bbye"
-  use "lewis6991/impatient.nvim"
-  use "lalitmee/browse.nvim"
+  -- use "lalitmee/browse.nvim"
 
   -- Registers
   use "tversteeg/registers.nvim"
@@ -249,7 +226,6 @@ return packer.startup(function(use)
   -- use "theHamsta/nvim-dap-virtual-text"
   -- use "Pocco81/DAPInstall.nvim"
 
-  -- Tabline
   use "akinsho/bufferline.nvim"
   -- use "tiagovla/scope.nvim"
 
@@ -277,14 +253,6 @@ return packer.startup(function(use)
   -- My own plugins
   use "krshrimali/nvim-autorunner"
 
-  use {
-    "Wansmer/treesj",
-    requires = { "nvim-treesitter" },
-    config = function()
-      require("treesj").setup {--[[ your config ]]
-      }
-    end,
-  }
 
   -- use 'echasnovski/mini.nvim'
   use "echasnovski/mini.bracketed"
@@ -314,8 +282,6 @@ return packer.startup(function(use)
   -- Quickfix
   use "kevinhwang91/nvim-bqf"
 
-  -- Code Runner
-  use "is0n/jaq-nvim"
   -- use {
   --   "0x100101/lab.nvim",
   --   run = "cd js && npm ci",
@@ -378,6 +344,7 @@ return packer.startup(function(use)
   use { "Shadorain/shadotheme" }
   use { "catppuccin/nvim", as = "catppuccin" }
   use { "nyoom-engineering/oxocarbon.nvim" }
+  use { "projekt0n/github-nvim-theme" }
 
   -- clip
   use {

@@ -25,11 +25,26 @@ keymap("n", "<m-j>", "<C-w>j", opts)
 keymap("n", "<m-k>", "<C-w>k", opts)
 keymap("n", "<m-l>", "<C-w>l", opts)
 
--- Resize with arrows
-keymap("n", "<C-Up>", ":resize -2<CR>", opts)
-keymap("n", "<C-Down>", ":resize +2<CR>", opts)
-keymap("n", "<C-Left>", ":vertical resize -2<CR>", opts)
-keymap("n", "<C-Right>", ":vertical resize +2<CR>", opts)
+keymap("n", "+", "<C-a>", opts)
+keymap("n", "-", "<C-x>", opts)
+
+-- Delete word backwards
+keymap("n", "dw", 'vb"_d', opts)
+
+-- Select all
+keymap("n", "<C-a>", "gg<S-v>G", opts)
+
+keymap("n", "<C-w><left>", "<C-w><", opts)
+keymap("n", "<C-w><right>", "<C-w>>", opts)
+keymap("n", "<C-w><up>", "<C-w>+", opts)
+keymap("n", "<C-w><down>", "<C-w>-", opts)
+
+-- -- Resize with arrows
+-- Didnd't work well on Mac
+-- keymap("n", "<m-S-k>", ":resize -2<CR>", opts)
+-- keymap("n", "<m-S-j>", ":resize +2<CR>", opts)
+-- keymap("n", "<m-S-l>", ":vertical resize -2<CR>", opts)
+-- keymap("n", "<m-S-h>", ":vertical resize +2<CR>", opts)
 
 -- Naviagate buffers
 -- TODO: Maybe this is not required in favor of C-l, C-h
@@ -68,7 +83,7 @@ keymap("x", "<leader>p", '"_dP', opts)
 keymap("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>//gI<Left><Left><Left>", opts)
 
 -- NOTE: the fact that tab and ctrl-i are the same is stupid
-keymap("n", "Q", "<cmd>Bdelete!<CR>", opts)
+keymap("n", "<leader>Q", "<cmd>Bdelete!<CR>", opts)
 keymap("n", "<F11>", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
 keymap("n", "<F12>", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
 -- keymap("n", "gI", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
@@ -93,6 +108,7 @@ M.show_documentation = function()
     vim.lsp.buf.hover()
   end
 end
+
 vim.api.nvim_set_keymap("n", "K", ":lua require('user.keymaps').show_documentation()<CR>", opts)
 
 -- TODO: Rethink on this, currently not using it... (harpoon)
@@ -137,12 +153,12 @@ keymap("n", "<m-q>", ":call QuickFixToggle()<cr>", opts)
 
 -- imap <silent><script><expr> <C-M> copilot#Accept("\<CR>")
 -- vim.keymap.set({"i", "C", "M"}, )
-vim.api.nvim_set_keymap("i", "<C-M>", "<cmd>copilot#Accept('<CR>')<cr>", opts)
-vim.api.nvim_set_keymap("n", "<C-M>", "<cmd>copilot#Accept('<CR>')<cr>", opts)
-vim.api.nvim_set_keymap("i", "<C-N>", "<cmd>copilot#Next()<cr>", opts)
-vim.api.nvim_set_keymap("n", "<C-N>", "<cmd>copilot#Next()<cr>", opts)
-vim.api.nvim_set_keymap("i", "<C-P>", "<cmd>copilot#Prev()<cr>", opts)
-vim.api.nvim_set_keymap("n", "<C-P>", "<cmd>copilot#Prev()<cr>", opts)
+-- vim.api.nvim_set_keymap("i", "<C-M>", "<cmd>copilot#Accept('<CR>')<cr>", opts)
+-- vim.api.nvim_set_keymap("n", "<C-M>", "<cmd>copilot#Accept('<CR>')<cr>", opts)
+-- vim.api.nvim_set_keymap("i", "<C-N>", "<cmd>copilot#Next()<cr>", opts)
+-- vim.api.nvim_set_keymap("n", "<C-N>", "<cmd>copilot#Next()<cr>", opts)
+-- vim.api.nvim_set_keymap("i", "<C-P>", "<cmd>copilot#Prev()<cr>", opts)
+-- vim.api.nvim_set_keymap("n", "<C-P>", "<cmd>copilot#Prev()<cr>", opts)
 -- map copilot#Accept
 -- vim.api.nvim_set_keymap("i", "<C-M>", "<cmd>copilot#Accept('<CR>')<cr>", opts)
 -- vim.api.nvim_set_keymap("n", "<C-M>", "<cmd>copilot#Accept('<CR>')<cr>", opts)
