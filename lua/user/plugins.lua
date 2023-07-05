@@ -243,7 +243,12 @@ use {
   --[[ use "freddiehaddad/feline.nvim" ]]
 
   -- Startup
-  use "goolord/alpha-nvim"
+  use {
+    "goolord/alpha-nvim",
+    config = function()
+      require("alpha").setup(require("alpha.themes.dashboard").config)
+    end,
+  }
 
   -- Indent
   use "lukas-reineke/indent-blankline.nvim"
