@@ -132,7 +132,7 @@ return packer.startup(function(use)
   use "krshrimali/harpoon"
   -- use "ThePrimeagen/harpoon"
   -- use "MattesGroeger/vim-bookmarks"
-  use "TimUntersberger/neogit"
+  use "NeogitOrg/neogit"
   -- use { "krshrimali/nvim-transparent", branch = "fix/highlight-search" }
   use { "xiyaowong/transparent.nvim" }
   -- use "petertriho/nvim-scrollbar"
@@ -234,7 +234,12 @@ return packer.startup(function(use)
   --[[ use "freddiehaddad/feline.nvim" ]]
 
   -- Startup
-  use "goolord/alpha-nvim"
+  use {
+    "goolord/alpha-nvim",
+    config = function()
+      require("alpha").setup(require("alpha.themes.dashboard").config)
+    end,
+  }
 
   -- Indent
   use "lukas-reineke/indent-blankline.nvim"
