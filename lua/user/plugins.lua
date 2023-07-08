@@ -50,9 +50,19 @@ return packer.startup(function(use)
 
   -- Lua Development
   use "nvim-lua/plenary.nvim" -- Useful lua functions used ny lots of plugins
-  -- use "nvim-lua/popup.nvim"
-  -- use "christianchiarulli/lua-dev.nvim"
+  use "nvim-lua/popup.nvim"
+  use "christianchiarulli/lua-dev.nvim"
   -- use "folke/lua-dev.nvim"
+  use "j-hui/fidget.nvim"
+
+  use {
+    "Wansmer/treesj",
+    requires = { "nvim-treesitter" },
+    config = function()
+      require("treesj").setup {--[[ your config ]]
+      }
+    end,
+  }
 
   -- LSP
   use "neovim/nvim-lspconfig" -- enable LSP
