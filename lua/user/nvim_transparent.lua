@@ -40,6 +40,7 @@ require("transparent").setup {
     "BufferLineSeparator",
     "BufferLineIndicatorSelected",
     "BufferLineNumbers",
+    "BufferLineNumbersSelected",
     "WinBar",
     "WinBarNC",
     "NvimTreeNormal",
