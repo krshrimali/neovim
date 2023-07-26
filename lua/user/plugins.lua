@@ -462,9 +462,8 @@ return packer.startup(function(use)
   }
 
   use {
-    "linrongbin16/gitlinker.nvim",
-    requires = { "nvim-lua/plenary.nvim" },
-    branch = "master",
+    'ruifm/gitlinker.nvim',
+    requires = 'nvim-lua/plenary.nvim',
     config = function()
       require("gitlinker").setup()
     end,
@@ -476,6 +475,9 @@ return packer.startup(function(use)
   --     require("flash").setup({})
   --   end,
   -- }
+  use {
+    "nvim-treesitter/nvim-treesitter-context"
+  }
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins

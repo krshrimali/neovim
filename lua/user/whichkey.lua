@@ -147,7 +147,7 @@ local mappings = {
   -- P = { "<cmd>lua require('telescope').extensions.projects.projects()<cr>", "Projects" },
   -- ["R"] = { '<cmd>lua require("renamer").rename()<cr>', "Rename" },
   -- ["z"] = { "<cmd>ZenMode<cr>", "Zen" },
-  ["gy"] = "Link",
+  -- ["gy"] = "Link",
 
   B = {
     name = "Browse",
@@ -178,11 +178,11 @@ local mappings = {
     t = { '<cmd>lua require("user.functions").toggle_tabline()<cr>', "Tabline" },
   },
 
-  -- s = {
-  --   name = "Split",
-  --   s = { "<cmd>split<cr>", "HSplit" },
-  --   v = { "<cmd>vsplit<cr>", "VSplit" },
-  -- },
+  k = {
+    name = "Split",
+    s = { "<cmd>split<cr>", "HSplit" },
+    v = { "<cmd>vsplit<cr>", "VSplit" },
+  },
 
   S = {
     name = "Session",
@@ -312,6 +312,17 @@ local mappings = {
       g = { "<cmd>Gist -b<cr>", "Create" },
       l = { "<cmd>Gist -l<cr>", "List" },
       p = { "<cmd>Gist -b -p<cr>", "Create Private" },
+    },
+    L = {
+      name = "Gitlinker",
+      Y = {
+        "<cmd>lua require('gitlinker').get_buf_range_url('n', {action_callback = require'gitlinker.actions'.open_in_browser})<cr>",
+        "Open in browser",
+      },
+      H = {
+        "<cmd>lua require('gitlinker').get_repo_url({action_callback = require('gitlinker.actions').open_in_browser})<cr>",
+        "Open Home Repo URL",
+      },
     },
   },
 
