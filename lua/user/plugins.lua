@@ -142,7 +142,15 @@ return packer.startup(function(use)
   use "krshrimali/harpoon"
   -- use "ThePrimeagen/harpoon"
   -- use "MattesGroeger/vim-bookmarks"
-  use "NeogitOrg/neogit"
+  use {
+    "NeogitOrg/neogit",
+    dependencies = {
+      "nvim-lua/plenary.nvim", -- required
+      "nvim-telescope/telescope.nvim", -- optional
+      "sindrets/diffview.nvim", -- optional
+    },
+    config = true,
+  }
   -- use { "krshrimali/nvim-transparent", branch = "fix/highlight-search" }
   use { "xiyaowong/transparent.nvim" }
   -- use "petertriho/nvim-scrollbar"
@@ -268,7 +276,6 @@ return packer.startup(function(use)
   -- My own plugins
   use "krshrimali/nvim-autorunner"
 
-
   -- use 'echasnovski/mini.nvim'
   use "echasnovski/mini.bracketed"
 
@@ -315,7 +322,6 @@ return packer.startup(function(use)
   -- Editing Support
   use "windwp/nvim-autopairs"
   use "monaqa/dial.nvim"
-  use "nacro90/numb.nvim"
   use "andymass/vim-matchup"
   use "folke/zen-mode.nvim"
   -- use "Pocco81/true-zen.nvim"
@@ -462,8 +468,8 @@ return packer.startup(function(use)
   }
 
   use {
-    'ruifm/gitlinker.nvim',
-    requires = 'nvim-lua/plenary.nvim',
+    "ruifm/gitlinker.nvim",
+    requires = "nvim-lua/plenary.nvim",
     config = function()
       require("gitlinker").setup()
     end,
@@ -476,8 +482,10 @@ return packer.startup(function(use)
   --   end,
   -- }
   use {
-    "nvim-treesitter/nvim-treesitter-context"
+    "nvim-treesitter/nvim-treesitter-context",
   }
+
+  use 'nacro90/numb.nvim'
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins

@@ -45,6 +45,7 @@ telescope.setup {
       },
     },
 
+    disable_coordinates = false,
     layout_strategy = "horizontal",
     prompt_prefix = icons.ui.Telescope .. " ",
     selection_caret = " ",
