@@ -13,6 +13,7 @@ require "user.autopairs"
 require "user.comment"
 require "user.gitsigns"
 require "user.nvim-tree"
+-- require "nvim-tree".setup {}
 reload "user.lualine"
 require "user.toggleterm"
 require "user.project"

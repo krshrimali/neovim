@@ -248,7 +248,7 @@ return packer.startup(function(use)
   -- use "tiagovla/scope.nvim"
 
   -- Statusline
-  use "christianchiarulli/lualine.nvim"
+  use "nvim-lualine/lualine.nvim"
   --[[ use "freddiehaddad/feline.nvim" ]]
 
   -- Startup
@@ -263,8 +263,18 @@ return packer.startup(function(use)
   use "lukas-reineke/indent-blankline.nvim"
 
   -- File Explorer
-  use "kyazdani42/nvim-tree.lua"
-  use "christianchiarulli/lir.nvim"
+  -- use "kyazdani42/nvim-tree.lua"
+
+  use {
+    "nvim-tree/nvim-tree.lua",
+    requires = {
+      "nvim-tree/nvim-web-devicons", -- optional
+    },
+    -- config = function()
+    --   require("nvim-tree").setup({})
+    -- end,
+  }
+  use "tamago324/lir.nvim"
 
   -- Comment
   use "numToStr/Comment.nvim"
@@ -485,7 +495,7 @@ return packer.startup(function(use)
     "nvim-treesitter/nvim-treesitter-context",
   }
 
-  use 'nacro90/numb.nvim'
+  use "nacro90/numb.nvim"
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
