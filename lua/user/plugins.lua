@@ -261,7 +261,7 @@ return packer.startup(function(use)
   }
 
   -- Indent
-  use "lukas-reineke/indent-blankline.nvim"
+  use {"lukas-reineke/indent-blankline.nvim", main="ibl", opts={}}
 
   -- File Explorer
   -- use "kyazdani42/nvim-tree.lua"

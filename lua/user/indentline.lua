@@ -47,7 +47,7 @@ vim.g.indent_blankline_show_current_context = true
 --   "operation_type",
 -- }
 -- HACK: work-around for https://github.com/lukas-reineke/indent-blankline.nvim/issues/59
-vim.wo.colorcolumn = "99999"
+-- vim.wo.colorcolumn = "99999"
 
 vim.opt.termguicolors = true
 vim.cmd [[highlight IndentBlanklineIndent1 guifg=#E06C75 gui=nocombine]]
@@ -62,17 +62,17 @@ vim.opt.list = true
 -- vim.opt.listchars:append "space:"
 -- vim.opt.listchars:append "eol:↴"
 
-indent_blankline.setup {
-  -- show_end_of_line = true,
-  -- space_char_blankline = "space:⋅",
-  -- show_current_context = true,
-  -- show_current_context_start = true,
-  -- char_highlight_list = {
-  --   "IndentBlanklineIndent1",
-  --   "IndentBlanklineIndent2",
-  --   "IndentBlanklineIndent3",
-  --   "IndentBlanklineIndent4",
-  --   "IndentBlanklineIndent5",
-  --   "IndentBlanklineIndent6",
-  -- },
-}
+-- indent_blankline.setup {
+--   -- show_end_of_line = true,
+--   -- space_char_blankline = "space:⋅",
+--   -- show_current_context = true,
+--   -- show_current_context_start = true,
+--   -- char_highlight_list = {
+--   --   "IndentBlanklineIndent1",
+--   --   "IndentBlanklineIndent2",
+--   --   "IndentBlanklineIndent3",
+--   --   "IndentBlanklineIndent4",
+--   --   "IndentBlanklineIndent5",
+--   --   "IndentBlanklineIndent6",
+--   -- },
+-- }
