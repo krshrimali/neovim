@@ -157,7 +157,19 @@ local mappings = {
     f = { "<cmd>BrowseDevdocsFiletypeSearch<cr>", "Devdocs Filetype" },
     m = { "<cmd>BrowseMdnSearch<cr>", "Mdn" },
   },
-
+  E = {
+    name = "Executor",
+    r = { "<cmd>ExecutorRun<cr>", "Run" },
+    a = { "<cmd>ExecutorSetCommand<cr>", "Set Command" },
+    s = { "<cmd>ExecutorShowDetail<cr>", "Show Detail" },
+    h = { "<cmd>ExecutorHideDetail<cr>", "Hide Detail" },
+    t = { "<cmd>ExecutorToggleDetail<cr>", "Toggle Detail" },
+    S = { "<cmd>ExecutorSwapToSplit<cr>", "Swap to Split" },
+    P = { "<cmd>ExecutorSwapToPopup<cr>", "Swap to Popup" },
+    c = { "<cmd>ExecutorShowPresets<cr>", "Show preset commands in config" },
+    H = { "<cmd>ExecutorShowHistory<cr>", "Show History" },
+    C = { "<cmd>ExecutorReset<cr>", "Clear output" },
+  },
   p = {
     name = "Packer",
     c = { "<cmd>PackerCompile<cr>", "Compile" },

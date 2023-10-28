@@ -68,3 +68,4 @@ require "user.bracketed"
 require "user.dap"
 -- require "user.copilot"
 require "user.terminal"
+require "executor".setup({})
