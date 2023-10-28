@@ -76,23 +76,24 @@ return packer.startup(function(use)
   use "b0o/SchemaStore.nvim"
   -- bringing it back
   use "folke/trouble.nvim"
+  use "github/copilot.vim"
 
-  use {
-    "zbirenbaum/copilot-cmp",
-    after = { "copilot.lua" },
-    config = function()
-      require("copilot_cmp").setup()
-    end,
-  }
-  use {
-    "zbirenbaum/copilot.lua",
-    event = { "VimEnter" },
-    config = function()
-      vim.defer_fn(function()
-        require "user.copilot"
-      end, 100)
-    end,
-  }
+  -- use {
+  --   "zbirenbaum/copilot-cmp",
+  --   after = { "copilot.lua" },
+  --   config = function()
+  --     require("copilot_cmp").setup()
+  --   end,
+  -- }
+  -- use {
+  --   "zbirenbaum/copilot.lua",
+  --   event = { "VimEnter" },
+  --   config = function()
+  --     vim.defer_fn(function()
+  --       require "user.copilot"
+  --     end, 100)
+  --   end,
+  -- }
 
   use "RRethy/vim-illuminate"
   use "lvimuser/lsp-inlayhints.nvim"

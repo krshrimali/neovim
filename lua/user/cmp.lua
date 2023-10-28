@@ -138,10 +138,10 @@ cmp.setup {
         end
         local entry = cmp.get_selected_entry()
         local is_copilot = entry and entry.source.name == "copilot"
-        if is_copilot then
-          confirm_opts.behavior = cmp.ConfirmBehavior.Replace
-          confirm_opts.select = true
-        end
+        -- if is_copilot then
+        --   confirm_opts.behavior = cmp.ConfirmBehavior.Replace
+        --   confirm_opts.select = true
+        -- end
         if cmp.confirm(confirm_opts) then
           return -- success, exit early
         end
@@ -191,10 +191,10 @@ cmp.setup {
       --   vim_item.kind = icons.misc.Robot
       --   vim_item.kind_hl_group = "CmpItemKindTabnine"
       -- end
-      if entry.source.name == "copilot" then
-        vim_item.kind = icons.git.Octoface
-        vim_item.kind_hl_group = "CmpItemKindCopilot"
-      end
+      -- if entry.source.name == "copilot" then
+      --   vim_item.kind = icons.git.Octoface
+      --   vim_item.kind_hl_group = "CmpItemKindCopilot"
+      -- end
 
       -- if entry.source.name == "emoji" then
       --   vim_item.kind = icons.misc.Smiley

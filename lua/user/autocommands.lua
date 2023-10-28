@@ -136,16 +136,16 @@ vim.api.nvim_create_autocmd(
   { command = [[set nofoldenable foldmethod=manual foldlevelstart=99]] }
 )
 
-vim.api.nvim_create_autocmd({ "InsertEnter" }, {
-  callback = function()
-    vim.schedule(function()
-      local cmp = require "cmp"
-      cmp.complete {
-        config = { sources = { name = "buffer" }, { name = "copilot" } },
-      }
-    end)
-  end,
-})
+-- vim.api.nvim_create_autocmd({ "InsertEnter" }, {
+--   callback = function()
+--     vim.schedule(function()
+--       local cmp = require "cmp"
+--       cmp.complete {
+--         config = { sources = { name = "buffer" }, { name = "copilot" } },
+--       }
+--     end)
+--   end,
+-- })
 
 -- vim.cmd([[
 -- autocmd CursorHold * call v:lua.s_on_insert_enter()
