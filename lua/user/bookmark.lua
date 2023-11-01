@@ -1,8 +1,5 @@
 -- highlight BookmarkSign ctermbg=NONE ctermfg=160
 -- highlight BookmarkLine ctermbg=194 ctermfg=NONE
-local icons = require "user.icons"
-vim.g.bookmark_sign = icons.ui.BookMark
-vim.g.bookmark_annotation_sign = icons.ui.Comment
 vim.g.bookmark_no_default_key_mappings = 1
 vim.g.bookmark_auto_save = 0
 vim.g.bookmark_auto_close = 0

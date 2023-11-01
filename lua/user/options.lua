@@ -88,6 +88,7 @@ vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1e222a" })
 vim.opt.whichwrap:append("<>[]hl")
 
 vim.g.transparent_enabled = false
+vim.g.use_nerd_fonts = false
 
 -- vim.g.transparent_groups = vim.list_extend(vim.g.transparent_groups or {}, { "BufferLineFill", "BufferLineTabClose", "BufferLineBufferSelected", "BufferLineBackground", "BufferLineSeparator", "BufferLineIndicatorSelected" })
 

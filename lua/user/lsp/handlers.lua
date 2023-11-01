@@ -10,13 +10,11 @@ M.capabilities.textDocument.completion.completionItem.snippetSupport = true
 M.capabilities = cmp_nvim_lsp.default_capabilities(M.capabilities)
 
 M.setup = function()
-  local icons = require "user.icons"
   local signs = {
-
-    { name = "DiagnosticSignError", text = icons.diagnostics.Error },
-    { name = "DiagnosticSignWarn", text = icons.diagnostics.Warning },
-    { name = "DiagnosticSignHint", text = icons.diagnostics.Hint },
-    { name = "DiagnosticSignInfo", text = icons.diagnostics.Information },
+    { name = "DiagnosticSignError", text = "E" },
+    { name = "DiagnosticSignWarn", text = "W" },
+    { name = "DiagnosticSignHint", text = "H" },
+    { name = "DiagnosticSignInfo", text = "I" },
   }
 
   for _, sign in ipairs(signs) do

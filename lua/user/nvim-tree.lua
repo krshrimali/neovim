@@ -234,16 +234,6 @@ nvim_tree.setup {
     -- height = 30,
     -- hide_root_folder = false,
     side = "left",
-    -- auto_resize = true,
-    -- shifted to on_attach, see https://github.com/nvim-tree/nvim-tree.lua/wiki/Migrating-To-on_attach
-    -- mappings = {
-    --   custom_only = false,
-    --   list = {
-    --     { key = { "l", "<CR>", "o" }, cb = tree_cb "edit" },
-    --     { key = "h", cb = tree_cb "close_node" },
-    --     { key = "v", cb = tree_cb "vsplit" },
-    --   },
-    -- },
     number = false,
     relativenumber = false,
   },
