@@ -17,7 +17,7 @@ local opts = {
   log_level = "info",
   auto_session_enable_last_session = true,
   auto_session_root_dir = vim.fn.stdpath "data" .. "/sessions/",
-  auto_session_enabled = true,
+  auto_session_enabled = false,
   auto_save_enabled = nil,
   auto_restore_enabled = nil,
   auto_session_suppress_dirs = {
@@ -37,8 +37,8 @@ telescope.load_extension "session-lens"
 session_lens.setup {
   path_display = { "shorten" },
   -- theme_conf = { border = false },
-  previewer = false,
-  prompt_title = "Sessions",
+  previewer = true,
+  prompt_title = "TGKRS Sessions",
 }
 
 auto_session.setup(opts)

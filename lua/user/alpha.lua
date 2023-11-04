@@ -23,14 +23,18 @@ dashboard.section.header.val = {
 }
 dashboard.section.buttons.val = {
   -- button("f", icons.documents.Files .. " Find file", ":Telescope find_files <CR>"),
-  button("f", icons.documents.Files .. " Find file", ":lua require('telescope.builtin').find_files(require('user.telescope.user_themes').get_ivy_vertical{})<CR>"),
+  button(
+    "f",
+    icons.documents.Files .. " Find file",
+    ":lua require('telescope.builtin').find_files(require('user.telescope.user_themes').get_ivy_vertical{})<CR>"
+  ),
   button("e", icons.ui.NewFile .. " New file", ":ene <BAR> startinsert <CR>"),
   button("p", icons.git.Repo .. " Find project", ":lua require('telescope').extensions.projects.projects()<CR>"),
   button("r", icons.ui.History .. " Recent files", ":Telescope oldfiles <CR>"),
   button("t", icons.ui.List .. " Find text", ":Telescope live_grep <CR>"),
-  -- dashboard.button("s", icons.ui.SignIn .. " Find Session", ":silent Autosession search <CR>"),
   button("s", icons.ui.SignIn .. " Find Session", ":SearchSession<CR>"),
   button("c", icons.ui.Gear .. " Config", ":e ~/.config/nvim/init.lua <CR>"),
+  button("z", icons.ui.Lock .. " Settings", ":e ~/.zshrc <CR>"),
   button("u", icons.ui.CloudDownload .. " Update", ":PackerSync<CR>"),
   button("q", icons.ui.SignOut .. " Quit", ":qa<CR>"),
 }
@@ -40,7 +44,7 @@ local function footer()
   -- local fortune = handle:read("*a")
   -- handle:close()
   -- return fortune
-  return "krshrimali.github.io"
+  return "https://twitch.tv/buffetcodes\nhttps://youtube.com/c/kushashwaraviShrimali\nhttps://krshrimali.github.io\nhttps://twitter.com/kushashwa"
 end
 
 dashboard.section.footer.val = footer()
