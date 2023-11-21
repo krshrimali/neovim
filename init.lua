@@ -69,3 +69,4 @@ require "user.dap"
 -- require "user.copilot"
 require "user.terminal"
 require "executor".setup({})
+require "goto-preview".setup({})
