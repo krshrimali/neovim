@@ -159,9 +159,6 @@ return packer.startup(function(use)
   -- use "rmagatti/goto-preview"
   use {
     "rmagatti/goto-preview",
-    config = function()
-      require("goto-preview").setup {}
-    end,
   }
   use {
     "mawkler/modicator.nvim",
