@@ -70,3 +70,4 @@ require "user.dap"
 require "user.terminal"
 require "executor".setup({})
 require "goto-preview".setup({})
+require "gitlinker".setup({})
