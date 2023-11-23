@@ -58,10 +58,6 @@ return packer.startup(function(use)
   use {
     "Wansmer/treesj",
     requires = { "nvim-treesitter" },
-    config = function()
-      require("treesj").setup {--[[ your config ]]
-      }
-    end,
   }
 
   -- LSP
@@ -129,11 +125,6 @@ return packer.startup(function(use)
   use {
     "kylechui/nvim-surround",
     -- tag = "*", -- Use for stability; omit to use `main` branch for the latest features
-    config = function()
-      require("nvim-surround").setup {
-        -- Configuration here, or leave empty to use defaults
-      }
-    end,
   }
   -- use {
   --   "abecodes/tabout.nvim",
@@ -168,9 +159,6 @@ return packer.startup(function(use)
       vim.o.cursorline = true
       vim.o.number = true
       vim.o.termguicolors = true
-    end,
-    config = function()
-      require("modicator").setup {}
     end,
   }
   use { "chrisgrieser/nvim-spider" }
@@ -253,9 +241,9 @@ return packer.startup(function(use)
   -- Startup
   use {
     "goolord/alpha-nvim",
-    config = function()
-      require("alpha").setup(require("alpha.themes.dashboard").config)
-    end,
+    -- config = function()
+    --   require("alpha").setup(require("alpha.themes.dashboard").config)
+    -- end,
   }
 
   -- Indent
@@ -293,17 +281,6 @@ return packer.startup(function(use)
   -- Note: https://github.com/ahmedkhalf/project.nvim - Look at the options here if the auto change of cwd irritates me
   use {
     "ahmedkhalf/project.nvim",
-    config = function()
-      require("project_nvim").setup {
-        -- manual_mode = true,
-        -- respect_buf_cwd = true,
-        -- update_cwd = true,
-        -- update_focused_file = {
-        --   enable = true,
-        --   update_cwd = true
-        -- },
-      }
-    end,
   }
   use "nvim-pack/nvim-spectre"
 
@@ -384,9 +361,6 @@ return packer.startup(function(use)
       { "kkharji/sqlite.lua", module = "sqlite" },
       { "nvim-telescope/telescope.nvim" },
     },
-    config = function()
-      require("neoclip").setup()
-    end,
   }
 
   -- Graveyard
@@ -441,11 +415,6 @@ return packer.startup(function(use)
   use {
     "anuvyklack/fold-preview.nvim",
     requires = "anuvyklack/keymap-amend.nvim",
-    config = function()
-      require("fold-preview").setup {
-        -- Your configuration goes here.
-      }
-    end,
   }
 
   use {
@@ -480,9 +449,6 @@ return packer.startup(function(use)
   use {
     "ruifm/gitlinker.nvim",
     requires = "nvim-lua/plenary.nvim",
-    config = function()
-      require("gitlinker").setup()
-    end,
   }
 
   -- use {
@@ -497,12 +463,6 @@ return packer.startup(function(use)
 
   use "nacro90/numb.nvim"
   use "MunifTanjim/nui.nvim"
-  use {
-    "google/executor.nvim",
-    config = function()
-      require("executor").setup {}
-    end,
-  }
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
