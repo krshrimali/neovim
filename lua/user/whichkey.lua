@@ -373,12 +373,14 @@ local mappings = {
       "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>",
       "Prev Diagnostic",
     },
-    v = { "<cmd>lua require('lsp_lines').toggle()<cr>", "Virtual Lines" },
-    V = {
-      function()
-        vim.diagnostic.config { virtual_text = not vim.diagnostic.config().virtual_text }
-      end,
-      "Virtual Text",
+    e = {
+      v = { "<cmd>lua require('lsp_lines').toggle()<cr>", "Virtual Lines" },
+      V = {
+        function()
+          vim.diagnostic.config { virtual_text = not vim.diagnostic.config().virtual_text }
+        end,
+        "Virtual Text",
+      },
     },
     o = { "<cmd>SymbolsOutline<cr>", "Outline" },
     q = { "<cmd>lua vim.diagnostic.setloclist()<cr>", "Quickfix (Diagnostics)" },
