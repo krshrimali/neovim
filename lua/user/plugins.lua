@@ -463,6 +463,7 @@ return packer.startup(function(use)
 
   use "nacro90/numb.nvim"
   use "MunifTanjim/nui.nvim"
+  use "stevearc/oil.nvim"
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins

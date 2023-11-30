@@ -94,7 +94,9 @@ keymap("n", "<C-p>", "<cmd>Telescope projects<cr>", opts)
 keymap("n", "<C-s>", "<cmd>lua vim.lsp.buf.document_symbol()<cr>", opts)
 keymap("n", "<C-z>", "<cmd>ZenMode<cr>", opts)
 
-keymap("n", "-", ":lua require'lir.float'.toggle()<cr>", opts)
+-- keymap("n", "-", ":lua require'lir.float'.toggle()<cr>", opts)
+
+vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
 M.show_documentation = function()
   local filetype = vim.bo.filetype

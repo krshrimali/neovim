@@ -76,3 +76,5 @@ require "alpha".setup(require("alpha.themes.dashboard").config)
 require "project_nvim".setup({})
 require "neoclip".setup()
 require "fold-preview".setup({})
+require "user.oil"
+require "oil".setup()
