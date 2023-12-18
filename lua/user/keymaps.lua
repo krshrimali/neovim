@@ -6,6 +6,7 @@
 --   term_mode = "t",
 --   command_mode = "c",
 
+
 -- Shorten function name
 M = {}
 local opts = { noremap = true, silent = true }
@@ -177,5 +178,20 @@ keymap("n", "<m-q>", ":call QuickFixToggle()<cr>", opts)
 vim.api.nvim_set_keymap("i", "<C-l>", 'copilot#Accept("<CR>")', { expr = true, silent = true })
 
 vim.g.copilot_no_tab_map = true
+
+local opts = { noremap = true, silent = true }
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>pp",
+  [[:lua require('user.subfolder').copySubfolderPath()<CR>]],
+  { noremap = true, silent = true }
+)
+
+vim.api.nvim_set_keymap(
+  "n",
+  "<Leader>pr",
+  [[:lua require('user.subfolder').copyRelativeFolderPath()<CR>]],
+  { noremap = true, silent = true }
+)
 
 return M
