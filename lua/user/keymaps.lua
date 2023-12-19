@@ -6,7 +6,6 @@
 --   term_mode = "t",
 --   command_mode = "c",
 
-
 -- Shorten function name
 M = {}
 local opts = { noremap = true, silent = true }
@@ -20,6 +19,8 @@ vim.g.maplocalleader = ","
 vim.g.mkdp_browser = "microsoft-edge"
 
 -- Normal --
+keymap("n", "glb", "<cmd>Gitsigns blame_line<cr>", opts)
+
 -- Better window navigation
 keymap("n", "<m-h>", "<C-w>h", opts)
 keymap("n", "<m-j>", "<C-w>j", opts)
