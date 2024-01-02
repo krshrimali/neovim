@@ -329,17 +329,17 @@ local mappings = {
       l = { "<cmd>Gist -l<cr>", "List" },
       p = { "<cmd>Gist -b -p<cr>", "Create Private" },
     },
-    L = {
-      name = "Gitlinker",
-      Y = {
-        "<cmd>lua require('gitlinker').get_buf_range_url('n', {action_callback = require'gitlinker.actions'.open_in_browser})<cr>",
-        "Open in browser",
-      },
-      H = {
-        "<cmd>lua require('gitlinker').get_repo_url({action_callback = require('gitlinker.actions').open_in_browser})<cr>",
-        "Open Home Repo URL",
-      },
-    },
+    -- L = {
+    --   name = "Gitlinker",
+    --   Y = {
+    --     "<cmd>lua require('gitlinker').get_buf_range_url('n', {action_callback = require'gitlinker.actions'.open_in_browser})<cr>",
+    --     "Open in browser",
+    --   },
+    --   H = {
+    --     "<cmd>lua require('gitlinker').get_repo_url({action_callback = require('gitlinker.actions').open_in_browser})<cr>",
+    --     "Open Home Repo URL",
+    --   },
+    -- },
   },
 
   -- GitBlame
@@ -480,6 +480,12 @@ local mappings = {
     b = { "<cmd>Telescope builtin<cr>", "Builtin" },
     B = { "<cmd>Telescope Buffers<cr>", "buffers" },
     S = { "<cmd>Telescope current_buffer_fuzzy_find<cr>", "Search Buffer" },
+  },
+
+  z = {
+    name = "Folding",
+    o = { "<cmd>lua require('ufo').openAllFolds()<CR>", "Open All Folds" },
+    c = { "<cmd>lua require('ufo').closeAllFolds()<CR>", "Close" },
   },
 
   -- z = {

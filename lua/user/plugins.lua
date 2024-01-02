@@ -114,7 +114,7 @@ return packer.startup(function(use)
   use "rafamadriz/friendly-snippets" -- a bunch of snippets to use
 
   -- Syntax/Treesitter
-  use "nvim-treesitter/nvim-treesitter"
+  use {"nvim-treesitter/nvim-treesitter", run = ":TSUpdate"}
   use "JoosepAlviste/nvim-ts-context-commentstring"
   use "p00f/nvim-ts-rainbow"
   use "nvim-treesitter/playground"
@@ -446,9 +446,15 @@ return packer.startup(function(use)
     end,
   }
 
+  -- use {
+  --   "ruifm/gitlinker.nvim",
+  --   requires = "nvim-lua/plenary.nvim",
+  -- }
   use {
-    "ruifm/gitlinker.nvim",
-    requires = "nvim-lua/plenary.nvim",
+    "linrongbin16/gitlinker.nvim",
+    config = function()
+      require("gitlinker").setup()
+    end,
   }
 
   -- use {
