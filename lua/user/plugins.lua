@@ -471,6 +471,8 @@ return packer.startup(function(use)
   use "MunifTanjim/nui.nvim"
   use "stevearc/oil.nvim"
 
+  use "junegunn/gv.vim"
+
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
   if PACKER_BOOTSTRAP then
