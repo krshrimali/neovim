@@ -13,6 +13,7 @@
 7. [NeoComposer: Neovim plugin that simplifies macros, enhancing productivity with harmony](https://github.com/ecthelionvi/NeoComposer.nvim)
 8. https://github.com/folke/flash.nvim
 9. git@github.com:VidocqH/lsp-lens.nvim.git
+10. https://github.com/HakonHarnes/img-clip.nvim
 
 ## Known issues
 
