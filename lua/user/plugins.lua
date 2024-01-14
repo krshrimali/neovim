@@ -69,7 +69,17 @@ return packer.startup(function(use)
   -- use "nvimtools/none-ls.nvim"
   use "ray-x/lsp_signature.nvim"
   use "SmiteshP/nvim-navic"
+
+  -- TODO: Remove this as it's archived by the author and not actively maintained anymore
   use "simrat39/symbols-outline.nvim"
+  require("packer").startup(function()
+    use {
+      "stevearc/aerial.nvim",
+      config = function()
+        require("aerial").setup()
+      end,
+    }
+  end)
   use "b0o/SchemaStore.nvim"
   -- bringing it back
   use "folke/trouble.nvim"
@@ -95,7 +105,9 @@ return packer.startup(function(use)
   use "RRethy/vim-illuminate"
   use "lvimuser/lsp-inlayhints.nvim"
   -- use "simrat39/inlay-hints.nvim"
-  use "https://git.sr.ht/~whynothugo/lsp_lines.nvim"
+
+  -- TODO: DOWN FOR SOME REASON
+  -- use "https://git.sr.ht/~whynothugo/lsp_lines.nvim"
 
   -- Completion
   use "hrsh7th/nvim-cmp"
@@ -174,15 +186,15 @@ return packer.startup(function(use)
   -- use "nvim-telescope/telescope.nvim"
   use "nvim-telescope/telescope-media-files.nvim"
   -- use "tom-anders/telescope-vim-bookmarks.nvim"
-  use {
-    "nvim-telescope/telescope.nvim",
-    requires = {
-      { "nvim-telescope/telescope-live-grep-args.nvim" },
-    },
-    config = function()
-      require("telescope").load_extension "live_grep_args"
-    end,
-  }
+  -- use {
+  --   "nvim-telescope/telescope.nvim",
+  --   requires = {
+  --     { "nvim-telescope/telescope-live-grep-args.nvim" },
+  --   },
+  --   config = function()
+  --     require("telescope").load_extension "live_grep_args"
+  --   end,
+  -- }
   use {
     "aaronhallaert/advanced-git-search.nvim",
     config = function()
@@ -247,8 +259,7 @@ return packer.startup(function(use)
   }
 
   -- Indent
-  use {"lukas-reineke/indent-blankline.nvim", main="ibl", opts={
-  }}
+  use { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} }
 
   -- File Explorer
   -- use "kyazdani42/nvim-tree.lua"
@@ -418,11 +429,24 @@ return packer.startup(function(use)
   }
 
   use {
-    "krshrimali/context-pilot.nvim",
+    -- pass local path of the plugin instead of git path
+    "/home/krshrimali/Documents/Projects-Live-Stream/context-pilot.nvim",
+    -- "krshrimali/context-pilot.nvim",
+    -- branch = "backend/upgrade",
     requires = {
       "nvim-telescope/telescope.nvim",
       "nvim-telescope/telescope-fzy-native.nvim",
     },
+  }
+
+  use {
+    "/home/krshrimali/Documents/Projects-Live-Stream/telescope.nvim",
+    requires = {
+      { "nvim-telescope/telescope-live-grep-args.nvim" },
+    },
+    config = function()
+      require("telescope").load_extension "live_grep_args"
+    end,
   }
 
   -- nvim v0.7.2
@@ -463,6 +487,13 @@ return packer.startup(function(use)
 
   use "nacro90/numb.nvim"
   use "MunifTanjim/nui.nvim"
+
+  use {
+    "VonHeikemen/fine-cmdline.nvim",
+    requires = {
+      { "MunifTanjim/nui.nvim" },
+    },
+  }
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins

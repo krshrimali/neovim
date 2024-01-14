@@ -165,6 +165,7 @@ vim.api.nvim_create_autocmd(
 --   end)
 -- end
 
+-- Autocommands for opening goto definition in horizontal and vertical splits
 vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(ev)
     local opts = { buffer = ev.buf }

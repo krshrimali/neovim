@@ -68,11 +68,13 @@ require "user.bracketed"
 require "user.dap"
 -- require "user.copilot"
 require "user.terminal"
-require "goto-preview".setup({})
-require "gitlinker".setup({})
-require "treesj".setup({})
-require "nvim-surround".setup()
-require "alpha".setup(require("alpha.themes.dashboard").config)
-require "project_nvim".setup({})
-require "neoclip".setup()
-require "fold-preview".setup({})
+require("goto-preview").setup {}
+require("gitlinker").setup {}
+-- require("treesj").setup {}
+require("nvim-surround").setup()
+require("alpha").setup(require("alpha.themes.dashboard").config)
+require("project_nvim").setup {}
+require("neoclip").setup()
+require("fold-preview").setup {}
+require "user.finecmdline"
+require("aerial").setup({})
