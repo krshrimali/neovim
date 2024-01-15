@@ -72,14 +72,12 @@ return packer.startup(function(use)
 
   -- TODO: Remove this as it's archived by the author and not actively maintained anymore
   use "simrat39/symbols-outline.nvim"
-  require("packer").startup(function()
-    use {
-      "stevearc/aerial.nvim",
-      config = function()
-        require("aerial").setup()
-      end,
-    }
-  end)
+  use {
+    "stevearc/aerial.nvim",
+    config = function()
+      require("aerial").setup()
+    end,
+  }
   use "b0o/SchemaStore.nvim"
   -- bringing it back
   use "folke/trouble.nvim"

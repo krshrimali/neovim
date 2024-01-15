@@ -14,8 +14,7 @@ require "user.comment"
 require "user.gitsigns"
 require "user.nvim-tree"
 -- require "nvim-tree".setup {}
--- reload "user.lualine"
-require "user.lualine"
+reload "user.lualine"
 require "user.toggleterm"
 require "user.project"
 require "user.impatient"
@@ -89,3 +88,5 @@ require "neogit".setup({})
 require("telescope").load_extension("cmdline")
 require "user.finecmdline"
 require("aerial").setup({})
+-- require("mason").setup({})
+-- require("mason-lspconfig").setup({})
