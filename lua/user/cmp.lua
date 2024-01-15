@@ -231,50 +231,23 @@ cmp.setup {
   },
   sources = {
     { name = "crates", group_index = 1 },
-    -- {
-    --   name = "copilot",
-    --   -- keyword_length = 0,
-    --   -- trigger_characters = {
-    --   --   {
-    --   --     ".",
-    --   --     ":",
-    --   --     "(",
-    --   --     "'",
-    --   --     '"',
-    --   --     "[",
-    --   --     ",",
-    --   --     "#",
-    --   --     "*",
-    --   --     "@",
-    --   --     "|",
-    --   --     "=",
-    --   --     "-",
-    --   --     "{",
-    --   --     "/",
-    --   --     "\\",
-    --   --     "+",
-    --   --     "?",
-    --   --     " ",
-    --   --   },
-    --   -- },
-    -- },
     { name = "nvim_lsp", group_index = 2 },
     { name = "nvim_lua", group_index = 2 },
     { name = "luasnip", group_index = 2 },
-    {
-      name = "buffer",
-      group_index = 2,
-      keyword_length = 4,
-      filter = function(entry, ctx)
-        if not contains(buffer_fts, ctx.prev_context.filetype) then
-          return true
-        end
-      end,
-    },
+    -- {
+    --   name = "buffer",
+    --   group_index = 2,
+    --   keyword_length = 4,
+    --   filter = function(entry, ctx)
+    --     if not contains(buffer_fts, ctx.prev_context.filetype) then
+    --       return true
+    --     end
+    --   end,
+    -- },
     -- { name = "cmp_tabnine", group_index = 2 },
     { name = "path", group_index = 2 },
     { name = "emoji", group_index = 2 },
-    { name = "lab.quick_data", keyword_length = 4, group_index = 2 },
+    -- { name = "lab.quick_data", keyword_length = 4, group_index = 2 },
   },
   sorting = {
     priority_weight = 2,
@@ -303,19 +276,15 @@ cmp.setup {
     documentaton = true,
     documentation = {
       border = "rounded",
-      -- winhighlight = "NormalFloat:Pmenu,NormalFloat:Pmenu,CursorLine:PmenuSel,Search:None",
       winhighlight = "NormalFloat:Pmenu,NormalFloat:Pmenu,CursorLine:Pmenu,Search:None",
-      -- winhighlight = "NormalFloat, No"
     },
-    -- documentation = false,
     completion = {
       border = "rounded",
       winhighlight = "NormalFloat:Pmenu,NormalFloat:Pmenu,CursorLine:PmenuSel,Search:None",
-      -- winhighlight = "NormalFloat:Pmenu,NormalFloat:Pmenu,CursorLine:PmenuSel,Search:None",
     },
   },
   duplicates = {
-    buffer = 1,
+    -- buffer = 1,
     path = 1,
     nvim_lsp = 0,
     luasnip = 1,
