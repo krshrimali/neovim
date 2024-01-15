@@ -92,7 +92,7 @@ return packer.startup(function(use)
   -- use "simrat39/inlay-hints.nvim"
 
   -- TODO: DOWN FOR SOME REASON
-  -- use "https://git.sr.ht/~whynothugo/lsp_lines.nvim"
+  use "https://git.sr.ht/~whynothugo/lsp_lines.nvim"
 
   -- Completion
   use "hrsh7th/nvim-cmp"
@@ -171,15 +171,15 @@ return packer.startup(function(use)
   -- use "nvim-telescope/telescope.nvim"
   use "nvim-telescope/telescope-media-files.nvim"
   -- use "tom-anders/telescope-vim-bookmarks.nvim"
-  -- use {
-  --   "nvim-telescope/telescope.nvim",
-  --   requires = {
-  --     { "nvim-telescope/telescope-live-grep-args.nvim" },
-  --   },
-  --   config = function()
-  --     require("telescope").load_extension "live_grep_args"
-  --   end,
-  -- }
+  use {
+    "nvim-telescope/telescope.nvim",
+    requires = {
+      { "nvim-telescope/telescope-live-grep-args.nvim" },
+    },
+    config = function()
+      require("telescope").load_extension "live_grep_args"
+    end,
+  }
   use {
     "aaronhallaert/advanced-git-search.nvim",
     config = function()
@@ -415,8 +415,8 @@ return packer.startup(function(use)
 
   use {
     -- pass local path of the plugin instead of git path
-    "/home/krshrimali/Documents/Projects-Live-Stream/context-pilot.nvim",
-    -- "krshrimali/context-pilot.nvim",
+    -- "/home/krshrimali/Documents/Projects-Live-Stream/context-pilot.nvim",
+    "krshrimali/context-pilot.nvim",
     -- branch = "backend/upgrade",
     requires = {
       "nvim-telescope/telescope.nvim",
@@ -424,15 +424,15 @@ return packer.startup(function(use)
     },
   }
 
-  use {
-    "/home/krshrimali/Documents/Projects-Live-Stream/telescope.nvim",
-    requires = {
-      { "nvim-telescope/telescope-live-grep-args.nvim" },
-    },
-    config = function()
-      require("telescope").load_extension "live_grep_args"
-    end,
-  }
+  -- use {
+  --   "/home/krshrimali/Documents/Projects-Live-Stream/telescope.nvim",
+  --   requires = {
+  --     { "nvim-telescope/telescope-live-grep-args.nvim" },
+  --   },
+  --   config = function()
+  --     require("telescope").load_extension "live_grep_args"
+  --   end,
+  -- }
 
   -- nvim v0.7.2
   -- use({
