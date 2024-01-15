@@ -22,10 +22,10 @@ vim.g.mkdp_browser = "microsoft-edge"
 keymap("n", "glb", "<cmd>Gitsigns blame_line<cr>", opts)
 
 -- Better window navigation
-keymap("n", "<m-h>", "<C-w>h", opts)
-keymap("n", "<m-j>", "<C-w>j", opts)
-keymap("n", "<m-k>", "<C-w>k", opts)
-keymap("n", "<m-l>", "<C-w>l", opts)
+-- keymap("n", "<m-h>", "<C-w>h", opts)
+-- keymap("n", "<m-j>", "<C-w>j", opts)
+-- keymap("n", "<m-k>", "<C-w>k", opts)
+-- keymap("n", "<m-l>", "<C-w>l", opts)
 
 keymap("n", "+", "<C-a>", opts)
 keymap("n", "-", "<C-x>", opts)
@@ -202,6 +202,9 @@ keymap("n", "<m-q>", ":call QuickFixToggle()<cr>", opts)
 
 -- vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', {noremap = true})
 vim.api.nvim_set_keymap("i", "<C-l>", 'copilot#Accept("<CR>")', { expr = true, silent = true })
+
+vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<CR>', '<cmd>FineCmdline<CR>', {noremap = true})
 
 vim.g.copilot_no_tab_map = true
 

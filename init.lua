@@ -70,7 +70,7 @@ require "user.dap"
 require "user.terminal"
 require "goto-preview".setup({})
 require "gitlinker".setup({})
-require "treesj".setup({})
+-- require "treesj".setup({})
 require "nvim-surround".setup()
 require "alpha".setup(require("alpha.themes.dashboard").config)
 require "project_nvim".setup({})
@@ -86,3 +86,5 @@ require("ufo").setup {
 require "neogit".setup({})
 -- require "gitlinker".setup({})
 require("telescope").load_extension("cmdline")
+require "user.finecmdline"
+require("aerial").setup({})
