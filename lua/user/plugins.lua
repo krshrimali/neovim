@@ -65,7 +65,7 @@ return packer.startup(function(use)
   -- use "williamboman/nvim-lsp-installer" -- simple to use language server installer
   use "williamboman/mason.nvim"
   use "williamboman/mason-lspconfig.nvim"
-  use "jose-elias-alvarez/null-ls.nvim" -- for formatters and linters
+  -- use "jose-elias-alvarez/null-ls.nvim" -- for formatters and linters
   -- use "nvimtools/none-ls.nvim"
   use "ray-x/lsp_signature.nvim"
   use "SmiteshP/nvim-navic"
@@ -85,22 +85,7 @@ return packer.startup(function(use)
   use "folke/trouble.nvim"
   use "github/copilot.vim"
 
-  -- use {
-  --   "zbirenbaum/copilot-cmp",
-  --   after = { "copilot.lua" },
-  --   config = function()
-  --     require("copilot_cmp").setup()
-  --   end,
-  -- }
-  -- use {
-  --   "zbirenbaum/copilot.lua",
-  --   event = { "VimEnter" },
-  --   config = function()
-  --     vim.defer_fn(function()
-  --       require "user.copilot"
-  --     end, 100)
-  --   end,
-  -- }
+  use "nvimtools/none-ls.nvim"
 
   use "RRethy/vim-illuminate"
   use "lvimuser/lsp-inlayhints.nvim"
@@ -126,7 +111,7 @@ return packer.startup(function(use)
   use "rafamadriz/friendly-snippets" -- a bunch of snippets to use
 
   -- Syntax/Treesitter
-  use "nvim-treesitter/nvim-treesitter"
+  use { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" }
   use "JoosepAlviste/nvim-ts-context-commentstring"
   use "p00f/nvim-ts-rainbow"
   use "nvim-treesitter/playground"
@@ -470,9 +455,15 @@ return packer.startup(function(use)
     end,
   }
 
+  -- use {
+  --   "ruifm/gitlinker.nvim",
+  --   requires = "nvim-lua/plenary.nvim",
+  -- }
   use {
-    "ruifm/gitlinker.nvim",
-    requires = "nvim-lua/plenary.nvim",
+    "linrongbin16/gitlinker.nvim",
+    config = function()
+      require("gitlinker").setup()
+    end,
   }
 
   -- use {
@@ -487,6 +478,10 @@ return packer.startup(function(use)
 
   use "nacro90/numb.nvim"
   use "MunifTanjim/nui.nvim"
+  use "stevearc/oil.nvim"
+
+  use "junegunn/gv.vim"
+  use "jonarrien/telescope-cmdline.nvim"
 
   use {
     "VonHeikemen/fine-cmdline.nvim",

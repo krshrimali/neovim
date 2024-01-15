@@ -15,6 +15,6 @@ bufferline.setup {
     },
     hover = {
       enabled = true,
-    }
+    },
   }
 }

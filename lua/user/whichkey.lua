@@ -315,7 +315,11 @@ local mappings = {
     g = { "<cmd>lua require ('user.terminal').lazygit_toggle()<cr>", "Lazygit" },
     j = { "<cmd>lua require 'gitsigns'.next_hunk()<cr>", "Next Hunk" },
     k = { "<cmd>lua require 'gitsigns'.prev_hunk()<cr>", "Prev Hunk" },
-    l = { "<cmd>GitBlameToggle<cr>", "Blame" },
+    l = {
+      l = { "<cmd>GitBlameToggle<cr>", "Blame Virtual Text" },
+      f = { "<cmd>Git blame<cr>", "Blame column" },
+      g = { "<cmd>Gitsigns blame_line<cr>", "Blame line preview" },
+    },
     p = { "<cmd>lua require 'gitsigns'.preview_hunk()<cr>", "Preview Hunk" },
     r = { "<cmd>lua require 'gitsigns'.reset_hunk()<cr>", "Reset Hunk" },
     R = { "<cmd>lua require 'gitsigns'.reset_buffer()<cr>", "Reset Buffer" },
@@ -340,17 +344,17 @@ local mappings = {
       l = { "<cmd>Gist -l<cr>", "List" },
       p = { "<cmd>Gist -b -p<cr>", "Create Private" },
     },
-    L = {
-      name = "Gitlinker",
-      Y = {
-        "<cmd>lua require('gitlinker').get_buf_range_url('n', {action_callback = require'gitlinker.actions'.open_in_browser})<cr>",
-        "Open in browser",
-      },
-      H = {
-        "<cmd>lua require('gitlinker').get_repo_url({action_callback = require('gitlinker.actions').open_in_browser})<cr>",
-        "Open Home Repo URL",
-      },
-    },
+    -- L = {
+    --   name = "Gitlinker",
+    --   Y = {
+    --     "<cmd>lua require('gitlinker').get_buf_range_url('n', {action_callback = require'gitlinker.actions'.open_in_browser})<cr>",
+    --     "Open in browser",
+    --   },
+    --   H = {
+    --     "<cmd>lua require('gitlinker').get_repo_url({action_callback = require('gitlinker.actions').open_in_browser})<cr>",
+    --     "Open Home Repo URL",
+    --   },
+    -- },
   },
 
   -- GitBlame
@@ -491,6 +495,12 @@ local mappings = {
     b = { "<cmd>Telescope builtin<cr>", "Builtin" },
     B = { "<cmd>Telescope Buffers<cr>", "buffers" },
     S = { "<cmd>Telescope current_buffer_fuzzy_find<cr>", "Search Buffer" },
+  },
+
+  z = {
+    name = "Folding",
+    o = { "<cmd>lua require('ufo').openAllFolds()<CR>", "Open All Folds" },
+    c = { "<cmd>lua require('ufo').closeAllFolds()<CR>", "Close" },
   },
 
   -- z = {
