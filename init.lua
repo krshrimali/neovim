@@ -78,3 +78,11 @@ require "neoclip".setup()
 require "fold-preview".setup({})
 require "user.oil"
 require "oil".setup()
+require("ufo").setup {
+  provider_selector = function(bufnr, filetype, buftype)
+    return { "treesitter", "indent" }
+  end,
+}
+require "neogit".setup({})
+-- require "gitlinker".setup({})
+require("telescope").load_extension("cmdline")

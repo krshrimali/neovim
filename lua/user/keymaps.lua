@@ -223,4 +223,6 @@ vim.api.nvim_set_keymap(
 -- vim.api.nvim_set_keymap("n", "<leader>zm", '[[:lua require("ufo").openAllFolds()<CR>]]', opts)
 -- vim.api.nvim_set_keymap("n", "<leader>zr", '[[:lua require("ufo").closeAllFolds()<CR>]]', opts)
 
+vim.api.nvim_set_keymap("n", "<leader><leader>s", ":silent Telescope cmdline<CR>", opts)
+
 return M
