@@ -55,18 +55,12 @@ return packer.startup(function(use)
   -- use "folke/lua-dev.nvim"
   use "j-hui/fidget.nvim"
 
-  use {
-    "Wansmer/treesj",
-    requires = { "nvim-treesitter" },
-  }
-
   -- LSP
   use "neovim/nvim-lspconfig" -- enable LSP
   -- use "williamboman/nvim-lsp-installer" -- simple to use language server installer
   use "williamboman/mason.nvim"
   use "williamboman/mason-lspconfig.nvim"
-  -- use "jose-elias-alvarez/null-ls.nvim" -- for formatters and linters
-  -- use "nvimtools/none-ls.nvim"
+
   use "ray-x/lsp_signature.nvim"
   use "SmiteshP/nvim-navic"
 
@@ -407,11 +401,6 @@ return packer.startup(function(use)
   use { "kevinhwang91/nvim-ufo", requires = "kevinhwang91/promise-async" }
 
   use {
-    "anuvyklack/fold-preview.nvim",
-    requires = "anuvyklack/keymap-amend.nvim",
-  }
-
-  use {
     -- pass local path of the plugin instead of git path
     -- "/home/krshrimali/Documents/Projects-Live-Stream/context-pilot.nvim",
     "krshrimali/context-pilot.nvim",
@@ -422,41 +411,6 @@ return packer.startup(function(use)
     },
   }
 
-  -- use {
-  --   "/home/krshrimali/Documents/Projects-Live-Stream/telescope.nvim",
-  --   requires = {
-  --     { "nvim-telescope/telescope-live-grep-args.nvim" },
-  --   },
-  --   config = function()
-  --     require("telescope").load_extension "live_grep_args"
-  --   end,
-  -- }
-
-  -- nvim v0.7.2
-  -- use({
-  --     "kdheepak/lazygit.nvim",
-  --     -- optional for floating window border decoration
-  --     requires = {
-  --         "nvim-lua/plenary.nvim",
-  --     },
-  -- })
-
-  -- nvim v0.7.2
-  use {
-    "kdheepak/lazygit.nvim",
-    requires = {
-      "nvim-telescope/telescope.nvim",
-      "nvim-lua/plenary.nvim",
-    },
-    config = function()
-      require("telescope").load_extension "lazygit"
-    end,
-  }
-
-  -- use {
-  --   "ruifm/gitlinker.nvim",
-  --   requires = "nvim-lua/plenary.nvim",
-  -- }
   use {
     "linrongbin16/gitlinker.nvim",
     config = function()
