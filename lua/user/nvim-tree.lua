@@ -153,7 +153,7 @@ nvim_tree.setup {
   -- --   warning
   -- --   lightbulb
   renderer = {
-    add_trailing = false,
+    -- add_trailing = false,
     group_empty = false,
     highlight_git = false,
     -- highlight_opened_files = "none",
@@ -166,6 +166,8 @@ nvim_tree.setup {
         none = "  ",
       },
     },
+    add_trailing = true,
+    full_name = true,
     icons = {
       webdev_colors = true,
       git_placement = "before",
@@ -229,13 +231,18 @@ nvim_tree.setup {
     ignore = false,
     timeout = 500,
   },
+  -- renderer = {
+  -- },
   view = {
-    width = 30,
+    -- width = 30,
+    width = {min = 30, max = 100},
     -- height = 30,
     -- hide_root_folder = false,
-    side = "left",
-    number = false,
+    number = true,
     relativenumber = false,
+    centralize_selection = true,
+    cursorline = true,
+    side = "right",
   },
   on_attach = on_attach,
 }
