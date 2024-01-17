@@ -204,7 +204,6 @@ keymap("n", "<m-q>", ":call QuickFixToggle()<cr>", opts)
 vim.api.nvim_set_keymap("i", "<C-l>", 'copilot#Accept("<CR>")', { expr = true, silent = true })
 
 vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', {noremap = true})
-vim.api.nvim_set_keymap('n', '<CR>', '<cmd>FineCmdline<CR>', {noremap = true})
 
 vim.g.copilot_no_tab_map = true
 

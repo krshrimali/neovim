@@ -13,25 +13,24 @@ require "user.autopairs"
 -- require "user.comment"
 require "user.gitsigns"
 require "user.nvim-tree"
--- require "nvim-tree".setup {}
 reload "user.lualine"
 require "user.toggleterm"
 require "user.project"
-require "user.impatient"
+-- require "user.impatient"
 require "user.indentline"
 require "user.alpha"
 require "user.whichkey"
 -- require "user.hop"
 -- require "user.matchup"
 require "user.numb"
-require "user.dial"
+-- require "user.dial"
 require "user.colorizer"
 require "user.spectre"
 require "user.zen-mode"
 require "user.neoscroll"
 require "user.todo-comments"
 -- require "user.bookmark"
-require "user.symbol-outline"
+-- require "user.symbol-outline"
 require "user.git-blame"
 -- require "user.gist"
 require "user.notify"
@@ -55,7 +54,7 @@ require "user.dressing"
 require "user.auto-session"
 -- require "user.jaq"
 require "user.surround"
-require "user.harpoon"
+-- require "user.harpoon"
 -- require "user.lab"
 require "user.vim-slash"
 require "user.bufferline"
@@ -75,7 +74,7 @@ require "nvim-surround".setup()
 require "alpha".setup(require("alpha.themes.dashboard").config)
 require "project_nvim".setup({})
 require "neoclip".setup()
-require "fold-preview".setup({})
+-- require "fold-preview".setup({})
 require "user.oil"
 require "oil".setup()
 require("ufo").setup {
