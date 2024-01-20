@@ -220,7 +220,7 @@ return packer.startup(function(use)
   -- use "theHamsta/nvim-dap-virtual-text"
   -- use "Pocco81/DAPInstall.nvim"
 
-  use "akinsho/bufferline.nvim"
+  -- use "akinsho/bufferline.nvim"
   -- use "tiagovla/scope.nvim"
 
   -- Statusline
