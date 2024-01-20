@@ -20,7 +20,7 @@ telescope.setup {
       width = 0.95,
       height = 0.85,
       -- preview_cutoff = 120,
-      prompt_position = "bottom",
+      -- prompt_position = "bottom",
 
       horizontal = {
         preview_width = function(_, cols, _)
@@ -192,14 +192,14 @@ telescope.setup {
 
     live_grep = {
       -- theme = "ivy",
-      theme = "ivy",
+      -- theme = "ivy",
       find_command = { "rg", "--no-heading", "--with-filename", "--line-number", "--column", "--smart-case" },
       path_display = { "absolute" },
       -- theme = "ivy_vertical"
       -- theme = themes.get_ivy_vertical({}),
     },
     grep_string = {
-      theme = "ivy",
+      -- theme = "ivy",
     },
     quickfix = {
       theme = "ivy",
@@ -213,7 +213,7 @@ telescope.setup {
       wrap_results = true,
     },
     find_files = {
-      theme = "ivy", -- dropdown
+      -- theme = "ivy", -- dropdown
       initial_mode = "insert",
       find_command = { "rg", "--files", "--iglob", "!.git", "--hidden" },
     },
