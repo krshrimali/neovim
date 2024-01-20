@@ -88,25 +88,25 @@ local m_opts = {
   nowait = true, -- use `nowait` when creating keymaps
 }
 
-local m_mappings = {
-  a = { "<cmd>silent BookmarkAnnotate<cr>", "Annotate" },
-  c = { "<cmd>silent BookmarkClear<cr>", "Clear" },
-  b = { "<cmd>silent BookmarkToggle<cr>", "Toggle" },
-  m = { '<cmd>lua require("harpoon.mark").add_file()<cr>', "Harpoon" },
-  ["."] = { '<cmd>lua require("harpoon.ui").nav_next()<cr>', "Harpoon Next" },
-  [","] = { '<cmd>lua require("harpoon.ui").nav_prev()<cr>', "Harpoon Prev" },
-  l = { "<cmd>lua require('user.bfs').open()<cr>", "Buffers" },
-  j = { "<cmd>silent BookmarkNext<cr>", "Next" },
-  s = { "<cmd>Telescope harpoon marks<cr>", "Search Files" },
-  k = { "<cmd>silent BookmarkPrev<cr>", "Prev" },
-  S = { "<cmd>silent BookmarkShowAll<cr>", "Prev" },
-  -- s = {
-  --   "<cmd>lua require('telescope').extensions.vim_bookmarks.all({ hide_filename=false, prompt_title=\"bookmarks\", shorten_path=false })<cr>",
-  --   "Show",
-  -- },
-  x = { "<cmd>BookmarkClearAll<cr>", "Clear All" },
-  [";"] = { '<cmd>lua require("harpoon.ui").toggle_quick_menu()<cr>', "Harpoon UI" },
-}
+-- local m_mappings = {
+--   a = { "<cmd>silent BookmarkAnnotate<cr>", "Annotate" },
+--   c = { "<cmd>silent BookmarkClear<cr>", "Clear" },
+--   b = { "<cmd>silent BookmarkToggle<cr>", "Toggle" },
+--   -- m = { '<cmd>lua require("harpoon.mark").add_file()<cr>', "Harpoon" },
+--   -- ["."] = { '<cmd>lua require("harpoon.ui").nav_next()<cr>', "Harpoon Next" },
+--   -- [","] = { '<cmd>lua require("harpoon.ui").nav_prev()<cr>', "Harpoon Prev" },
+--   l = { "<cmd>lua require('user.bfs').open()<cr>", "Buffers" },
+--   j = { "<cmd>silent BookmarkNext<cr>", "Next" },
+--   -- s = { "<cmd>Telescope harpoon marks<cr>", "Search Files" },
+--   k = { "<cmd>silent BookmarkPrev<cr>", "Prev" },
+--   S = { "<cmd>silent BookmarkShowAll<cr>", "Prev" },
+--   -- s = {
+--   --   "<cmd>lua require('telescope').extensions.vim_bookmarks.all({ hide_filename=false, prompt_title=\"bookmarks\", shorten_path=false })<cr>",
+--   --   "Show",
+--   -- },
+--   x = { "<cmd>BookmarkClearAll<cr>", "Clear All" },
+--   [";"] = { '<cmd>lua require("harpoon.ui").toggle_quick_menu()<cr>', "Harpoon UI" },
+-- }
 
 local mappings = {
   -- ["1"] = "which_key_ignore",
@@ -126,7 +126,7 @@ local mappings = {
     a = { "<cmd>AerialOpenAll<cr>", "Open all" },
     c = { "<cmd>AerialCloseAll<cr>", "Close all" },
     o = { "<cmd>AerialOpen<cr>", "Open" },
-    n = { "<cmd>AerialNavToggle<cr>", "Nav Toggle"},
+    n = { "<cmd>AerialNavToggle<cr>", "Nav Toggle" },
     t = { "<cmd>AerialToggle<cr>", "Toggle" },
     f = { "<cmd>AerialOpen float<cr>", "Float" },
   },
@@ -289,12 +289,21 @@ local mappings = {
     t = {
       t = { "<cmd>Telescope live_grep<cr>", "Find Text" },
       a = { "<cmd>Telescope live_grep_args<cr>", "Find text (live grep args)" },
-      s = { "<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args(default_text=vim.fn.expand('<cword>'))", "Live Grep Args with the word under cursor" },
+      s = {
+        "<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args(default_text=vim.fn.expand('<cword>'))",
+        "Live Grep Args with the word under cursor",
+      },
     },
     s = {
-      s = {"<cmd>lua require('telescope.builtin').live_grep({default_text=vim.fn.expand('<cword>')})<cr>", "Find string in the workspace"},
+      s = {
+        "<cmd>lua require('telescope.builtin').live_grep({default_text=vim.fn.expand('<cword>')})<cr>",
+        "Find string in the workspace",
+      },
       -- w = {"<cmd>lua require('telescope.builtin').grep_string({word_match = '-w'})<cr>", "Exact word match"},
-      b = {"<cmd>lua require('telescope.builtin').live_grep({default_text=vim.fn.expand('<cword>'), grep_open_files=true})<cr>", "Grep only open files"},
+      b = {
+        "<cmd>lua require('telescope.builtin').live_grep({default_text=vim.fn.expand('<cword>'), grep_open_files=true})<cr>",
+        "Grep only open files",
+      },
     },
     h = { "<cmd>Telescope help_tags<cr>", "Help" },
     H = { "<cmd>Telescope highlights<cr>", "Highlights" },
@@ -502,6 +511,8 @@ local mappings = {
     name = "Folding",
     o = { "<cmd>lua require('ufo').openAllFolds()<CR>", "Open All Folds" },
     c = { "<cmd>lua require('ufo').closeAllFolds()<CR>", "Close" },
+    m = { "<cmd>lua require('ufo').closeFoldsWith()<CR>", "Close Folds With" },
+    r = { "<cmd>lua require('ufo').openFoldsExceptKinds()<CR>", "Open Folds except Kinds" },
   },
 
   -- z = {

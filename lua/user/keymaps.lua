@@ -131,26 +131,26 @@ vim.api.nvim_set_keymap("n", "<leader>i", "<cmd>Portal jumplist forward<cr>", op
 
 -- vim.api.nvim_set_keymap('v', '<leader>gLb', '<cmd>lua require"gitlinker".get_buf_range_url("v", {action_callback = require"gitlinker.actions".open_in_browser})<cr>', {})
 vim.keymap.set(
-  {"n", 'v'},
+  { "n", "v" },
   "<leader>gy",
   "<cmd>GitLink<cr>",
   { silent = true, noremap = true, desc = "Copy git permlink to clipboard" }
 )
 vim.keymap.set(
-  {"n", 'v'},
+  { "n", "v" },
   "<leader>gY",
   "<cmd>GitLink!<cr>",
   { silent = true, noremap = true, desc = "Open git permlink in browser" }
 )
 -- blame
 vim.keymap.set(
-  {"n", 'v'},
+  { "n", "v" },
   "<leader>gb",
   "<cmd>GitLink blame<cr>",
   { silent = true, noremap = true, desc = "Copy git blame link to clipboard" }
 )
 vim.keymap.set(
-  {"n", 'v'},
+  { "n", "v" },
   "<leader>gB",
   "<cmd>GitLink! blame<cr>",
   { silent = true, noremap = true, desc = "Open git blame link in browser" }
@@ -203,7 +203,7 @@ keymap("n", "<m-q>", ":call QuickFixToggle()<cr>", opts)
 -- vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', {noremap = true})
 vim.api.nvim_set_keymap("i", "<C-l>", 'copilot#Accept("<CR>")', { expr = true, silent = true })
 
-vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', {noremap = true})
+vim.api.nvim_set_keymap("n", ":", "<cmd>FineCmdline<CR>", { noremap = true })
 
 vim.g.copilot_no_tab_map = true
 
@@ -226,5 +226,15 @@ vim.api.nvim_set_keymap(
 -- vim.api.nvim_set_keymap("n", "<leader>zr", '[[:lua require("ufo").closeAllFolds()<CR>]]', opts)
 
 vim.api.nvim_set_keymap("n", "<leader><leader>s", ":silent Telescope cmdline<CR>", opts)
+vim.keymap.set("n", "zR", require("ufo").openAllFolds)
+vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
+vim.keymap.set("n", "zr", require("ufo").openFoldsExceptKinds)
+vim.keymap.set("n", "zm", require("ufo").closeFoldsWith) -- closeAllFolds == closeFoldsWith(0)
+vim.keymap.set("n", "K", function()
+  local winid = require("ufo").peekFoldedLinesUnderCursor()
+  if not winid then
+    vim.lsp.buf.hover()
+  end
+end)
 
 return M

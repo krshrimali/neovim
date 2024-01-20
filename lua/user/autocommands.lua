@@ -131,10 +131,10 @@ vim.api.nvim_create_autocmd({ "CursorHold" }, {
 -- See: https://github.com/j-hui/fidget.nvim/issues/86
 vim.api.nvim_create_autocmd("VimLeavePre", { command = [[silent! FidgetClose]] })
 
-vim.api.nvim_create_autocmd(
-  { "BufWritePost", "BufEnter" },
-  { command = [[set nofoldenable foldmethod=manual foldlevelstart=99]] }
-)
+-- vim.api.nvim_create_autocmd(
+--   { "BufWritePost", "BufEnter" },
+--   { command = [[set nofoldenable foldmethod=manual foldlevelstart=99]] }
+-- )
 
 -- vim.api.nvim_create_autocmd({ "InsertEnter" }, {
 --   callback = function()

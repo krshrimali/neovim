@@ -87,5 +87,7 @@ require "neogit".setup({})
 require("telescope").load_extension("cmdline")
 require "user.finecmdline"
 require("aerial").setup({})
+require "user.ufo"
 -- require("mason").setup({})
 -- require("mason-lspconfig").setup({})
+require 'user.statuscol'

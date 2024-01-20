@@ -87,7 +87,7 @@ vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1e222a" })
 vim.opt.whichwrap:append "<>[]hl"
 
-vim.g.transparent_enabled = true
+vim.g.transparent_enabled = false
 vim.g.use_nerd_fonts = false
 
 -- vim.g.transparent_groups = vim.list_extend(vim.g.transparent_groups or {}, { "BufferLineFill", "BufferLineTabClose", "BufferLineBufferSelected", "BufferLineBackground", "BufferLineSeparator", "BufferLineIndicatorSelected" })
@@ -102,5 +102,15 @@ vim.g.use_nerd_fonts = false
 -- vim.g.copilot_no_tab_map = true
 -- vim.g.copilot_assume_mapped = true
 -- vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
+
+vim.o.foldcolumn = "1" -- '0' is not bad
+vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
+vim.o.foldlevelstart = 99
+vim.o.foldenable = true
+vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
+
+-- Using ufo provider need remap `zR` and `zM`. If Neovim is 0.6.1, remap yourself
+vim.keymap.set("n", "zR", require("ufo").openAllFolds)
+vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
 
 vim.api.nvim_command "highlight VertSplit guifg=fg guibg=bg"

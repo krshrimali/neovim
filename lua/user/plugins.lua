@@ -398,7 +398,7 @@ return packer.startup(function(use)
   --   end,
   -- }
 
-  use { "kevinhwang91/nvim-ufo", requires = "kevinhwang91/promise-async" }
+  use { "kevinhwang91/nvim-ufo", requires = { "kevinhwang91/promise-async", "luukvbaal/statuscol.nvim" } }
 
   use {
     -- pass local path of the plugin instead of git path
