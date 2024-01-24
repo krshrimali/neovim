@@ -91,3 +91,4 @@ require "user.ufo"
 -- require("mason").setup({})
 -- require("mason-lspconfig").setup({})
 require 'user.statuscol'
+require("hoverhints").setup({})
