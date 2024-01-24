@@ -1,21 +1,19 @@
-require "user.hot-reload"
+-- require "user.hot-reload"
 require "user.keymaps"
 require "user.plugins"
 require "user.autocommands"
 require "user.colorscheme"
 require "user.cmp"
-require "user.navic"
-require "user.lsp-inlayhints"
+-- require "user.navic"
+-- require "user.lsp-inlayhints"
 require "user.lsp"
 require "user.telescope"
 require "user.treesitter"
-require "user.autopairs"
 require "user.comment"
 require "user.gitsigns"
 require "user.nvim-tree"
-reload "user.lualine"
+require "user.lualine"
 require "user.toggleterm"
-require "user.project"
 -- require "user.impatient"
 -- require "user.indentline"
 require "user.alpha"
@@ -26,7 +24,6 @@ require "user.numb"
 -- require "user.dial"
 require "user.colorizer"
 require "user.spectre"
-require "user.zen-mode"
 require "user.neoscroll"
 require "user.todo-comments"
 -- require "user.bookmark"
@@ -67,27 +64,34 @@ require "user.nvim_transparent"
 -- require "user.dap"
 -- require "user.copilot"
 require "user.terminal"
-require "goto-preview".setup({})
-require "gitlinker".setup({})
+require("goto-preview").setup {}
+require("gitlinker").setup {}
 -- require "treesj".setup({})
-require "nvim-surround".setup()
-require "alpha".setup(require("alpha.themes.dashboard").config)
-require "project_nvim".setup({})
-require "neoclip".setup()
+require("nvim-surround").setup()
+require("alpha").setup(require("alpha.themes.dashboard").config)
+require("project_nvim").setup {}
+require("neoclip").setup()
 -- require "fold-preview".setup({})
 require "user.oil"
-require "oil".setup()
+require("oil").setup()
 require("ufo").setup {
   provider_selector = function(bufnr, filetype, buftype)
     return { "treesitter", "indent" }
   end,
 }
-require "neogit".setup({})
+require("neogit").setup {}
 -- require "gitlinker".setup({})
-require("telescope").load_extension("cmdline")
+require("telescope").load_extension "cmdline"
 require "user.finecmdline"
-require("aerial").setup({})
+require("aerial").setup {}
 require "user.ufo"
 -- require("mason").setup({})
 -- require("mason-lspconfig").setup({})
-require 'user.statuscol'
+require "user.statuscol"
+
+-- TODO: @krshrimali - look at these plugins and see if they are really useful
+require "user.autopairs"
+
+-- TODO: @krshrimali: testing without using these plugins for 7 days and checking if I really need them
+-- require "user.project"
+-- require "user.zen-mode"
