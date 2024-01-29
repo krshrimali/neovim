@@ -44,12 +44,14 @@ telescope.setup {
         },
       },
     },
-
+    cache_picker = {
+      ignore_empty_prompt = true,
+    },
     disable_coordinates = false,
     layout_strategy = "horizontal",
     prompt_prefix = icons.ui.Telescope .. " ",
     selection_caret = " ",
-    path_display = { "smart" }, -- do :help telescope.defaults.path_display (options: hidden, tail, smart, shorten, truncate)
+    path_display = { "shorten" }, -- do :help telescope.defaults.path_display (options: hidden, tail, smart, shorten, truncate)
 
     selection_strategy = "reset",
     sorting_strategy = "descending",

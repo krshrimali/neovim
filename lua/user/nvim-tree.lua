@@ -235,14 +235,14 @@ nvim_tree.setup {
   -- },
   view = {
     -- width = 30,
-    width = {min = 30, max = 100},
+    width = {min = 30, max = 40},
     -- height = 30,
     -- hide_root_folder = false,
     number = true,
-    relativenumber = false,
+    relativenumber = true,
     centralize_selection = true,
     cursorline = true,
-    side = "right",
+    side = "left",
   },
   on_attach = on_attach,
 }
