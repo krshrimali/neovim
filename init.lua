@@ -96,3 +96,4 @@ require("hoverhints").setup({})
 -- TODO: @krshrimali: testing without using these plugins for 7 days and checking if I really need them
 -- require "user.project"
 -- require "user.zen-mode"
+require "user.noice"

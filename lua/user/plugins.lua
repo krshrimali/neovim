@@ -170,6 +170,7 @@ return packer.startup(function(use)
     },
     config = function()
       require("telescope").load_extension "live_grep_args"
+      require("telescope").load_extension("noice")
     end,
   }
   use {
@@ -444,6 +445,14 @@ return packer.startup(function(use)
 
   use {
     "soulis-1256/hoverhints.nvim"
+  }
+
+  use {
+    "folke/noice.nvim",
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "rcarriga/nvim-notify",
+    }
   }
 
   -- Automatically set up your configuration after cloning packer.nvim
