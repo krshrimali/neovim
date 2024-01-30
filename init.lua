@@ -82,7 +82,7 @@ require("ufo").setup {
 require("neogit").setup {}
 -- require "gitlinker".setup({})
 require("telescope").load_extension "cmdline"
-require "user.finecmdline"
+-- require "user.finecmdline"
 require("aerial").setup {}
 require "user.ufo"
 -- require("mason").setup({})
@@ -92,6 +92,7 @@ require "user.statuscol"
 -- TODO: @krshrimali - look at these plugins and see if they are really useful
 require "user.autopairs"
 require("hoverhints").setup({})
+require("neoscopes").setup({})
 
 -- TODO: @krshrimali: testing without using these plugins for 7 days and checking if I really need them
 -- require "user.project"

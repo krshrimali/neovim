@@ -164,7 +164,8 @@ return packer.startup(function(use)
   use "nvim-telescope/telescope-media-files.nvim"
   -- use "tom-anders/telescope-vim-bookmarks.nvim"
   use {
-    "nvim-telescope/telescope.nvim",
+    -- "nvim-telescope/telescope.nvim",
+    "/Users/krshrimali/Documents/Projects/Personal/telescope.nvim",
     requires = {
       { "nvim-telescope/telescope-live-grep-args.nvim" },
     },
@@ -454,6 +455,20 @@ return packer.startup(function(use)
       "rcarriga/nvim-notify",
     }
   }
+    
+  use ({
+    "princejoogie/dir-telescope.nvim",
+    -- telescope.nvim is a required dependency
+    requires = {"nvim-telescope/telescope.nvim"},
+    config = function()
+      require("dir-telescope").setup({
+        -- these are the default options set
+        hidden = true,
+        no_ignore = false,
+        show_preview = true,
+      })
+    end,
+  })
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins

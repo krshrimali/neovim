@@ -203,7 +203,7 @@ keymap("n", "<m-q>", ":call QuickFixToggle()<cr>", opts)
 -- vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', {noremap = true})
 vim.api.nvim_set_keymap("i", "<C-l>", 'copilot#Accept("<CR>")', { expr = true, silent = true })
 
-vim.api.nvim_set_keymap("n", ":", "<cmd>FineCmdline<CR>", { noremap = true })
+-- vim.api.nvim_set_keymap("n", ":", "<cmd>FineCmdline<CR>", { noremap = true })
 
 vim.g.copilot_no_tab_map = true
 
@@ -221,6 +221,30 @@ vim.api.nvim_set_keymap(
   [[:lua require('user.subfolder').copyRelativeFolderPath()<CR>]],
   { noremap = true, silent = true }
 )
+
+-- Helper functions to fetch the current scope and set `search_dirs`
+_G.find_files = function()
+  local current_path = vim.fn.expand "%:p:h"
+  local relative_path = vim.fn.fnamemodify(current_path, ":~:.")
+
+  require("telescope.builtin").find_files {
+    search_dirs = { relative_path },
+  }
+end
+_G.live_grep = function()
+  local current_path = vim.fn.expand "%:p:h"
+  local relative_path = vim.fn.fnamemodify(current_path, ":~:.")
+
+  require("telescope.builtin").live_grep {
+    search_dirs = { relative_path },
+  }
+end
+
+vim.api.nvim_set_keymap("n", "<Leader><leader>f", ":lua find_files()<CR>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<Leader><leader>g", ":lua live_grep()<CR>", { noremap = true })
+
+vim.api.nvim_set_keymap("n", "<Leader><leader>F", "<cmd>Telescope dir find_files<CR>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<Leader><leader>t", "<cmd>Telescope dir live_grep<CR>", { noremap = true })
 
 -- vim.api.nvim_set_keymap("n", "<leader>zm", '[[:lua require("ufo").openAllFolds()<CR>]]', opts)
 -- vim.api.nvim_set_keymap("n", "<leader>zr", '[[:lua require("ufo").closeAllFolds()<CR>]]', opts)
