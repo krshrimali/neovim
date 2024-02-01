@@ -50,8 +50,8 @@ return packer.startup(function(use)
 
   -- Lua Development
   use "nvim-lua/plenary.nvim" -- Useful lua functions used ny lots of plugins
-  use "nvim-lua/popup.nvim"
-  use "christianchiarulli/lua-dev.nvim"
+  -- use "nvim-lua/popup.nvim"
+  -- use "christianchiarulli/lua-dev.nvim"
   -- use "folke/lua-dev.nvim"
   use "j-hui/fidget.nvim"
 
@@ -65,14 +65,14 @@ return packer.startup(function(use)
   use "SmiteshP/nvim-navic"
 
   -- TODO: Remove this as it's archived by the author and not actively maintained anymore
-  use "simrat39/symbols-outline.nvim"
+  -- use "simrat39/symbols-outline.nvim"
   use {
     "stevearc/aerial.nvim",
     config = function()
       require("aerial").setup()
     end,
   }
-  use "b0o/SchemaStore.nvim"
+  -- use "b0o/SchemaStore.nvim"
   -- bringing it back
   use "folke/trouble.nvim"
   use "github/copilot.vim"
@@ -83,7 +83,6 @@ return packer.startup(function(use)
   use "lvimuser/lsp-inlayhints.nvim"
   -- use "simrat39/inlay-hints.nvim"
 
-  -- TODO: DOWN FOR SOME REASON
   use "https://git.sr.ht/~whynothugo/lsp_lines.nvim"
 
   -- Completion
@@ -105,23 +104,18 @@ return packer.startup(function(use)
   -- Syntax/Treesitter
   use { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" }
   use "JoosepAlviste/nvim-ts-context-commentstring"
-  use "p00f/nvim-ts-rainbow"
-  use "nvim-treesitter/playground"
+  -- use "p00f/nvim-ts-rainbow"
+  -- use "nvim-treesitter/playground"
   use "windwp/nvim-ts-autotag"
-  use "nvim-treesitter/nvim-treesitter-textobjects"
+  -- use "nvim-treesitter/nvim-treesitter-textobjects"
   -- use "wellle/targets.vim"
   -- use "RRethy/nvim-treesitter-textsubjects"
   use {
     "kylechui/nvim-surround",
     -- tag = "*", -- Use for stability; omit to use `main` branch for the latest features
   }
-  -- use {
-  --   "abecodes/tabout.nvim",
-  --   wants = { "nvim-treesitter" }, -- or require if not used so far
-  -- }
 
   -- Marks
-  use "krshrimali/harpoon"
   -- use "ThePrimeagen/harpoon"
   -- use "MattesGroeger/vim-bookmarks"
   use {
@@ -140,28 +134,29 @@ return packer.startup(function(use)
   use {
     "rmagatti/goto-preview",
   }
-  use {
-    "mawkler/modicator.nvim",
-    after = "bluloco.nvim", -- Add your colorscheme plugin here
-    setup = function()
-      -- These are required for Modicator to work
-      vim.o.cursorline = true
-      vim.o.number = true
-      vim.o.termguicolors = true
-    end,
-  }
-  use { "chrisgrieser/nvim-spider" }
-  use {
-    "mrjones2014/legendary.nvim",
-    -- sqlite is only needed if you want to use frecency sorting
-    requires = "kkharji/sqlite.lua",
-  }
+  -- use {
+  --   "mawkler/modicator.nvim",
+  --   after = "bluloco.nvim", -- Add your colorscheme plugin here
+  --   setup = function()
+  --     -- These are required for Modicator to work
+  --     vim.o.cursorline = true
+  --     vim.o.number = true
+  --     vim.o.termguicolors = true
+  --   end,
+  -- }
 
-  use "mbbill/undotree"
+  use { "chrisgrieser/nvim-spider" }
+  -- use {
+  --   "mrjones2014/legendary.nvim",
+  --   -- sqlite is only needed if you want to use frecency sorting
+  --   requires = "kkharji/sqlite.lua",
+  -- }
+
+  -- use "mbbill/undotree"
 
   -- Fuzzy Finder/Telescope
   -- use "nvim-telescope/telescope.nvim"
-  use "nvim-telescope/telescope-media-files.nvim"
+  -- use "nvim-telescope/telescope-media-files.nvim"
   -- use "tom-anders/telescope-vim-bookmarks.nvim"
   use {
     -- "nvim-telescope/telescope.nvim",
@@ -174,22 +169,22 @@ return packer.startup(function(use)
       require("telescope").load_extension("noice")
     end,
   }
-  use {
-    "aaronhallaert/advanced-git-search.nvim",
-    config = function()
-      require("telescope").load_extension "advanced_git_search"
-    end,
-    requires = {
-      "nvim-telescope/telescope.nvim",
-      -- to show diff splits and open commits in browser
-      "tpope/vim-fugitive",
-    },
-  }
+  -- use {
+  --   "aaronhallaert/advanced-git-search.nvim",
+  --   config = function()
+  --     require("telescope").load_extension "advanced_git_search"
+  --   end,
+  --   requires = {
+  --     "nvim-telescope/telescope.nvim",
+  --     -- to show diff splits and open commits in browser
+  --     "tpope/vim-fugitive",
+  --   },
+  -- }
 
   -- Color
-  use "NvChad/nvim-colorizer.lua"
+  -- use "NvChad/nvim-colorizer.lua"
   -- use "ziontee113/color-picker.nvim"
-  use "nvim-colortils/colortils.nvim"
+  -- use "nvim-colortils/colortils.nvim"
 
   -- Colorschemes
   -- use "lunarvim/onedarker.nvim"
@@ -214,11 +209,11 @@ return packer.startup(function(use)
   -- Icon
   use "kyazdani42/nvim-web-devicons"
 
-  -- Debugging
-  use "mfussenegger/nvim-dap"
-  use "rcarriga/nvim-dap-ui"
+  -- Debugging --- I don't use debugging for any of this
+  -- use "mfussenegger/nvim-dap"
+  -- use "rcarriga/nvim-dap-ui"
 
-  use "mfussenegger/nvim-dap-python"
+  -- use "mfussenegger/nvim-dap-python"
   -- use "theHamsta/nvim-dap-virtual-text"
   -- use "Pocco81/DAPInstall.nvim"
 
@@ -252,7 +247,7 @@ return packer.startup(function(use)
     --   require("nvim-tree").setup({})
     -- end,
   }
-  use "tamago324/lir.nvim"
+  -- use "tamago324/lir.nvim"
 
   -- Comment
   use "numToStr/Comment.nvim"
@@ -265,18 +260,18 @@ return packer.startup(function(use)
   use "krshrimali/nvim-autorunner"
 
   -- use 'echasnovski/mini.nvim'
-  use "echasnovski/mini.bracketed"
+  -- use "echasnovski/mini.bracketed"
 
   -- Project
   -- Note: https://github.com/ahmedkhalf/project.nvim - Look at the options here if the auto change of cwd irritates me
-  use {
-    "ahmedkhalf/project.nvim",
-  }
+  -- use {
+  --   "ahmedkhalf/project.nvim",
+  -- }
   use "nvim-pack/nvim-spectre"
 
   -- Session
-  use "rmagatti/auto-session"
-  use "rmagatti/session-lens"
+  -- use "rmagatti/auto-session"
+  -- use "rmagatti/session-lens"
 
   -- Quickfix
   use "kevinhwang91/nvim-bqf"
@@ -290,48 +285,48 @@ return packer.startup(function(use)
   use "lewis6991/gitsigns.nvim"
   use "f-person/git-blame.nvim"
   -- use "ruifm/gitlinker.nvim"
-  use "mattn/vim-gist"
-  use "mattn/webapi-vim"
+  -- use "mattn/vim-gist"
+  -- use "mattn/webapi-vim"
 
   -- Github
-  use "pwntester/octo.nvim"
+  -- use "pwntester/octo.nvim"
 
   -- Editing Support
   use "windwp/nvim-autopairs"
-  use "monaqa/dial.nvim"
-  use "andymass/vim-matchup"
-  use "folke/zen-mode.nvim"
+  -- use "monaqa/dial.nvim"
+  -- use "andymass/vim-matchup"
+  -- use "folke/zen-mode.nvim"
   -- use "Pocco81/true-zen.nvim"
   use "karb94/neoscroll.nvim"
-  use "junegunn/vim-slash"
+  -- use "junegunn/vim-slash"
 
   -- Motion
-  use "phaazon/hop.nvim"
+  -- use "phaazon/hop.nvim"
   -- use "jinh0/eyeliner.nvim"
 
   -- Keybinding
   use "folke/which-key.nvim"
 
   -- Java
-  use "mfussenegger/nvim-jdtls"
+  -- use "mfussenegger/nvim-jdtls"
 
   -- Rust
   -- use { "christianchiarulli/rust-tools.nvim", branch = "modularize_and_inlay_rewrite" }
   use "simrat39/rust-tools.nvim"
-  use "Saecki/crates.nvim"
+  -- use "Saecki/crates.nvim"
 
   -- Typescript TODO: set this up, also add keybinds to ftplugin
-  use "jose-elias-alvarez/typescript.nvim"
+  -- use "jose-elias-alvarez/typescript.nvim"
 
   -- Markdown
-  use {
-    "iamcco/markdown-preview.nvim",
-    run = "cd app && npm install",
-    setup = function()
-      vim.g.mkdp_filetypes = { "markdown" }
-    end,
-    ft = "markdown",
-  }
+  -- use {
+  --   "iamcco/markdown-preview.nvim",
+  --   run = "cd app && npm install",
+  --   setup = function()
+  --     vim.g.mkdp_filetypes = { "markdown" }
+  --   end,
+  --   ft = "markdown",
+  -- }
 
   -- Theme
   -- use { "bluz71/vim-moonfly-colors" }
@@ -381,16 +376,16 @@ return packer.startup(function(use)
   -- use "stevearc/stickybuf.nvim"
   -- use "drybalka/tree-climber.nvim"
   -- use "phaazon/hop.nvim"
-  use { "michaelb/sniprun", run = "bash ./install.sh" }
-  use { "numToStr/Navigator.nvim" }
-  use {
-    "cbochs/portal.nvim",
-    -- Optional dependencies
-    requires = {
-      "cbochs/grapple.nvim",
-      "ThePrimeagen/harpoon",
-    },
-  }
+  -- use { "michaelb/sniprun", run = "bash ./install.sh" }
+  -- use { "numToStr/Navigator.nvim" }
+  -- use {
+  --   "cbochs/portal.nvim",
+  --   -- Optional dependencies
+  --   requires = {
+  --     "cbochs/grapple.nvim",
+  --     "ThePrimeagen/harpoon",
+  --   },
+  -- }
 
   -- folding
   -- use {
@@ -434,19 +429,19 @@ return packer.startup(function(use)
   use "MunifTanjim/nui.nvim"
   use "stevearc/oil.nvim"
 
-  use "junegunn/gv.vim"
+  -- use "junegunn/gv.vim"
   use "jonarrien/telescope-cmdline.nvim"
 
-  use {
-    "VonHeikemen/fine-cmdline.nvim",
-    requires = {
-      { "MunifTanjim/nui.nvim" },
-    },
-  }
+  -- use {
+  --   "VonHeikemen/fine-cmdline.nvim",
+  --   requires = {
+  --     { "MunifTanjim/nui.nvim" },
+  --   },
+  -- }
 
-  use {
-    "soulis-1256/hoverhints.nvim"
-  }
+  -- use {
+  --   "soulis-1256/hoverhints.nvim"
+  -- }
 
   use {
     "folke/noice.nvim",
@@ -455,8 +450,8 @@ return packer.startup(function(use)
       "rcarriga/nvim-notify",
     }
   }
-    
-  use ({
+
+  use {
     "princejoogie/dir-telescope.nvim",
     -- telescope.nvim is a required dependency
     requires = {"nvim-telescope/telescope.nvim"},
@@ -468,7 +463,7 @@ return packer.startup(function(use)
         show_preview = true,
       })
     end,
-  })
+  }
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins

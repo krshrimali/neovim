@@ -28,7 +28,7 @@ require "user.neoscroll"
 require "user.todo-comments"
 -- require "user.bookmark"
 -- require "user.symbol-outline"
-require "user.git-blame"
+-- require "user.git-blame"
 -- require "user.gist"
 require "user.notify"
 -- require "user.ts-context"
@@ -69,7 +69,7 @@ require("gitlinker").setup {}
 -- require "treesj".setup({})
 require("nvim-surround").setup()
 require("alpha").setup(require("alpha.themes.dashboard").config)
-require("project_nvim").setup {}
+-- require("project_nvim").setup {}
 require("neoclip").setup()
 -- require "fold-preview".setup({})
 require "user.oil"
@@ -85,14 +85,14 @@ require("telescope").load_extension "cmdline"
 -- require "user.finecmdline"
 require("aerial").setup {}
 require "user.ufo"
--- require("mason").setup({})
+require("mason").setup({})
 -- require("mason-lspconfig").setup({})
 require "user.statuscol"
 
 -- TODO: @krshrimali - look at these plugins and see if they are really useful
 require "user.autopairs"
-require("hoverhints").setup({})
-require("neoscopes").setup({})
+-- require("hoverhints").setup({})
+-- require("neoscopes").setup({})
 
 -- TODO: @krshrimali: testing without using these plugins for 7 days and checking if I really need them
 -- require "user.project"
