@@ -243,8 +243,8 @@ end
 vim.api.nvim_set_keymap("n", "<Leader><leader>f", ":lua find_files()<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<Leader><leader>g", ":lua live_grep()<CR>", { noremap = true })
 
-vim.api.nvim_set_keymap("n", "<Leader><leader>F", "<cmd>Telescope dir find_files<CR>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<Leader><leader>t", "<cmd>Telescope dir live_grep<CR>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<Leader><leader>d", "<cmd>Telescope dir find_files<CR>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<Leader><leader>r", "<cmd>Telescope dir live_grep<CR>", { noremap = true })
 
 -- vim.api.nvim_set_keymap("n", "<leader>zm", '[[:lua require("ufo").openAllFolds()<CR>]]', opts)
 -- vim.api.nvim_set_keymap("n", "<leader>zr", '[[:lua require("ufo").closeAllFolds()<CR>]]', opts)

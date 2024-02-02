@@ -92,7 +92,7 @@ require "user.statuscol"
 -- TODO: @krshrimali - look at these plugins and see if they are really useful
 require "user.autopairs"
 require("hoverhints").setup({})
-require("neoscopes").setup({})
+-- require("neoscopes").setup({})
 
 -- TODO: @krshrimali: testing without using these plugins for 7 days and checking if I really need them
 -- require "user.project"
