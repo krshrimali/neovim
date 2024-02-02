@@ -50,9 +50,9 @@ return packer.startup(function(use)
 
   -- Lua Development
   use "nvim-lua/plenary.nvim" -- Useful lua functions used ny lots of plugins
-  -- use "nvim-lua/popup.nvim"
+  use "nvim-lua/popup.nvim"
   -- use "christianchiarulli/lua-dev.nvim"
-  -- use "folke/lua-dev.nvim"
+  use "folke/lua-dev.nvim"
   use "j-hui/fidget.nvim"
 
   -- LSP
