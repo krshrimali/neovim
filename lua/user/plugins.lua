@@ -72,7 +72,7 @@ return packer.startup(function(use)
       require("aerial").setup()
     end,
   }
-  -- use "b0o/SchemaStore.nvim"
+  use "b0o/SchemaStore.nvim"
   -- bringing it back
   use "folke/trouble.nvim"
   use "github/copilot.vim"

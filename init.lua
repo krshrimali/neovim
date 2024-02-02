@@ -1,4 +1,5 @@
 -- require "user.hot-reload"
+-- require "user.mason"
 require "user.keymaps"
 require "user.plugins"
 require "user.autocommands"
@@ -28,7 +29,7 @@ require "user.neoscroll"
 require "user.todo-comments"
 -- require "user.bookmark"
 -- require "user.symbol-outline"
--- require "user.git-blame"
+require "user.git-blame"
 -- require "user.gist"
 require "user.notify"
 -- require "user.ts-context"
@@ -85,7 +86,7 @@ require("telescope").load_extension "cmdline"
 -- require "user.finecmdline"
 require("aerial").setup {}
 require "user.ufo"
-require("mason").setup({})
+-- require("mason").setup({})
 -- require("mason-lspconfig").setup({})
 require "user.statuscol"
 
