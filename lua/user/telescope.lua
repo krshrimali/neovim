@@ -5,7 +5,7 @@ end
 
 local actions = require "telescope.actions"
 local lga_actions = require "telescope-live-grep-args.actions"
-telescope.load_extension "media_files"
+-- telescope.load_extension "media_files"
 local icons = require "user.icons"
 local themes = require "user.telescope.user_themes"
 
@@ -278,12 +278,6 @@ telescope.setup {
     -- builtin picker
   },
   extensions = {
-    media_files = {
-      -- filetypes whitelist
-      -- defaults to {"png", "jpg", "mp4", "webm", "pdf"}
-      filetypes = { "png", "webp", "jpg", "jpeg" },
-      find_cmd = "rg", -- find command (defaults to `fd`)
-    },
     live_grep_args = {
       auto_quoting = false,
       find_command = "rg",
