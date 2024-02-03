@@ -52,7 +52,7 @@ return packer.startup(function(use)
   use "nvim-lua/plenary.nvim" -- Useful lua functions used ny lots of plugins
   use "nvim-lua/popup.nvim"
   -- use "christianchiarulli/lua-dev.nvim"
-  use "folke/lua-dev.nvim"
+  use "folke/neodev.nvim"
   use "j-hui/fidget.nvim"
 
   -- LSP
@@ -159,8 +159,8 @@ return packer.startup(function(use)
   -- use "nvim-telescope/telescope-media-files.nvim"
   -- use "tom-anders/telescope-vim-bookmarks.nvim"
   use {
-    -- "nvim-telescope/telescope.nvim",
-    "/Users/krshrimali/Documents/Projects/Personal/telescope.nvim",
+    "nvim-telescope/telescope.nvim",
+    -- "/Users/krshrimali/Documents/Projects/Personal/telescope.nvim",
     requires = {
       { "nvim-telescope/telescope-live-grep-args.nvim" },
     },
@@ -217,7 +217,7 @@ return packer.startup(function(use)
   -- use "theHamsta/nvim-dap-virtual-text"
   -- use "Pocco81/DAPInstall.nvim"
 
-  -- use "akinsho/bufferline.nvim"
+  use "akinsho/bufferline.nvim"
   -- use "tiagovla/scope.nvim"
 
   -- Statusline
