@@ -483,7 +483,8 @@ local mappings = {
   t = {
     name = "Telescope",
     c = { "<cmd>Telescope commands<cr>", "Commands" },
-    p = { "<cmd>Telescope projects<cr>", "Projects" },
+    -- TODO: Fix this, probably missed it somewhere or it's now removed
+    -- p = { "<cmd>Telescope projects<cr>", "Projects" },
     d = { "<cmd>Telescope diagnostics<cr>", "Diagnostics" },
     m = { "<cmd>Telescope media_files<cr>", "Media Files" },
     g = {
