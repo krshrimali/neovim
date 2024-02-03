@@ -79,38 +79,7 @@ local opts = {
   nowait = true, -- use `nowait` when creating keymaps
 }
 
-local m_opts = {
-  mode = "n", -- NORMAL mode
-  prefix = "m",
-  buffer = nil, -- Global mappings. Specify a buffer number for buffer local mappings
-  silent = true, -- use `silent` when creating keymaps
-  noremap = true, -- use `noremap` when creating keymaps
-  nowait = true, -- use `nowait` when creating keymaps
-}
-
--- local m_mappings = {
---   a = { "<cmd>silent BookmarkAnnotate<cr>", "Annotate" },
---   c = { "<cmd>silent BookmarkClear<cr>", "Clear" },
---   b = { "<cmd>silent BookmarkToggle<cr>", "Toggle" },
---   -- m = { '<cmd>lua require("harpoon.mark").add_file()<cr>', "Harpoon" },
---   -- ["."] = { '<cmd>lua require("harpoon.ui").nav_next()<cr>', "Harpoon Next" },
---   -- [","] = { '<cmd>lua require("harpoon.ui").nav_prev()<cr>', "Harpoon Prev" },
---   l = { "<cmd>lua require('user.bfs').open()<cr>", "Buffers" },
---   j = { "<cmd>silent BookmarkNext<cr>", "Next" },
---   -- s = { "<cmd>Telescope harpoon marks<cr>", "Search Files" },
---   k = { "<cmd>silent BookmarkPrev<cr>", "Prev" },
---   S = { "<cmd>silent BookmarkShowAll<cr>", "Prev" },
---   -- s = {
---   --   "<cmd>lua require('telescope').extensions.vim_bookmarks.all({ hide_filename=false, prompt_title=\"bookmarks\", shorten_path=false })<cr>",
---   --   "Show",
---   -- },
---   x = { "<cmd>BookmarkClearAll<cr>", "Clear All" },
---   [";"] = { '<cmd>lua require("harpoon.ui").toggle_quick_menu()<cr>', "Harpoon UI" },
--- }
-
 local mappings = {
-  -- ["1"] = "which_key_ignore",
-  -- a = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Action" },
   A = {
     name = "AutoRunner",
     r = { "<cmd>AutoRunnerRun<cr>", "Run the command" },
@@ -130,14 +99,6 @@ local mappings = {
     t = { "<cmd>AerialToggle<cr>", "Toggle" },
     f = { "<cmd>AerialOpen float<cr>", "Float" },
   },
-  -- a = {
-  --   name = "AutoRunnerTerm",
-  --   r = { "<cmd>AutoRunnerTermRun<cr>", "Run the command" },
-  --   t = { "<cmd>AutoRunnerTermToggle<cr>", "Toggle output window" },
-  --   e = { "<cmd>AutoRunnerEditFile<cr>", "Edit build file/command (if available)" },
-  --   a = { "<cmd>AutoRunnerAddCommand<cr>", "Add/change command" },
-  --   p = { "<cmd>AutoRunnerPrintCommand<cr>", "Print command" },
-  -- },
   b = { "<cmd>Telescope buffers<cr>", "Buffers" },
   e = { "<cmd>NvimTreeToggle<cr>", "Explorer" },
   -- v = { "<cmd>vsplit<cr>", "vsplit" },
@@ -148,16 +109,6 @@ local mappings = {
   ["/"] = { '<cmd>lua require("Comment.api").toggle.linewise.current()<CR>', "Comment" },
   -- ["c"] = { "<cmd>Bdelete!<CR>", "Close Buffer" },
   c = { "<cmd>bdelete!<CR>", "Close Buffer" },
-
-  -- :lua require'lir.float'.toggle()
-  -- ["f"] = {
-  -- },
-  -- ["F"] = { "<cmd>Telescope live_grep theme=ivy<cr>", "Find Text" },
-  -- P = { "<cmd>lua require('telescope').extensions.projects.projects()<cr>", "Projects" },
-  -- ["R"] = { '<cmd>lua require("renamer").rename()<cr>', "Rename" },
-  -- ["z"] = { "<cmd>ZenMode<cr>", "Zen" },
-  -- ["gy"] = "Link",
-
   B = {
     name = "Browse",
     i = { "<cmd>BrowseInputSearch<cr>", "Input Search" },
@@ -240,7 +191,6 @@ local mappings = {
     u = { "<cmd>lua require'dapui'.toggle()<cr>", "UI" },
     x = { "<cmd>lua require'dap'.terminate()<cr>", "Exit" },
   },
-
   d = {
     name = "Diagnostics",
     c = {
@@ -256,26 +206,6 @@ local mappings = {
       "Diagnostics from listed buffers",
     },
   },
-
-  -- nnoremap <silent> <leader>B :lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>
-  -- nnoremap <silent> <leader>lp :lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>
-  -- require("dapui").open()
-  -- require("dapui").close()
-  -- require("dapui").toggle()
-  -- s = {
-  --   -- vim.api.nvim_set_keymap("n", "s", "<cmd>lua require('flash').jump()<CR>", opts)
-  --   -- vim.api.nvim_set_keymap("n", "S", "<cmd>lua require('flash').treesitter()<CR>", opts)
-  --   -- vim.api.nvim_set_keymap("o", "r", "<cmd>lua require('flash').remote()<CR>", opts)
-  --   -- vim.api.nvim_set_keymap("o", "R", "<cmd>lua require('flash').tresitter_search()<CR>", opts)
-  --   -- vim.api.nvim_set_keymap("c", "<C-s>", "<cmd>lua require('flash').toggle()<CR>", opts)
-  --   name = "Flash NeoVim",
-  --   s = { "<cmd>lua require('flash').jump()<CR>", "Jump" },
-  --   S = { "<cmd>lua require('flash').treesitter()<CR>", "Treesitter" },
-  --   r = { "<cmd>lua require('flash').remote()<CR>", "Remote" },
-  --   R = { "<cmd>lua require('flash').treesitter_search()<CR>", "Treesitter Search" },
-  --   ["<C-s>"] = { "<cmd>lua require('flash').toggle()<CR>", "Toggle" },
-  -- },
-
   f = {
     name = "Find using Telescope",
     B = { "<cmd>Telescope git_branches<cr>", "Checkout branch" },
@@ -318,7 +248,6 @@ local mappings = {
     k = { "<cmd>Telescope keymaps<cr>", "Keymaps" },
     C = { "<cmd>Telescope commands<cr>", "Commands" },
   },
-
   g = {
     name = "Git",
     -- TODO: Not really a good idea to use lazygit within neovim: https://github.com/jesseduffield/lazygit/issues/996
@@ -354,26 +283,13 @@ local mappings = {
       l = { "<cmd>Gist -l<cr>", "List" },
       p = { "<cmd>Gist -b -p<cr>", "Create Private" },
     },
-    -- L = {
-    --   name = "Gitlinker",
-    --   Y = {
-    --     "<cmd>lua require('gitlinker').get_buf_range_url('n', {action_callback = require'gitlinker.actions'.open_in_browser})<cr>",
-    --     "Open in browser",
-    --   },
-    --   H = {
-    --     "<cmd>lua require('gitlinker').get_repo_url({action_callback = require('gitlinker.actions').open_in_browser})<cr>",
-    --     "Open Home Repo URL",
-    --   },
-    -- },
   },
-
   -- GitBlame
   G = {
     l = { "<cmd>GitBlameToggle<cr>", "Blame Toggle" },
     c = { "<cmd>GitBlameCopySHA<cr>", "Copy SHA URL of the commit" },
     o = { "<cmd>GitBlameOpenCommitURL<cr>", "Open commit URL" },
   },
-
   l = {
     name = "LSP",
     A = { "<cmd>lua vim.lsp.codelens.run()<cr>", "CodeLens Action" },
@@ -448,7 +364,6 @@ local mappings = {
     t = { '<cmd>lua require("user.functions").toggle_diagnostics()<cr>', "Toggle Diagnostics" },
     u = { "<cmd>LuaSnipUnlinkCurrent<cr>", "Unlink Snippet" },
   },
-
   -- n = {
   --   -- name = "Session",
   --   -- s = { "<cmd>SaveSession<cr>", "Save" },
@@ -464,7 +379,6 @@ local mappings = {
   --   t = { "<cmd>SnipRunToggle<cr>", "Toggle" },
   --   x = { "<cmd>SnipTerminate<cr>", "Terminate" },
   -- },
-
   T = {
     name = "Terminal",
     ["1"] = { ":1ToggleTerm<cr>", "1" },
@@ -479,7 +393,6 @@ local mappings = {
     h = { "<cmd>ToggleTerm size=10 direction=horizontal<cr>", "Horizontal" },
     v = { "<cmd>ToggleTerm size=80 direction=vertical<cr>", "Vertical" },
   },
-
   t = {
     name = "Telescope",
     c = { "<cmd>Telescope commands<cr>", "Commands" },
@@ -507,7 +420,6 @@ local mappings = {
     B = { "<cmd>Telescope Buffers<cr>", "buffers" },
     S = { "<cmd>Telescope current_buffer_fuzzy_find<cr>", "Search Buffer" },
   },
-
   z = {
     name = "Folding",
     o = { "<cmd>lua require('ufo').openAllFolds()<CR>", "Open All Folds" },
@@ -515,7 +427,6 @@ local mappings = {
     m = { "<cmd>lua require('ufo').closeFoldsWith()<CR>", "Close Folds With" },
     r = { "<cmd>lua require('ufo').openFoldsExceptKinds()<CR>", "Open Folds except Kinds" },
   },
-
   -- z = {
   --   name = "Zen",
   --   z = { "<cmd>TZAtaraxis<cr>", "Zen" },
@@ -546,4 +457,4 @@ local vmappings = {
 which_key.setup(setup)
 which_key.register(mappings, opts)
 which_key.register(vmappings, vopts)
-which_key.register(m_mappings, m_opts)
+-- which_key.register(m_mappings, m_opts)
