@@ -1,7 +1,7 @@
 -- require "user.hot-reload"
 -- require "user.mason"
-require "user.keymaps"
 require "user.plugins"
+require "user.keymaps"
 require "user.autocommands"
 require "user.colorscheme"
 require "user.cmp"

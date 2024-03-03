@@ -421,9 +421,9 @@ return packer.startup(function(use)
   --     require("flash").setup({})
   --   end,
   -- }
-  use {
-    "nvim-treesitter/nvim-treesitter-context",
-  }
+  -- use {
+  --   "nvim-treesitter/nvim-treesitter-context",
+  -- }
 
   use "nacro90/numb.nvim"
   use "MunifTanjim/nui.nvim"
