@@ -14,6 +14,7 @@
 8. https://github.com/folke/flash.nvim
 9. git@github.com:VidocqH/lsp-lens.nvim.git
 10. https://github.com/HakonHarnes/img-clip.nvim
+11. https://github.com/briangwaltney/paren-hint.nvim
 
 ## Known issues
 
