@@ -4,14 +4,14 @@
 
 -- for catppuccin
 -- local colorscheme = "catppuccin"
--- vim.g.catppuccin_flavour = "mocha"
 -- local colorscheme = "darkplus"
 -- local colorscheme = "gruvbox"
 -- local colorscheme = "darkplus"
 -- -- local colorscheme = "oxocarbon"
 
 -- local colorscheme = "gruvbox-light"
--- local colorscheme = "catppuccin"
+local colorscheme = "catppuccin"
+vim.g.catppuccin_flavour = "mocha"
 -- vim.o.background="light"
 -- vim.g.gruvbox_material_background = "hard"
 -- vim.cmd [[colorscheme darkplus]]
@@ -32,7 +32,7 @@
 
 -- vim.g.onedarker_italic_conditionals = false
 
-local colorscheme = "darkplus"
+-- local colorscheme = "darkplus"
 
 local status_ok, _ = pcall(vim.cmd, "colorscheme " .. colorscheme)
 if not status_ok then
