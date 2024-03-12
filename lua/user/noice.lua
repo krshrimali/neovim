@@ -9,6 +9,11 @@ require('noice').setup({
       ["cmp.entry.get_documentation"] = true,
     },
   },
+  config = {
+    notify = {
+      enabled = false
+    }
+  },
   presets = {
     bottom_search = true,
     command_palette = true,
@@ -17,3 +22,4 @@ require('noice').setup({
     -- lsp_doc_border = false,
   },
 })
+
