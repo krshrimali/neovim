@@ -237,5 +237,10 @@ require("lazy").setup({
         config = function()
             -- Your LSP settings here
         end,
-    }
+    },
+    {
+        "ms-jpq/chadtree",
+        lazy = false,
+        branch = "chad"
+    },
 })
