@@ -14,8 +14,6 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = ","
 vim.g.maplocalleader = ","
 
-
-
 -- Install your plugins here
 require("lazy").setup({
     -- Lua Development
@@ -53,15 +51,15 @@ require("lazy").setup({
 
     -- Completion
     "hrsh7th/nvim-cmp",
-    "hrsh7th/cmp-buffer",     -- buffer completions
-    "hrsh7th/cmp-path",       -- path completions
-    "hrsh7th/cmp-cmdline",    -- cmdline completions
+    "hrsh7th/cmp-buffer",       -- buffer completions
+    "hrsh7th/cmp-path",         -- path completions
+    "hrsh7th/cmp-cmdline",      -- cmdline completions
     "saadparwaiz1/cmp_luasnip", -- snippet completions
     "hrsh7th/cmp-nvim-lsp",
     "hrsh7th/cmp-emoji",
     "hrsh7th/cmp-nvim-lua",
 
-    "L3MON4D3/LuaSnip",           --snippet engine
+    "L3MON4D3/LuaSnip",             --snippet engine
     "rafamadriz/friendly-snippets", -- a bunch of snippets to use
 
     { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
@@ -72,9 +70,9 @@ require("lazy").setup({
     {
         "NeogitOrg/neogit",
         dependencies = {
-            "nvim-lua/plenary.nvim",   -- required
+            "nvim-lua/plenary.nvim",         -- required
             "nvim-telescope/telescope.nvim", -- optional
-            "sindrets/diffview.nvim",  -- optional
+            "sindrets/diffview.nvim",        -- optional
         },
         config = true,
     },
@@ -173,8 +171,8 @@ require("lazy").setup({
 
 
     {
-        -- "linrongbin16/gitlinker.nvim",
-        dir = "/u/shrimali/gitlinker.nvim",
+        "linrongbin16/gitlinker.nvim",
+        -- dir = "/u/shrimali/gitlinker.nvim",
         -- config = function()
         --   require("gitlinker").setup()
         -- end,
@@ -185,16 +183,6 @@ require("lazy").setup({
     "stevearc/oil.nvim",
 
     "jonarrien/telescope-cmdline.nvim",
-
-
-    -- {
-    --   "folke/noice.nvim",
-    --   dependencies = {
-    --     "MunifTanjim/nui.nvim",
-    --     "rcarriga/nvim-notify",
-    --   }
-    -- },
-
     {
         "princejoogie/dir-telescope.nvim",
         -- telescope.nvim is a required dependency
@@ -207,17 +195,6 @@ require("lazy").setup({
                 show_preview = true,
             })
         end,
-    },
-    {
-        "hedyhli/outline.nvim",
-        lazy = true,
-        cmd = { "Outline", "OutlineOpen" },
-        keys = { -- Example mapping to toggle outline
-            { "<leader>oo", "<cmd>Outline<CR>", desc = "Toggle outline" },
-        },
-        opts = {
-            -- Your setup opts here
-        },
     },
     "LunarVim/bigfile.nvim",
     {
@@ -232,4 +209,33 @@ require("lazy").setup({
             }
         end,
     },
+    {
+        "neovim/nvim-lspconfig", -- REQUIRED: for native Neovim LSP integration
+        lazy = false,      -- REQUIRED: tell lazy.nvim to start this plugin at startup
+        dependencies = {
+            -- main one
+            { "ms-jpq/coq_nvim",       branch = "coq" },
+
+            -- 9000+ Snippets
+            { "ms-jpq/coq.artifacts",  branch = "artifacts" },
+
+            -- lua & third party sources -- See https://github.com/ms-jpq/coq.thirdparty
+            -- Need to **configure separately**
+            { 'ms-jpq/coq.thirdparty', branch = "3p" }
+            -- - shell repl
+            -- - nvim lua api
+            -- - scientific calculator
+            -- - comment banner
+            -- - etc
+        },
+        init = function()
+            vim.g.coq_settings = {
+                auto_start = true, -- if you want to start COQ at startup
+                -- Your COQ settings here
+            }
+        end,
+        config = function()
+            -- Your LSP settings here
+        end,
+    }
 })
