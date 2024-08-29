@@ -4,7 +4,7 @@ require "user.plugins"
 require "user.keymaps"
 require "user.autocommands"
 require "user.colorscheme"
-require "user.cmp"
+-- require "user.cmp"
 -- require "user.navic"
 -- require "user.lsp-inlayhints"
 require "user.lsp"
@@ -91,6 +91,6 @@ require "user.autopairs"
 -- TODO: @krshrimali: testing without using these plugins for 7 days and checking if I really need them
 -- require "user.project"
 -- require "user.zen-mode"
-require("ufo").setup({})
+-- require("ufo").setup({})
 require "user.gitlinker"
-require "user.bigfile"
+-- require "user.bigfile"
