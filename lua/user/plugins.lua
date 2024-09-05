@@ -48,8 +48,6 @@ require("lazy").setup({
   "williamboman/mason-lspconfig.nvim",
 
   "ray-x/lsp_signature.nvim",
-  "SmiteshP/nvim-navic",
-
   -- TODO: Remove this as it's archived by the author and not actively maintained anymore
   -- "simrat39/symbols-outline.nvim"
   -- bringing it back
@@ -302,5 +300,18 @@ require("lazy").setup({
     },
     lazy = false,
     priority = 100,
+  },
+  {
+    "fgheng/winbar.nvim"
+  },
+  {
+    'nvimdev/lspsaga.nvim',
+    config = function()
+      require('lspsaga').setup({})
+    end,
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter', -- optional
+      'nvim-tree/nvim-web-devicons',   -- optional
+    }
   },
 })
