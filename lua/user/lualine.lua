@@ -4,13 +4,15 @@ if not status_ok then
   return
 end
 
-local lualine_scheme = "darkplus_dark"
+local lualine_scheme = "auto"
 -- local lualine_scheme = "onedarker_alt"
 
 local status_theme_ok, theme = pcall(require, "lualine.themes." .. lualine_scheme)
 if not status_theme_ok then
   return
 end
+
+local navic = require("nvim-navic")
 
 -- check if value in table
 local function contains(t, value)
@@ -139,30 +141,32 @@ local progress = {
   padding = 0,
 }
 
-local current_signature = {
-  function()
-    local buf_ft = vim.bo.filetype
+-- local current_signature = {
+--   function()
+--     local buf_ft = vim.bo.filetype
 
-    if buf_ft == "toggleterm" or buf_ft == "TelescopePrompt" then
-      return ""
-    end
-    if not pcall(require, "lsp_signature") then
-      return ""
-    end
-    local sig = require("lsp_signature").status_line(30)
-    local hint = sig.hint
+--     if buf_ft == "toggleterm" or buf_ft == "TelescopePrompt" then
+--       return ""
+--     end
+--     -- if not pcall(require, "lsp_signature") then
+--     --   return ""
+--     -- end
 
-    if not require("user.functions").isempty(hint) then
-      -- return "%#SLSeparator#│ : " .. hint .. "%*"
-      -- return "%#SLSeparator#│ " .. hint .. "%*"
-      return hint .. "%*"
-    end
+--     local sig = require("lsp_signature").status_line()
+--     -- return sig.label .. " " .. sig.hint
 
-    return ""
-  end,
-  cond = hide_in_width_100,
-  padding = 0,
-}
+--     if not require("user.functions").isempty(sig.hint) then
+--       -- return "%#SLSeparator#│ : " .. hint .. "%*"
+--       -- return "%#SLSeparator#│ " .. hint .. "%*"
+--       return sig.hint .. "%*"
+--     end
+
+--     -- return "functions empty"
+--     return ""
+--   end,
+--   cond = hide_in_width_100,
+--   padding = 0,
+-- }
 
 local spaces = {
   function()
@@ -322,7 +326,7 @@ lualine.setup {
     -- lualine_a = { 'filename', file_status=true, path=2 },
     -- lualine_b = { diagnostics },
     -- lualine_c = {},
-    lualine_c = { current_signature },
+    lualine_c = { 'filename', { navic.get_location, cond = navic.is_available } },
     -- lualine_x = { diff, spaces, "encoding", filetype },
     -- lualine_x = { diff, lanuage_server, spaces, filetype },
     -- lualine_x = { lanuage_server, spaces, filetype },
