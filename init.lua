@@ -60,3 +60,4 @@ require "user.bigfile"
 require("flow").setup({})
 require("lsp_signature").setup({})
 -- require("breadcrumbs").setup()
+require("user.guard")

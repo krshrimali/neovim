@@ -28,6 +28,7 @@ require("lazy").setup({
     version = '^4', -- Recommended
     ft = { 'rust' },
   },
+  { 'rust-lang/rust.vim' },
 
   -- LSP
   {
@@ -311,7 +312,14 @@ require("lazy").setup({
     end,
     dependencies = {
       'nvim-treesitter/nvim-treesitter', -- optional
-      'nvim-tree/nvim-web-devicons',   -- optional
+      'nvim-tree/nvim-web-devicons',     -- optional
     }
   },
+  {
+    "nvimdev/guard.nvim",
+    -- Builtin configuration, optional
+    dependencies = {
+      "nvimdev/guard-collection",
+    },
+  }
 })
