@@ -154,6 +154,13 @@ vim.keymap.set(
   { silent = true, noremap = true, desc = "Open git blame link in browser" }
 )
 
+vim.keymap.set(
+  { "n", "v" },
+  "<leader>gf",
+  "<cmd>GuardFmt<cr>",
+  { silent = true, noremap = true, desc = "Format using Guard" }
+)
+
 vim.cmd [[
   function! QuickFixToggle()
     if empty(filter(getwininfo(), 'v:val.quickfix'))
@@ -165,18 +172,10 @@ vim.cmd [[
 ]]
 
 -- nvim-spider
-vim.keymap.set({ "n", "o", "x" }, "w", function()
-  require("spider").motion "w"
-end, { desc = "Spider-w" })
-vim.keymap.set({ "n", "o", "x" }, "e", function()
-  require("spider").motion "e"
-end, { desc = "Spider-e" })
-vim.keymap.set({ "n", "o", "x" }, "b", function()
-  require("spider").motion "b"
-end, { desc = "Spider-b" })
-vim.keymap.set({ "n", "o", "x" }, "ge", function()
-  require("spider").motion "ge"
-end, { desc = "Spider-ge" })
+vim.keymap.set({ "n", "o", "x" }, "w", function() require("spider").motion "w" end, { desc = "Spider-w" })
+vim.keymap.set({ "n", "o", "x" }, "e", function() require("spider").motion "e" end, { desc = "Spider-e" })
+vim.keymap.set({ "n", "o", "x" }, "b", function() require("spider").motion "b" end, { desc = "Spider-b" })
+vim.keymap.set({ "n", "o", "x" }, "ge", function() require("spider").motion "ge" end, { desc = "Spider-ge" })
 
 keymap("n", "<m-q>", ":call QuickFixToggle()<cr>", opts)
 
@@ -200,6 +199,7 @@ keymap("n", "<m-q>", ":call QuickFixToggle()<cr>", opts)
 
 -- vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', {noremap = true})
 vim.api.nvim_set_keymap("i", "<C-l>", 'copilot#Accept("<CR>")', { expr = true, silent = true })
+vim.keymap.set('v', '<leader>lf', vim.lsp.buf.format, bufopts)
 
 -- vim.api.nvim_set_keymap("n", ":", "<cmd>FineCmdline<CR>", { noremap = true })
 
