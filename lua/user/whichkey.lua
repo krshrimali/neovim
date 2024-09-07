@@ -214,7 +214,7 @@ which_key.add {
     desc = "Buffers",
   },
   {
-    "<leader>fc",
+    "<leader>fC",
     "<cmd>Telescope colorscheme<cr>",
     desc = "Colorscheme",
   },
@@ -304,17 +304,17 @@ which_key.add {
     desc = "Keymaps",
   },
   {
-    "<leader>fC",
+    "<leader>fc",
     "<cmd>Telescope commands<cr>",
     desc = "Commands",
   },
 
   -- Git
-  {
-    "<leader>gg",
-    "<cmd>lua require ('user.terminal').lazygit_toggle()<cr>",
-    desc = "Lazygit",
-  },
+  -- {
+  --   "<leader>gg",
+  --   "<cmd>lua require ('user.terminal').lazygit_toggle()<cr>",
+  --   desc = "Lazygit",
+  -- },
   {
     "<leader>gj",
     "<cmd>lua require 'gitsigns'.next_hunk()<cr>",
