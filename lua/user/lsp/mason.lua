@@ -13,6 +13,16 @@ if not status_ok_1 then
   return
 end
 
+local function attach_navic(client, bufnr)
+  -- vim.g.navic_silence = true
+  -- local status_ok, navic = pcall(require, "nvim-navic")
+  local navic = require("nvim-navic")
+  if client.server_capabilities.documentSymbolProvider then
+    navic.attach(client, bufnr)
+  end
+end
+
+
 local servers = {
   "cssls",
   "cssmodules_ls",
@@ -127,6 +137,8 @@ for _, server in pairs(servers) do
 
   if server == "ruff-lsp" then
     local ruff_on_attach = function(client, bufnr)
+      -- lsp_keymaps(bufnr)
+      attach_navic(client, bufnr)
       client.server_capabilities.hoverProvider = false
     end
 
