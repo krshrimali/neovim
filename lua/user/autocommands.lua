@@ -169,13 +169,13 @@ vim.api.nvim_create_autocmd({ "TextYankPost" }, {
 vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(ev)
     local opts = { buffer = ev.buf }
-    vim.keymap.set("n", "<leader>lv", "<cmd>vsplit | lua vim.lsp.buf.definition()<CR>", opts)
+    vim.keymap.set("n", "<leader>lgv", "<cmd>vsplit | lua vim.lsp.buf.definition()<CR>", opts)
   end,
 })
 
 vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(ev)
     local opts = { buffer = ev.buf }
-    vim.keymap.set("n", "<leader>lh", "<cmd>split | lua vim.lsp.buf.definition()<CR>", opts)
+    vim.keymap.set("n", "<leader>lgh", "<cmd>split | lua vim.lsp.buf.definition()<CR>", opts)
   end,
 })

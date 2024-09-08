@@ -25,7 +25,7 @@ require "user.functions"
 require "user.illuminate"
 -- require "user.lir"
 require "user.cybu"
-require "user.winbar"
+-- require "user.winbar"
 require "user.options"
 require "user.nvim-webdev-icons"
 -- require "user.bfs"
@@ -58,3 +58,6 @@ require("ufo").setup({})
 require "user.bigfile"
 -- require "user.disable_diagnostics"
 require("flow").setup({})
+require("lsp_signature").setup({})
+-- require("breadcrumbs").setup()
+require("user.guard")

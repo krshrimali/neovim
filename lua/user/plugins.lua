@@ -28,6 +28,7 @@ require("lazy").setup({
     version = '^4', -- Recommended
     ft = { 'rust' },
   },
+  { 'rust-lang/rust.vim' },
 
   -- LSP
   {
@@ -48,8 +49,6 @@ require("lazy").setup({
   "williamboman/mason-lspconfig.nvim",
 
   "ray-x/lsp_signature.nvim",
-  "SmiteshP/nvim-navic",
-
   -- TODO: Remove this as it's archived by the author and not actively maintained anymore
   -- "simrat39/symbols-outline.nvim"
   -- bringing it back
@@ -311,5 +310,22 @@ require("lazy").setup({
       -- calling `setup` is optional for customization
       require("fzf-lua").setup({})
     end
+  },
+  {
+    'nvimdev/lspsaga.nvim',
+    config = function()
+      require('lspsaga').setup({})
+    end,
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter', -- optional
+      'nvim-tree/nvim-web-devicons',     -- optional
+    }
+  },
+  {
+    "nvimdev/guard.nvim",
+    -- Builtin configuration, optional
+    dependencies = {
+      "nvimdev/guard-collection",
+    },
   }
 })

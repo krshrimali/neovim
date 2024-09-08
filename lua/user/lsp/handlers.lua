@@ -12,9 +12,9 @@ M.capabilities = cmp_nvim_lsp.default_capabilities(M.capabilities)
 M.setup = function()
   local signs = {
     { name = "DiagnosticSignError", text = "E" },
-    { name = "DiagnosticSignWarn", text = "W" },
-    { name = "DiagnosticSignHint", text = "H" },
-    { name = "DiagnosticSignInfo", text = "I" },
+    { name = "DiagnosticSignWarn",  text = "W" },
+    { name = "DiagnosticSignHint",  text = "H" },
+    { name = "DiagnosticSignInfo",  text = "I" },
   }
 
   for _, sign in ipairs(signs) do
@@ -87,12 +87,11 @@ M.setup = function()
 end
 
 local function attach_navic(client, bufnr)
-  vim.g.navic_silence = true
-  local status_ok, navic = pcall(require, "nvim-navic")
-  if not status_ok then
-    return
+  -- vim.g.navic_silence = true
+  local navic = require("nvim-navic")
+  if client.server_capabilities.documentSymbolProvider then
+    navic.attach(client, bufnr)
   end
-  navic.attach(client, bufnr)
 end
 
 local function lsp_keymaps(bufnr)
@@ -128,7 +127,7 @@ M.on_attach = function(client, bufnr)
   lsp_keymaps(bufnr)
   attach_navic(client, bufnr)
 
-  if client.name == "tsserver" then
+  if client.name == "ts_server" then
     require("lsp-inlayhints").on_attach(client, bufnr)
   end
 end
@@ -136,8 +135,8 @@ end
 function M.enable_format_on_save()
   vim.cmd [[
     augroup format_on_save
-      autocmd! 
-      autocmd BufWritePre * lua vim.lsp.buf.format({ async = false }) 
+      autocmd!
+      autocmd BufWritePre * lua vim.lsp.buf.format({ async = false })
     augroup end
   ]]
   vim.notify "Enabled format on save"
