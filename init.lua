@@ -36,7 +36,12 @@ require "user.surround"
 require "user.vim-slash"
 require "user.bufferline"
 require "user.nvim_transparent"
--- require "user.copilot"
+require "user.copilot"
+-- require("copilot").setup({
+--   suggestion = {
+--     auto_trigger = true,
+--   }
+-- })
 require "user.terminal"
 require "user.gitlinker"
 require("goto-preview").setup {}
@@ -60,4 +65,5 @@ require "user.bigfile"
 require("flow").setup({})
 require("lsp_signature").setup({})
 -- require("breadcrumbs").setup()
-require("user.guard")
+-- require("user.guard")
+-- require "user.coc"
