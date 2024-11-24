@@ -93,7 +93,7 @@ require("lazy").setup({
   },
   "rcarriga/nvim-notify",
   "ghillb/cybu.nvim",
-  -- "stevearc/dressing.nvim",
+  "stevearc/dressing.nvim",
 
   -- Colorthemes
   { "decaycs/decay.nvim",    as = "decay" },
@@ -304,6 +304,14 @@ require("lazy").setup({
         ft = { "markdown", "Avante" },
       },
     },
+      "hrsh7th/nvim-cmp",
+  "hrsh7th/cmp-buffer",       -- buffer completions
+  "hrsh7th/cmp-path",         -- path completions
+  "hrsh7th/cmp-cmdline",      -- cmdline completions
+  "saadparwaiz1/cmp_luasnip", -- snippet completions
+  "hrsh7th/cmp-nvim-lsp",
+  "hrsh7th/cmp-emoji",
+  "hrsh7th/cmp-nvim-lua",
     {
       'saghen/blink.cmp',
       lazy = false, -- lazy loading handled internally
