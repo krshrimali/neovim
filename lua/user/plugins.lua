@@ -19,17 +19,11 @@ vim.g.maplocalleader = ","
 -- Install your plugins here
 require("lazy").setup({
   -- Lua Development
-  "nvim-lua/plenary.nvim", -- Useful lua functions used ny lots of plugins
-  "nvim-lua/popup.nvim",
-  "folke/neodev.nvim",
-  "j-hui/fidget.nvim",
-  -- {
-  --   'mrcjkb/rustaceanvim',
-  --   version = '^4', -- Recommended
-  --   ft = { 'rust' },
-  -- },
+  "nvim-lua/plenary.nvim", -- Useful lua functions used in lots of plugins
+  -- "nvim-lua/popup.nvim",
+  -- "folke/neodev.nvim",
+  -- "j-hui/fidget.nvim",
   { 'rust-lang/rust.vim' },
-
   -- LSP
   {
     "neovim/nvim-lspconfig",
@@ -48,48 +42,34 @@ require("lazy").setup({
   "williamboman/mason.nvim",
   "williamboman/mason-lspconfig.nvim",
 
-  "ray-x/lsp_signature.nvim",
+  -- "ray-x/lsp_signature.nvim", -- TODO
   -- TODO: Remove this as it's archived by the author and not actively maintained anymore
   -- "simrat39/symbols-outline.nvim"
   -- bringing it back
   "folke/trouble.nvim",
-  -- "github/copilot.vim",
-  {
-    "zbirenbaum/copilot.lua",
-    event = "InsertEnter",
-    config = function()
-      require("copilot").setup({
-        suggestion = { enabled = true, auto_trigger = true },
-        panel = { enabled = true },
-      })
-    end,
-  },
-
-  "nvimtools/none-ls.nvim",
+  "github/copilot.vim",
+  -- {
+  --   "zbirenbaum/copilot.lua",
+  --   event = "InsertEnter",
+  --   config = function()
+  --     require("copilot").setup({
+  --       suggestion = { enabled = true, auto_trigger = true },
+  --       panel = { enabled = true },
+  --     })
+  --   end,
+  -- },
+  "nvimtools/none-ls.nvim", -- TODO
 
   "RRethy/vim-illuminate",
-  "lvimuser/lsp-inlayhints.nvim",
-
+  -- "lvimuser/lsp-inlayhints.nvim",
   "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-
-  -- Completion
-  "hrsh7th/nvim-cmp",
-  "hrsh7th/cmp-buffer",       -- buffer completions
-  "hrsh7th/cmp-path",         -- path completions
-  "hrsh7th/cmp-cmdline",      -- cmdline completions
-  "saadparwaiz1/cmp_luasnip", -- snippet completions
-  "hrsh7th/cmp-nvim-lsp",
-  "hrsh7th/cmp-emoji",
-  "hrsh7th/cmp-nvim-lua",
 
   "L3MON4D3/LuaSnip",             --snippet engine
   "rafamadriz/friendly-snippets", -- a bunch of snippets to use
 
   { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
   "JoosepAlviste/nvim-ts-context-commentstring",
-  "windwp/nvim-ts-autotag",
   "kylechui/nvim-surround",
-
   {
     "NeogitOrg/neogit",
     dependencies = {
@@ -101,8 +81,6 @@ require("lazy").setup({
   },
   "xiyaowong/transparent.nvim",
   "rmagatti/goto-preview",
-
-
   "chrisgrieser/nvim-spider",
   {
     "nvim-telescope/telescope.nvim",
@@ -112,9 +90,13 @@ require("lazy").setup({
     },
     config = function()
       require("telescope").load_extension "live_grep_args"
-      -- require("telescope").load_extension("noice")
     end,
   },
+  "rcarriga/nvim-notify",
+  "ghillb/cybu.nvim",
+  -- "stevearc/dressing.nvim",
+
+  -- Colorthemes
   { "decaycs/decay.nvim",    as = "decay" },
   "lunarvim/darkplus.nvim",
   "folke/tokyonight.nvim",
@@ -122,12 +104,9 @@ require("lazy").setup({
     "uloco/bluloco.nvim",
     dependencies = { "rktjmp/lush.nvim" },
   },
-  "rcarriga/nvim-notify",
-  "stevearc/dressing.nvim",
-  "ghillb/cybu.nvim",
 
   -- Registers
-  "tversteeg/registers.nvim",
+  -- "tversteeg/registers.nvim",
 
   "kyazdani42/nvim-web-devicons",
 
@@ -137,42 +116,12 @@ require("lazy").setup({
     "goolord/alpha-nvim",
   },
 
-  -- Indent
-  -- { "lukas-reineke/indent-blankline.nvim", main = "ibl",                                                               opts = {} },
-
-  -- File Explorer
-  -- "kyazdani42/nvim-tree.lua"
-
   {
     "nvim-tree/nvim-tree.lua",
     dependencies = {
       "nvim-tree/nvim-web-devicons", -- optional
     },
-    -- config = function()
-    --   require("nvim-tree").setup({})
-    -- end,
   },
-  -- "tamago324/lir.nvim"
-
-  -- Comment
-  "numToStr/Comment.nvim",
-  "folke/todo-comments.nvim",
-
-  -- Terminal
-  "akinsho/toggleterm.nvim",
-
-  -- My own plugins
-  -- "krshrimali/nvim-autorunner",
-
-  "nvim-pack/nvim-spectre",
-  "kevinhwang91/nvim-bqf",
-
-  "lewis6991/gitsigns.nvim",
-  "f-person/git-blame.nvim",
-  "windwp/nvim-autopairs",
-  -- "karb94/neoscroll.nvim",
-  "folke/which-key.nvim",
-
   "krshrimali/vim-moonfly-colors", -- personalized, this one is very dark :D
   "navarasu/onedark.nvim",
   "ellisonleao/gruvbox.nvim",
@@ -181,7 +130,24 @@ require("lazy").setup({
   "nyoom-engineering/oxocarbon.nvim",
   "projekt0n/github-nvim-theme",
 
-  -- clip
+  -- Comment
+  "numToStr/Comment.nvim",
+  "folke/todo-comments.nvim",
+  -- Terminal
+  "akinsho/toggleterm.nvim",
+
+  -- Not so used
+  "nvim-pack/nvim-spectre",
+  "kevinhwang91/nvim-bqf",
+
+  "lewis6991/gitsigns.nvim",
+	{
+		"f-person/git-blame.nvim", opts = { enabled = false } },
+  "windwp/nvim-autopairs",
+  -- "karb94/neoscroll.nvim",
+  "folke/which-key.nvim",
+
+  -- clip -- TODO
   {
     "AckslD/nvim-neoclip.lua",
     dependencies = {
@@ -189,33 +155,9 @@ require("lazy").setup({
       { "nvim-telescope/telescope.nvim" },
     },
   },
-
-  { "kevinhwang91/nvim-ufo", dependencies = { "kevinhwang91/promise-async", "luukvbaal/statuscol.nvim" } },
-
-
-  {
-    -- "linrongbin16/gitlinker.nvim",
-    dir = "/u/shrimali/gitlinker.nvim",
-    -- config = function()
-    --   require("gitlinker").setup()
-    -- end,
-  },
-
-  "nacro90/numb.nvim",
-  "MunifTanjim/nui.nvim",
-  "stevearc/oil.nvim",
-
+  -- TODO: use gitlinker
+  -- "stevearc/oil.nvim", -- TODO
   "jonarrien/telescope-cmdline.nvim",
-
-
-  -- {
-  --   "folke/noice.nvim",
-  --   dependencies = {
-  --     "MunifTanjim/nui.nvim",
-  --     "rcarriga/nvim-notify",
-  --   }
-  -- },
-
   {
     "princejoogie/dir-telescope.nvim",
     -- telescope.nvim is a required dependency
@@ -229,7 +171,6 @@ require("lazy").setup({
       })
     end,
   },
-  "LunarVim/bigfile.nvim",
   {
     "hedyhli/outline.nvim",
     config = function()
@@ -242,40 +183,6 @@ require("lazy").setup({
       }
     end,
   },
-  -- {
-  --     "neovim/nvim-lspconfig", -- REQUIRED: for native Neovim LSP integration
-  --     lazy = false,            -- REQUIRED: tell lazy.nvim to start this plugin at startup
-  --     dependencies = {
-  --         -- main one
-  --         { "ms-jpq/coq_nvim",       branch = "coq" },
-
-  --         -- 9000+ Snippets
-  --         { "ms-jpq/coq.artifacts",  branch = "artifacts" },
-
-  --         -- lua & third party sources -- See https://github.com/ms-jpq/coq.thirdparty
-  --         -- Need to **configure separately**
-  --         { 'ms-jpq/coq.thirdparty', branch = "3p" }
-  --         -- - shell repl
-  --         -- - nvim lua api
-  --         -- - scientific calculator
-  --         -- - comment banner
-  --         -- - etc
-  --     },
-  --     init = function()
-  --         vim.g.coq_settings = {
-  --             auto_start = true, -- if you want to start COQ at startup
-  --             display = {
-  --                 icons = {
-  --                     mode = "none"
-  --                 }
-  --             },
-  --             -- Your COQ settings here
-  --         }
-  --     end,
-  --     config = function()
-  --         -- Your LSP settings here
-  --     end,
-  -- },
   {
     "microsoft/python-type-stubs",
     cond = false,
@@ -283,12 +190,6 @@ require("lazy").setup({
   {
     "nvim-telescope/telescope-file-browser.nvim",
     dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
-  },
-  {
-    "0xstepit/flow.nvim",
-    lazy = false,
-    priority = 1000,
-    opts = {},
   },
   {
     "coffebar/neovim-project",
@@ -321,19 +222,6 @@ require("lazy").setup({
       require("fzf-lua").setup({})
     end
   },
-  {
-    'nvimdev/lspsaga.nvim',
-    config = function()
-      require('lspsaga').setup({})
-    end,
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter', -- optional
-      'nvim-tree/nvim-web-devicons',     -- optional
-    }
-  },
-  -- {
-  --   'neoclide/coc.nvim', branch = 'release'
-  -- },
   {
     "folke/trouble.nvim",
     opts = {}, -- for default options, refer to the configuration section for custom setup.
@@ -417,12 +305,75 @@ require("lazy").setup({
         ft = { "markdown", "Avante" },
       },
     },
-  }
-  -- {
-  --   "nvimdev/guard.nvim",
-  --   -- Builtin configuration, optional
-  --   dependencies = {
-  --     "nvimdev/guard-collection",
-  --   },
-  -- }
+    {
+      'saghen/blink.cmp',
+      lazy = false, -- lazy loading handled internally
+      -- optional: provides snippets for the snippet source
+      dependencies = 'rafamadriz/friendly-snippets',
+
+      -- use a release tag to download pre-built binaries
+      version = 'v0.*',
+      -- OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
+      -- build = 'cargo build --release',
+      -- If you use nix, you can build from source using latest nightly rust with:
+      -- build = 'nix run .#build-plugin',
+
+      ---@module 'blink.cmp'
+      ---@type blink.cmp.Config
+      opts = {
+        -- 'default' for mappings similar to built-in completion
+        -- 'super-tab' for mappings similar to vscode (tab to accept, arrow keys to navigate)
+        -- 'enter' for mappings similar to 'super-tab' but with 'enter' to accept
+        -- see the "default configuration" section below for full documentation on how to define
+        -- your own keymap.
+        keymap = { preset = 'default' },
+
+        highlight = {
+          -- sets the fallback highlight groups to nvim-cmp's highlight groups
+          -- useful for when your theme doesn't support blink.cmp
+          -- will be removed in a future release, assuming themes add support
+          use_nvim_cmp_as_default = false,
+        },
+        -- set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+        -- adjusts spacing to ensure icons are aligned
+        nerd_font_variant = 'normal',
+
+        -- default list of enabled providers defined so that you can extend it
+        -- elsewhere in your config, without redefining it, via `opts_extend`
+        sources = {
+          completion = {
+            enabled_providers = { 'lsp', 'path', 'snippets', 'buffer' },
+          },
+        },
+
+        -- experimental auto-brackets support
+        -- accept = { auto_brackets = { enabled = true } }
+
+        -- experimental signature help support
+        -- trigger = { signature_help = { enabled = true } }
+      },
+      -- allows extending the enabled_providers array elsewhere in your config
+      -- without having to redefine it
+      opts_extend = { "sources.completion.enabled_providers" }
+    },
+
+    -- LSP servers and clients communicate what features they support through "capabilities".
+    --  By default, Neovim support a subset of the LSP specification.
+    --  With blink.cmp, Neovim has *more* capabilities which are communicated to the LSP servers.
+    --  Explanation from TJ: https://youtu.be/m8C0Cq9Uv9o?t=1275
+    --
+    -- This can vary by config, but in general for nvim-lspconfig:
+
+    -- {
+    --   'neovim/nvim-lspconfig',
+    --   dependencies = { 'saghen/blink.cmp' },
+    --   config = function(_, opts)
+    --     local lspconfig = require('lspconfig')
+    --     for server, config in pairs(opts.servers or {}) do
+    --       config.capabilities = require('blink.cmp').get_lsp_capabilities(config.capabilities)
+    --       lspconfig[server].setup(config)
+    --     end
+    --   end
+    -- }
+  },
 })
