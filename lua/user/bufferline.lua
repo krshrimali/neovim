@@ -11,10 +11,14 @@ bufferline.setup {
     show_buffer_close_icons = true,
     separator_style = "slant",
     indicator = {
-      -- style = 'underline',
+      style = 'underline',
     },
     hover = {
       enabled = true,
     },
   }
 }
+
+-- vim.api.nvim_set_hl(0, "BufferLineBufferSelected", { fg = "#ffffff", bg = "#005f87", bold = true })
+-- vim.api.nvim_set_hl(0, "BufferLineTabSelected", { fg = "#ffffff", bg = "#005f87", bold = true })
+-- vim.api.nvim_set_hl(0, "BufferLineTabClose", { fg = "#ffffff", bg = "#005f87", bold = true })

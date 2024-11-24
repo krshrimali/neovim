@@ -1,8 +1,9 @@
+-- Treesitter, LSP, terminal plugin, telescopem, tree, lualine, alpha
 require "user.plugins"
 require "user.keymaps"
 require "user.autocommands"
 require "user.colorscheme"
-require "user.cmp"
+-- require "user.cmp"
 require "user.lsp"
 require "user.telescope"
 require "user.treesitter"
