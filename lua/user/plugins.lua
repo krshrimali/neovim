@@ -15,14 +15,13 @@ vim.g.mapleader = ","
 vim.g.maplocalleader = ","
 
 
-
 -- Install your plugins here
 require("lazy").setup({
   -- Lua Development
   "nvim-lua/plenary.nvim", -- Useful lua functions used in lots of plugins
-  -- "nvim-lua/popup.nvim",
-  -- "folke/neodev.nvim",
-  -- "j-hui/fidget.nvim",
+  "nvim-lua/popup.nvim",
+  "folke/neodev.nvim",
+  "j-hui/fidget.nvim",
   { 'rust-lang/rust.vim' },
   -- LSP
   {
@@ -47,17 +46,17 @@ require("lazy").setup({
   -- "simrat39/symbols-outline.nvim"
   -- bringing it back
   "folke/trouble.nvim",
-  "github/copilot.vim",
-  -- {
-  --   "zbirenbaum/copilot.lua",
-  --   event = "InsertEnter",
-  --   config = function()
-  --     require("copilot").setup({
-  --       suggestion = { enabled = true, auto_trigger = true },
-  --       panel = { enabled = true },
-  --     })
-  --   end,
-  -- },
+  -- "github/copilot.vim",
+  {
+    "zbirenbaum/copilot.lua",
+    event = "InsertEnter",
+    config = function()
+      require("copilot").setup({
+        suggestion = { enabled = true, auto_trigger = true },
+        panel = { enabled = true },
+      })
+    end,
+  },
   "nvimtools/none-ls.nvim", -- TODO
 
   "RRethy/vim-illuminate",
@@ -106,7 +105,7 @@ require("lazy").setup({
   },
 
   -- Registers
-  -- "tversteeg/registers.nvim",
+  "tversteeg/registers.nvim",
 
   "kyazdani42/nvim-web-devicons",
 
@@ -143,7 +142,7 @@ require("lazy").setup({
   "lewis6991/gitsigns.nvim",
 	{
 		"f-person/git-blame.nvim", opts = { enabled = false } },
-  "windwp/nvim-autopairs",
+  -- "windwp/nvim-autopairs",
   -- "karb94/neoscroll.nvim",
   "folke/which-key.nvim",
 
