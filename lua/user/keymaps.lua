@@ -83,7 +83,7 @@ keymap("x", "<leader>p", '"_dP', opts)
 keymap("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>//gI<Left><Left><Left>", opts)
 
 -- NOTE: the fact that tab and ctrl-i are the same is stupid
--- keymap("n", "<leader>Q", "<cmd>Bdelete!<CR>", opts)
+keymap("n", "<leader>Q", "<cmd>bdelete!<CR>", opts)
 keymap("n", "<F11>", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
 keymap("n", "<F12>", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
 -- keymap("n", "gI", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
@@ -198,7 +198,7 @@ keymap("n", "<m-q>", ":call QuickFixToggle()<cr>", opts)
 -- ]]
 
 -- vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', {noremap = true})
--- vim.api.nvim_set_keymap("i", "<C-l>", 'copilot#Accept("<CR>")', { expr = true, silent = true })
+vim.api.nvim_set_keymap("i", "<C-l>", 'copilot#Accept("<CR>")', { expr = true, silent = true })
 vim.keymap.set('v', '<leader>lf', vim.lsp.buf.format, bufopts)
 
 -- vim.api.nvim_set_keymap("n", ":", "<cmd>FineCmdline<CR>", { noremap = true })

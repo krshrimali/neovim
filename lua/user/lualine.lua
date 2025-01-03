@@ -309,8 +309,7 @@ lualine.setup {
   options = {
     globalstatus = true,
     icons_enabled = true,
-    -- theme = custom_auto_theme,
-    theme = auto,
+    theme = custom_auto_theme,
     -- theme = theme,
     -- theme = "shado",
     -- theme = "catppuccin",
