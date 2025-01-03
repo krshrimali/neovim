@@ -1,7 +1,5 @@
 local status_ok, which_key = pcall(require, "which-key")
-if not status_ok then
-  return
-end
+if not status_ok then return end
 
 which_key.add {
   {
@@ -216,7 +214,7 @@ which_key.add {
     desc = "Buffers",
   },
   {
-    "<leader>fC",
+    "<leader>fc",
     "<cmd>Telescope colorscheme<cr>",
     desc = "Colorscheme",
   },
@@ -242,7 +240,7 @@ which_key.add {
   },
   {
     "<leader>fts",
-    "<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args(default_text=vim.fn.expand('<cword>'))",
+    "<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args(default_text=vim.fn.expand('<cword>'))<cr>",
     desc = "Live Grep Args with the word under cursor",
   },
   {
@@ -296,6 +294,11 @@ which_key.add {
     desc = "Recent File",
   },
   {
+    "<leader>fp",
+    "<cmd>Telescope frecency workspace=CWD<cr>",
+    desc = "Frecency recent file",
+  },
+  {
     "<leader>fR",
     "<cmd>Telescope registers<cr>",
     desc = "Registers",
@@ -306,17 +309,17 @@ which_key.add {
     desc = "Keymaps",
   },
   {
-    "<leader>fc",
+    "<leader>fC",
     "<cmd>Telescope commands<cr>",
     desc = "Commands",
   },
 
   -- Git
-  -- {
-  --   "<leader>gg",
-  --   "<cmd>lua require ('user.terminal').lazygit_toggle()<cr>",
-  --   desc = "Lazygit",
-  -- },
+  {
+    "<leader>gg",
+    "<cmd>lua require ('user.terminal').lazygit_toggle()<cr>",
+    desc = "Lazygit",
+  },
   {
     "<leader>gj",
     "<cmd>lua require 'gitsigns'.next_hunk()<cr>",
@@ -711,26 +714,12 @@ which_key.add {
     desc = "NavBar",
   },
 
-  -- Transparent
-  { "<leader>xt",  "<cmd>TransparentToggle<cr>",                                                  desc = "Toggle transparency" },
+  -- Folding
+  -- { "<leader>zo", "<cmd>lua require('ufo').openAllFolds()<CR>", desc = "Open All Folds" },
+  -- { "<leader>zc", "<cmd>lua require('ufo').closeAllFolds()<CR>", desc = "Close" },
+  -- { "<leader>zm", "<cmd>lua require('ufo').closeFoldsWith()<CR>", desc = "Close Folds With" },
+  -- { "<leader>zr", "<cmd>lua require('ufo').openFoldsExceptKinds()<CR>", desc = "Open Folds except Kinds" },
 
-  -- fzf-lua
-  { "<leader>cpp", "<cmd>lua require('fzf-lua').files()<cr>",                                     desc = "Fzf Files" },
-  { "<leader>cpg", "<cmd>lua require('fzf-lua').git_files()<cr>",                                 desc = "Fzf Git Files" },
-  { "<leader>csl", "<cmd>lua require('fzf-lua').live_grep()<CR>",                                 desc = "Fzf Live Grep" },
-  { "<leader>csr", "<cmd>lua require('fzf-lua').live_grep_resume()<CR>",                          desc = "Fzf Live Grep Resume" },
-  { "<leader>csw", "<cmd>lua require('fzf-lua').grep_cword()<CR>",                                desc = "Fzf Grep Cword" },
-  { "<leader>ckk", "<cmd>lua require('fzf-lua').keymaps()<CR>",                                   desc = "Fzf Keymaps" },
-  -- { "<leader>cr", require('fzf-lua').registers, { desc = "Fzf Registers"}},
-  { "<leader>coo", "<cmd>lua require('fzf-lua').oldfiles()<CR>",                                  desc = "Fzf Oldfiles" },
-  { "<leader>coc", "<cmd>lua require('fzf-lua').oldfiles({ cwd = vim.fn.expand('%:p:h') })<CR>",  desc = "Fzf Oldfiles in current directory" },
-  { "<leader>cbb", "<cmd>lua require('fzf-lua').buffers()<CR>",                                   desc = "Fzf Buffers" },
-  { "<leader>cs",  "<cmd>lua require('fzf-lua').search_history()<CR>",                            desc = "Fzf Search History" },
-  { "<leader>cfi", "<cmd>lua require('fzf-lua').files({ cwd = vim.fn.expand('%:p:h') })<CR>",     desc = "Fzf Files in current directory" },
-  { "<leader>cgg", "<cmd>lua require('fzf-lua').git_files({ cwd = vim.fn.expand('%:p:h') })<CR>", desc = "Fzf Git Files in current directory" },
-  { "<leader>cgb", "<cmd>lua require('fzf-lua').git_branches()<CR>",                              desc = "Fzf Git Files in current directory" },
-  -- { "<leader>cR", require('fzf-lua').registers({ cwd = vim.fn.expand('%:p:h') }), { desc = "Fzf Registers in current directory"}},
-  { "<leader>clr", "<cmd>lua require('fzf-lua').lsp_references()<CR>",                            desc = "LSP References" },
   -- Project
   {
     "<leader>tp",
@@ -752,28 +741,3 @@ which_key.add {
     desc = "Guard Fmt",
   },
 }
-
--- local opts = {
---   mode = "n", -- NORMAL mode
---   prefix = "<leader>",
---   buffer = nil, -- Global mappings. Specify a buffer number for buffer local mappings
---   silent = true, -- use `silent` when creating keymaps
---   noremap = true, -- use `noremap` when creating keymaps
---   nowait = true, -- use `nowait` when creating keymaps
--- }
-
--- local vopts = {
---   mode = "v", -- VISUAL mode
---   prefix = "<leader>",
---   buffer = nil, -- Global mappings. Specify a buffer number for buffer local mappings
---   silent = true, -- use `silent` when creating keymaps
---   noremap = true, -- use `noremap` when creating keymaps
---   nowait = true, -- use `nowait` when creating keymaps
--- }
--- local vmappings = {
---   ["/"] = { '<ESC><CMD>lua require("Comment.api").toggle.linewise(vim.fn.visualmode())<CR>', "Comment" },
--- }
-
--- which_key.setup(setup)
--- which_key.register(mappings, opts)
--- which_key.register(vmappings, vopts)

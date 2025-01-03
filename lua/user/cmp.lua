@@ -255,16 +255,16 @@ cmp.setup {
     { name = "nvim_lsp", group_index = 2 },
     { name = "nvim_lua", group_index = 2 },
     { name = "luasnip", group_index = 2 },
-    -- {
-    --   name = "buffer",
-    --   group_index = 2,
-    --   keyword_length = 4,
-    --   filter = function(entry, ctx)
-    --     if not contains(buffer_fts, ctx.prev_context.filetype) then
-    --       return true
-    --     end
-    --   end,
-    -- },
+    {
+      name = "buffer",
+      group_index = 2,
+      keyword_length = 1,
+      filter = function(entry, ctx)
+        if not contains(buffer_fts, ctx.prev_context.filetype) then
+          return true
+        end
+      end,
+    },
     -- { name = "cmp_tabnine", group_index = 2 },
     { name = "path", group_index = 2 },
     { name = "emoji", group_index = 2 },
@@ -295,14 +295,14 @@ cmp.setup {
   },
   window = {
     documentaton = true,
-    documentation = {
-      border = "rounded",
-      winhighlight = "NormalFloat:Pmenu,NormalFloat:Pmenu,CursorLine:Pmenu,Search:None",
-    },
-    completion = {
-      border = "rounded",
-      winhighlight = "NormalFloat:Pmenu,NormalFloat:Pmenu,CursorLine:PmenuSel,Search:None",
-    },
+    -- documentation = {
+    --   border = "rounded",
+    --   winhighlight = "NormalFloat:Pmenu,NormalFloat:Pmenu,CursorLine:Pmenu,Search:None",
+    -- },
+    -- completion = {
+    --   border = "rounded",
+    --   winhighlight = "NormalFloat:Pmenu,NormalFloat:Pmenu,CursorLine:PmenuSel,Search:None",
+    -- },
   },
   duplicates = {
     -- buffer = 1,
