@@ -32,9 +32,9 @@
 
 -- vim.g.onedarker_italic_conditionals = false
 
--- local colorscheme = "darkplus"
+local colorscheme = "darkplus"
 -- local colorscheme = "github_light"
-local colorscheme = "github_dark"
+-- local colorscheme = "github_dark_default"
 -- local colorscheme = "github_light"
 
 local status_ok, _ = pcall(vim.cmd, "colorscheme " .. colorscheme)
