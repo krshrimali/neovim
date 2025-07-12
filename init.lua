@@ -3,7 +3,7 @@ require "user.keymaps"
 require "user.autocommands"
 require "user.colorscheme"
 -- require "user.cmp"
-require "user.lsp"
+-- require "user.lsp"
 require "user.telescope"
 require "user.treesitter"
 require "user.comment"
@@ -40,26 +40,27 @@ require "user.nvim_transparent"
 require "user.terminal"
 require "user.gitlinker"
 require("goto-preview").setup {}
-require("nvim-surround").setup()
 require("alpha").setup(require("alpha.themes.dashboard").config)
-require("neoclip").setup()
 require "user.oil"
 require("oil").setup()
 require("neogit").setup {}
 require("telescope").load_extension "cmdline"
-require "user.statuscol"
 
 -- TODO: @krshrimali - look at these plugins and see if they are really useful
 require "user.autopairs"
 
 -- TODO: @krshrimali: testing without using these plugins for 7 days and checking if I really need them
 -- require "user.project"
-require("ufo").setup({})
-require "user.bigfile"
 -- require "user.disable_diagnostics"
-require("flow").setup({})
 require("lsp_signature").setup({})
 -- require("breadcrumbs").setup()
 -- require("user.guard")
 -- require("user.lspsaga")
 require "user.indentline"
+
+vim.lsp.enable('rust-analyzer')
+vim.lsp.enable('pyright')
+vim.lsp.enable('tsserver')
+vim.lsp.enable('gopls')
+vim.lsp.enable('clangd')
+vim.lsp.enable('lua_ls')
