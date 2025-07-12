@@ -99,16 +99,16 @@ keymap("n", "<C-z>", "<cmd>ZenMode<cr>", opts)
 vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
 M.show_documentation = function()
-  local filetype = vim.bo.filetype
-  if vim.tbl_contains({ "vim", "help" }, filetype) then
-    vim.cmd("h " .. vim.fn.expand "<cword>")
-  elseif vim.tbl_contains({ "man" }, filetype) then
-    vim.cmd("Man " .. vim.fn.expand "<cword>")
-  elseif vim.fn.expand "%:t" == "Cargo.toml" then
-    require("crates").show_popup()
-  else
-    vim.lsp.buf.hover()
-  end
+    local filetype = vim.bo.filetype
+    if vim.tbl_contains({ "vim", "help" }, filetype) then
+        vim.cmd("h " .. vim.fn.expand "<cword>")
+    elseif vim.tbl_contains({ "man" }, filetype) then
+        vim.cmd("Man " .. vim.fn.expand "<cword>")
+    elseif vim.fn.expand "%:t" == "Cargo.toml" then
+        require("crates").show_popup()
+    else
+        vim.lsp.buf.hover()
+    end
 end
 
 vim.api.nvim_set_keymap("n", "K", ":lua require('user.keymaps').show_documentation()<CR>", opts)
@@ -129,36 +129,36 @@ vim.api.nvim_set_keymap("n", "<m-t>", "<cmd>TodoQuickFix<cr>", opts)
 
 -- vim.api.nvim_set_keymap('v', '<leader>gLb', '<cmd>lua require"gitlinker".get_buf_range_url("v", {action_callback = require"gitlinker.actions".open_in_browser})<cr>', {})
 vim.keymap.set(
-  { "n", "v" },
-  "<leader>gy",
-  "<cmd>GitLink<cr>",
-  { silent = true, noremap = true, desc = "Copy git permlink to clipboard" }
+    { "n", "v" },
+    "<leader>gy",
+    "<cmd>GitLink<cr>",
+    { silent = true, noremap = true, desc = "Copy git permlink to clipboard" }
 )
 vim.keymap.set(
-  { "n", "v" },
-  "<leader>gY",
-  "<cmd>GitLink!<cr>",
-  { silent = true, noremap = true, desc = "Open git permlink in browser" }
+    { "n", "v" },
+    "<leader>gY",
+    "<cmd>GitLink!<cr>",
+    { silent = true, noremap = true, desc = "Open git permlink in browser" }
 )
 -- blame
 vim.keymap.set(
-  { "n", "v" },
-  "<leader>gb",
-  "<cmd>GitLink blame<cr>",
-  { silent = true, noremap = true, desc = "Copy git blame link to clipboard" }
+    { "n", "v" },
+    "<leader>gb",
+    "<cmd>GitLink blame<cr>",
+    { silent = true, noremap = true, desc = "Copy git blame link to clipboard" }
 )
 vim.keymap.set(
-  { "n", "v" },
-  "<leader>gB",
-  "<cmd>GitLink! blame<cr>",
-  { silent = true, noremap = true, desc = "Open git blame link in browser" }
+    { "n", "v" },
+    "<leader>gB",
+    "<cmd>GitLink! blame<cr>",
+    { silent = true, noremap = true, desc = "Open git blame link in browser" }
 )
 
 vim.keymap.set(
-  { "n", "v" },
-  "<leader>gf",
-  "<cmd>GuardFmt<cr>",
-  { silent = true, noremap = true, desc = "Format using Guard" }
+    { "n", "v" },
+    "<leader>gf",
+    "<cmd>GuardFmt<cr>",
+    { silent = true, noremap = true, desc = "Format using Guard" }
 )
 
 vim.cmd [[
@@ -207,35 +207,35 @@ vim.g.copilot_no_tab_map = true
 
 local opts = { noremap = true, silent = true }
 vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>pp",
-  [[:lua require('user.subfolder').copySubfolderPath()<CR>]],
-  { noremap = true, silent = true }
+    "n",
+    "<Leader>pp",
+    [[:lua require('user.subfolder').copySubfolderPath()<CR>]],
+    { noremap = true, silent = true }
 )
 
 vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>pr",
-  [[:lua require('user.subfolder').copyRelativeFolderPath()<CR>]],
-  { noremap = true, silent = true }
+    "n",
+    "<Leader>pr",
+    [[:lua require('user.subfolder').copyRelativeFolderPath()<CR>]],
+    { noremap = true, silent = true }
 )
 
 -- Helper functions to fetch the current scope and set `search_dirs`
 _G.find_files = function()
-  local current_path = vim.fn.expand "%:p:h"
-  local relative_path = vim.fn.fnamemodify(current_path, ":~:.")
+    local current_path = vim.fn.expand "%:p:h"
+    local relative_path = vim.fn.fnamemodify(current_path, ":~:.")
 
-  require("telescope.builtin").find_files {
-    search_dirs = { relative_path },
-  }
+    require("telescope.builtin").find_files {
+        search_dirs = { relative_path },
+    }
 end
 _G.live_grep = function()
-  local current_path = vim.fn.expand "%:p:h"
-  local relative_path = vim.fn.fnamemodify(current_path, ":~:.")
+    local current_path = vim.fn.expand "%:p:h"
+    local relative_path = vim.fn.fnamemodify(current_path, ":~:.")
 
-  require("telescope.builtin").live_grep {
-    search_dirs = { relative_path },
-  }
+    require("telescope.builtin").live_grep {
+        search_dirs = { relative_path },
+    }
 end
 
 vim.api.nvim_set_keymap("n", "<Leader><leader>f", ":lua find_files()<CR>", { noremap = true })
@@ -258,7 +258,5 @@ vim.api.nvim_set_keymap("n", "<leader><leader>s", ":silent Telescope cmdline<CR>
 --     vim.lsp.buf.hover()
 --   end
 -- end)
-
-vim.keymap.set("n", "<leader>e", "<CMD>CHADopen<CR>", { desc = "Open CHADTree" })
 
 return M
