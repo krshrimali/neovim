@@ -63,4 +63,3 @@ require("lsp_signature").setup({})
 -- require("user.guard")
 -- require("user.lspsaga")
 require "user.indentline"
-require "user.coc"
