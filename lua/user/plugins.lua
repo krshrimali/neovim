@@ -166,7 +166,6 @@ require("lazy").setup {
     },
     {
         "CopilotC-Nvim/CopilotChat.nvim",
-        branch = "canary",
         dependencies = {
             { "zbirenbaum/copilot.lua" }, -- or github/copilot.vim
             { "nvim-lua/plenary.nvim" },  -- for curl, log wrapper
@@ -246,8 +245,26 @@ require("lazy").setup {
             -- C-k: Toggle signature help (if signature.enabled = true)
             --
             -- See :h blink-cmp-config-keymap for defining your own keymap
-            keymap = { preset = 'enter' },
-
+            keymap = { preset = 'super-tab',
+                -- ["<Tab>"] = {
+                --     function(cmp)
+                --         if vim.b[vim.api.nvim_get_current_buf()].nes_state then
+                --             cmp.hide()
+                --             return (
+                --                 require("copilot-lsp.nes").apply_pending_nes()
+                --                 and require("copilot-lsp.nes").walk_cursor_start_edit()
+                --             )
+                --         end
+                --         if cmp.snippet_active() then
+                --             return cmp.accept()
+                --         else
+                --             return cmp.select_and_accept()
+                --         end
+                --     end,
+                --     "snippet_forward",
+                --     "fallback",
+                -- },
+            },
             appearance = {
                 -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
                 -- Adjusts spacing to ensure icons are aligned
@@ -273,6 +290,62 @@ require("lazy").setup {
         opts_extend = { "sources.default" }
     },
     { "SmiteshP/nvim-navic" },
+    -- {
+    --     "copilotlsp-nvim/copilot-lsp",
+    --     init = function()
+    --         vim.g.copilot_nes_debounce = 500
+    --         vim.lsp.enable("copilot_ls")
+    --         vim.keymap.set("n", "<C-p>", function()
+    --             -- Try to jump to the start of the suggestion edit.
+    --             -- If already at the start, then apply the pending suggestion and jump to the end of the edit.
+    --             local _ = require("copilot-lsp.nes").walk_cursor_start_edit()
+    --                 or (
+    --                     require("copilot-lsp.nes").apply_pending_nes() and require("copilot-lsp.nes").walk_cursor_end_edit()
+    --                 )
+    --         end)
+    --     end
+    -- },
+    {
+        "mason-org/mason.nvim",
+    },
+    {
+        "coffebar/neovim-project",
+        opts = {
+            projects = { -- define project roots
+                "~/Documents/*",
+                "~/.config/*",
+                "~/RustroverProjects/*",
+                "~/CLionProjects/*",
+            },
+            picker = {
+                type = "telescope", -- one of "telescope", "fzf-lua", or "snacks"
+            }
+        },
+        init = function()
+            -- enable saving the state of plugins in the session
+            vim.opt.sessionoptions:append("globals") -- save global variables that start with an uppercase letter and contain at least one lowercase letter.
+        end,
+        dependencies = {
+            { "nvim-lua/plenary.nvim" },
+            -- optional picker
+            { "nvim-telescope/telescope.nvim", tag = "0.1.4" },
+            -- optional picker
+            { "ibhagwan/fzf-lua" },
+            -- optional picker
+            { "folke/snacks.nvim" },
+            { "Shatur/neovim-session-manager" },
+        },
+        lazy = false,
+        priority = 100,
+    },
+    {
+        "mason-org/mason-lspconfig.nvim",
+        opts = {},
+        dependencies = {
+            { "mason-org/mason.nvim", opts = {} },
+            "neovim/nvim-lspconfig",
+        },
+    }
 
     -- TEST later
     -- "kylechui/nvim-surround",
