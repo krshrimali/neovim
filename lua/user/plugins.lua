@@ -17,66 +17,34 @@ vim.g.maplocalleader = ","
 -- Install your plugins here
 require("lazy").setup {
     -- Lua Development
-    "nvim-lua/plenary.nvim", -- Useful lua functions used ny lots of plugins
-    "nvim-lua/popup.nvim",
-    "folke/neodev.nvim",
-    "j-hui/fidget.nvim",
-    {
-        "mrcjkb/rustaceanvim",
-        version = "^4", -- Recommended
-        ft = { "rust" },
-    },
-    { "rust-lang/rust.vim" },
+    -- "nvim-lua/plenary.nvim", -- Useful lua functions used ny lots of plugins
+    -- "nvim-lua/popup.nvim",
+    -- "folke/neodev.nvim",
+    -- "j-hui/fidget.nvim",
+    -- {
+    --     "mrcjkb/rustaceanvim",
+    --     version = "^4", -- Recommended
+    --     ft = { "rust" },
+    -- },
+    -- { "rust-lang/rust.vim" },
 
     -- LSP
     {
         "neovim/nvim-lspconfig",
-        dependencies = {
-            {
-                "SmiteshP/nvim-navbuddy",
-                dependencies = {
-                    "SmiteshP/nvim-navic",
-                    "MunifTanjim/nui.nvim",
-                },
-                opts = { lsp = { auto_attach = true } },
-            },
-        },
     },
-    -- "williamboman/nvim-lsp-installer" -- simple to language server installer
-    "williamboman/mason.nvim",
-    "williamboman/mason-lspconfig.nvim",
 
     "ray-x/lsp_signature.nvim",
-    -- TODO: Remove this as it's archived by the author and not actively maintained anymore
-    -- "simrat39/symbols-outline.nvim"
-    -- bringing it back
-    "folke/trouble.nvim",
     "github/copilot.vim",
 
-    "nvimtools/none-ls.nvim",
-
+    -- Highlight words under cursor
     "RRethy/vim-illuminate",
-    "lvimuser/lsp-inlayhints.nvim",
 
+    -- Check if vim.lsp provides this now...
     "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
 
-    -- Completion
-    "hrsh7th/nvim-cmp",
-    "hrsh7th/cmp-buffer",       -- buffer completions
-    "hrsh7th/cmp-path",         -- path completions
-    "hrsh7th/cmp-cmdline",      -- cmdline completions
-    "saadparwaiz1/cmp_luasnip", -- snippet completions
-    "hrsh7th/cmp-nvim-lsp",
-    "hrsh7th/cmp-emoji",
-    "hrsh7th/cmp-nvim-lua",
-
-    "L3MON4D3/LuaSnip",             --snippet engine
-    "rafamadriz/friendly-snippets", -- a bunch of snippets to use
-
     { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
+    -- For commenting (uses Treesitter to comment properly)
     "JoosepAlviste/nvim-ts-context-commentstring",
-    "windwp/nvim-ts-autotag",
-    "kylechui/nvim-surround",
 
     {
         "NeogitOrg/neogit",
@@ -93,7 +61,6 @@ require("lazy").setup {
     "chrisgrieser/nvim-spider",
     {
         "nvim-telescope/telescope.nvim",
-        -- "/Users/krshrimali/Documents/Projects/Personal/telescope.nvim",
         dependencies = {
             { "nvim-telescope/telescope-live-grep-args.nvim" },
         },
@@ -102,7 +69,7 @@ require("lazy").setup {
             -- require("telescope").load_extension("noice")
         end,
     },
-    { "decaycs/decay.nvim",                  as = "decay" },
+    { "decaycs/decay.nvim",              as = "decay" },
     "lunarvim/darkplus.nvim",
     "folke/tokyonight.nvim",
     {
@@ -127,17 +94,11 @@ require("lazy").setup {
     -- Indent
     { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
 
-    -- File Explorer
-    -- "kyazdani42/nvim-tree.lua"
-
     {
         "nvim-tree/nvim-tree.lua",
         dependencies = {
             "nvim-tree/nvim-web-devicons", -- optional
         },
-        -- config = function()
-        --   require("nvim-tree").setup({})
-        -- end,
     },
     -- "tamago324/lir.nvim"
 
@@ -148,18 +109,13 @@ require("lazy").setup {
     -- Terminal
     "akinsho/toggleterm.nvim",
 
-    -- My own plugins
-    -- "krshrimali/nvim-autorunner",
-
     "nvim-pack/nvim-spectre",
     "kevinhwang91/nvim-bqf",
 
     "lewis6991/gitsigns.nvim",
-    "f-person/git-blame.nvim",
-    "windwp/nvim-autopairs",
-    -- "karb94/neoscroll.nvim",
     "folke/which-key.nvim",
 
+    -- THEMES
     "krshrimali/vim-moonfly-colors", -- personalized, this one is very dark :D
     "navarasu/onedark.nvim",
     "ellisonleao/gruvbox.nvim",
@@ -168,45 +124,12 @@ require("lazy").setup {
     "nyoom-engineering/oxocarbon.nvim",
     "projekt0n/github-nvim-theme",
 
-    -- clip
-    {
-        "AckslD/nvim-neoclip.lua",
-        dependencies = {
-            { "kkharji/sqlite.lua",           module = "sqlite" },
-            { "nvim-telescope/telescope.nvim" },
-        },
-    },
-
-    { "kevinhwang91/nvim-ufo", dependencies = { "kevinhwang91/promise-async", "luukvbaal/statuscol.nvim" } },
-
+    -- Peek numbers
     "nacro90/numb.nvim",
-    "MunifTanjim/nui.nvim",
+    -- File Explorer
     "stevearc/oil.nvim",
 
     "jonarrien/telescope-cmdline.nvim",
-
-    -- {
-    --   "folke/noice.nvim",
-    --   dependencies = {
-    --     "MunifTanjim/nui.nvim",
-    --     "rcarriga/nvim-notify",
-    --   }
-    -- },
-
-    {
-        "princejoogie/dir-telescope.nvim",
-        -- telescope.nvim is a required dependency
-        dependencies = { "nvim-telescope/telescope.nvim" },
-        config = function()
-            require("dir-telescope").setup {
-                -- these are the default options set
-                hidden = true,
-                no_ignore = false,
-                show_preview = true,
-            }
-        end,
-    },
-    "LunarVim/bigfile.nvim",
     {
         "hedyhli/outline.nvim",
         config = function()
@@ -218,40 +141,6 @@ require("lazy").setup {
             }
         end,
     },
-    -- {
-    --     "neovim/nvim-lspconfig", -- REQUIRED: for native Neovim LSP integration
-    --     lazy = false,            -- REQUIRED: tell lazy.nvim to start this plugin at startup
-    --     dependencies = {
-    --         -- main one
-    --         { "ms-jpq/coq_nvim",       branch = "coq" },
-
-    --         -- 9000+ Snippets
-    --         { "ms-jpq/coq.artifacts",  branch = "artifacts" },
-
-    --         -- lua & third party sources -- See https://github.com/ms-jpq/coq.thirdparty
-    --         -- Need to **configure separately**
-    --         { 'ms-jpq/coq.thirdparty', branch = "3p" }
-    --         -- - shell repl
-    --         -- - nvim lua api
-    --         -- - scientific calculator
-    --         -- - comment banner
-    --         -- - etc
-    --     },
-    --     init = function()
-    --         vim.g.coq_settings = {
-    --             auto_start = true, -- if you want to start COQ at startup
-    --             display = {
-    --                 icons = {
-    --                     mode = "none"
-    --                 }
-    --             },
-    --             -- Your COQ settings here
-    --         }
-    --     end,
-    --     config = function()
-    --         -- Your LSP settings here
-    --     end,
-    -- },
     {
         "microsoft/python-type-stubs",
         cond = false,
@@ -259,34 +148,6 @@ require("lazy").setup {
     {
         "nvim-telescope/telescope-file-browser.nvim",
         dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
-    },
-    {
-        "0xstepit/flow.nvim",
-        lazy = false,
-        priority = 1000,
-        opts = {},
-    },
-    {
-        "coffebar/neovim-project",
-        opts = {
-            projects = { -- define project roots
-                "~/.config/*",
-                "/codemill/shrimali/*",
-                "/u/shrimali/*",
-            },
-        },
-        init = function()
-            -- enable saving the state of plugins in the session
-            vim.opt.sessionoptions:append "globals" -- save global variables that start with an uppercase letter and contain at least one lowercase letter.
-            require("nvim-tree").setup {}
-        end,
-        dependencies = {
-            { "nvim-lua/plenary.nvim" },
-            { "nvim-telescope/telescope.nvim", tag = "0.1.4" },
-            { "Shatur/neovim-session-manager" },
-        },
-        lazy = false,
-        priority = 100,
     },
     {
         "fgheng/winbar.nvim",
@@ -317,10 +178,10 @@ require("lazy").setup {
         },
         -- See Commands section for default commands if you want to lazy load on them
     },
-    {
-        'neoclide/coc.nvim',
-        branch = 'release',
-    },
+    -- {
+    --     'neoclide/coc.nvim',
+    --     branch = 'release',
+    -- },
     {
         "folke/trouble.nvim",
         opts = {}, -- for default options, refer to the configuration section for custom setup.
@@ -357,11 +218,63 @@ require("lazy").setup {
                 desc = "Quickfix List (Trouble)",
             },
         },
-    }
-    -- -- {
-    --   "supermaven-inc/supermaven-nvim",
-    --   config = function()
-    --     require("supermaven-nvim").setup({})
-    --   end,
-    -- },
+    },
+    {
+        "Saghen/blink.cmp",
+        -- optional: provides snippets for the snippet source
+        dependencies = { 'rafamadriz/friendly-snippets' },
+
+        -- use a release tag to download pre-built binaries
+        version = '1.*',
+        -- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
+        -- build = 'cargo build --release',
+        -- If you use nix, you can build from source using latest nightly rust with:
+        -- build = 'nix run .#build-plugin',
+
+        ---@module 'blink.cmp'
+        ---@type blink.cmp.Config
+        opts = {
+            -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
+            -- 'super-tab' for mappings similar to vscode (tab to accept)
+            -- 'enter' for enter to accept
+            -- 'none' for no mappings
+            --
+            -- All presets have the following mappings:
+            -- C-space: Open menu or open docs if already open
+            -- C-n/C-p or Up/Down: Select next/previous item
+            -- C-e: Hide menu
+            -- C-k: Toggle signature help (if signature.enabled = true)
+            --
+            -- See :h blink-cmp-config-keymap for defining your own keymap
+            keymap = { preset = 'enter' },
+
+            appearance = {
+                -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+                -- Adjusts spacing to ensure icons are aligned
+                nerd_font_variant = 'mono'
+            },
+
+            -- (Default) Only show the documentation popup when manually triggered
+            completion = { documentation = { auto_show = false } },
+
+            -- Default list of enabled providers defined so that you can extend it
+            -- elsewhere in your config, without redefining it, due to `opts_extend`
+            sources = {
+                default = { 'lsp', 'path', 'snippets', 'buffer' },
+            },
+
+            -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
+            -- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
+            -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
+            --
+            -- See the fuzzy documentation for more information
+            fuzzy = { implementation = "prefer_rust_with_warning" }
+        },
+        opts_extend = { "sources.default" }
+    },
+    { "SmiteshP/nvim-navic" },
+
+    -- TEST later
+    -- "kylechui/nvim-surround",
+    -- "windwp/nvim-autopairs",
 }
