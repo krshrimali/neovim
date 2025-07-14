@@ -5,7 +5,7 @@ which_key.add {
   {
     "<leader>b",
     "<cmd>Telescope buffers<cr>",
-    desc = "Telescope buffers",
+    desc = "Buffers",
   },
   {
     "<leader>e",
@@ -93,16 +93,16 @@ which_key.add {
     "<cmd>SessionDelete<cr>",
     desc = "Delete",
   },
-  {
-    "<leader>Sf",
-    "<cmd>Autosession search<cr>",
-    desc = "Find",
-  },
-  {
-    "<leader>Sd",
-    "<cmd>Autosession delete<cr>",
-    desc = "Find Delete",
-  },
+  -- {
+  --   "<leader>Sf",
+  --   "<cmd>Autosession search<cr>",
+  --   desc = "Find",
+  -- },
+  -- {
+  --   "<leader>Sd",
+  --   "<cmd>Autosession delete<cr>",
+  --   desc = "Find Delete",
+  -- },
 
   -- Replace
   {
@@ -138,68 +138,71 @@ which_key.add {
     desc = "Run python file",
   },
 
-  -- Debug
-  {
-    "<leader>Db",
-    "<cmd>lua require'dap'.toggle_breakpoint()<cr>",
-    desc = "Breakpoint",
-  },
-  {
-    "<leader>Dc",
-    "<cmd>lua require'dap'.continue()<cr>",
-    desc = "Continue",
-  },
-  {
-    "<leader>Di",
-    "<cmd>lua require'dap'.step_into()<cr>",
-    desc = "Into",
-  },
-  {
-    "<leader>Do",
-    "<cmd>lua require'dap'.step_over()<cr>",
-    desc = "Over",
-  },
-  {
-    "<leader>DO",
-    "<cmd>lua require'dap'.step_out()<cr>",
-    desc = "Out",
-  },
-  {
-    "<leader>Dr",
-    "<cmd>lua require'dap'.repl.toggle()<cr>",
-    desc = "Repl",
-  },
-  {
-    "<leader>Dl",
-    "<cmd>lua require'dap'.run_last()<cr>",
-    desc = "Last",
-  },
-  {
-    "<leader>Du",
-    "<cmd>lua require'dapui'.toggle()<cr>",
-    desc = "UI",
-  },
-  {
-    "<leader>Dx",
-    "<cmd>lua require'dap'.terminate()<cr>",
-    desc = "Exit",
-  },
+  -- Debug (DAP not installed)
+  -- {
+  --   "<leader>Db",
+  --   "<cmd>lua require'dap'.toggle_breakpoint()<cr>",
+  --   desc = "Breakpoint",
+  -- },
+  -- {
+  --   "<leader>Dc",
+  --   "<cmd>lua require'dap'.continue()<cr>",
+  --   desc = "Continue",
+  -- },
+  -- {
+  --   "<leader>Di",
+  --   "<cmd>lua require'dap'.step_into()<cr>",
+  --   desc = "Into",
+  -- },
+  -- {
+  --   "<leader>Do",
+  --   "<cmd>lua require'dap'.step_over()<cr>",
+  --   desc = "Over",
+  -- },
+  -- {
+  --   "<leader>DO",
+  --   "<cmd>lua require'dap'.step_out()<cr>",
+  --   desc = "Out",
+  -- },
+  -- {
+  --   "<leader>Dr",
+  --   "<cmd>lua require'dap'.repl.toggle()<cr>",
+  --   desc = "Repl",
+  -- },
+  -- {
+  --   "<leader>Dl",
+  --   "<cmd>lua require'dap'.run_last()<cr>",
+  --   desc = "Last",
+  -- },
+  -- {
+  --   "<leader>Du",
+  --   "<cmd>lua require'dapui'.toggle()<cr>",
+  --   desc = "UI",
+  -- },
+  -- {
+  --   "<leader>Dx",
+  --   "<cmd>lua require'dap'.terminate()<cr>",
+  --   desc = "Exit",
+  -- },
 
   -- Diagnostics
-  {
-    "<leader>ldc",
-    "<cmd>lua require('telescope.builtin').diagnostics({ bufnr = 0 })<cr>",
-    desc = "Diagnostics of current buffer",
-  },
-  {
-    "<leader>ldw",
-    "<cmd>lua require('telescope.builtin').diagnostics()<cr>",
-    desc = "Workspace Diagnostics",
-  },
+  -- Duplicate of <leader>ld - removed
+  -- {
+  --   "<leader>ldc",
+  --   "<cmd>lua require('telescope.builtin').diagnostics({ bufnr = 0 })<cr>",
+  --   desc = "Diagnostics of current buffer",
+  -- },
+  -- Duplicate of <leader>lw - removed
+  -- {
+  --   "<leader>ldw",
+  --   "<cmd>lua require('telescope.builtin').diagnostics()<cr>",
+  --   desc = "Workspace Diagnostics",
+  -- },
+  -- Specific diagnostics filter - keeping this one
   {
     "<leader>ldu",
     "<cmd>lua require('telescope.builtin').diagnostics({ no_unlisted = true })<cr>",
-    desc = "Diagnostics from listed buffers",
+    desc = "Diagnostics (listed buffers)",
   },
 
   -- Find using Telescope
@@ -208,11 +211,12 @@ which_key.add {
     "<cmd>Telescope git_branches<cr>",
     desc = "Checkout branch",
   },
-  {
-    "<leader>fb",
-    "<cmd>Telescope buffers<cr>",
-    desc = "Buffers",
-  },
+  -- Duplicate of <leader>b - removed
+  -- {
+  --   "<leader>fb",
+  --   "<cmd>Telescope buffers<cr>",
+  --   desc = "Buffers",
+  -- },
   {
     "<leader>fc",
     "<cmd>Telescope colorscheme<cr>",
@@ -375,6 +379,7 @@ which_key.add {
     "<cmd>Telescope git_status<cr>",
     desc = "Open changed file",
   },
+  -- Commented out duplicates - functionality available via other keymaps
   -- { "<leader>gb", "<cmd>Telescope git_branches<cr>", desc = "Checkout branch" },
   -- { "<leader>gc", "<cmd>Telescope git_commits<cr>", desc = "Checkout commit" },
   {
@@ -436,11 +441,11 @@ which_key.add {
     "<cmd>MasonLog<cr>",
     desc = "Info",
   },
-  {
-    "<leader>lh",
-    "<cmd>lua require('lsp-inlayhints').toggle()<cr>",
-    desc = "Toggle Hints",
-  },
+  -- {
+  --   "<leader>lh",
+  --   "<cmd>lua require('lsp-inlayhints').toggle()<cr>",
+  --   desc = "Toggle Hints",
+  -- },
   {
     "<leader>lH",
     "<cmd>IlluminateToggle<cr>",
@@ -541,27 +546,27 @@ which_key.add {
     "<cmd>LuaSnipUnlinkCurrent<cr>",
     desc = "Unlink Snippet",
   },
-  -- Lspsaga
-  {
-    "<leader>llt",
-    "<cmd>Lspsaga term_toggle<cr>",
-    desc = "Terminal toggle",
-  },
-  {
-    "<leader>llo",
-    "<cmd>Lspsaga outline<cr>",
-    desc = "LSP outline",
-  },
-  {
-    "<leader>lld",
-    "<cmd>Lspsaga show_line_diagnostics<cr>",
-    desc = "Cursor diagnostics",
-  },
-  {
-    "<leader>llc",
-    "<cmd>Lspsaga show_cursor_diagnostics<cr>",
-    desc = "Cursor diagnostics",
-  },
+  -- Lspsaga (not installed)
+  -- {
+  --   "<leader>llt",
+  --   "<cmd>Lspsaga term_toggle<cr>",
+  --   desc = "Terminal toggle",
+  -- },
+  -- {
+  --   "<leader>llo",
+  --   "<cmd>Lspsaga outline<cr>",
+  --   desc = "LSP outline",
+  -- },
+  -- {
+  --   "<leader>lld",
+  --   "<cmd>Lspsaga show_line_diagnostics<cr>",
+  --   desc = "Cursor diagnostics",
+  -- },
+  -- {
+  --   "<leader>llc",
+  --   "<cmd>Lspsaga show_cursor_diagnostics<cr>",
+  --   desc = "Cursor diagnostics",
+  -- },
 
   -- Terminal
   {
@@ -621,46 +626,52 @@ which_key.add {
   },
 
   -- Telescope
-  {
-    "<leader>tc",
-    "<cmd>Telescope commands<cr>",
-    desc = "Commands",
-  },
-  {
-    "<leader>td",
-    "<cmd>Telescope diagnostics<cr>",
-    desc = "Diagnostics",
-  },
-  {
-    "<leader>tm",
-    "<cmd>Telescope media_files<cr>",
-    desc = "Media Files",
-  },
-  {
-    "<leader>tgc",
-    "<cmd>Telescope git_commits<cr>",
-    desc = "Git Commits",
-  },
-  {
-    "<leader>tgb",
-    "<cmd>Telescope git_branches<cr>",
-    desc = "Git Branches",
-  },
-  {
-    "<leader>tgs",
-    "<cmd>Telescope git_status<cr>",
-    desc = "Git Status",
-  },
+  -- Duplicate of <leader>fC - removed
+  -- {
+  --   "<leader>tc",
+  --   "<cmd>Telescope commands<cr>",
+  --   desc = "Commands",
+  -- },
+  -- Duplicate of <leader>lw - removed
+  -- {
+  --   "<leader>td",
+  --   "<cmd>Telescope diagnostics<cr>",
+  --   desc = "Diagnostics",
+  -- },
+  -- {
+  --   "<leader>tm",
+  --   "<cmd>Telescope media_files<cr>",
+  --   desc = "Media Files",
+  -- },
+  -- Git commits available via other keymaps
+  -- {
+  --   "<leader>tgc",
+  --   "<cmd>Telescope git_commits<cr>",
+  --   desc = "Git Commits",
+  -- },
+  -- Duplicate of <leader>fB - removed
+  -- {
+  --   "<leader>tgb",
+  --   "<cmd>Telescope git_branches<cr>",
+  --   desc = "Git Branches",
+  -- },
+  -- Duplicate of <leader>go - removed
+  -- {
+  --   "<leader>tgs",
+  --   "<cmd>Telescope git_status<cr>",
+  --   desc = "Git Status",
+  -- },
   {
     "<leader>tgS",
     "<cmd>Telescope git_stash<cr>",
     desc = "Git Stash",
   },
-  {
-    "<leader>tf",
-    "<cmd>Telescope find_files<cr>",
-    desc = "Find Files",
-  },
+  -- Duplicate of <leader>ff - removed
+  -- {
+  --   "<leader>tf",
+  --   "<cmd>Telescope find_files<cr>",
+  --   desc = "Find Files",
+  -- },
   {
     "<leader>tC",
     "<cmd>Telescope command_history<cr>",
@@ -671,16 +682,17 @@ which_key.add {
     "<cmd>Telescope jumplist<cr>",
     desc = "Jumplist",
   },
-  {
-    "<leader>tr",
-    "<cmd>Telescope resume<cr>",
-    desc = "Resume",
-  },
-  {
-    "<leader>ts",
-    "<cmd>Telescope symbols<cr>",
-    desc = "Symbols",
-  },
+  -- Duplicate of <leader>fl - removed
+  -- {
+  --   "<leader>tr",
+  --   "<cmd>Telescope resume<cr>",
+  --   desc = "Resume",
+  -- },
+  -- {
+  --   "<leader>ts",
+  --   "<cmd>Telescope symbols<cr>",
+  --   desc = "Symbols",
+  -- },
   {
     "<leader>th",
     "<cmd>Telescope search_history<cr>",
@@ -691,23 +703,24 @@ which_key.add {
     "<cmd>Telescope builtin<cr>",
     desc = "Builtin",
   },
-  {
-    "<leader>tB",
-    "<cmd>Telescope Buffers<cr>",
-    desc = "buffers",
-  },
+  -- Duplicate of <leader>b - removed
+  -- {
+  --   "<leader>tB",
+  --   "<cmd>Telescope Buffers<cr>",
+  --   desc = "buffers",
+  -- },
   {
     "<leader>tS",
     "<cmd>Telescope current_buffer_fuzzy_find<cr>",
     desc = "Search Buffer",
   },
 
-  -- NavBar
-  {
-    "<leader>nb",
-    "<cmd>Navbuddy<cr>",
-    desc = "NavBar",
-  },
+  -- NavBar (not installed)
+  -- {
+  --   "<leader>nb",
+  --   "<cmd>Navbuddy<cr>",
+  --   desc = "NavBar",
+  -- },
 
   -- Folding
   -- { "<leader>zo", "<cmd>lua require('ufo').openAllFolds()<CR>", desc = "Open All Folds" },
@@ -729,10 +742,10 @@ which_key.add {
     desc = "Toggle transparency",
   },
 
-  -- Guard
-  {
-    "<leader>gf",
-    "<cmd>GuardFmt<cr>",
-    desc = "Guard Fmt",
-  },
+  -- Guard (not installed)
+  -- {
+  --   "<leader>gf",
+  --   "<cmd>GuardFmt<cr>",
+  --   desc = "Guard Fmt",
+  -- },
 }
