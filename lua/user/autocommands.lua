@@ -165,6 +165,15 @@ vim.api.nvim_create_autocmd({ "TextYankPost" }, {
 --   end)
 -- end
 
+-- Open nvim-tree when nvim starts with no arguments
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    if vim.fn.argc() == 0 then
+      vim.cmd("NvimTreeOpen")
+    end
+  end,
+})
+
 -- Autocommands for opening goto definition in horizontal and vertical splits
 vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(ev)
