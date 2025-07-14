@@ -56,7 +56,7 @@ telescope.setup {
     selection_strategy = "reset",
     sorting_strategy = "descending",
     scroll_strategy = "cycle",
-    color_devicons = true,
+    color_devicons = false, -- Disabled to avoid nerd fonts
 
     -- file_ignore_patterns = { },
     file_ignore_patterns = {
