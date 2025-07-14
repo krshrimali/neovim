@@ -13,23 +13,23 @@ gitlinker.setup({
         -- callback for what to do with the url
         action_callback = require("gitlinker.actions").open_in_browser,
         -- print the url after performing the action
-        print_url = false,
+        print_url = true,
         -- mapping to call url generation
         mappings = "<leader>gy",
-        router = {
-            browse = {
-                ["^github%.deshaw%.com"] = "https://github.deshaw.com/"
-                    .. "{_A.ORG}"
-                    .. "{_A.REPO}/blob/",
-                ["github.deshaw.com"] = "https://github.deshaw.com/"
-
-                    .. "{_A.ORG}"
-                    .. "{_A.REPO}/blob/",
-            },
-
-            blame = {
-                ["^github%.deshaw%.com"] = require('gitlinker.routers').github_blame,
-            }
-        }
+        -- router = {
+        --     browse = {
+        --         ["^github%.deshaw%.com"] = "https://github.deshaw.com/"
+        --             .. "{_A.ORG}"
+        --             .. "{_A.REPO}/blob/",
+        --         ["github.deshaw.com"] = "https://github.deshaw.com/"
+        --
+        --             .. "{_A.ORG}"
+        --             .. "{_A.REPO}/blob/",
+        --     },
+        --
+        --     blame = {
+        --         ["^github%.deshaw%.com"] = require('gitlinker.routers').github_blame,
+        --     }
+        -- }
     },
 })

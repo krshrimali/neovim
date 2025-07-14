@@ -7,9 +7,9 @@ bufferline.setup {
   options = {
     -- numbers = "both",
     show_buffer_icons = false,
-    show_close_icon = true,
-    show_buffer_close_icons = true,
-    separator_style = "slant",
+    show_close_icon = false,
+    show_buffer_close_icons = false,
+    -- separator_style = "slant",
     indicator = {
       -- style = 'underline',
     },

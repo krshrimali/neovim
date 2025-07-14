@@ -119,3 +119,5 @@ vim.api.nvim_command "highlight VertSplit guifg=fg guibg=bg"
 vim.api.nvim_exec([[
     autocmd FileType c,cpp setlocal shiftwidth=4 tabstop=4 expandtab
 ]], false)
+
+vim.g.tabby_inline_completion_keybinding_accept = "<C-l>"

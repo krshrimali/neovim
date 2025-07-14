@@ -34,7 +34,6 @@ require("lazy").setup {
     },
 
     "ray-x/lsp_signature.nvim",
-    "github/copilot.vim",
 
     -- Highlight words under cursor
     "RRethy/vim-illuminate",
@@ -87,9 +86,9 @@ require("lazy").setup {
 
     "akinsho/bufferline.nvim",
     "nvim-lualine/lualine.nvim",
-    {
-        "goolord/alpha-nvim",
-    },
+    -- {
+    --     "goolord/alpha-nvim",
+    -- },
 
     -- Indent
     { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
@@ -152,32 +151,33 @@ require("lazy").setup {
     {
         "fgheng/winbar.nvim",
     },
-    {
-        "nvimdev/lspsaga.nvim",
-        config = function() require("lspsaga").setup {} end,
-        dependencies = {
-            "nvim-treesitter/nvim-treesitter", -- optional
-            "nvim-tree/nvim-web-devicons",     -- optional
-        },
-    },
+    -- {
+    --     "nvimdev/lspsaga.nvim",
+    --     config = function() require("lspsaga").setup {
+    --     } end,
+    --     dependencies = {
+    --         "nvim-treesitter/nvim-treesitter", -- optional
+    --         "nvim-tree/nvim-web-devicons",     -- optional
+    --     },
+    -- },
     {
         "nvim-telescope/telescope-frecency.nvim",
         config = function() require("telescope").load_extension "frecency" end,
     },
-    {
-        "CopilotC-Nvim/CopilotChat.nvim",
-        dependencies = {
-            { "zbirenbaum/copilot.lua" }, -- or github/copilot.vim
-            { "nvim-lua/plenary.nvim" },  -- for curl, log wrapper
-        },
-        build = "make tiktoken",          -- Only on MacOS or Linux
-        opts = {
-            debug = true,                 -- Enable debugging
-            -- See Configuration section for rest
-        },
-        -- See Commands section for default commands if you want to lazy load on them
-    },
     -- {
+    --     "CopilotC-Nvim/CopilotChat.nvim",
+    --     dependencies = {
+    --         { "zbirenbaum/copilot.lua" }, -- or github/copilot.vim
+    --         { "nvim-lua/plenary.nvim" },  -- for curl, log wrapper
+    --     },
+    --     build = "make tiktoken",          -- Only on MacOS or Linux
+    --     opts = {
+    --         debug = true,                 -- Enable debugging
+    --         -- See Configuration section for rest
+    --     },
+    --     -- See Commands section for default commands if you want to lazy load on them
+    -- },
+    -- -- {
     --     'neoclide/coc.nvim',
     --     branch = 'release',
     -- },
@@ -245,7 +245,7 @@ require("lazy").setup {
             -- C-k: Toggle signature help (if signature.enabled = true)
             --
             -- See :h blink-cmp-config-keymap for defining your own keymap
-            keymap = { preset = 'super-tab',
+            keymap = { preset = 'enter',
                 -- ["<Tab>"] = {
                 --     function(cmp)
                 --         if vim.b[vim.api.nvim_get_current_buf()].nes_state then
@@ -272,7 +272,7 @@ require("lazy").setup {
             },
 
             -- (Default) Only show the documentation popup when manually triggered
-            completion = { documentation = { auto_show = false } },
+            completion = { documentation = { auto_show = true } },
 
             -- Default list of enabled providers defined so that you can extend it
             -- elsewhere in your config, without redefining it, due to `opts_extend`
@@ -328,7 +328,7 @@ require("lazy").setup {
         dependencies = {
             { "nvim-lua/plenary.nvim" },
             -- optional picker
-            { "nvim-telescope/telescope.nvim", tag = "0.1.4" },
+            { "nvim-telescope/telescope.nvim" },
             -- optional picker
             { "ibhagwan/fzf-lua" },
             -- optional picker
@@ -345,7 +345,96 @@ require("lazy").setup {
             { "mason-org/mason.nvim", opts = {} },
             "neovim/nvim-lspconfig",
         },
-    }
+    },
+    {
+        "https://github.deshaw.com/genai/vim-ai",
+        tag = 'v0.0.1',
+    },
+    {
+        "krshrimali/nvim-utils",
+        config = function()
+            require("tgkrsutil").setup({
+                enable_test_runner = true,
+                test_runner = function(file, func)
+                    return string.format("despytest %s -k %s", file, func)
+                end,
+            })
+        end,
+        event = "VeryLazy",
+    },
+    {
+        "krshrimali/context-pilot.nvim",
+        dependencies = {
+            "nvim-telescope/telescope.nvim",
+            "nvim-telescope/telescope-fzy-native.nvim"
+        },
+        config = function()
+            require("contextpilot")
+        end
+    },
+    {
+        "rmagatti/goto-preview",
+        dependencies = { "rmagatti/logger.nvim" },
+        event = "BufEnter",
+        config = true, -- necessary
+    },
+    {
+        "TabbyML/vim-tabby",
+        lazy = false,
+        dependencies = {
+            "neovim/nvim-lspconfig",
+        },
+        init = function()
+            vim.g.tabby_agent_start_command = { "npx", "tabby-agent", "--stdio" }
+            vim.g.tabby_inline_completion_trigger = "auto"
+        end,
+    },
+    {
+        "f-person/git-blame.nvim",
+        event = "VeryLazy",
+        opts = {
+            enabled = true,
+            virtual_text_column = 1
+        },
+    },
+    {
+        "folke/snacks.nvim",
+        priority = 1000,
+        lazy = false,
+        ---@type snacks.Config
+        opts = {
+            -- your configuration comes here
+            -- or leave it empty to use the default settings
+            -- refer to the configuration section below
+            bigfile = { enabled = true },
+            dashboard = { enabled = true },
+            explorer = { enabled = false },
+            indent = { enabled = false },
+            input = { enabled = false },
+            picker = { enabled = false },
+            notifier = { enabled = true },
+            quickfile = { enabled = false },
+            scope = { enabled = false },
+            scroll = { enabled = false },
+            statuscolumn = { enabled = true },
+            words = { enabled = false },
+            gitbrowse = {
+                what = "permalink",
+                url_patterns = {
+                    ["github%.deshaw%.com"] = {
+                        branch = "/tree/{branch}",
+                        file = "/blob/{branch}/{file}#L{line_start}-L{line_end}",
+                        permalink = "/blob/{commit}/{file}#L{line_start}-L{line_end}",
+                        commit = "/commit/{commit}",
+                    },
+                },
+            }
+        },
+        keys = {
+            { "<leader>gY", function() Snacks.gitbrowse() end, desc = "Git Browse", mode = { "n", "v" } },
+        }
+    },
+
 
     -- TEST later
     -- "kylechui/nvim-surround",
