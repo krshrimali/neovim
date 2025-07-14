@@ -412,11 +412,6 @@ which_key.add {
     desc = "Code Action",
   },
   {
-    "<leader>lc",
-    "<cmd>lua require('user.lsp').server_capabilities()<cr>",
-    desc = "Get Capabilities",
-  },
-  {
     "<leader>ld",
     "<cmd>lua require('telescope.builtin').diagnostics({ bufnr = 0 })<cr>",
     desc = "Document diagnostics",
