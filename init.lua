@@ -29,8 +29,6 @@ require "user.bufferline"
 require "user.nvim_transparent"
 require "user.terminal"
 require("goto-preview").setup {}
-require "user.oil"
-require("oil").setup()
 require("neogit").setup {}
 require("telescope").load_extension "cmdline"
 require "user.autopairs"

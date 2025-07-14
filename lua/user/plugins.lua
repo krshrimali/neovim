@@ -112,8 +112,6 @@ require("lazy").setup {
 
     -- Peek numbers
     "nacro90/numb.nvim",
-    -- File Explorer
-    "stevearc/oil.nvim",
 
     "jonarrien/telescope-cmdline.nvim",
     {
