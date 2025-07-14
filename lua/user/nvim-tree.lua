@@ -123,7 +123,8 @@ end
 
 nvim_tree.setup {
   hijack_directories = {
-    enable = false,
+    enable = true,
+    auto_open = true,
   },
   -- update_to_buf_dir = {
   --   enable = false,
@@ -217,7 +218,7 @@ nvim_tree.setup {
   },
   update_focused_file = {
     enable = true,
-    update_cwd = false,
+    update_cwd = true,
     ignore_list = {},
   },
   -- system_open = {

@@ -731,7 +731,7 @@ which_key.add {
   -- Project
   {
     "<leader>tp",
-    "<cmd>Telescope neovim-project discover<cr>",
+    "<cmd>Telescope projects<cr>",
     desc = "Switch project",
   },
 
