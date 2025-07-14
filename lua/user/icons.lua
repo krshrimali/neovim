@@ -95,7 +95,7 @@ return {
     Warning = " ",
     Information = " ",
     Question = " ",
-    Hint = " ",
+    Hint = "H ",
   },
   misc = {
     Robot = " ",
