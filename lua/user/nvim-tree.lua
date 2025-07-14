@@ -147,11 +147,11 @@ nvim_tree.setup {
   --   enable = true,
   --   auto_open = true,
   -- },
-  -- --   error
-  -- --   info
-  -- --   question
-  -- --   warning
-  -- --   lightbulb
+  -- --   error
+  -- --   info
+  -- --   question
+  -- --   warning
+  -- --   lightbulb
   renderer = {
     -- add_trailing = false,
     group_empty = false,
@@ -180,25 +180,25 @@ nvim_tree.setup {
         git = true,
       },
       glyphs = {
-        default = "",
-        symlink = "",
+        default = "",
+        symlink = "",
         folder = {
           arrow_open = icons.ui.ArrowOpen,
           arrow_closed = icons.ui.ArrowClosed,
-          default = "",
-          open = "",
-          empty = "",
-          empty_open = "",
-          symlink = "",
-          symlink_open = "",
+          default = "",
+          open = "",
+          empty = "",
+          empty_open = "",
+          symlink = "",
+          symlink_open = "",
         },
         git = {
-          unstaged = "",
+          unstaged = "",
           staged = "S",
-          unmerged = "",
+          unmerged = "",
           renamed = "➜",
           untracked = "U",
-          deleted = "",
+          deleted = "",
           ignored = "◌",
         },
       },
