@@ -1,7 +1,0 @@
-{
-    "diagnostic.enableMessage": false,
-    "diagnostic.virtualText": false,
-    "diagnostic.checkCurrentLine": true,
-    "diagnostic.enable": false,
-    "inlayHint.enable": false
-}
