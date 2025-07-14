@@ -13,7 +13,7 @@ gitlinker.setup({
         -- callback for what to do with the url
         action_callback = require("gitlinker.actions").open_in_browser,
         -- print the url after performing the action
-        print_url = false,
+        print_url = true,
         -- mapping to call url generation
         mappings = "<leader>gy",
     },

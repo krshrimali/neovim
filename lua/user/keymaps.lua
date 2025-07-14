@@ -128,39 +128,6 @@ vim.api.nvim_set_keymap("n", "<m-t>", "<cmd>TodoQuickFix<cr>", opts)
 -- vim.api.nvim_set_keymap("n", "<leader>i", "<cmd>Portal jumplist forward<cr>", opts)
 
 -- vim.api.nvim_set_keymap('v', '<leader>gLb', '<cmd>lua require"gitlinker".get_buf_range_url("v", {action_callback = require"gitlinker.actions".open_in_browser})<cr>', {})
-vim.keymap.set(
-    { "n", "v" },
-    "<leader>gy",
-    "<cmd>GitLink<cr>",
-    { silent = true, noremap = true, desc = "Copy git permlink to clipboard" }
-)
-vim.keymap.set(
-    { "n", "v" },
-    "<leader>gY",
-    "<cmd>GitLink!<cr>",
-    { silent = true, noremap = true, desc = "Open git permlink in browser" }
-)
--- blame
-vim.keymap.set(
-    { "n", "v" },
-    "<leader>gb",
-    "<cmd>GitLink blame<cr>",
-    { silent = true, noremap = true, desc = "Copy git blame link to clipboard" }
-)
-vim.keymap.set(
-    { "n", "v" },
-    "<leader>gB",
-    "<cmd>GitLink! blame<cr>",
-    { silent = true, noremap = true, desc = "Open git blame link in browser" }
-)
-
-vim.keymap.set(
-    { "n", "v" },
-    "<leader>gf",
-    "<cmd>GuardFmt<cr>",
-    { silent = true, noremap = true, desc = "Format using Guard" }
-)
-
 vim.cmd [[
   function! QuickFixToggle()
     if empty(filter(getwininfo(), 'v:val.quickfix'))
@@ -241,9 +208,9 @@ end
 vim.api.nvim_set_keymap("n", "<Leader><leader>f", ":lua find_files()<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<Leader><leader>g", ":lua live_grep()<CR>", { noremap = true })
 
-vim.api.nvim_set_keymap("n", "<Leader><leader>F", "<cmd>Telescope dir find_files<CR>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<Leader><leader>t", "<cmd>Telescope dir live_grep<CR>", { noremap = true })
-
+-- vim.api.nvim_set_keymap("n", "<Leader><leader>F", "<cmd>Telescope dir find_files<CR>", { noremap = true })
+-- vim.api.nvim_set_keymap("n", "<Leader><leader>t", "<cmd>Telescope dir live_grep<CR>", { noremap = true })
+--
 -- vim.api.nvim_set_keymap("n", "<leader>zm", '[[:lua require("ufo").openAllFolds()<CR>]]', opts)
 -- vim.api.nvim_set_keymap("n", "<leader>zr", '[[:lua require("ufo").closeAllFolds()<CR>]]', opts)
 
@@ -258,5 +225,34 @@ vim.api.nvim_set_keymap("n", "<leader><leader>s", ":silent Telescope cmdline<CR>
 --     vim.lsp.buf.hover()
 --   end
 -- end)
+-- Keymaps for goto-preview
+vim.keymap.set("n", "<leader>gpd", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>", { noremap = true })
+vim.keymap.set(
+  "n",
+  "<leader>gpi",
+  "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>",
+  { noremap = true }
+)
+vim.keymap.set(
+  "n",
+  "<leader>gpD",
+  "<cmd>lua require('goto-preview').goto_preview_declaration()<CR>",
+  { noremap = true }
+)
+vim.keymap.set("n", "<leader>gP", "<cmd>lua require('goto-preview').close_all_win()<CR>", { noremap = true })
+vim.keymap.set("n", "<leader>gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>", { noremap = true })
+vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { noremap = true })
+vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", { noremap = true })
+vim.keymap.set(
+  { "n", "x" },
+  "<leader>gy",
+  function()
+    Snacks.gitbrowse({
+      open = function(url) vim.fn.setreg("+", url) end,
+      notify = false
+    })
+  end,
+  { desc = "Git Browse (copy)" }
+)
 
 return M
