@@ -23,7 +23,6 @@ require "user.cybu"
 require "user.options"
 require "user.bqf"
 require "user.dressing"
-require "user.auto-session"
 require "user.surround"
 require "user.bufferline"
 require "user.nvim_transparent"
@@ -31,6 +30,7 @@ require "user.terminal"
 require("goto-preview").setup {}
 require("neogit").setup {}
 require("telescope").load_extension "cmdline"
+require("telescope").load_extension "projects"
 require "user.autopairs"
 require("lsp_signature").setup({})
 require "user.indentline"

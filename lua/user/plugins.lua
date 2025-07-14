@@ -232,37 +232,22 @@ require("lazy").setup {
     { "SmiteshP/nvim-navic" },
     { "github/copilot.vim" },
     {
-        "mason-org/mason.nvim",
+        "ahmedkhalf/project.nvim",
+        config = function()
+            require("project_nvim").setup({
+                detection_methods = { "lsp", "pattern" },
+                patterns = { ".git", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json", "Cargo.toml" },
+                ignore_lsp = {},
+                exclude_dirs = {},
+                show_hidden = false,
+                silent_chdir = true,
+                scope_chdir = 'global',
+                datapath = vim.fn.stdpath("data"),
+            })
+        end,
     },
     {
-        "coffebar/neovim-project",
-        opts = {
-            projects = { -- define project roots
-                "~/Documents/*",
-                "~/.config/*",
-                "~/RustroverProjects/*",
-                "~/CLionProjects/*",
-            },
-            picker = {
-                type = "telescope", -- one of "telescope", "fzf-lua", or "snacks"
-            }
-        },
-        init = function()
-            -- enable saving the state of plugins in the session
-            vim.opt.sessionoptions:append("globals") -- save global variables that start with an uppercase letter and contain at least one lowercase letter.
-        end,
-        dependencies = {
-            { "nvim-lua/plenary.nvim" },
-            -- optional picker
-            { "nvim-telescope/telescope.nvim" },
-            -- optional picker
-            { "ibhagwan/fzf-lua" },
-            -- optional picker
-            { "folke/snacks.nvim" },
-            { "Shatur/neovim-session-manager" },
-        },
-        lazy = false,
-        priority = 100,
+        "mason-org/mason.nvim",
     },
     {
         "mason-org/mason-lspconfig.nvim",
