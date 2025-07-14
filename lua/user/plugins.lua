@@ -295,6 +295,7 @@ require("lazy").setup {
         opts_extend = { "sources.default" }
     },
     { "SmiteshP/nvim-navic" },
+    { "github/copilot.vim" },
     -- {
     --     "copilotlsp-nvim/copilot-lsp",
     --     init = function()
@@ -352,10 +353,6 @@ require("lazy").setup {
         },
     },
     {
-        "https://github.deshaw.com/genai/vim-ai",
-        tag = 'v0.0.1',
-    },
-    {
         "krshrimali/nvim-utils",
         config = function()
             require("tgkrsutil").setup({
@@ -382,17 +379,6 @@ require("lazy").setup {
         dependencies = { "rmagatti/logger.nvim" },
         event = "BufEnter",
         config = true, -- necessary
-    },
-    {
-        "TabbyML/vim-tabby",
-        lazy = false,
-        dependencies = {
-            "neovim/nvim-lspconfig",
-        },
-        init = function()
-            vim.g.tabby_agent_start_command = { "npx", "tabby-agent", "--stdio" }
-            vim.g.tabby_inline_completion_trigger = "auto"
-        end,
     },
     {
         "f-person/git-blame.nvim",
