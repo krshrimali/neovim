@@ -71,7 +71,7 @@ require("lazy").setup {
     -- Registers
     "tversteeg/registers.nvim",
 
-    "kyazdani42/nvim-web-devicons",
+    -- "kyazdani42/nvim-web-devicons", -- Disabled to avoid nerd fonts
 
     "akinsho/bufferline.nvim",
     "nvim-lualine/lualine.nvim",
@@ -83,9 +83,9 @@ require("lazy").setup {
         "nvim-tree/nvim-tree.lua",
         version = "*",
         lazy = false,
-        dependencies = {
-            "nvim-tree/nvim-web-devicons",
-        },
+        -- dependencies = {
+        --     "nvim-tree/nvim-web-devicons", -- Disabled to avoid nerd fonts
+        -- },
     },
 
     -- Comment
@@ -210,7 +210,7 @@ require("lazy").setup {
             appearance = {
                 -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
                 -- Adjusts spacing to ensure icons are aligned
-                nerd_font_variant = 'mono'
+                -- nerd_font_variant = 'mono' -- Disabled to avoid nerd fonts
             },
 
             -- (Default) Only show the documentation popup when manually triggered
