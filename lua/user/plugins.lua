@@ -16,17 +16,6 @@ vim.g.maplocalleader = ","
 
 -- Install your plugins here
 require("lazy").setup {
-    -- Lua Development
-    -- "nvim-lua/plenary.nvim", -- Useful lua functions used ny lots of plugins
-    -- "nvim-lua/popup.nvim",
-    -- "folke/neodev.nvim",
-    -- "j-hui/fidget.nvim",
-    -- {
-    --     "mrcjkb/rustaceanvim",
-    --     version = "^4", -- Recommended
-    --     ft = { "rust" },
-    -- },
-    -- { "rust-lang/rust.vim" },
 
     -- LSP
     {
@@ -82,13 +71,10 @@ require("lazy").setup {
     -- Registers
     "tversteeg/registers.nvim",
 
-    "kyazdani42/nvim-web-devicons",
+    -- "kyazdani42/nvim-web-devicons", -- Disabled to avoid nerd fonts
 
     "akinsho/bufferline.nvim",
     "nvim-lualine/lualine.nvim",
-    -- {
-    --     "goolord/alpha-nvim",
-    -- },
 
     -- Indent
     { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
@@ -97,14 +83,10 @@ require("lazy").setup {
         "nvim-tree/nvim-tree.lua",
         version = "*",
         lazy = false,
-        dependencies = {
-            "nvim-tree/nvim-web-devicons",
-        },
-        -- config = function()
-        --     require("nvim-tree").setup {}
-        -- end,
+        -- dependencies = {
+        --     "nvim-tree/nvim-web-devicons", -- Disabled to avoid nerd fonts
+        -- },
     },
-    -- "tamago324/lir.nvim"
 
     -- Comment
     "numToStr/Comment.nvim",
@@ -130,8 +112,6 @@ require("lazy").setup {
 
     -- Peek numbers
     "nacro90/numb.nvim",
-    -- File Explorer
-    "stevearc/oil.nvim",
 
     "jonarrien/telescope-cmdline.nvim",
     {
@@ -156,36 +136,10 @@ require("lazy").setup {
     {
         "fgheng/winbar.nvim",
     },
-    -- {
-    --     "nvimdev/lspsaga.nvim",
-    --     config = function() require("lspsaga").setup {
-    --     } end,
-    --     dependencies = {
-    --         "nvim-treesitter/nvim-treesitter", -- optional
-    --         "nvim-tree/nvim-web-devicons",     -- optional
-    --     },
-    -- },
     {
         "nvim-telescope/telescope-frecency.nvim",
         config = function() require("telescope").load_extension "frecency" end,
     },
-    -- {
-    --     "CopilotC-Nvim/CopilotChat.nvim",
-    --     dependencies = {
-    --         { "zbirenbaum/copilot.lua" }, -- or github/copilot.vim
-    --         { "nvim-lua/plenary.nvim" },  -- for curl, log wrapper
-    --     },
-    --     build = "make tiktoken",          -- Only on MacOS or Linux
-    --     opts = {
-    --         debug = true,                 -- Enable debugging
-    --         -- See Configuration section for rest
-    --     },
-    --     -- See Commands section for default commands if you want to lazy load on them
-    -- },
-    -- -- {
-    --     'neoclide/coc.nvim',
-    --     branch = 'release',
-    -- },
     {
         "folke/trouble.nvim",
         opts = {}, -- for default options, refer to the configuration section for custom setup.
@@ -250,30 +204,11 @@ require("lazy").setup {
             -- C-k: Toggle signature help (if signature.enabled = true)
             --
             -- See :h blink-cmp-config-keymap for defining your own keymap
-            keymap = { preset = 'enter',
-                -- ["<Tab>"] = {
-                --     function(cmp)
-                --         if vim.b[vim.api.nvim_get_current_buf()].nes_state then
-                --             cmp.hide()
-                --             return (
-                --                 require("copilot-lsp.nes").apply_pending_nes()
-                --                 and require("copilot-lsp.nes").walk_cursor_start_edit()
-                --             )
-                --         end
-                --         if cmp.snippet_active() then
-                --             return cmp.accept()
-                --         else
-                --             return cmp.select_and_accept()
-                --         end
-                --     end,
-                --     "snippet_forward",
-                --     "fallback",
-                -- },
-            },
+            keymap = { preset = 'enter' },
             appearance = {
                 -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
                 -- Adjusts spacing to ensure icons are aligned
-                nerd_font_variant = 'mono'
+                -- nerd_font_variant = 'mono' -- Disabled to avoid nerd fonts
             },
 
             -- (Default) Only show the documentation popup when manually triggered
@@ -296,53 +231,23 @@ require("lazy").setup {
     },
     { "SmiteshP/nvim-navic" },
     { "github/copilot.vim" },
-    -- {
-    --     "copilotlsp-nvim/copilot-lsp",
-    --     init = function()
-    --         vim.g.copilot_nes_debounce = 500
-    --         vim.lsp.enable("copilot_ls")
-    --         vim.keymap.set("n", "<C-p>", function()
-    --             -- Try to jump to the start of the suggestion edit.
-    --             -- If already at the start, then apply the pending suggestion and jump to the end of the edit.
-    --             local _ = require("copilot-lsp.nes").walk_cursor_start_edit()
-    --                 or (
-    --                     require("copilot-lsp.nes").apply_pending_nes() and require("copilot-lsp.nes").walk_cursor_end_edit()
-    --                 )
-    --         end)
-    --     end
-    -- },
     {
-        "mason-org/mason.nvim",
+        "ahmedkhalf/project.nvim",
+        config = function()
+            require("project_nvim").setup({
+                detection_methods = { "lsp", "pattern" },
+                patterns = { ".git", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json", "Cargo.toml" },
+                ignore_lsp = {},
+                exclude_dirs = {},
+                show_hidden = false,
+                silent_chdir = true,
+                scope_chdir = 'global',
+                datapath = vim.fn.stdpath("data"),
+            })
+        end,
     },
     {
-        "coffebar/neovim-project",
-        opts = {
-            projects = { -- define project roots
-                "~/Documents/*",
-                "~/.config/*",
-                "~/RustroverProjects/*",
-                "~/CLionProjects/*",
-            },
-            picker = {
-                type = "telescope", -- one of "telescope", "fzf-lua", or "snacks"
-            }
-        },
-        init = function()
-            -- enable saving the state of plugins in the session
-            vim.opt.sessionoptions:append("globals") -- save global variables that start with an uppercase letter and contain at least one lowercase letter.
-        end,
-        dependencies = {
-            { "nvim-lua/plenary.nvim" },
-            -- optional picker
-            { "nvim-telescope/telescope.nvim" },
-            -- optional picker
-            { "ibhagwan/fzf-lua" },
-            -- optional picker
-            { "folke/snacks.nvim" },
-            { "Shatur/neovim-session-manager" },
-        },
-        lazy = false,
-        priority = 100,
+        "mason-org/mason.nvim",
     },
     {
         "mason-org/mason-lspconfig.nvim",
@@ -425,9 +330,11 @@ require("lazy").setup {
             { "<leader>gY", function() Snacks.gitbrowse() end, desc = "Git Browse", mode = { "n", "v" } },
         }
     },
+    {
+        'windwp/nvim-autopairs',
+        event = "InsertEnter",
+        config = true
+    },
 
 
-    -- TEST later
-    -- "kylechui/nvim-surround",
-    -- "windwp/nvim-autopairs",
 }

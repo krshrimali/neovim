@@ -9,7 +9,6 @@
 -- Shorten function name
 M = {}
 local opts = { noremap = true, silent = true }
-local term_opts = { silent = true }
 
 local keymap = vim.api.nvim_set_keymap
 
@@ -175,20 +174,6 @@ vim.keymap.set('v', '<leader>lf', vim.lsp.buf.format, bufopts)
 
 vim.g.copilot_no_tab_map = true
 
-local opts = { noremap = true, silent = true }
-vim.api.nvim_set_keymap(
-    "n",
-    "<Leader>pp",
-    [[:lua require('user.subfolder').copySubfolderPath()<CR>]],
-    { noremap = true, silent = true }
-)
-
-vim.api.nvim_set_keymap(
-    "n",
-    "<Leader>pr",
-    [[:lua require('user.subfolder').copyRelativeFolderPath()<CR>]],
-    { noremap = true, silent = true }
-)
 
 -- Helper functions to fetch the current scope and set `search_dirs`
 _G.find_files = function()
