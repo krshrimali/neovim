@@ -26,7 +26,6 @@ local options = {
     shiftwidth = 4,                          -- the number of spaces inserted for each indentation
     tabstop = 4,                             -- insert 2 spaces for a tab
     cursorline = true,                       -- highlight the current line
-    -- cursorlineopt = "number",
     number = true,                           -- set numbered lines
     laststatus = 3,
     showcmd = true,
@@ -35,18 +34,12 @@ local options = {
     numberwidth = 4,        -- set number column width to 2 {default 4}
     signcolumn = "yes",     -- always show the sign column, otherwise it would shift the text each time
     wrap = true,            -- display lines as one long line
-    -- scrolloff = 8,                           -- is one of my fav
     sidescrolloff = 8,
     guifont = "monospace:h17", -- the font used in graphical neovim applications
     title = true,
-    -- colorcolumn = "80",
-    -- colorcolumn = "120",
 }
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
--- vim.opt.fillchars.eob = " "
--- vim.opt.fillchars = vim.opt.fillchars + "vertleft: "
--- vim.opt.fillchars = vim.opt.fillchars + "vertright: "
 vim.opt.fillchars = vim.opt.fillchars + "eob: "
 vim.opt.fillchars:append {
     stl = " ",
@@ -62,11 +55,7 @@ end
 vim.cmd "set whichwrap+=<,>,[,],h,l"
 vim.cmd [[set iskeyword+=-]]
 vim.cmd "set sessionoptions-=folds"
--- vim.cmd [[set iskeyword-=_]]
-
--- vim.cmd [[set formatoptions+=cro]] -- TODO: this doesn't seem to work
 vim.cmd [[autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o]] -- this seem to work
--- vim.cmd[[set formatoptions-=cro]]
 
 vim.filetype.add {
     extension = {
@@ -78,42 +67,19 @@ vim.cmd [[autocmd TermOpen * setlocal signcolumn=no]]
 vim.cmd [[let g:python_recommended_style = 0]]
 
 vim.opt.foldmethod = "expr"
--- vim.opt.foldmethod = "expr"
 vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
 
--- Default: don't enable fold
--- vim.cmd [[set nofoldenable]]
-
--- vim.cmd [[hi Search guibg=peru guifg=wheat]]
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1e222a" })
 vim.opt.whichwrap:append "<>[]hl"
 
 vim.g.transparent_enabled = false
 vim.g.use_nerd_fonts = false
 
--- vim.g.transparent_groups = vim.list_extend(vim.g.transparent_groups or {}, { "BufferLineFill", "BufferLineTabClose", "BufferLineBufferSelected", "BufferLineBackground", "BufferLineSeparator", "BufferLineIndicatorSelected" })
-
--- vim.g.transparent_groups = vim.list_extend(
---   vim.g.transparent_groups or {},
---   vim.tbl_map(function(v)
---     return v.hl_group
---   end, vim.tbl_values(require('bufferline.config').highlights))
--- )
-
--- vim.g.copilot_no_tab_map = true
--- vim.g.copilot_assume_mapped = true
--- vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
-
 vim.o.foldcolumn = "1" -- '0' is not bad
 vim.o.foldlevel = 99   -- Using ufo provider need a large value, feel free to decrease the value
 vim.o.foldlevelstart = 99
 vim.o.foldenable = true
 vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
-
--- Using ufo provider need remap `zR` and `zM`. If Neovim is 0.6.1, remap yourself
--- vim.keymap.set("n", "zR", require("ufo").openAllFolds)
--- vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
--- vim.lsp.set_log_level("debug")
 
 vim.api.nvim_command "highlight VertSplit guifg=fg guibg=bg"
 vim.api.nvim_exec([[
