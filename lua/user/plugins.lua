@@ -330,6 +330,11 @@ require("lazy").setup {
             { "<leader>gY", function() Snacks.gitbrowse() end, desc = "Git Browse", mode = { "n", "v" } },
         }
     },
+    {
+        'windwp/nvim-autopairs',
+        event = "InsertEnter",
+        config = true
+    },
 
 
 }
