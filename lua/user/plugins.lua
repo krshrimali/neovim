@@ -116,14 +116,59 @@ require("lazy").setup {
     "jonarrien/telescope-cmdline.nvim",
     {
         "hedyhli/outline.nvim",
-        config = function()
-            -- Example mapping to toggle outline
-            vim.keymap.set("n", "<leader>lo", "<cmd>Outline<CR>", { desc = "Toggle Outline" })
-
-            require("outline").setup {
-                -- Your setup opts here (leave empty to use defaults)
+        lazy = true,
+        cmd = { "Outline", "OutlineToggle", "OutlineOpen" },
+        keys = {
+            {
+                "<leader>lo",
+                "<cmd>Outline<CR>",
+                desc = "Toggle Outline",
+            },
+        },
+        opts = {
+            outline_window = {
+                wrap = true,
+            },
+            symbol_folding = {
+                markers = { "> ", "v " },
+            },
+            symbols = {
+                icons = {
+                    File = { icon = 'F', hl = 'Identifier' },
+                    Module = { icon = 'M', hl = 'Include' },
+                    Namespace = { icon = 'N', hl = 'Include' },
+                    Package = { icon = 'P', hl = 'Include' },
+                    Class = { icon = 'C', hl = 'Type' },
+                    Method = { icon = 'm', hl = 'Function' },
+                    Property = { icon = 'p', hl = 'Identifier' },
+                    Field = { icon = 'f', hl = 'Identifier' },
+                    Constructor = { icon = 'c', hl = 'Special' },
+                    Enum = { icon = 'E', hl = 'Type' },
+                    Interface = { icon = 'I', hl = 'Type' },
+                    Function = { icon = 'F', hl = 'Function' },
+                    Variable = { icon = 'v', hl = 'Constant' },
+                    Constant = { icon = 'C', hl = 'Constant' },
+                    String = { icon = 's', hl = 'String' },
+                    Number = { icon = '#', hl = 'Number' },
+                    Boolean = { icon = 'b', hl = 'Boolean' },
+                    Array = { icon = 'A', hl = 'Constant' },
+                    Object = { icon = 'O', hl = 'Type' },
+                    Key = { icon = 'k', hl = 'Type' },
+                    Null = { icon = 'n', hl = 'Type' },
+                    EnumMember = { icon = 'e', hl = 'Identifier' },
+                    Struct = { icon = 'S', hl = 'Structure' },
+                    Event = { icon = 'E', hl = 'Type' },
+                    Operator = { icon = 'o', hl = 'Identifier' },
+                    TypeParameter = { icon = 't', hl = 'Identifier' },
+                    Component = { icon = 'C', hl = 'Function' },
+                    Fragment = { icon = 'f', hl = 'Constant' },
+                    TypeAlias = { icon = 'T', hl = 'Type' },
+                    Parameter = { icon = 'p', hl = 'Identifier' },
+                    StaticMethod = { icon = 'S', hl = 'Function' },
+                    Macro = { icon = 'M', hl = 'Function' },
+                }
             }
-        end,
+        },
     },
     {
         "microsoft/python-type-stubs",
@@ -142,7 +187,49 @@ require("lazy").setup {
     },
     {
         "folke/trouble.nvim",
-        opts = {}, -- for default options, refer to the configuration section for custom setup.
+        opts = {
+
+            icons = {
+                indent        = {
+                    top         = "| ",
+                    middle      = "|-",
+                    last        = "+-",
+                    fold_open   = "v",
+                    fold_closed = ">",
+                    ws          = "  ",
+                },
+                folder_closed = "d",
+                folder_open   = "D",
+                kinds         = {
+                    Array         = "A",
+                    Boolean       = "B",
+                    Class         = "C",
+                    Constant      = "c",
+                    Constructor   = "C",
+                    Enum          = "E",
+                    EnumMember    = "e",
+                    Event         = "E",
+                    Field         = "f",
+                    File          = "F",
+                    Function      = "f",
+                    Interface     = "I",
+                    Key           = "k",
+                    Method        = "m",
+                    Module        = "M",
+                    Namespace     = "N",
+                    Null          = "n",
+                    Number        = "#",
+                    Object        = "O",
+                    Operator      = "o",
+                    Package       = "P",
+                    Property      = "p",
+                    String        = "s",
+                    Struct        = "S",
+                    TypeParameter = "t",
+                    Variable      = "v",
+                },
+            },
+        }, -- for default options, refer to the configuration section for custom setup.
         cmd = "Trouble",
         keys = {
             {
@@ -204,21 +291,52 @@ require("lazy").setup {
             -- C-k: Toggle signature help (if signature.enabled = true)
             --
             -- See :h blink-cmp-config-keymap for defining your own keymap
-            keymap = { preset = 'enter' },
+            keymap = { preset = 'super-tab', ['<C-j>'] = { 'select_next', 'fallback' },
+                ['<C-k>'] = { 'select_prev', 'fallback' }, },
             signature = { enabled = true },
             appearance = {
-                -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+                -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
                 -- Adjusts spacing to ensure icons are aligned
-                -- nerd_font_variant = 'mono' -- Disabled to avoid nerd fonts
+                nerd_font_variant = 'mono',
+                kind_icons = {
+                    Text = 'T',
+                    Method = 'M',
+                    Function = 'F',
+                    Constructor = 'C',
+                    Field = 'f',
+                    Variable = 'v',
+                    Property = 'p',
+                    Class = 'C',
+                    Interface = 'I',
+                    Struct = 'S',
+                    Module = 'm',
+                    Unit = 'u',
+                    Value = 'V',
+                    Enum = 'E',
+                    EnumMember = 'e',
+                    Keyword = 'k',
+                    Constant = 'c',
+                    Snippet = 's',
+                    Color = '#',
+                    File = 'f',
+                    Reference = 'r',
+                    Folder = 'd',
+                    Event = 'E',
+                    Operator = 'o',
+                    TypeParameter = 't',
+                },
             },
 
             -- (Default) Only show the documentation popup when manually triggered
-            completion = { documentation = { auto_show = false } },
+            completion = { documentation = { auto_show = false }, list = {
+                max_items = 10,
+            } },
 
             -- Default list of enabled providers defined so that you can extend it
             -- elsewhere in your config, without redefining it, due to `opts_extend`
             sources = {
-                default = { 'lsp', 'path', 'snippets', 'buffer' },
+                default = { 'lsp', 'path', 'buffer' },
+                min_keyword_length = 2,
             },
 
             -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
@@ -304,7 +422,31 @@ require("lazy").setup {
             -- or leave it empty to use the default settings
             -- refer to the configuration section below
             bigfile = { enabled = true },
-            dashboard = { enabled = true },
+            dashboard = {
+                enabled = true,
+                preset = {
+                    header = [[
+████████  ██████  ██   ██ ██████  ███████
+   ██    ██       ██  ██  ██   ██ ██
+   ██    ██   ███ █████   ██████  ███████
+   ██    ██    ██ ██  ██  ██   ██      ██
+   ██     ██████  ██   ██ ██   ██ ███████
+
+   Welcome to Kushashwa's Home! <3
+        Jai Hind!
+]],
+                    keys = {
+                        { icon = "f", key = "f", desc = "Find File",       action = ":lua Snacks.dashboard.pick('files')" },
+                        { icon = "n", key = "n", desc = "New File",        action = ":ene | startinsert" },
+                        { icon = "g", key = "g", desc = "Find Text",       action = ":lua Snacks.dashboard.pick('live_grep')" },
+                        { icon = "r", key = "r", desc = "Recent Files",    action = ":lua Snacks.dashboard.pick('oldfiles')" },
+                        { icon = "c", key = "c", desc = "Config",          action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
+                        { icon = "s", key = "s", desc = "Restore Session", section = "session" },
+                        { icon = "l", key = "l", desc = "Lazy",            action = ":Lazy" },
+                        { icon = "q", key = "q", desc = "Quit",            action = ":qa" },
+                    },
+                }
+            },
             explorer = { enabled = false },
             indent = { enabled = false },
             input = { enabled = false },
