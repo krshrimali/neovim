@@ -47,6 +47,7 @@ local function on_attach(bufnr)
   vim.keymap.set("n", "<C-r>", api.fs.rename_sub, opts "Rename: Omit Filename")
   vim.keymap.set("n", "<C-t>", api.node.open.tab, opts "Open: New Tab")
   vim.keymap.set("n", "<C-v>", api.node.open.vertical, opts "Open: Vertical Split")
+  vim.keymap.set("n", "<C-\\>", api.node.open.vertical, opts "Open: Vertical Split")
   vim.keymap.set("n", "<C-x>", api.node.open.horizontal, opts "Open: Horizontal Split")
   vim.keymap.set("n", "<BS>", api.node.navigate.parent_close, opts "Close Directory")
   vim.keymap.set("n", "<CR>", api.node.open.edit, opts "Open")
@@ -103,6 +104,7 @@ local function on_attach(bufnr)
   vim.keymap.set("n", "o", api.node.open.edit, opts "Open")
   vim.keymap.set("n", "h", api.node.navigate.parent_close, opts "Close Directory")
   vim.keymap.set("n", "v", api.node.open.vertical, opts "Open: Vertical Split")
+  vim.keymap.set("n", "\\", api.node.open.vertical, opts "Open: Vertical Split")
 end
 
 ---@diagnostic disable-next-line: unused-local
@@ -121,7 +123,8 @@ end
 
 nvim_tree.setup {
   hijack_directories = {
-    enable = false,
+    enable = true,
+    auto_open = true,
   },
   -- update_to_buf_dir = {
   --   enable = false,
@@ -147,11 +150,11 @@ nvim_tree.setup {
   --   enable = true,
   --   auto_open = true,
   -- },
-  -- --   error
-  -- --   info
-  -- --   question
-  -- --   warning
-  -- --   lightbulb
+  -- --   error
+  -- --   info
+  -- --   question
+  -- --   warning
+  -- --   lightbulb
   renderer = {
     -- add_trailing = false,
     group_empty = false,
@@ -180,25 +183,25 @@ nvim_tree.setup {
         git = true,
       },
       glyphs = {
-        default = "",
-        symlink = "",
+        default = "",
+        symlink = "",
         folder = {
           arrow_open = icons.ui.ArrowOpen,
           arrow_closed = icons.ui.ArrowClosed,
-          default = "",
-          open = "",
-          empty = "",
-          empty_open = "",
-          symlink = "",
-          symlink_open = "",
+          default = "",
+          open = "",
+          empty = "",
+          empty_open = "",
+          symlink = "",
+          symlink_open = "",
         },
         git = {
-          unstaged = "",
+          unstaged = "",
           staged = "S",
-          unmerged = "",
+          unmerged = "",
           renamed = "➜",
           untracked = "U",
-          deleted = "",
+          deleted = "",
           ignored = "◌",
         },
       },
@@ -215,7 +218,7 @@ nvim_tree.setup {
   },
   update_focused_file = {
     enable = true,
-    update_cwd = false,
+    update_cwd = true,
     ignore_list = {},
   },
   -- system_open = {

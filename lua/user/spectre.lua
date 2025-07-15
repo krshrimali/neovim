@@ -4,7 +4,7 @@ if not status_ok then
 end
 spectre.setup({
 
-	color_devicons = true,
+	color_devicons = false, -- Disabled to avoid nerd fonts
 	highlight = {
 		ui = "String",
 		search = "DiffChange",
