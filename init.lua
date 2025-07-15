@@ -24,7 +24,7 @@ require "user.options"
 require "user.bqf"
 require "user.dressing"
 require "user.surround"
-require "user.bufferline"
+-- require "user.bufferline"
 require "user.nvim_transparent"
 require "user.terminal"
 require("goto-preview").setup {}
