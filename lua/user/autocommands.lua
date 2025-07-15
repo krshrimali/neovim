@@ -166,22 +166,22 @@ vim.api.nvim_create_autocmd({ "TextYankPost" }, {
 -- end
 
 -- Open nvim-tree when nvim starts with no arguments
-vim.api.nvim_create_autocmd("VimEnter", {
-  callback = function()
-    if vim.fn.argc() == 0 and vim.fn.line2byte(vim.fn.line("$") + 1) == -1 then
-      -- Use vim.schedule to ensure nvim-tree is loaded and give time for other plugins
-      vim.schedule(function()
-        -- Give more time for plugins to load
-        vim.defer_fn(function()
-          local status_ok, nvim_tree = pcall(require, "nvim-tree.api")
-          if status_ok and nvim_tree then
-            nvim_tree.tree.toggle()
-          end
-        end, 100)
-      end)
-    end
-  end,
-})
+-- vim.api.nvim_create_autocmd("VimEnter", {
+--   callback = function()
+--     if vim.fn.argc() == 0 and vim.fn.line2byte(vim.fn.line("$") + 1) == -1 then
+--       -- Use vim.schedule to ensure nvim-tree is loaded and give time for other plugins
+--       vim.schedule(function()
+--         -- Give more time for plugins to load
+--         vim.defer_fn(function()
+--           local status_ok, nvim_tree = pcall(require, "nvim-tree.api")
+--           if status_ok and nvim_tree then
+--             nvim_tree.tree.toggle()
+--           end
+--         end, 100)
+--       end)
+--     end
+--   end,
+-- })
 
 -- Autocommands for opening goto definition in horizontal and vertical splits
 vim.api.nvim_create_autocmd("LspAttach", {
