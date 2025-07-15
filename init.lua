@@ -31,8 +31,8 @@ require("goto-preview").setup {}
 require("neogit").setup {}
 require("telescope").load_extension "cmdline"
 require("telescope").load_extension "projects"
-require "user.autopairs"
-require("lsp_signature").setup({})
+-- require "user.autopairs"
+-- require("lsp_signature").setup({})
 require "user.indentline"
 
 vim.lsp.enable('rust-analyzer')
