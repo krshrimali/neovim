@@ -42,8 +42,6 @@ local hide_in_width_100 = function()
   return vim.o.columns > 100
 end
 
-local icons = require "user.icons"
-
 local diagnostics = {
   "diagnostics",
   sources = { "nvim_diagnostic" },
@@ -56,7 +54,7 @@ local diagnostics = {
 local diff = {
   "diff",
   colored = true,
-  symbols = { added = icons.git.Add .. " ", modified = icons.git.Mod .. " ", removed = icons.git.Remove .. " " }, -- changes diff symbols
+  symbols = { added = "+" .. " ", modified = "=" .. " ", removed = "-" .. " " }, -- changes diff symbols
   cond = hide_in_width_60,
   separator = "│ " .. "%*",
 }
@@ -85,7 +83,7 @@ local filetype = {
     end
 
     if str == "TelescopePrompt" then
-      return return_val(icons.ui.Telescope)
+      return return_val("T")
     end
 
     local function get_term_num()
@@ -115,7 +113,7 @@ local filetype = {
 
 local branch = {
   "branch",
-  icons_enabled = true,
+  icons_enabled = false,
   icon = " " .. "%*",
   -- color = "Constant",
   -- colored = false,
@@ -276,7 +274,7 @@ local lanuage_server = {
       language_servers = hl_str "" .. hl_str(client_names_str) .. hl_str ""
     end
     if copilot_active then
-      language_servers = language_servers .. " " .. icons.git.Octoface .. "%*"
+      language_servers = language_servers .. " " .. "C" .. "%*"
     end
 
     if client_names_str_len == 0 and not copilot_active then
@@ -308,7 +306,7 @@ custom_auto_theme.normal.c.bg = NONE
 lualine.setup {
   options = {
     globalstatus = true,
-    icons_enabled = true,
+    icons_enabled = false,
     theme = custom_auto_theme,
     -- theme = theme,
     -- theme = "shado",
