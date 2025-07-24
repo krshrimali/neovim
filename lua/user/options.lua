@@ -87,3 +87,4 @@ vim.api.nvim_exec([[
 ]], false)
 
 vim.g.tabby_inline_completion_keybinding_accept = "<C-l>"
+vim.opt.foldenable = false
