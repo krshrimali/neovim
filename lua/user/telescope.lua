@@ -12,6 +12,10 @@ local themes = require "user.telescope.user_themes"
 telescope.setup {
     defaults = {
         wrap_results = true,
+        results_limit = 1000,
+        dynamic_preview_title = false,
+        file_sorter = require('telescope.sorters').get_fuzzy_file,
+        generic_sorter = require('telescope.sorters').get_generic_fuzzy_sorter,
         -- layout_config = {
         --   prompt_position = "bottom",
         --   height = 80,
@@ -49,6 +53,12 @@ telescope.setup {
         },
         disable_coordinates = false,
         layout_strategy = "horizontal",
+        use_less = false,
+        get_status_text = function() return "" end,
+        cache_picker = {
+            num_pickers = 10,
+            limit_entries = 1000,
+        },
         prompt_prefix = "> ",
         selection_caret = "> ",
         entry_prefix = " ",
@@ -203,11 +213,14 @@ telescope.setup {
             -- theme = "ivy",
             find_command = { "rg", "--no-heading", "--with-filename", "--line-number", "--column", "--smart-case" },
             path_display = { "absolute" },
+            previewer = false,
+            debounce = 100,
             -- theme = "ivy_vertical"
             -- theme = themes.get_ivy_vertical({}),
         },
         grep_string = {
             -- theme = "ivy",
+            previewer = false,
         },
         quickfix = {
             theme = "ivy",
@@ -224,6 +237,12 @@ telescope.setup {
             -- theme = "ivy", -- dropdown
             initial_mode = "insert",
             find_command = { "rg", "--files", "--iglob", "!.git", "--hidden" },
+            previewer = false,
+        },
+        git_files = {
+            initial_mode = "insert",
+            previewer = false,
+            show_untracked = true,
         },
         projects = {
             enable_preview = true,
