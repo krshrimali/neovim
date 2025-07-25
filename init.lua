@@ -31,6 +31,7 @@ require("goto-preview").setup {}
 require("neogit").setup {}
 require("telescope").load_extension "cmdline"
 require("telescope").load_extension "projects"
+require "user.lsp"
 -- require "user.autopairs"
 -- require("lsp_signature").setup({})
 require "user.indentline"
