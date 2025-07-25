@@ -224,8 +224,8 @@ which_key.add {
   },
   {
     "<leader>ff",
-    "<cmd>Telescope find_files<cr>",
-    desc = "Find files",
+    "<cmd>Telescope git_files<cr>",
+    desc = "Git files (fast)",
   },
   {
     "<leader>fg",
@@ -256,6 +256,16 @@ which_key.add {
     "<leader>fsb",
     "<cmd>lua require('telescope.builtin').live_grep({default_text=vim.fn.expand('<cword>'), grep_open_files=true})<cr>",
     desc = "Grep only open files",
+  },
+  {
+    "<leader>fTT",
+    "<cmd>lua require('telescope.builtin').live_grep({previewer = true})<cr>",
+    desc = "Live Grep (with preview)",
+  },
+  {
+    "<leader>fSS",
+    "<cmd>lua require('telescope.builtin').grep_string({default_text=vim.fn.expand('<cword>'), previewer = true})<cr>",
+    desc = "Grep String under cursor (with preview)",
   },
   {
     "<leader>fh",
@@ -316,6 +326,11 @@ which_key.add {
     "<leader>fC",
     "<cmd>Telescope commands<cr>",
     desc = "Commands",
+  },
+  {
+    "<leader>fF",
+    "<cmd>lua require('telescope.builtin').find_files({previewer = true})<cr>",
+    desc = "Find Files (with preview)",
   },
 
   -- Git
