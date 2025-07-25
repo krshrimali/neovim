@@ -7,7 +7,7 @@ require("illuminate").configure {
     "regex",
   },
   -- delay: delay in milliseconds
-  delay = 120,
+  delay = 500,
   -- filetypes_denylist: filetypes to not illuminate, this overrides filetypes_allowlist
   filetypes_denylist = {
     "dirvish",
@@ -40,4 +40,6 @@ require("illuminate").configure {
   providers_regex_syntax_allowlist = {},
   -- under_cursor: whether or not to illuminate under the cursor
   under_cursor = true,
+  -- max_file_lines: files with more than this many lines will not be illuminated
+  max_file_lines = 2000,
 }
