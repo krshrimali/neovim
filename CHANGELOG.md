@@ -2,6 +2,12 @@
 
 All notable changes to this Neovim configuration will be documented in this file.
 
+[Unreleased]
+
+## [0.2.0]
+
+- Added snacks for main features like GitBrowse (copy URL).
+
 ## Major Changes
 
 - **Replaced nvim-lsp with coc.nvim** - Complete migration from native Neovim LSP to coc.nvim for better VS Code-like experience ([aca060f](https://github.com/krshrimali/neovim/commit/aca060fa23b73bbc4a8635c24ab4f2f0eb7eab08))
