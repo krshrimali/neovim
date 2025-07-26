@@ -17,10 +17,8 @@ vim.g.maplocalleader = ","
 -- Install your plugins here
 require("lazy").setup {
 
-    -- LSP
-    {
-        "neovim/nvim-lspconfig",
-    },
+    -- COC.nvim for LSP and completion
+    { 'neoclide/coc.nvim',               branch = 'release' },
 
     -- "ray-x/lsp_signature.nvim",
 
@@ -28,7 +26,7 @@ require("lazy").setup {
     "RRethy/vim-illuminate",
 
     -- Check if vim.lsp provides this now...
-    "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+    -- "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
 
     { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
     -- For commenting (uses Treesitter to comment properly)
@@ -57,7 +55,7 @@ require("lazy").setup {
             -- require("telescope").load_extension("noice")
         end,
     },
-    { "decaycs/decay.nvim",              as = "decay" },
+    { "decaycs/decay.nvim",                  as = "decay" },
     "lunarvim/darkplus.nvim",
     "folke/tokyonight.nvim",
     {
@@ -264,90 +262,6 @@ require("lazy").setup {
             },
         },
     },
-    {
-        "Saghen/blink.cmp",
-        -- optional: provides snippets for the snippet source
-        dependencies = { 'rafamadriz/friendly-snippets' },
-
-        -- use a release tag to download pre-built binaries
-        version = '1.*',
-        -- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
-        -- build = 'cargo build --release',
-        -- If you use nix, you can build from source using latest nightly rust with:
-        -- build = 'nix run .#build-plugin',
-
-        ---@module 'blink.cmp'
-        ---@type blink.cmp.Config
-        opts = {
-            -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
-            -- 'super-tab' for mappings similar to vscode (tab to accept)
-            -- 'enter' for enter to accept
-            -- 'none' for no mappings
-            --
-            -- All presets have the following mappings:
-            -- C-space: Open menu or open docs if already open
-            -- C-n/C-p or Up/Down: Select next/previous item
-            -- C-e: Hide menu
-            -- C-k: Toggle signature help (if signature.enabled = true)
-            --
-            -- See :h blink-cmp-config-keymap for defining your own keymap
-            keymap = { preset = 'super-tab', ['<C-j>'] = { 'select_next', 'fallback' },
-                ['<C-k>'] = { 'select_prev', 'fallback' }, },
-            signature = { enabled = true },
-            appearance = {
-                -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-                -- Adjusts spacing to ensure icons are aligned
-                nerd_font_variant = 'mono',
-                kind_icons = {
-                    Text = 'T',
-                    Method = 'M',
-                    Function = 'F',
-                    Constructor = 'C',
-                    Field = 'f',
-                    Variable = 'v',
-                    Property = 'p',
-                    Class = 'C',
-                    Interface = 'I',
-                    Struct = 'S',
-                    Module = 'm',
-                    Unit = 'u',
-                    Value = 'V',
-                    Enum = 'E',
-                    EnumMember = 'e',
-                    Keyword = 'k',
-                    Constant = 'c',
-                    Snippet = 's',
-                    Color = '#',
-                    File = 'f',
-                    Reference = 'r',
-                    Folder = 'd',
-                    Event = 'E',
-                    Operator = 'o',
-                    TypeParameter = 't',
-                },
-            },
-
-            -- (Default) Only show the documentation popup when manually triggered
-            completion = { documentation = { auto_show = false }, list = {
-                max_items = 10,
-            } },
-
-            -- Default list of enabled providers defined so that you can extend it
-            -- elsewhere in your config, without redefining it, due to `opts_extend`
-            sources = {
-                default = { 'lsp', 'path', 'buffer' },
-                min_keyword_length = 2,
-            },
-
-            -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
-            -- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
-            -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
-            --
-            -- See the fuzzy documentation for more information
-            fuzzy = { implementation = "prefer_rust_with_warning" }
-        },
-        opts_extend = { "sources.default" }
-    },
     { "SmiteshP/nvim-navic" },
     { "github/copilot.vim" },
     {
@@ -364,17 +278,6 @@ require("lazy").setup {
                 datapath = vim.fn.stdpath("data"),
             })
         end,
-    },
-    {
-        "mason-org/mason.nvim",
-    },
-    {
-        "mason-org/mason-lspconfig.nvim",
-        opts = {},
-        dependencies = {
-            { "mason-org/mason.nvim", opts = {} },
-            "neovim/nvim-lspconfig",
-        },
     },
     {
         "krshrimali/nvim-utils",
@@ -473,11 +376,11 @@ require("lazy").setup {
             { "<leader>gY", function() Snacks.gitbrowse() end, desc = "Git Browse", mode = { "n", "v" } },
         }
     },
-    {
-        'windwp/nvim-autopairs',
-        event = "InsertEnter",
-        config = true
-    },
+    -- {
+    --     'windwp/nvim-autopairs',
+    --     event = "InsertEnter",
+    --     config = true
+    -- },
     {
         "krshrimali/nvim-utils.nvim",
         config = function()
