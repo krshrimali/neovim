@@ -23,11 +23,12 @@ npairs.setup {
     highlight = "PmenuSel",
     highlight_grey = "LineNr",
   },
+  -- Disable the default <CR> mapping
+  map_cr = false,
 }
 
-local cmp_autopairs = require "nvim-autopairs.completion.cmp"
-local cmp_status_ok, cmp = pcall(require, "cmp")
-if not cmp_status_ok then
-  return
+-- Configure autopairs for coc.nvim instead of nvim-cmp
+local coc_status_ok, coc_autopairs = pcall(require, "nvim-autopairs.completion.coc")
+if coc_status_ok then
+  coc_autopairs.setup()
 end
-cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done { map_char = { tex = "" } })

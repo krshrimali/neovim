@@ -168,7 +168,7 @@ keymap("n", "<m-q>", ":call QuickFixToggle()<cr>", opts)
 
 -- vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', {noremap = true})
 vim.api.nvim_set_keymap("i", "<C-l>", 'copilot#Accept("<CR>")', { expr = true, silent = true })
-vim.keymap.set('v', '<leader>lf', vim.lsp.buf.format, bufopts)
+-- vim.keymap.set('v', '<leader>lf', vim.lsp.buf.format, bufopts)
 
 -- vim.api.nvim_set_keymap("n", ":", "<cmd>FineCmdline<CR>", { noremap = true })
 
@@ -229,8 +229,6 @@ vim.keymap.set(
 )
 vim.keymap.set("n", "<leader>gP", "<cmd>lua require('goto-preview').close_all_win()<CR>", { noremap = true })
 vim.keymap.set("n", "<leader>gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>", { noremap = true })
-vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { noremap = true })
-vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", { noremap = true })
 vim.keymap.set(
   { "n", "x" },
   "<leader>gy",
