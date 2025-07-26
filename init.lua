@@ -32,7 +32,3 @@ require("neogit").setup {}
 require("telescope").load_extension "cmdline"
 require("telescope").load_extension "projects"
 require "user.coc"
--- require "user.autopairs"
--- require("lsp_signature").setup({})
--- require "user.indentline"
-
