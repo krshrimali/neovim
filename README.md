@@ -14,11 +14,11 @@ It's a current TODO for me to add instructions on how to set it up, but I'm not 
 
 | Plugin                                      | Description                |
 |----------------------------------------------|----------------------------|
-| neovim/nvim-lspconfig                        | LSP configuration          |
-| mason-org/mason.nvim                         | LSP/DAP/Linter installer   |
-| mason-org/mason-lspconfig.nvim               | Mason LSP integration      |
+| neoclide/coc.nvim                            | LSP client with completion |
 | SmiteshP/nvim-navic                          | LSP context navigation     |
 | hedyhli/outline.nvim                         | Symbols outline            |
+
+*Includes auto-installed language servers: coc-pyright (Python), coc-tsserver (TypeScript/JavaScript), coc-rust-analyzer (Rust), coc-lua (Lua), coc-json (JSON), coc-snippets (Snippets)*
 
 ---
 
@@ -26,8 +26,9 @@ It's a current TODO for me to add instructions on how to set it up, but I'm not 
 
 | Plugin                                      | Description                |
 |----------------------------------------------|----------------------------|
-| Saghen/blink.cmp                             | Completion engine          |
 | github/copilot.vim                           | Copilot AI                 |
+
+*Completion is now handled by coc.nvim (see LSP section above)*
 
 ---
 
@@ -45,7 +46,6 @@ It's a current TODO for me to add instructions on how to set it up, but I'm not 
 
 | Plugin                                      | Description                |
 |----------------------------------------------|----------------------------|
-| akinsho/bufferline.nvim                      | Buffer line                |
 | nvim-lualine/lualine.nvim                    | Status line                |
 | xiyaowong/transparent.nvim                   | Transparent background     |
 | rcarriga/nvim-notify                         | Notification UI            |
@@ -94,7 +94,6 @@ It's a current TODO for me to add instructions on how to set it up, but I'm not 
 | nvim-pack/nvim-spectre                       | Search/replace             |
 | kevinhwang91/nvim-bqf                        | Quickfix enhancements      |
 | folke/which-key.nvim                         | Keybinding helper          |
-| windwp/nvim-autopairs                        | Autopairs                  |
 | rmagatti/goto-preview                        | Preview definitions        |
 | rmagatti/goto-preview (with logger.nvim)      | Preview definitions        |
 
@@ -141,5 +140,59 @@ It's a current TODO for me to add instructions on how to set it up, but I'm not 
 | krshrimali/nvim-utils                        | Utilities                  |
 | krshrimali/nvim-utils.nvim                   | Utilities (pytest runner)  |
 | olimorris/codecompanion.nvim                 | AI assistant               |
+
+---
+
+## Key Mappings
+
+**Leader Key:** `,` (comma)
+
+### LSP & Code Navigation (coc.nvim)
+
+| Key | Mode | Description |
+|-----|------|-------------|
+| `Tab` / `Shift-Tab` | Insert | Navigate completion menu |
+| `Enter` | Insert | Accept completion |
+| `Ctrl-Space` | Insert | Trigger completion |
+| `gd` | Normal | Go to definition |
+| `gy` | Normal | Go to type definition |
+| `gi` | Normal | Go to implementation |
+| `gr` | Normal | Go to references |
+| `K` | Normal | Show documentation |
+| `[g` / `]g` | Normal | Navigate diagnostics |
+| `,rn` | Normal | Rename symbol |
+| `,lf` | Normal/Visual | Format code |
+| `,ld` | Normal | Show line diagnostics |
+| `,a` | Normal/Visual | Code actions |
+| `,ac` | Normal | Code actions (cursor) |
+| `,as` | Normal | Source code actions |
+| `,qf` | Normal | Quick fix |
+
+### File Navigation
+
+| Key | Mode | Description |
+|-----|------|-------------|
+| `,ff` | Normal | Find files (respects .gitignore) |
+| `,fg` | Normal | Git files |
+| `,fw` | Normal | Live grep |
+| `,fb` | Normal | Buffers |
+| `,fr` | Normal | Recent files |
+
+### Git Integration
+
+| Key | Mode | Description |
+|-----|------|-------------|
+| `glb` | Normal | Git blame line |
+| `,gY` | Normal/Visual | Git browse (open in browser) |
+
+### Utility
+
+| Key | Mode | Description |
+|-----|------|-------------|
+| `,q` | Normal | Smart quit |
+| `,w` | Normal | Save file |
+| `,e` | Normal | Toggle file explorer |
+
+*For a complete list of keymaps, see `keymaps.md` and `keymaps_table.md`*
 
 ---
