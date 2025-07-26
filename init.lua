@@ -31,16 +31,4 @@ require("goto-preview").setup {}
 require("neogit").setup {}
 require("telescope").load_extension "cmdline"
 require("telescope").load_extension "projects"
-require "user.lsp"
--- require "user.autopairs"
--- require("lsp_signature").setup({})
-require "user.indentline"
-
-vim.lsp.enable('rust-analyzer')
-vim.lsp.enable('pyright')
-vim.lsp.enable('tsserver')
-vim.lsp.enable('gopls')
-vim.lsp.enable('clangd')
-vim.lsp.enable('lua_ls')
-require("mason").setup()
-require("mason-lspconfig").setup {}
+require "user.coc"

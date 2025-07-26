@@ -12,7 +12,7 @@ if not status_theme_ok then
     return
 end
 
-local navic = require("nvim-navic")
+-- local navic = require("nvim-navic")
 
 -- check if value in table
 local function contains(t, value)
@@ -325,10 +325,11 @@ lualine.setup {
         -- lualine_b = { diagnostics },
         -- lualine_c = {},
         -- lualine_c = { 'filename', { navic.get_location, cond = navic.is_available } },
-        lualine_c = { 'filename', { function() return require('lspsaga.symbol.winbar').get_bar() end, cond = function()
-            return
-                require('lspsaga.symbol.winbar').get_bar() ~= nil
-        end } },
+        -- lualine_c = { 'filename', { function() return require('lspsaga.symbol.winbar').get_bar() end, cond = function()
+        --     return
+        --         require('lspsaga.symbol.winbar').get_bar() ~= nil
+        -- end } },
+        lualine_c = { 'filename' },
         -- lualine_x = { diff, spaces, "encoding", filetype },
         -- lualine_x = { diff, lanuage_server, spaces, filetype },
         -- lualine_x = { lanuage_server, spaces, filetype },
@@ -353,6 +354,111 @@ lualine.setup {
         --   path = 3,
         -- },
         lualine_z = { location, progress },
+    },
+    winbar = {
+        lualine_a = {},
+        lualine_b = {},
+        lualine_c = { 
+            {
+                'filename',
+                path = 1,  -- Show relative path
+            },
+            {
+                function()
+                    -- Hierarchical breadcrumb: class → function → current_node
+                    local ok, ts_utils = pcall(require, 'nvim-treesitter.ts_utils')
+                    if not ok then return '' end
+                    
+                    local node = ts_utils.get_node_at_cursor()
+                    if not node then return '' end
+                    
+                    local breadcrumbs = {}
+                    local current_node_type = node:type()
+                    
+                    -- Define node types for different languages
+                    local class_types = {
+                        'class_declaration', 'class_definition', 'impl_item', 'struct_item',
+                        'interface_declaration', 'trait_item', 'enum_item', 'type_item'
+                    }
+                    
+                    local function_types = {
+                        'function_item', 'function_definition', 'function_declaration',
+                        'method_definition', 'method_declaration', 'arrow_function'
+                    }
+                    
+                    -- Walk up the tree to collect hierarchy
+                    local current = node:parent()
+                    local class_name = nil
+                    local function_name = nil
+                    
+                    while current do
+                        local type = current:type()
+                        
+                        -- Look for class/struct/impl
+                        if not class_name then
+                            for _, class_type in ipairs(class_types) do
+                                if type == class_type then
+                                    local name_node = current:field('name')[1] or 
+                                                     current:field('type')[1] or
+                                                     current:field('identifier')[1]
+                                    if name_node then
+                                        class_name = vim.treesitter.get_node_text(name_node, 0)
+                                        break
+                                    end
+                                end
+                            end
+                        end
+                        
+                        -- Look for function/method
+                        if not function_name then
+                            for _, func_type in ipairs(function_types) do
+                                if type == func_type then
+                                    local name_node = current:field('name')[1] or 
+                                                     current:field('identifier')[1]
+                                    if name_node then
+                                        function_name = vim.treesitter.get_node_text(name_node, 0)
+                                        break
+                                    end
+                                end
+                            end
+                        end
+                        
+                        current = current:parent()
+                    end
+                    
+                    -- Build breadcrumb string
+                    local parts = {}
+                    if class_name then
+                        table.insert(parts, class_name)
+                    end
+                    if function_name then
+                        table.insert(parts, function_name)
+                    end
+                    -- Always show current node type (useful for debugging and context)
+                    table.insert(parts, current_node_type)
+                    
+                    if #parts > 0 then
+                        return ' → ' .. table.concat(parts, ' → ')
+                    end
+                    
+                    return ''
+                end,
+                cond = function() 
+                    return vim.bo.filetype ~= 'help' and vim.bo.filetype ~= 'alpha' and vim.bo.filetype ~= ''
+                end
+            }
+        },
+        lualine_x = {},
+        lualine_y = {},
+        lualine_z = {}
+    },
+    inactive_winbar = {
+        lualine_a = {},
+        lualine_b = {},
+        lualine_c = { 'filename' },
+        lualine_x = {},
+        lualine_y = {},
+        lualine_z = {}
     },
     inactive_sections = {
         lualine_a = {},
