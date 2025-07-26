@@ -262,7 +262,7 @@ require("lazy").setup {
             },
         },
     },
-    { "SmiteshP/nvim-navic" },
+    -- { "SmiteshP/nvim-navic" },
     { "github/copilot.vim" },
     {
         "ahmedkhalf/project.nvim",
