@@ -6,7 +6,7 @@ end
 bufferline.setup {
   options = {
     -- numbers = "both",
-    show_buffer_icons = false,
+    show_buffer_icons = vim.g.enable_nerd_icons,
     show_close_icon = false,
     show_buffer_close_icons = false,
     separator_style = "|",

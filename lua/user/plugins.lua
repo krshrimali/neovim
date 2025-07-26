@@ -125,50 +125,89 @@ require("lazy").setup {
                 desc = "Toggle Outline",
             },
         },
-        opts = {
-            outline_window = {
-                wrap = true,
-            },
-            symbol_folding = {
-                markers = { "> ", "v " },
-            },
-            symbols = {
-                icons = {
-                    File = { icon = 'F', hl = 'Identifier' },
-                    Module = { icon = 'M', hl = 'Include' },
-                    Namespace = { icon = 'N', hl = 'Include' },
-                    Package = { icon = 'P', hl = 'Include' },
-                    Class = { icon = 'C', hl = 'Type' },
-                    Method = { icon = 'm', hl = 'Function' },
-                    Property = { icon = 'p', hl = 'Identifier' },
-                    Field = { icon = 'f', hl = 'Identifier' },
-                    Constructor = { icon = 'c', hl = 'Special' },
-                    Enum = { icon = 'E', hl = 'Type' },
-                    Interface = { icon = 'I', hl = 'Type' },
-                    Function = { icon = 'F', hl = 'Function' },
-                    Variable = { icon = 'v', hl = 'Constant' },
-                    Constant = { icon = 'C', hl = 'Constant' },
-                    String = { icon = 's', hl = 'String' },
-                    Number = { icon = '#', hl = 'Number' },
-                    Boolean = { icon = 'b', hl = 'Boolean' },
-                    Array = { icon = 'A', hl = 'Constant' },
-                    Object = { icon = 'O', hl = 'Type' },
-                    Key = { icon = 'k', hl = 'Type' },
-                    Null = { icon = 'n', hl = 'Type' },
-                    EnumMember = { icon = 'e', hl = 'Identifier' },
-                    Struct = { icon = 'S', hl = 'Structure' },
-                    Event = { icon = 'E', hl = 'Type' },
-                    Operator = { icon = 'o', hl = 'Identifier' },
-                    TypeParameter = { icon = 't', hl = 'Identifier' },
-                    Component = { icon = 'C', hl = 'Function' },
-                    Fragment = { icon = 'f', hl = 'Constant' },
-                    TypeAlias = { icon = 'T', hl = 'Type' },
-                    Parameter = { icon = 'p', hl = 'Identifier' },
-                    StaticMethod = { icon = 'S', hl = 'Function' },
-                    Macro = { icon = 'M', hl = 'Function' },
-                }
+        config = function()
+            local nerd_icons = {
+                File = { icon = '', hl = 'Identifier' },
+                Module = { icon = '', hl = 'Include' },
+                Namespace = { icon = '', hl = 'Include' },
+                Package = { icon = '', hl = 'Include' },
+                Class = { icon = '', hl = 'Type' },
+                Method = { icon = '', hl = 'Function' },
+                Property = { icon = '', hl = 'Identifier' },
+                Field = { icon = '', hl = 'Identifier' },
+                Constructor = { icon = '', hl = 'Special' },
+                Enum = { icon = '', hl = 'Type' },
+                Interface = { icon = '', hl = 'Type' },
+                Function = { icon = '', hl = 'Function' },
+                Variable = { icon = '', hl = 'Constant' },
+                Constant = { icon = '', hl = 'Constant' },
+                String = { icon = '', hl = 'String' },
+                Number = { icon = '', hl = 'Number' },
+                Boolean = { icon = '⊨', hl = 'Boolean' },
+                Array = { icon = '', hl = 'Constant' },
+                Object = { icon = '', hl = 'Type' },
+                Key = { icon = '', hl = 'Type' },
+                Null = { icon = '', hl = 'Type' },
+                EnumMember = { icon = '', hl = 'Identifier' },
+                Struct = { icon = '', hl = 'Structure' },
+                Event = { icon = '', hl = 'Type' },
+                Operator = { icon = '', hl = 'Identifier' },
+                TypeParameter = { icon = '', hl = 'Identifier' },
+                Component = { icon = '', hl = 'Function' },
+                Fragment = { icon = '', hl = 'Constant' },
+                TypeAlias = { icon = '', hl = 'Type' },
+                Parameter = { icon = '', hl = 'Identifier' },
+                StaticMethod = { icon = '', hl = 'Function' },
+                Macro = { icon = '', hl = 'Function' },
             }
-        },
+
+            local ascii_icons = {
+                File = { icon = 'F', hl = 'Identifier' },
+                Module = { icon = 'M', hl = 'Include' },
+                Namespace = { icon = 'N', hl = 'Include' },
+                Package = { icon = 'P', hl = 'Include' },
+                Class = { icon = 'C', hl = 'Type' },
+                Method = { icon = 'm', hl = 'Function' },
+                Property = { icon = 'p', hl = 'Identifier' },
+                Field = { icon = 'f', hl = 'Identifier' },
+                Constructor = { icon = 'c', hl = 'Special' },
+                Enum = { icon = 'E', hl = 'Type' },
+                Interface = { icon = 'I', hl = 'Type' },
+                Function = { icon = 'F', hl = 'Function' },
+                Variable = { icon = 'v', hl = 'Constant' },
+                Constant = { icon = 'C', hl = 'Constant' },
+                String = { icon = 's', hl = 'String' },
+                Number = { icon = '#', hl = 'Number' },
+                Boolean = { icon = 'b', hl = 'Boolean' },
+                Array = { icon = 'A', hl = 'Constant' },
+                Object = { icon = 'O', hl = 'Type' },
+                Key = { icon = 'k', hl = 'Type' },
+                Null = { icon = 'n', hl = 'Type' },
+                EnumMember = { icon = 'e', hl = 'Identifier' },
+                Struct = { icon = 'S', hl = 'Structure' },
+                Event = { icon = 'E', hl = 'Type' },
+                Operator = { icon = 'o', hl = 'Identifier' },
+                TypeParameter = { icon = 't', hl = 'Identifier' },
+                Component = { icon = 'C', hl = 'Function' },
+                Fragment = { icon = 'f', hl = 'Constant' },
+                TypeAlias = { icon = 'T', hl = 'Type' },
+                Parameter = { icon = 'p', hl = 'Identifier' },
+                StaticMethod = { icon = 'S', hl = 'Function' },
+                Macro = { icon = 'M', hl = 'Function' },
+            }
+
+            require('outline').setup({
+                outline_window = {
+                    wrap = true,
+                },
+                symbol_folding = {
+                    markers = vim.g.enable_nerd_icons and { '', '' } or { '> ', 'v ' },
+                },
+                symbols = {
+                    icons = vim.g.enable_nerd_icons and nerd_icons or ascii_icons,
+                }
+            })
+        end,
     },
     {
         "microsoft/python-type-stubs",
@@ -612,16 +651,53 @@ require("lazy").setup {
         config = function()
             require('lspsaga').setup({
                 ui = {
-                    devicon = false,
-                    foldericon = false,
-                    expand = '>',
-                    collapse = '<',
-                    use_nerd = false
+                    devicon = vim.g.enable_nerd_icons,
+                    foldericon = vim.g.enable_nerd_icons,
+                    expand = vim.g.enable_nerd_icons and '' or '>',
+                    collapse = vim.g.enable_nerd_icons and '' or '<',
+                    use_nerd = vim.g.enable_nerd_icons
+                },
+                symbol_in_winbar = {
+                    enable = true,
+                },
+                lightbulb = {
+                    enable = false,
+                },
+                code_action = {
+                    enable = false,
+                },
+                hover = {
+                    enable = false,
+                },
+                rename = {
+                    enable = false,
+                },
+                diagnostic = {
+                    enable = false,
+                },
+                finder = {
+                    enable = false,
+                },
+                definition = {
+                    enable = false,
+                },
+                implement = {
+                    enable = false,
+                },
+                beacon = {
+                    enable = false,
+                },
+                callhierarchy = {
+                    enable = false,
+                },
+                outline = {
+                    enable = false,
                 }
             })
         end,
         dependencies = {
             'nvim-treesitter/nvim-treesitter', -- optional
         }
-    }
+    },
+    { "nvim-tree/nvim-web-devicons", opts = {} },
 }

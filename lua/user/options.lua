@@ -73,7 +73,7 @@ vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1e222a" })
 vim.opt.whichwrap:append "<>[]hl"
 
 vim.g.transparent_enabled = false
-vim.g.use_nerd_fonts = false
+vim.g.enable_nerd_icons = false
 
 vim.o.foldcolumn = "1" -- '0' is not bad
 vim.o.foldlevel = 99   -- Using ufo provider need a large value, feel free to decrease the value

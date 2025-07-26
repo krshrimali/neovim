@@ -2,9 +2,114 @@
 -- go to the above and then enter <c-v>u<unicode> and the symbold should appear
 -- or go here and upload the font file: https://mathew-kurian.github.io/CharacterMap/
 -- find more here: https://www.nerdfonts.com/cheat-sheet
--- vim.g.use_nerd_icons = false
--- Replaced nerd font icons with regular ASCII characters
-return {
+
+-- Define nerd font icons
+local nerd_icons = {
+  kind = {
+    Text = "",
+    Method = "",
+    Function = "",
+    Constructor = "",
+    Field = "",
+    Variable = "",
+    Class = "",
+    Interface = "",
+    Module = "",
+    Property = "",
+    Unit = "",
+    Value = "",
+    Enum = "",
+    Keyword = "",
+    Snippet = "",
+    Color = "",
+    File = "",
+    Reference = "",
+    Folder = "",
+    EnumMember = "",
+    Constant = "",
+    Struct = "",
+    Event = "",
+    Operator = "",
+    TypeParameter = "",
+    Misc = "",
+  },
+  type = {
+    Array = "",
+    Number = "",
+    String = "",
+    Boolean = "⊨",
+    Object = "",
+  },
+  documents = {
+    File = "",
+    Files = "",
+    Folder = "",
+    OpenFolder = "",
+  },
+  git = {
+    Add = "",
+    Mod = "",
+    Remove = "",
+    Ignore = "",
+    Rename = "",
+    Diff = "",
+    Repo = "",
+    Octoface = "",
+  },
+  ui = {
+    ArrowClosed = "",
+    ArrowOpen = "",
+    Lock = "",
+    Circle = "",
+    BigCircle = "",
+    BigUnfilledCircle = "",
+    Close = "",
+    NewFile = "",
+    Search = "",
+    Lightbulb = "",
+    Project = "",
+    Dashboard = "",
+    History = "",
+    Comment = "",
+    Bug = "",
+    Code = "",
+    Telescope = "",
+    Gear = "",
+    Package = "",
+    List = "",
+    SignIn = "",
+    SignOut = "",
+    NoteBook = "",
+    Check = "",
+    Fire = "",
+    Note = "",
+    BookMark = "",
+    Pencil = "",
+    ChevronRight = "",
+    Table = "",
+    Calendar = "",
+    CloudDownload = "",
+  },
+  diagnostics = {
+    Error = "",
+    Warning = "",
+    Information = "",
+    Question = "",
+    Hint = "",
+  },
+  misc = {
+    Robot = "",
+    Squirrel = "",
+    Tag = "",
+    Watch = "",
+    Smiley = "",
+    Package = "",
+    CircuitBoard = "",
+  },
+}
+
+-- Define ASCII fallback icons
+local ascii_icons = {
   kind = {
     Text = "T",
     Method = "m",
@@ -107,3 +212,14 @@ return {
     CircuitBoard = "C",
   },
 }
+
+-- Return the appropriate icon set based on the flag
+local function get_icons()
+  if vim.g.enable_nerd_icons then
+    return nerd_icons
+  else
+    return ascii_icons
+  end
+end
+
+return get_icons()

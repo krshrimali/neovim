@@ -172,7 +172,7 @@ nvim_tree.setup {
     add_trailing = true,
     full_name = true,
     icons = {
-      webdev_colors = true,
+      webdev_colors = vim.g.enable_nerd_icons,
       git_placement = "before",
       padding = " ",
       symlink_arrow = " ➛ ",

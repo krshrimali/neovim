@@ -23,8 +23,8 @@ cybu.setup {
     padding = 1, -- left & right padding in number of spaces
     hide_buffer_id = true,
     devicons = {
-      enabled = false, -- disable web dev icons to avoid nerd fonts
-      colored = false, -- disable color for web dev icons
+      enabled = vim.g.enable_nerd_icons, -- enable/disable web dev icons based on flag
+      colored = vim.g.enable_nerd_icons, -- enable/disable color for web dev icons based on flag
     },
     highlights = {
       current_buffer = "CybuFocus",

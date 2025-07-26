@@ -4,7 +4,7 @@ if not status_ok then
 end
 spectre.setup({
 
-	color_devicons = false, -- Disabled to avoid nerd fonts
+	color_devicons = vim.g.enable_nerd_icons, -- Enable/disable devicons based on nerd icons flag
 	highlight = {
 		ui = "String",
 		search = "DiffChange",

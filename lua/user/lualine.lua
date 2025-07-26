@@ -107,13 +107,13 @@ local filetype = {
             return return_val(str)
         end
     end,
-    icons_enabled = false,
+    icons_enabled = vim.g.enable_nerd_icons,
     padding = 0,
 }
 
 local branch = {
     "branch",
-    icons_enabled = false,
+    icons_enabled = vim.g.enable_nerd_icons,
     icon = " " .. "%*",
     -- color = "Constant",
     -- colored = false,
@@ -306,7 +306,7 @@ custom_auto_theme.normal.c.bg = NONE
 lualine.setup {
     options = {
         globalstatus = true,
-        icons_enabled = false,
+        icons_enabled = vim.g.enable_nerd_icons,
         theme = custom_auto_theme,
         -- theme = theme,
         -- theme = "shado",

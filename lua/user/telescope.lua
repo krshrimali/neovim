@@ -67,7 +67,7 @@ telescope.setup {
         selection_strategy = "reset",
         sorting_strategy = "descending",
         scroll_strategy = "cycle",
-        color_devicons = false, -- Disabled to avoid nerd fonts
+        color_devicons = vim.g.enable_nerd_icons, -- Enable devicons based on nerd icons flag
 
         -- file_ignore_patterns = { },
         file_ignore_patterns = {
