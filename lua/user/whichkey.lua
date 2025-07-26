@@ -199,11 +199,6 @@ which_key.add {
   --   desc = "Workspace Diagnostics",
   -- },
   -- Specific diagnostics filter - keeping this one
-  {
-    "<leader>ldu",
-    "<cmd>lua require('telescope.builtin').diagnostics({ no_unlisted = true })<cr>",
-    desc = "Diagnostics (listed buffers)",
-  },
 
   -- Find using Telescope
   {
@@ -224,8 +219,8 @@ which_key.add {
   },
   {
     "<leader>ff",
-    "<cmd>Telescope git_files<cr>",
-    desc = "Git files (fast)",
+    "<cmd>Telescope find_files<cr>",
+    desc = "Find files",
   },
   {
     "<leader>fg",
@@ -421,41 +416,36 @@ which_key.add {
   },
 
   -- LSP
-  {
-    "<leader>lA",
-    "<cmd>lua vim.lsp.codelens.run()<cr>",
-    desc = "CodeLens Action",
-  },
-  {
-    "<leader>la",
-    "<cmd>lua vim.lsp.buf.code_action()<cr>",
-    desc = "Code Action",
-  },
-  {
-    "<leader>ld",
-    "<cmd>lua require('telescope.builtin').diagnostics({ bufnr = 0 })<cr>",
-    desc = "Document diagnostics",
-  },
-  {
-    "<leader>lw",
-    "<cmd>lua require('telescope.builtin').diagnostics()<cr>",
-    desc = "Workspace Diagnostics",
-  },
-  {
-    "<leader>lf",
-    "<cmd>lua vim.lsp.buf.format({ async = true })<cr>",
-    desc = "Format",
-  },
-  {
-    "<leader>lF",
-    "<cmd>LspToggleAutoFormat<cr>",
-    desc = "Toggle Autoformat",
-  },
-  {
-    "<leader>li",
-    "<cmd>MasonLog<cr>",
-    desc = "Info",
-  },
+  -- {
+  --   "<leader>lA",
+  --   "<cmd>lua vim.lsp.codelens.run()<cr>",
+  --   desc = "CodeLens Action",
+  -- },
+  -- {
+  --   "<leader>la",
+  --   "<cmd>lua vim.lsp.buf.code_action()<cr>",
+  --   desc = "Code Action",
+  -- },
+  -- {
+  --   "<leader>ld",
+  --   "<cmd>call CocActionAsync('diagnosticInfo')<cr>",
+  --   desc = "Line Diagnostics",
+  -- },
+  -- {
+  --   "<leader>lf",
+  --   "<cmd>lua vim.lsp.buf.format({ async = true })<cr>",
+  --   desc = "Format",
+  -- },
+  -- {
+  --   "<leader>lF",
+  --   "<cmd>LspToggleAutoFormat<cr>",
+  --   desc = "Toggle Autoformat",
+  -- },
+  -- {
+  --   "<leader>li",
+  --   "<cmd>MasonLog<cr>",
+  --   desc = "Info",
+  -- },
   -- {
   --   "<leader>lh",
   --   "<cmd>lua require('lsp-inlayhints').toggle()<cr>",
@@ -481,16 +471,28 @@ which_key.add {
     "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>",
     desc = "Prev Diagnostic",
   },
-  {
-    "<leader>lev",
-    "<cmd>lua require('lsp_lines').toggle()<cr>",
-    desc = "Virtual Lines",
-  },
-  {
-    "<leader>leV",
-    function() vim.diagnostic.config { virtual_text = not vim.diagnostic.config().virtual_text } end,
-    desc = "Virtual Text",
-  },
+  -- {
+  --   "<leader>lev",
+  --   function()
+  --     local current = vim.fn.CocAction('getConfig', 'diagnostic.virtualText')
+  --     local new_value = not current
+  --     vim.fn['coc#config']('diagnostic.virtualText', new_value)
+  --     vim.fn['coc#config']('diagnostic.virtualTextCurrentLineOnly', false)
+  --     vim.notify('Virtual text: ' .. (new_value and 'enabled' or 'disabled'))
+  --   end,
+  --   desc = "Toggle Virtual Text",
+  -- },
+  -- {
+  --   "<leader>leV",
+  --   function()
+  --     local current = vim.fn.CocAction('getConfig', 'diagnostic.virtualTextAlign') or 'after'
+  --     local new_align = current == 'below' and 'after' or 'below'
+  --     vim.fn['coc#config']('diagnostic.virtualText', true)
+  --     vim.fn['coc#config']('diagnostic.virtualTextAlign', new_align)
+  --     vim.notify('Virtual lines: ' .. (new_align == 'below' and 'enabled' or 'disabled'))
+  --   end,
+  --   desc = "Toggle Virtual Lines",
+  -- },
   {
     "<leader>lo",
     "<cmd>Outline<cr>",
