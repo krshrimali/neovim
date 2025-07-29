@@ -8,6 +8,16 @@ which_key.add {
     desc = "Buffers",
   },
   {
+    "<leader>bb",
+    "<cmd>lua require('user.buffer_browser').open_buffer_browser()<cr>",
+    desc = "Buffer Browser",
+  },
+  {
+    "<leader>bs",
+    "<cmd>lua require('user.buffer_browser').toggle_sidebar()<cr>",
+    desc = "Buffer Sidebar",
+  },
+  {
     "<leader>e",
     "<cmd>NvimTreeToggle<cr>",
     desc = "Explorer",
