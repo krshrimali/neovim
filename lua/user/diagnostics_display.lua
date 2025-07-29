@@ -15,6 +15,27 @@ local config = {
 
 -- COC diagnostic severity mapping
 local severity_map = {
+  ["Error"] = {
+    icon = icons.diagnostics.Error,
+    name = "Error",
+    hl = "CocErrorSign"
+  },
+  ["Warning"] = {
+    icon = icons.diagnostics.Warning,
+    name = "Warning", 
+    hl = "CocWarningSign"
+  },
+  ["Information"] = {
+    icon = icons.diagnostics.Information,
+    name = "Info",
+    hl = "CocInfoSign"
+  },
+  ["Hint"] = {
+    icon = icons.diagnostics.Hint,
+    name = "Hint",
+    hl = "CocHintSign"
+  },
+  -- Fallback mappings for lowercase
   ["error"] = {
     icon = icons.diagnostics.Error,
     name = "Error",
@@ -60,14 +81,25 @@ local function debug_coc_diagnostics()
     
     for i, diag in ipairs(diagnostics) do
       if i <= 3 then -- Show first 3 diagnostics
-        print(string.format("Diagnostic %d: line=%s, lnum=%s, file=%s", 
+        print(string.format("Diagnostic %d: lnum=%s, col=%s, severity=%s, file=%s", 
           i, 
-          diag.line or "nil", 
           diag.lnum or "nil", 
+          diag.col or "nil",
+          diag.severity or "nil",
           diag.file or "nil"
         ))
       end
     end
+    
+    -- Test current line filtering
+    local current_line = vim.api.nvim_win_get_cursor(0)[1] - 1
+    local line_diagnostics = {}
+    for _, diag in ipairs(diagnostics) do
+      if diag.lnum == current_line then
+        table.insert(line_diagnostics, diag)
+      end
+    end
+    print("Line diagnostics found for current line:", #line_diagnostics)
   else
     print("No COC diagnostics found or error:", diagnostics)
   end
@@ -107,28 +139,15 @@ local function get_coc_line_diagnostics()
     return {}
   end
   
-  -- Try to get diagnostics for current line using COC's built-in function
   local current_line = vim.api.nvim_win_get_cursor(0)[1] - 1 -- Convert to 0-based
   
-  -- First try using COC's diagnosticInfo for current position
-  local ok, line_info = pcall(vim.fn.CocAction, 'diagnosticInfo')
-  if ok and line_info and #line_info > 0 then
-    return line_info
-  end
-  
-  -- Fallback: filter all diagnostics for current line
+  -- Get all diagnostics and filter for current line
   local all_diagnostics = get_coc_diagnostics()
   local line_diagnostics = {}
   
   for _, diagnostic in ipairs(all_diagnostics) do
-    -- Handle different possible line number fields and convert to 0-based
+    -- Based on the debug output, COC diagnostics have 'lnum' field (0-based)
     local diag_line = diagnostic.lnum
-    if diag_line == nil and diagnostic.line ~= nil then
-      diag_line = diagnostic.line
-    end
-    if diag_line == nil and diagnostic.range and diagnostic.range.start then
-      diag_line = diagnostic.range.start.line
-    end
     
     if diag_line ~= nil and diag_line == current_line then
       table.insert(line_diagnostics, diagnostic)
@@ -140,8 +159,8 @@ end
 
 -- Helper function to format COC diagnostic message
 local function format_diagnostic(diagnostic, show_line_info)
-  -- Handle different possible COC diagnostic structures
-  local severity = diagnostic.severity or diagnostic.type or "error"
+  -- Based on debug output, COC diagnostics have 'severity' field as string like "Warning"
+  local severity = diagnostic.severity or "Error"
   local severity_info = severity_map[severity] or {
     icon = "?", 
     name = "Unknown", 
@@ -149,10 +168,9 @@ local function format_diagnostic(diagnostic, show_line_info)
   }
   
   local line_info = ""
-  local lnum = diagnostic.lnum or diagnostic.line
-  local col = diagnostic.col or diagnostic.column or 0
-  if show_line_info and lnum then
-    line_info = string.format("Line %d, Col %d: ", lnum + 1, col + 1)
+  -- COC diagnostics use 'lnum' (0-based) and 'col' (0-based)
+  if show_line_info and diagnostic.lnum ~= nil then
+    line_info = string.format("Line %d, Col %d: ", diagnostic.lnum + 1, diagnostic.col + 1)
   end
   
   local source_info = ""
@@ -165,7 +183,7 @@ local function format_diagnostic(diagnostic, show_line_info)
     code_info = string.format(" (%s)", diagnostic.code)
   end
   
-  local message = diagnostic.message or diagnostic.text or "No message"
+  local message = diagnostic.message or "No message"
   
   return {
     icon = severity_info.icon,
@@ -204,6 +222,11 @@ local function create_buffer_content(diagnostics, title, show_line_info)
   
   -- Group diagnostics by severity
   local grouped = {
+    ["Error"] = {},
+    ["Warning"] = {},
+    ["Information"] = {},
+    ["Hint"] = {},
+    -- Fallbacks for lowercase
     ["error"] = {},
     ["warning"] = {},
     ["information"] = {},
@@ -211,20 +234,20 @@ local function create_buffer_content(diagnostics, title, show_line_info)
   }
   
   for _, diagnostic in ipairs(diagnostics) do
-    local severity = diagnostic.severity or "error"
+    local severity = diagnostic.severity or "Error"
     if grouped[severity] then
       table.insert(grouped[severity], diagnostic)
     else
-      table.insert(grouped["error"], diagnostic) -- fallback to error
+      table.insert(grouped["Error"], diagnostic) -- fallback to error
     end
   end
   
-  -- Add diagnostics by severity (errors first)
+  -- Add diagnostics by severity (errors first) - check both cases
   for _, severity in ipairs({
-    "error",
-    "warning", 
-    "information",
-    "hint"
+    "Error", "error",
+    "Warning", "warning", 
+    "Information", "information",
+    "Hint", "hint"
   }) do
     local group = grouped[severity]
     if #group > 0 then
@@ -342,14 +365,9 @@ local function show_diagnostic_buffer(diagnostics, title, show_line_info)
       vim.cmd("close")
       
       -- Navigate to the diagnostic location
-      local target_line = diagnostic.lnum or diagnostic.line
-      local target_col = diagnostic.col or diagnostic.column or 0
-      
-      -- Handle range-based diagnostics
-      if target_line == nil and diagnostic.range and diagnostic.range.start then
-        target_line = diagnostic.range.start.line
-        target_col = diagnostic.range.start.character or 0
-      end
+      -- COC diagnostics use 'lnum' (0-based) and 'col' (0-based)
+      local target_line = diagnostic.lnum
+      local target_col = diagnostic.col or 0
       
       if target_line ~= nil then
         -- Convert to 1-based for vim.api.nvim_win_set_cursor
