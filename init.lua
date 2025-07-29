@@ -42,6 +42,7 @@ require "user.colorizer"
 require "user.functions" 
 require "user.surround"
 require "user.nvim_transparent"
+require "user.diagnostics_display"
 
 -- Setup buffer browser (lazy loaded on keymap)
 vim.keymap.set("n", "<leader>bb", function()
