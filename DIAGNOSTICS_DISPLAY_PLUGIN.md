@@ -18,10 +18,11 @@ A Neovim plugin that displays COC.nvim diagnostics for the current line or curre
 |--------|----------|-------------|
 | `<leader>dl` | `show_current_line_diagnostics()` | Show diagnostics for current line |
 | `<leader>df` | `show_current_file_diagnostics()` | Show diagnostics for current file |
+| `<leader>dd` | `debug()` | Debug COC diagnostics (troubleshooting) |
 
 ### Within the diagnostic window:
 - `q` or `<Esc>` - Close the window
-- `<CR>` - Close the window (future: jump to diagnostic)
+- `<CR>` - Navigate to the diagnostic under cursor (with visual flash)
 
 ## Display Format
 
@@ -87,4 +88,6 @@ The plugin is already integrated into this Neovim configuration. It's loaded in 
 
 1. **Check current line**: Place cursor on a line with diagnostics and press `<leader>dl`
 2. **Check entire file**: Press `<leader>df` to see all diagnostics in the current file
-3. **Quick overview**: The window shows diagnostics grouped by severity for easy scanning
+3. **Navigate to diagnostic**: In the diagnostic window, press `<CR>` on any diagnostic line to jump to it
+4. **Debug issues**: If current line diagnostics aren't working, use `<leader>dd` to debug COC diagnostic structure
+5. **Quick overview**: The window shows diagnostics grouped by severity for easy scanning
