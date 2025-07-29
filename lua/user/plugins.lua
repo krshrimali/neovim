@@ -146,10 +146,8 @@ require("lazy").setup {
     -- Buffer navigation - LAZY LOAD
     {
         "ghillb/cybu.nvim",
-        keys = {
-            { "<S-Tab>", "<cmd>lua require('cybu').cycle('prev')<cr>" },
-            { "<Tab>", "<cmd>lua require('cybu').cycle('next')<cr>" },
-        },
+        branch = "main", -- timely updates
+        event = { "BufReadPost", "BufNewFile" },
         config = function()
             require("user.cybu")
         end
@@ -163,6 +161,8 @@ require("lazy").setup {
             require("user.registers")
         end
     },
+
+
 
     -- Bufferline - LAZY LOAD
     {
