@@ -4,19 +4,41 @@ if not status_ok then
     return
 end
 
--- Use a static theme that matches the colorscheme without mode changes
-local function get_colorscheme_theme()
-    -- Get current colorscheme colors
-    local normal_bg = vim.fn.synIDattr(vim.fn.hlID('Normal'), 'bg')
-    local normal_fg = vim.fn.synIDattr(vim.fn.hlID('Normal'), 'fg')
-    local statusline_bg = vim.fn.synIDattr(vim.fn.hlID('StatusLine'), 'bg')
-    local statusline_fg = vim.fn.synIDattr(vim.fn.hlID('StatusLine'), 'fg')
+-- Use a simple fallback theme initially to avoid startup delays
+local function get_safe_colorscheme_theme()
+    -- Use a simple theme during startup to avoid delays
+    if vim.g.colors_name == nil or vim.g.colors_name == '' then
+        -- Fallback theme for startup
+        local fallback_theme = {
+            normal = {
+                a = { fg = '#ffffff', bg = '#2d2d2d', gui = 'bold' },
+                b = { fg = '#ffffff', bg = '#2d2d2d' },
+                c = { fg = '#ffffff', bg = 'NONE' },
+            }
+        }
+        -- Copy to all modes to prevent color changes
+        fallback_theme.insert = fallback_theme.normal
+        fallback_theme.visual = fallback_theme.normal
+        fallback_theme.replace = fallback_theme.normal
+        fallback_theme.command = fallback_theme.normal
+        fallback_theme.inactive = fallback_theme.normal
+        
+        return fallback_theme
+    end
     
-    -- Fallback to reasonable defaults if colors are not found
-    if normal_bg == '' then normal_bg = '#1e1e1e' end
-    if normal_fg == '' then normal_fg = '#ffffff' end
-    if statusline_bg == '' then statusline_bg = '#2d2d2d' end
-    if statusline_fg == '' then statusline_fg = '#ffffff' end
+    -- Only do expensive color detection after startup
+    local ok, normal_bg = pcall(vim.fn.synIDattr, vim.fn.hlID('Normal'), 'bg')
+    local ok2, normal_fg = pcall(vim.fn.synIDattr, vim.fn.hlID('Normal'), 'fg')
+    local ok3, statusline_bg = pcall(vim.fn.synIDattr, vim.fn.hlID('StatusLine'), 'bg')
+    local ok4, statusline_fg = pcall(vim.fn.synIDattr, vim.fn.hlID('StatusLine'), 'fg')
+    
+    -- Fallback to reasonable defaults if colors are not found or functions fail
+    if not ok or not ok2 or not ok3 or not ok4 or normal_bg == '' or normal_fg == '' then
+        normal_bg = '#1e1e1e'
+        normal_fg = '#ffffff'
+        statusline_bg = '#2d2d2d'
+        statusline_fg = '#ffffff'
+    end
     
     -- Create a static theme that doesn't change with mode
     local theme = {
@@ -24,33 +46,15 @@ local function get_colorscheme_theme()
             a = { fg = statusline_fg, bg = statusline_bg, gui = 'bold' },
             b = { fg = statusline_fg, bg = statusline_bg },
             c = { fg = statusline_fg, bg = 'NONE' },
-        },
-        insert = {
-            a = { fg = statusline_fg, bg = statusline_bg, gui = 'bold' },
-            b = { fg = statusline_fg, bg = statusline_bg },
-            c = { fg = statusline_fg, bg = 'NONE' },
-        },
-        visual = {
-            a = { fg = statusline_fg, bg = statusline_bg, gui = 'bold' },
-            b = { fg = statusline_fg, bg = statusline_bg },
-            c = { fg = statusline_fg, bg = 'NONE' },
-        },
-        replace = {
-            a = { fg = statusline_fg, bg = statusline_bg, gui = 'bold' },
-            b = { fg = statusline_fg, bg = statusline_bg },
-            c = { fg = statusline_fg, bg = 'NONE' },
-        },
-        command = {
-            a = { fg = statusline_fg, bg = statusline_bg, gui = 'bold' },
-            b = { fg = statusline_fg, bg = statusline_bg },
-            c = { fg = statusline_fg, bg = 'NONE' },
-        },
-        inactive = {
-            a = { fg = statusline_fg, bg = statusline_bg },
-            b = { fg = statusline_fg, bg = statusline_bg },
-            c = { fg = statusline_fg, bg = 'NONE' },
-        },
+        }
     }
+    
+    -- Copy to all modes to prevent color changes
+    theme.insert = theme.normal
+    theme.visual = theme.normal
+    theme.replace = theme.normal
+    theme.command = theme.normal
+    theme.inactive = theme.normal
     
     return theme
 end
@@ -58,12 +62,22 @@ end
 -- Cache for breadcrumbs to avoid expensive treesitter operations
 local breadcrumb_cache = {}
 local last_cursor_pos = {}
+local startup_complete = false
 
--- Optimized breadcrumb function with caching
+-- Mark startup as complete after a delay
+vim.defer_fn(function()
+    startup_complete = true
+end, 2000) -- 2 seconds after startup
+
+-- Optimized breadcrumb function with caching and startup awareness
 local function get_cached_breadcrumbs()
+    -- Don't calculate breadcrumbs during startup to avoid delays
+    if not startup_complete then
+        return ''
+    end
+    
     local bufnr = vim.api.nvim_get_current_buf()
     local cursor = vim.api.nvim_win_get_cursor(0)
-    local cursor_key = bufnr .. ':' .. cursor[1] .. ':' .. cursor[2]
     
     -- Check if cursor position changed significantly (more than 2 lines)
     local last_pos = last_cursor_pos[bufnr]
@@ -143,20 +157,25 @@ vim.api.nvim_create_autocmd({'BufWritePost', 'TextChanged'}, {
     end
 })
 
--- Refresh lualine when colorscheme changes to maintain dynamic theming
+-- Refresh lualine when colorscheme changes, but only after startup
 vim.api.nvim_create_autocmd('ColorScheme', {
     callback = function()
+        -- Only refresh after startup to avoid delays
+        if not startup_complete then
+            return
+        end
+        
         -- Clear breadcrumb cache on colorscheme change
         breadcrumb_cache = {}
         last_cursor_pos = {}
         
-        -- Refresh lualine with new theme
-        vim.schedule(function()
-            require('lualine').setup {
+        -- Refresh lualine with new theme after a small delay
+        vim.defer_fn(function()
+            local new_config = {
                 options = {
                     globalstatus = true,
                     icons_enabled = false,
-                    theme = get_colorscheme_theme(),
+                    theme = get_safe_colorscheme_theme(),
                     component_separators = { left = "", right = "" },
                     section_separators = { left = "", right = "" },
                     disabled_filetypes = { "alpha", "dashboard" },
@@ -189,7 +208,7 @@ vim.api.nvim_create_autocmd('ColorScheme', {
                         {
                             get_cached_breadcrumbs,
                             cond = function() 
-                                return vim.bo.filetype ~= 'help' and vim.bo.filetype ~= 'alpha' and vim.bo.filetype ~= ''
+                                return startup_complete and vim.bo.filetype ~= 'help' and vim.bo.filetype ~= 'alpha' and vim.bo.filetype ~= ''
                             end
                         }
                     },
@@ -216,7 +235,9 @@ vim.api.nvim_create_autocmd('ColorScheme', {
                 tabline = {},
                 extensions = {},
             }
-        end)
+            
+            require('lualine').setup(new_config)
+        end, 100) -- Small delay to ensure colorscheme is fully loaded
     end
 })
 
@@ -510,7 +531,7 @@ lualine.setup {
     options = {
         globalstatus = true,
         icons_enabled = false,
-        theme = get_colorscheme_theme(),
+        theme = get_safe_colorscheme_theme(),
         component_separators = { left = "", right = "" },
         section_separators = { left = "", right = "" },
         disabled_filetypes = { "alpha", "dashboard" },
@@ -543,7 +564,7 @@ lualine.setup {
             {
                 get_cached_breadcrumbs,
                 cond = function() 
-                    return vim.bo.filetype ~= 'help' and vim.bo.filetype ~= 'alpha' and vim.bo.filetype ~= ''
+                    return startup_complete and vim.bo.filetype ~= 'help' and vim.bo.filetype ~= 'alpha' and vim.bo.filetype ~= ''
                 end
             }
         },

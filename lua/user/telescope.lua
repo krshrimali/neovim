@@ -12,7 +12,7 @@ local themes = require "user.telescope.user_themes"
 telescope.setup {
     defaults = {
         wrap_results = true,
-        results_limit = 200, -- Reduced from 1000 for faster initial display
+        results_limit = 100, -- Reduced further for faster startup
         dynamic_preview_title = false,
         file_sorter = require('telescope.sorters').get_fuzzy_file,
         generic_sorter = require('telescope.sorters').get_generic_fuzzy_sorter,
@@ -20,7 +20,7 @@ telescope.setup {
         -- Performance optimizations
         initial_mode = "insert",
         selection_strategy = "reset",
-        sorting_strategy = "ascending", -- Changed from descending for better performance
+        sorting_strategy = "ascending",
         scroll_strategy = "cycle",
         
         -- Faster file processing
@@ -29,39 +29,39 @@ telescope.setup {
         qflist_previewer = require('telescope.previewers').vim_buffer_qflist.new,
         
         layout_config = {
-            width = 0.90, -- Reduced from 0.95 for faster rendering
-            height = 0.80, -- Reduced from 0.85 for faster rendering
+            width = 0.85, -- Reduced for faster rendering
+            height = 0.75, -- Reduced for faster rendering
             
             horizontal = {
                 preview_width = function(_, cols, _)
                     if cols > 200 then
-                        return math.floor(cols * 0.35) -- Reduced preview width
+                        return math.floor(cols * 0.3) -- Further reduced preview width
                     else
-                        return math.floor(cols * 0.5)
+                        return math.floor(cols * 0.4)
                     end
                 end,
             },
 
             vertical = {
-                width = 0.85,
-                height = 0.90,
-                preview_height = 0.4, -- Reduced preview height
+                width = 0.80,
+                height = 0.85,
+                preview_height = 0.35, -- Further reduced preview height
             },
 
             flex = {
                 horizontal = {
-                    preview_width = 0.8,
+                    preview_width = 0.7,
                 },
             },
         },
         
         cache_picker = {
-            num_pickers = 5, -- Reduced from 10
-            limit_entries = 200, -- Reduced from 1000
+            num_pickers = 3, -- Further reduced
+            limit_entries = 100, -- Further reduced
             ignore_empty_prompt = true,
         },
         
-        disable_coordinates = true, -- Disabled for better performance
+        disable_coordinates = true,
         layout_strategy = "horizontal",
         use_less = false,
         get_status_text = function() return "" end,
@@ -69,7 +69,7 @@ telescope.setup {
         prompt_prefix = "> ",
         selection_caret = "> ",
         entry_prefix = " ",
-        path_display = { "smart" }, -- Changed from absolute to smart for better performance
+        path_display = { "smart" },
 
         color_devicons = false, -- Disabled to avoid nerd fonts
 
@@ -172,14 +172,14 @@ telescope.setup {
             find_command = { "rg", "--no-heading", "--with-filename", "--line-number", "--column", "--smart-case" },
             path_display = { "smart" },
             previewer = false,
-            debounce = 50, -- Reduced from 100 for faster response
-            results_limit = 100, -- Added limit for faster results
+            debounce = 30, -- Reduced for faster response
+            results_limit = 75, -- Reduced for faster results
         },
         
         grep_string = {
             previewer = false,
-            results_limit = 100,
-            debounce = 50,
+            results_limit = 75,
+            debounce = 30,
         },
         
         quickfix = {
@@ -200,23 +200,25 @@ telescope.setup {
             initial_mode = "insert",
             find_command = { "rg", "--files", "--iglob", "!.git", "--hidden" },
             previewer = false,
-            debounce = 50, -- Added debouncing for better performance
-            results_limit = 150, -- Added limit for faster initial display
-            path_display = { "smart" }, -- Smart path display for better performance
+            debounce = 30, -- Reduced for faster response
+            results_limit = 100, -- Optimized for speed
+            path_display = { "smart" },
             follow = false, -- Don't follow symlinks for better performance
             hidden = true,
+            -- Faster file discovery
+            file_sorter = require('telescope.sorters').get_fuzzy_file,
         },
         
         git_files = {
             initial_mode = "insert",
             previewer = false,
             show_untracked = true,
-            results_limit = 200,
-            debounce = 50,
+            results_limit = 150,
+            debounce = 30,
         },
         
         projects = {
-            enable_preview = true,
+            enable_preview = false, -- Disabled for faster loading
         },
         
         keymaps = {
@@ -229,7 +231,7 @@ telescope.setup {
             preview = false, -- Disabled preview for instant switching
             sort_lastused = true,
             sort_mru = true,
-            results_limit = 50, -- Limited for instant display
+            results_limit = 30, -- Further reduced for instant display
             ignore_current_buffer = false,
         },
         
@@ -239,13 +241,13 @@ telescope.setup {
         },
         
         colorscheme = {
-            enable_preview = true,
+            enable_preview = false, -- Disabled for faster loading
         },
         
         lsp_references = {
             theme = "ivy",
             initial_mode = "normal",
-            results_limit = 100,
+            results_limit = 75,
         },
         
         lsp_definitions = {
@@ -276,8 +278,8 @@ telescope.setup {
         diagnostics = {
             theme = "ivy",
             initial_mode = "normal",
-            preview = true,
-            results_limit = 100,
+            preview = false, -- Disabled for faster loading
+            results_limit = 75,
         },
     },
     extensions = {
@@ -286,8 +288,8 @@ telescope.setup {
             find_command = "rg",
             theme = "ivy",
             path_display = { "smart" },
-            debounce = 50,
-            results_limit = 100,
+            debounce = 30,
+            results_limit = 75,
         },
         fzf = {
             fuzzy = true,             -- false will only do exact matching
@@ -298,4 +300,7 @@ telescope.setup {
     },
 }
 
-require('telescope').load_extension('fzf')
+-- Load extensions after setup to avoid startup delays
+vim.defer_fn(function()
+    require('telescope').load_extension('fzf')
+end, 100)
