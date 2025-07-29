@@ -553,82 +553,18 @@ require("lazy").setup {
             -- or leave it empty to use the default settings
             -- refer to the configuration section below
             bigfile = { enabled = true },
-            dashboard = {
-                enabled = true,
-                preset = {
-                    header = [[
-████████  ██████  ██   ██ ██████  ███████
-   ██    ██       ██  ██  ██   ██ ██
-   ██    ██   ███ █████   ██████  ███████
-   ██    ██    ██ ██  ██  ██   ██      ██
-   ██     ██████  ██   ██ ██   ██ ███████
-
-   Welcome to Kushashwa's Home! <3
-        Jai Hind!
-]],
-                    keys = {
-                        { icon = " ", key = "f", desc = "Find File",       action = ":lua Snacks.dashboard.pick('files')" },
-                        { icon = " ", key = "n", desc = "New File",        action = ":ene | startinsert" },
-                        { icon = " ", key = "g", desc = "Find Text",       action = ":lua Snacks.dashboard.pick('live_grep')" },
-                        { icon = " ", key = "r", desc = "Recent Files",    action = ":lua Snacks.dashboard.pick('oldfiles')" },
-                        { icon = " ", key = "c", desc = "Config",          action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
-                        { icon = " ", key = "s", desc = "Restore Session", section = "session" },
-                        { icon = " ", key = "l", desc = "Lazy",            action = ":Lazy" },
-                        { icon = " ", key = "q", desc = "Quit",            action = ":qa" },
-                    },
-                }
-            },
+            dashboard = { enabled = false }, -- Completely disable dashboard
             explorer = { enabled = false },
             indent = { enabled = false },
             input = { enabled = false },
-            picker = { 
-                enabled = true,
-                -- Performance optimizations
-                win = {
-                    input = {
-                        keys = {
-                            ["<Esc>"] = { "close", mode = { "n", "i" } },
-                        },
-                    },
-                },
-                -- Disable icons for better performance and no nerd font requirement
-                formatters = {
-                    file = {
-                        filename_first = true,
-                        show_icons = false,
-                    },
-                },
-                -- Optimize matcher for speed
-                matcher = {
-                    frecency = false, -- Disable frecency for faster startup
-                },
-                -- Use faster layout
-                layout = {
-                    preset = "ivy",
-                    cycle = false,
-                },
-            },
-            notifier = { enabled = true },
+            picker = { enabled = false }, -- Disable picker since we're using nvim-tree
+            notifier = { enabled = false }, -- Disable for faster startup
             quickfile = { enabled = true },
             scope = { enabled = false },
             scroll = { enabled = false },
-            statuscolumn = { enabled = true },
+            statuscolumn = { enabled = false }, -- Disable for faster startup
             words = { enabled = false },
-            gitbrowse = {
-                what = "permalink",
-                url_patterns = {
-                    ["github%.deshaw%.com"] = {
-                        branch = "/tree/{branch}",
-                        file = "/blob/{branch}/{file}#L{line_start}-L{line_end}",
-                        permalink = "/blob/{commit}/{file}#L{line_start}-L{line_end}",
-                        commit = "/commit/{commit}",
-                    },
-                },
-            }
         },
-        keys = {
-            { "<leader>gY", function() Snacks.gitbrowse() end, desc = "Git Browse", mode = { "n", "v" } },
-        }
     },
 
     -- Avante - LAZY LOAD

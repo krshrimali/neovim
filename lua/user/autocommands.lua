@@ -1,3 +1,13 @@
+-- Auto-open nvim-tree when starting Neovim (replaces dashboard)
+vim.api.nvim_create_autocmd({ "VimEnter" }, {
+  callback = function()
+    -- Only open nvim-tree if no file was specified on the command line
+    if vim.fn.argc() == 0 then
+      require("nvim-tree.api").tree.open()
+    end
+  end,
+})
+
 vim.api.nvim_create_autocmd({ "User" }, {
   pattern = { "AlphaReady" },
   callback = function()

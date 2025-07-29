@@ -117,68 +117,35 @@ nvim_tree.setup {
     enable = true,
     auto_open = true,
   },
-  -- update_to_buf_dir = {
-  --   enable = false,
-  -- },
-  -- disable_netrw = true,
-  -- hijack_netrw = true,
-  -- open_on_setup = false,
-  -- TODO: Fix this it's commented out now
-  -- ignore_ft_on_setup = {
-  --   "startify",
-  --   "dashboard",
-  --   "alpha",
-  -- },
-  -- filters = {
-  --   custom = { ".git" },
-  --   -- exclude = { ".gitignore" },
-  -- },
-  -- auto_close = true,
-  -- open_on_tab = false,
-  -- hijack_cursor = false,
+  -- Auto-open nvim-tree when starting Neovim
+  on_attach = on_attach,
   update_cwd = true,
-  -- update_to_buf_dir = {
-  --   enable = true,
-  --   auto_open = true,
-  -- },
-  -- --   error
-  -- --   info
-  -- --   question
-  -- --   warning
-  -- --   lightbulb
   renderer = {
-    -- add_trailing = false,
     group_empty = false,
     highlight_git = false,
-    -- highlight_opened_files = "none",
     root_folder_modifier = ":t",
     indent_markers = {
       enable = false,
-      icons = {
-        corner = "└ ",
-        edge = "│ ",
-        none = "  ",
-      },
     },
     add_trailing = true,
     full_name = true,
     icons = {
-      webdev_colors = true,
+      webdev_colors = false, -- Disable for performance
       git_placement = "before",
       padding = " ",
-      symlink_arrow = " ➛ ",
+      symlink_arrow = " -> ", -- Simple ASCII arrow
       show = {
-        file = true,
-        folder = true,
-        folder_arrow = true,
-        git = true,
+        file = false,        -- Disable file icons
+        folder = false,      -- Disable folder icons
+        folder_arrow = true, -- Keep folder arrows for navigation
+        git = false,         -- Disable git icons
       },
       glyphs = {
         default = "",
         symlink = "",
         folder = {
-          arrow_open = icons.ui.ArrowOpen,
-          arrow_closed = icons.ui.ArrowClosed,
+          arrow_open = "v",    -- Simple ASCII arrow
+          arrow_closed = ">",  -- Simple ASCII arrow
           default = "",
           open = "",
           empty = "",
@@ -188,12 +155,12 @@ nvim_tree.setup {
         },
         git = {
           unstaged = "",
-          staged = "S",
+          staged = "",
           unmerged = "",
-          renamed = "➜",
-          untracked = "U",
+          renamed = "",
+          untracked = "",
           deleted = "",
-          ignored = "◌",
+          ignored = "",
         },
       },
     },
