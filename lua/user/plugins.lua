@@ -18,8 +18,8 @@ vim.g.maplocalleader = ","
 require("lazy").setup {
 
     -- COC.nvim for LSP and completion - LAZY LOAD
-    { 
-        'neoclide/coc.nvim', 
+    {
+        'neoclide/coc.nvim',
         branch = 'release',
         event = { "BufReadPre", "BufNewFile" }, -- Only load when opening files
         config = function()
@@ -40,15 +40,15 @@ require("lazy").setup {
     },
 
     -- Treesitter - LAZY LOAD
-    { 
-        "nvim-treesitter/nvim-treesitter", 
+    {
+        "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
         event = { "BufReadPost", "BufNewFile" },
         config = function()
             require("user.treesitter")
         end
     },
-    
+
     -- For commenting (uses Treesitter to comment properly) - LAZY LOAD
     -- {
     --     "JoosepAlviste/nvim-ts-context-commentstring",
@@ -69,10 +69,10 @@ require("lazy").setup {
         keys = { "<leader>gg" },
         config = true,
     },
-    
+
     -- Transparency - LOAD IMMEDIATELY (UI)
     "xiyaowong/transparent.nvim",
-    
+
     -- Goto preview - LAZY LOAD
     {
         "rmagatti/goto-preview",
@@ -81,7 +81,7 @@ require("lazy").setup {
             { "gpd", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>" },
             { "gpi", "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>" },
             { "gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>" },
-            { "gP", "<cmd>lua require('goto-preview').close_all_win()<CR>" },
+            { "gP",  "<cmd>lua require('goto-preview').close_all_win()<CR>" },
         },
         config = true,
     },
@@ -119,7 +119,7 @@ require("lazy").setup {
     },
 
     -- THEMES - Keep minimal set, load immediately for UI consistency
-    { "decaycs/decay.nvim", as = "decay" },
+    { "decaycs/decay.nvim",                       as = "decay" },
     "lunarvim/darkplus.nvim",
     "folke/tokyonight.nvim",
     {
@@ -134,7 +134,7 @@ require("lazy").setup {
             require("user.notify")
         end
     },
-    
+
     -- Dressing - LOAD IMMEDIATELY (UI)
     {
         "stevearc/dressing.nvim",
@@ -168,7 +168,7 @@ require("lazy").setup {
         event = "VeryLazy",
         -- config handled in separate file
     },
-    
+
     -- Lualine - LOAD IMMEDIATELY (UI)
     {
         "nvim-lualine/lualine.nvim",
@@ -203,7 +203,7 @@ require("lazy").setup {
         --     require("user.comment")
         -- end
     },
-    
+
     -- Todo comments - LAZY LOAD
     {
         "folke/todo-comments.nvim",
@@ -391,8 +391,8 @@ require("lazy").setup {
         "nvim-telescope/telescope-frecency.nvim",
         dependencies = { "nvim-telescope/telescope.nvim" },
         cmd = "Telescope frecency",
-        config = function() 
-            require("telescope").load_extension "frecency" 
+        config = function()
+            require("telescope").load_extension "frecency"
         end,
     },
 
@@ -478,10 +478,10 @@ require("lazy").setup {
     },
 
     -- Copilot - LAZY LOAD
-    { 
-        "github/copilot.vim",
-        event = "InsertEnter"
-    },
+    -- {
+    --     "github/copilot.vim",
+    --     event = "InsertEnter"
+    -- },
 
     -- Project management - LAZY LOAD
     {
@@ -555,7 +555,7 @@ require("lazy").setup {
             explorer = { enabled = false },
             indent = { enabled = false },
             input = { enabled = false },
-            picker = { enabled = false }, -- Disable picker since we're using nvim-tree
+            picker = { enabled = false },   -- Disable picker since we're using nvim-tree
             notifier = { enabled = false }, -- Disable for faster startup
             quickfile = { enabled = true },
             scope = { enabled = false },
@@ -664,5 +664,20 @@ require("lazy").setup {
         dependencies = {
             'nvim-treesitter/nvim-treesitter',
         }
+    },
+    {
+        "TabbyML/vim-tabby",
+        lazy = false,
+        dependencies = {
+            "neovim/nvim-lspconfig",
+        },
+        config = function()
+            -- Keybinding to accept Tabby suggestion
+            vim.g.tabby_keybinding_accept = "<C-y>"
+            -- Set specific Node.js binary path
+            vim.g.tabby_node_binary = "node"
+            vim.g.tabby_agent_start_command = { "npx", "tabby-agent", "--stdio" }
+            vim.g.tabby_inline_completion_trigger = "auto"
+        end,
     },
 }
