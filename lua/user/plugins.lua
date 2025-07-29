@@ -682,4 +682,8 @@ require("lazy").setup {
             vim.g.tabby_inline_completion_trigger = "auto"
         end,
     },
+    {
+        "https://github.deshaw.com/genai/vim-ai",
+        -- tag: v0.0.1
+    }
 }
