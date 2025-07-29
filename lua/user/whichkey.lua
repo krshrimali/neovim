@@ -349,6 +349,11 @@ which_key.add {
     "<cmd>lua require('user.diagnostics_display').show_current_file_diagnostics()<cr>",
     desc = "File Diagnostics",
   },
+  {
+    "<leader>dd",
+    "<cmd>lua require('user.diagnostics_display').debug()<cr>",
+    desc = "Debug Diagnostics",
+  },
 
   -- Git
   {

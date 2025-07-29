@@ -42,6 +42,37 @@ local function is_coc_available()
   return vim.fn.exists('*CocAction') == 1
 end
 
+-- Debug function to inspect COC diagnostic structure
+local function debug_coc_diagnostics()
+  if not is_coc_available() then
+    print("COC not available")
+    return
+  end
+  
+  local ok, diagnostics = pcall(vim.fn.CocAction, 'diagnosticList')
+  if ok and diagnostics and #diagnostics > 0 then
+    print("COC Diagnostics found:", #diagnostics)
+    print("First diagnostic structure:")
+    print(vim.inspect(diagnostics[1]))
+    
+    local current_line = vim.api.nvim_win_get_cursor(0)[1] - 1
+    print("Current line (0-based):", current_line)
+    
+    for i, diag in ipairs(diagnostics) do
+      if i <= 3 then -- Show first 3 diagnostics
+        print(string.format("Diagnostic %d: line=%s, lnum=%s, file=%s", 
+          i, 
+          diag.line or "nil", 
+          diag.lnum or "nil", 
+          diag.file or "nil"
+        ))
+      end
+    end
+  else
+    print("No COC diagnostics found or error:", diagnostics)
+  end
+end
+
 -- Helper function to get COC diagnostics for current buffer
 local function get_coc_diagnostics()
   if not is_coc_available() then
@@ -71,13 +102,35 @@ end
 
 -- Helper function to get COC diagnostics for current line
 local function get_coc_line_diagnostics()
-  local all_diagnostics = get_coc_diagnostics()
+  if not is_coc_available() then
+    vim.notify("COC.nvim is not available", vim.log.levels.ERROR)
+    return {}
+  end
+  
+  -- Try to get diagnostics for current line using COC's built-in function
   local current_line = vim.api.nvim_win_get_cursor(0)[1] - 1 -- Convert to 0-based
+  
+  -- First try using COC's diagnosticInfo for current position
+  local ok, line_info = pcall(vim.fn.CocAction, 'diagnosticInfo')
+  if ok and line_info and #line_info > 0 then
+    return line_info
+  end
+  
+  -- Fallback: filter all diagnostics for current line
+  local all_diagnostics = get_coc_diagnostics()
   local line_diagnostics = {}
   
   for _, diagnostic in ipairs(all_diagnostics) do
-    local diag_line = diagnostic.lnum or diagnostic.line
-    if diag_line == current_line then
+    -- Handle different possible line number fields and convert to 0-based
+    local diag_line = diagnostic.lnum
+    if diag_line == nil and diagnostic.line ~= nil then
+      diag_line = diagnostic.line
+    end
+    if diag_line == nil and diagnostic.range and diagnostic.range.start then
+      diag_line = diagnostic.range.start.line
+    end
+    
+    if diag_line ~= nil and diag_line == current_line then
       table.insert(line_diagnostics, diagnostic)
     end
   end
@@ -137,6 +190,7 @@ end
 local function create_buffer_content(diagnostics, title, show_line_info)
   local content = {}
   local highlights = {}
+  local diagnostic_map = {} -- Map line numbers to diagnostics for navigation
   
   -- Add title
   table.insert(content, title)
@@ -145,7 +199,7 @@ local function create_buffer_content(diagnostics, title, show_line_info)
   
   if #diagnostics == 0 then
     table.insert(content, "  No diagnostics found")
-    return content, highlights
+    return content, highlights, diagnostic_map
   end
   
   -- Group diagnostics by severity
@@ -199,6 +253,9 @@ local function create_buffer_content(diagnostics, title, show_line_info)
         local main_line = string.format("  %s", formatted.full_text)
         table.insert(content, main_line)
         
+        -- Store diagnostic info for navigation (map content line to diagnostic)
+        diagnostic_map[#content] = diagnostic
+        
         -- Highlight the icon and severity
         table.insert(highlights, {
           line = #content - 1,
@@ -219,12 +276,12 @@ local function create_buffer_content(diagnostics, title, show_line_info)
   local summary = string.format("Total: %d diagnostics", #diagnostics)
   table.insert(content, summary)
   
-  return content, highlights
+  return content, highlights, diagnostic_map
 end
 
 -- Helper function to create and show the diagnostic buffer
 local function show_diagnostic_buffer(diagnostics, title, show_line_info)
-  local content, highlights = create_buffer_content(diagnostics, title, show_line_info)
+  local content, highlights, diagnostic_map = create_buffer_content(diagnostics, title, show_line_info)
   
   -- Calculate window dimensions
   local max_line_length = 0
@@ -275,16 +332,54 @@ local function show_diagnostic_buffer(diagnostics, title, show_line_info)
   vim.api.nvim_win_set_option(win, "wrap", true)
   vim.api.nvim_win_set_option(win, "cursorline", true)
   
+  -- Helper function to navigate to diagnostic
+  local function navigate_to_diagnostic()
+    local cursor_line = vim.api.nvim_win_get_cursor(win)[1]
+    local diagnostic = diagnostic_map[cursor_line]
+    
+    if diagnostic then
+      -- Close the diagnostic window first
+      vim.cmd("close")
+      
+      -- Navigate to the diagnostic location
+      local target_line = diagnostic.lnum or diagnostic.line
+      local target_col = diagnostic.col or diagnostic.column or 0
+      
+      -- Handle range-based diagnostics
+      if target_line == nil and diagnostic.range and diagnostic.range.start then
+        target_line = diagnostic.range.start.line
+        target_col = diagnostic.range.start.character or 0
+      end
+      
+      if target_line ~= nil then
+        -- Convert to 1-based for vim.api.nvim_win_set_cursor
+        vim.api.nvim_win_set_cursor(0, {target_line + 1, target_col})
+        
+        -- Center the line on screen
+        vim.cmd("normal! zz")
+        
+        -- Flash the line to show where we jumped
+        vim.defer_fn(function()
+          local ns_id = vim.api.nvim_create_namespace("diagnostic_jump_flash")
+          vim.api.nvim_buf_add_highlight(0, ns_id, "Search", target_line, 0, -1)
+          vim.defer_fn(function()
+            vim.api.nvim_buf_clear_namespace(0, ns_id, 0, -1)
+          end, 500)
+        end, 10)
+      else
+        vim.notify("Could not determine diagnostic location", vim.log.levels.WARN)
+      end
+    else
+      -- No diagnostic on this line, just close
+      vim.cmd("close")
+    end
+  end
+  
   -- Set keymaps for the buffer
   local opts = { noremap = true, silent = true, buffer = buf }
   vim.keymap.set("n", "q", "<cmd>close<cr>", opts)
   vim.keymap.set("n", "<Esc>", "<cmd>close<cr>", opts)
-  vim.keymap.set("n", "<CR>", function()
-    local line_num = vim.api.nvim_win_get_cursor(win)[1]
-    -- Try to find diagnostic info in the current line to jump to it
-    -- This is a simple implementation - could be enhanced
-    vim.cmd("close")
-  end, opts)
+  vim.keymap.set("n", "<CR>", navigate_to_diagnostic, opts)
   
   return buf, win
 end
@@ -309,6 +404,11 @@ function M.show_current_file_diagnostics()
     config.title_current_file, 
     true -- show line info since diagnostics are from different lines
   )
+end
+
+-- Debug function for troubleshooting
+function M.debug()
+  debug_coc_diagnostics()
 end
 
 -- Setup function to configure the plugin
