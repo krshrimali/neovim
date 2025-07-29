@@ -338,6 +338,23 @@ which_key.add {
     desc = "Find Files (with preview)",
   },
 
+  -- Diagnostics
+  {
+    "<leader>dl",
+    "<cmd>lua require('user.diagnostics_display').show_current_line_diagnostics()<cr>",
+    desc = "Line Diagnostics",
+  },
+  {
+    "<leader>df",
+    "<cmd>lua require('user.diagnostics_display').show_current_file_diagnostics()<cr>",
+    desc = "File Diagnostics",
+  },
+  {
+    "<leader>dd",
+    "<cmd>lua require('user.diagnostics_display').debug()<cr>",
+    desc = "Debug Diagnostics",
+  },
+
   -- Git
   {
     "<leader>gg",
