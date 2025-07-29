@@ -18,7 +18,7 @@ local options = {
     splitright = true,                       -- force all vertical splits to go to the right of current window
     swapfile = false,                        -- creates a swapfile
     termguicolors = true,                    -- set term gui colors (most terminals support this)
-    timeoutlen = 1000,                       -- time to wait for a mapped sequence to complete (in milliseconds)
+    timeoutlen = 300,                        -- time to wait for a mapped sequence to complete (in milliseconds) - reduced for faster response
     undofile = true,                         -- enable persistent undo
     updatetime = 100,                        -- faster completion (4000ms default)
     writebackup = false,                     -- if a file is being edited by another program (or was written to file while editing with another program), it is not allowed to be edited
@@ -86,5 +86,5 @@ vim.api.nvim_exec([[
     autocmd FileType c,cpp setlocal shiftwidth=4 tabstop=4 expandtab
 ]], false)
 
-vim.g.tabby_inline_completion_keybinding_accept = "<C-l>"
+vim.g.tabby_inline_completion_keybinding_accept = "<C-y>" -- Disabled to avoid conflict with other keybindings
 vim.opt.foldenable = false
