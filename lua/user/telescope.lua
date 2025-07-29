@@ -69,7 +69,7 @@ telescope.setup {
         prompt_prefix = "> ",
         selection_caret = "> ",
         entry_prefix = " ",
-        path_display = { "smart" }, -- Changed from absolute to smart for better performance
+        path_display = { "absolute" }, -- Changed from absolute to absolute for better performance
 
         color_devicons = false, -- Disabled to avoid nerd fonts
 
@@ -170,7 +170,7 @@ telescope.setup {
     pickers = {
         live_grep = {
             find_command = { "rg", "--no-heading", "--with-filename", "--line-number", "--column", "--smart-case" },
-            path_display = { "smart" },
+            path_display = { "absolute" },
             previewer = false,
             debounce = 50, -- Reduced from 100 for faster response
             results_limit = 100, -- Added limit for faster results
@@ -202,7 +202,7 @@ telescope.setup {
             previewer = false,
             debounce = 50, -- Added debouncing for better performance
             results_limit = 150, -- Added limit for faster initial display
-            path_display = { "smart" }, -- Smart path display for better performance
+            path_display = { "absolute" }, -- absolute path display for better performance
             follow = false, -- Don't follow symlinks for better performance
             hidden = true,
         },
@@ -285,7 +285,7 @@ telescope.setup {
             auto_quoting = false,
             find_command = "rg",
             theme = "ivy",
-            path_display = { "smart" },
+            path_display = { "absolute" },
             debounce = 50,
             results_limit = 100,
         },
