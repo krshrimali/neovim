@@ -182,6 +182,11 @@ _G.find_files = function()
 
     require("telescope.builtin").find_files {
         search_dirs = { relative_path },
+        debounce = 50,
+        results_limit = 100,
+        path_display = { "smart" },
+        previewer = false,
+        follow = false,
     }
 end
 _G.live_grep = function()
@@ -190,6 +195,10 @@ _G.live_grep = function()
 
     require("telescope.builtin").live_grep {
         search_dirs = { relative_path },
+        debounce = 50,
+        results_limit = 100,
+        path_display = { "smart" },
+        previewer = false,
     }
 end
 
