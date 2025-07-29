@@ -62,7 +62,7 @@ telescope.setup {
         prompt_prefix = "> ",
         selection_caret = "> ",
         entry_prefix = " ",
-        path_display = { "smart" }, -- do :help telescope.defaults.path_display (options: hidden, tail, smart, shorten, truncate)
+        path_display = { "absolute" }, -- do :help telescope.defaults.path_display (options: hidden, tail, smart, shorten, truncate)
 
         selection_strategy = "reset",
         sorting_strategy = "descending",
@@ -212,7 +212,7 @@ telescope.setup {
             -- theme = "ivy",
             -- theme = "ivy",
             find_command = { "rg", "--no-heading", "--with-filename", "--line-number", "--column", "--smart-case" },
-            path_display = { "smart" },
+            path_display = { "absolute" },
             previewer = false,
             debounce = 100,
             -- theme = "ivy_vertical"
@@ -307,7 +307,7 @@ telescope.setup {
             auto_quoting = false,
             find_command = "rg",
             theme = "ivy",
-            path_display = { "smart" },
+            path_display = { "absolute" },
             -- mappings = {
             --   i = {
             --     ["<C-k>"] = lga_actions.quote_prompt(),
