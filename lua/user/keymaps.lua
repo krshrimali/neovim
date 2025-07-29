@@ -250,4 +250,19 @@ vim.keymap.set(
   { desc = "Git Browse (copy)" }
 )
 
+-- nnoremap <leader>fb <cmd>Telescope find_files theme=ivy search_dirs={"/prod/tools/base/"}<cr>
+-- nnoremap <leader>gb <cmd>Telescope live_grep theme=ivy search_dirs={"/prod/tools/base/"}<cr>
+vim.keymap.set('n', '<leader>fb', function()
+  require('telescope.builtin').find_files {
+    search_dirs = { '/prod/tools/base/' },
+    theme = 'ivy',
+  }
+end, { desc = 'Find files in base' })
+vim.keymap.set('n', '<leader>gb', function()
+  require('telescope.builtin').live_grep {
+    search_dirs = { '/prod/tools/base/' },
+    theme = 'ivy',
+  }
+end, { desc = 'Live grep in base' })
+
 return M
