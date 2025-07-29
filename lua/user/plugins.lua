@@ -567,21 +567,47 @@ require("lazy").setup {
         Jai Hind!
 ]],
                     keys = {
-                        { icon = "f", key = "f", desc = "Find File",       action = ":lua Snacks.dashboard.pick('files')" },
-                        { icon = "n", key = "n", desc = "New File",        action = ":ene | startinsert" },
-                        { icon = "g", key = "g", desc = "Find Text",       action = ":lua Snacks.dashboard.pick('live_grep')" },
-                        { icon = "r", key = "r", desc = "Recent Files",    action = ":lua Snacks.dashboard.pick('oldfiles')" },
-                        { icon = "c", key = "c", desc = "Config",          action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
-                        { icon = "s", key = "s", desc = "Restore Session", section = "session" },
-                        { icon = "l", key = "l", desc = "Lazy",            action = ":Lazy" },
-                        { icon = "q", key = "q", desc = "Quit",            action = ":qa" },
+                        { icon = " ", key = "f", desc = "Find File",       action = ":lua Snacks.dashboard.pick('files')" },
+                        { icon = " ", key = "n", desc = "New File",        action = ":ene | startinsert" },
+                        { icon = " ", key = "g", desc = "Find Text",       action = ":lua Snacks.dashboard.pick('live_grep')" },
+                        { icon = " ", key = "r", desc = "Recent Files",    action = ":lua Snacks.dashboard.pick('oldfiles')" },
+                        { icon = " ", key = "c", desc = "Config",          action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
+                        { icon = " ", key = "s", desc = "Restore Session", section = "session" },
+                        { icon = " ", key = "l", desc = "Lazy",            action = ":Lazy" },
+                        { icon = " ", key = "q", desc = "Quit",            action = ":qa" },
                     },
                 }
             },
             explorer = { enabled = false },
             indent = { enabled = false },
             input = { enabled = false },
-            picker = { enabled = true },
+            picker = { 
+                enabled = true,
+                -- Performance optimizations
+                win = {
+                    input = {
+                        keys = {
+                            ["<Esc>"] = { "close", mode = { "n", "i" } },
+                        },
+                    },
+                },
+                -- Disable icons for better performance and no nerd font requirement
+                formatters = {
+                    file = {
+                        filename_first = true,
+                        show_icons = false,
+                    },
+                },
+                -- Optimize matcher for speed
+                matcher = {
+                    frecency = false, -- Disable frecency for faster startup
+                },
+                -- Use faster layout
+                layout = {
+                    preset = "ivy",
+                    cycle = false,
+                },
+            },
             notifier = { enabled = true },
             quickfile = { enabled = true },
             scope = { enabled = false },
