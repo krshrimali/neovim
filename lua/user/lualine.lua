@@ -4,15 +4,221 @@ if not status_ok then
     return
 end
 
-local lualine_scheme = "auto"
--- local lualine_scheme = "onedarker_alt"
-
-local status_theme_ok, theme = pcall(require, "lualine.themes." .. lualine_scheme)
-if not status_theme_ok then
-    return
+-- Use a static theme that matches the colorscheme without mode changes
+local function get_colorscheme_theme()
+    -- Get current colorscheme colors
+    local normal_bg = vim.fn.synIDattr(vim.fn.hlID('Normal'), 'bg')
+    local normal_fg = vim.fn.synIDattr(vim.fn.hlID('Normal'), 'fg')
+    local statusline_bg = vim.fn.synIDattr(vim.fn.hlID('StatusLine'), 'bg')
+    local statusline_fg = vim.fn.synIDattr(vim.fn.hlID('StatusLine'), 'fg')
+    
+    -- Fallback to reasonable defaults if colors are not found
+    if normal_bg == '' then normal_bg = '#1e1e1e' end
+    if normal_fg == '' then normal_fg = '#ffffff' end
+    if statusline_bg == '' then statusline_bg = '#2d2d2d' end
+    if statusline_fg == '' then statusline_fg = '#ffffff' end
+    
+    -- Create a static theme that doesn't change with mode
+    local theme = {
+        normal = {
+            a = { fg = statusline_fg, bg = statusline_bg, gui = 'bold' },
+            b = { fg = statusline_fg, bg = statusline_bg },
+            c = { fg = statusline_fg, bg = 'NONE' },
+        },
+        insert = {
+            a = { fg = statusline_fg, bg = statusline_bg, gui = 'bold' },
+            b = { fg = statusline_fg, bg = statusline_bg },
+            c = { fg = statusline_fg, bg = 'NONE' },
+        },
+        visual = {
+            a = { fg = statusline_fg, bg = statusline_bg, gui = 'bold' },
+            b = { fg = statusline_fg, bg = statusline_bg },
+            c = { fg = statusline_fg, bg = 'NONE' },
+        },
+        replace = {
+            a = { fg = statusline_fg, bg = statusline_bg, gui = 'bold' },
+            b = { fg = statusline_fg, bg = statusline_bg },
+            c = { fg = statusline_fg, bg = 'NONE' },
+        },
+        command = {
+            a = { fg = statusline_fg, bg = statusline_bg, gui = 'bold' },
+            b = { fg = statusline_fg, bg = statusline_bg },
+            c = { fg = statusline_fg, bg = 'NONE' },
+        },
+        inactive = {
+            a = { fg = statusline_fg, bg = statusline_bg },
+            b = { fg = statusline_fg, bg = statusline_bg },
+            c = { fg = statusline_fg, bg = 'NONE' },
+        },
+    }
+    
+    return theme
 end
 
--- local navic = require("nvim-navic")
+-- Cache for breadcrumbs to avoid expensive treesitter operations
+local breadcrumb_cache = {}
+local last_cursor_pos = {}
+
+-- Optimized breadcrumb function with caching
+local function get_cached_breadcrumbs()
+    local bufnr = vim.api.nvim_get_current_buf()
+    local cursor = vim.api.nvim_win_get_cursor(0)
+    local cursor_key = bufnr .. ':' .. cursor[1] .. ':' .. cursor[2]
+    
+    -- Check if cursor position changed significantly (more than 2 lines)
+    local last_pos = last_cursor_pos[bufnr]
+    if last_pos and math.abs(cursor[1] - last_pos[1]) < 3 and breadcrumb_cache[bufnr] then
+        return breadcrumb_cache[bufnr]
+    end
+    
+    -- Update last cursor position
+    last_cursor_pos[bufnr] = cursor
+    
+    -- Only calculate breadcrumbs for certain filetypes to improve performance
+    local ft = vim.bo.filetype
+    local supported_filetypes = {
+        'lua', 'python', 'javascript', 'typescript', 'rust', 'go', 'c', 'cpp', 'java'
+    }
+    
+    local is_supported = false
+    for _, supported_ft in ipairs(supported_filetypes) do
+        if ft == supported_ft then
+            is_supported = true
+            break
+        end
+    end
+    
+    if not is_supported then
+        breadcrumb_cache[bufnr] = ''
+        return ''
+    end
+    
+    local ok, ts_utils = pcall(require, 'nvim-treesitter.ts_utils')
+    if not ok then 
+        breadcrumb_cache[bufnr] = ''
+        return '' 
+    end
+    
+    local node = ts_utils.get_node_at_cursor()
+    if not node then 
+        breadcrumb_cache[bufnr] = ''
+        return '' 
+    end
+    
+    -- Simplified breadcrumb generation - only get function/class names
+    local breadcrumbs = {}
+    local current = node:parent()
+    
+    while current and #breadcrumbs < 3 do -- Limit to 3 levels for performance
+        local type = current:type()
+        
+        -- Only look for major structural elements
+        if type:match('function') or type:match('method') or type:match('class') or type:match('struct') then
+            local name_node = current:field('name')[1] or current:field('identifier')[1]
+            if name_node then
+                local name = vim.treesitter.get_node_text(name_node, 0)
+                if name and name ~= '' then
+                    table.insert(breadcrumbs, 1, name)
+                end
+            end
+        end
+        
+        current = current:parent()
+    end
+    
+    local result = ''
+    if #breadcrumbs > 0 then
+        result = ' → ' .. table.concat(breadcrumbs, ' → ')
+    end
+    
+    breadcrumb_cache[bufnr] = result
+    return result
+end
+
+-- Clear cache when buffer changes significantly
+vim.api.nvim_create_autocmd({'BufWritePost', 'TextChanged'}, {
+    callback = function()
+        local bufnr = vim.api.nvim_get_current_buf()
+        breadcrumb_cache[bufnr] = nil
+    end
+})
+
+-- Refresh lualine when colorscheme changes to maintain dynamic theming
+vim.api.nvim_create_autocmd('ColorScheme', {
+    callback = function()
+        -- Clear breadcrumb cache on colorscheme change
+        breadcrumb_cache = {}
+        last_cursor_pos = {}
+        
+        -- Refresh lualine with new theme
+        vim.schedule(function()
+            require('lualine').setup {
+                options = {
+                    globalstatus = true,
+                    icons_enabled = false,
+                    theme = get_colorscheme_theme(),
+                    component_separators = { left = "", right = "" },
+                    section_separators = { left = "", right = "" },
+                    disabled_filetypes = { "alpha", "dashboard" },
+                    always_divide_middle = true,
+                    refresh = {
+                        statusline = 1000,
+                        tabline = 1000,
+                        winbar = 1000,
+                    },
+                },
+                sections = {
+                    lualine_c = { 
+                        {
+                            'filename',
+                            path = 3,
+                        }
+                    },
+                    lualine_x = { lanuage_server, spaces },
+                    lualine_y = {},
+                    lualine_z = { location, progress },
+                },
+                winbar = {
+                    lualine_a = {},
+                    lualine_b = {},
+                    lualine_c = { 
+                        {
+                            'filename',
+                            path = 1,
+                        },
+                        {
+                            get_cached_breadcrumbs,
+                            cond = function() 
+                                return vim.bo.filetype ~= 'help' and vim.bo.filetype ~= 'alpha' and vim.bo.filetype ~= ''
+                            end
+                        }
+                    },
+                    lualine_x = {},
+                    lualine_y = {},
+                    lualine_z = {}
+                },
+                inactive_winbar = {
+                    lualine_a = {},
+                    lualine_b = {},
+                    lualine_c = { 'filename' },
+                    lualine_x = {},
+                    lualine_y = {},
+                    lualine_z = {}
+                },
+                inactive_sections = {
+                    lualine_a = {},
+                    lualine_b = {},
+                    lualine_c = {},
+                    lualine_x = {},
+                    lualine_y = {},
+                    lualine_z = {},
+                },
+                tabline = {},
+                extensions = {},
+            }
+        end)
+    end
+})
 
 -- check if value in table
 local function contains(t, value)
@@ -78,7 +284,7 @@ local filetype = {
         }
 
         local return_val = function(str_)
-            -- return hl_str(" ", "SLSep") .. hl_str(str, "SLFT") .. hl_str("", "SLSep")
+            -- return hl_str(" ", "SLSep") .. hl_str(str, "SLFT") .. hl_str("", "SLSep")
             return hl_str " (" .. hl_str(str_) .. hl_str ")"
         end
 
@@ -95,8 +301,8 @@ local filetype = {
         end
 
         if str == "toggleterm" then
-            -- 
-            local term = " " .. "%*" .. get_term_num() .. "%*"
+            -- 
+            local term = " " .. "%*" .. get_term_num() .. "%*"
 
             return return_val(term)
         end
@@ -114,7 +320,7 @@ local filetype = {
 local branch = {
     "branch",
     icons_enabled = false,
-    icon = " " .. "%*",
+    icon = " " .. "%*",
     -- color = "Constant",
     -- colored = false,
     padding = 1,
@@ -133,7 +339,7 @@ local progress = {
     fmt = function(str)
         -- return "▊"
         return hl_str "(" .. hl_str "%P/%L" .. hl_str ") "
-        -- return "  "
+        -- return "  "
     end,
     -- color = "SLProgress",
     padding = 0,
@@ -271,7 +477,7 @@ local lanuage_server = {
         local language_servers = ""
         local client_names_str_len = #client_names_str
         if client_names_str_len ~= 0 then
-            language_servers = hl_str "" .. hl_str(client_names_str) .. hl_str ""
+            language_servers = hl_str "" .. hl_str(client_names_str) .. hl_str ""
         end
         if copilot_active then
             language_servers = language_servers .. " " .. "C" .. "%*"
@@ -295,69 +501,35 @@ local location = {
         -- return "▊"
         return hl_str " (" .. hl_str(str) .. hl_str ") "
         -- return hl_str(" (") .. hl_str(str) .. hl_str(") ")
-        -- return "  "
+        -- return "  "
     end,
     padding = 0,
 }
-
-local custom_auto_theme = require 'lualine.themes.auto'
-custom_auto_theme.normal.c.bg = NONE
 
 lualine.setup {
     options = {
         globalstatus = true,
         icons_enabled = false,
-        theme = custom_auto_theme,
-        -- theme = theme,
-        -- theme = "shado",
-        -- theme = "catppuccin",
-        -- theme = "darkplus",
-        -- theme = "gruvbox-material",
+        theme = get_colorscheme_theme(),
         component_separators = { left = "", right = "" },
         section_separators = { left = "", right = "" },
         disabled_filetypes = { "alpha", "dashboard" },
         always_divide_middle = true,
+        refresh = {
+            statusline = 1000,  -- Refresh every 1 second instead of constantly
+            tabline = 1000,
+            winbar = 1000,
+        },
     },
     sections = {
-        -- lualine_a = { left_pad, mode, branch, right_pad },
-        -- lualine_a = { "mode", "branch", diff },
-        -- lualine_a = { 'filename', file_status=true, path=2 },
-        -- lualine_b = { diagnostics },
-        -- lualine_c = {},
-        -- lualine_c = { 'filename', { navic.get_location, cond = navic.is_available } },
-        -- lualine_c = { 'filename', { function() return require('lspsaga.symbol.winbar').get_bar() end, cond = function()
-        --     return
-        --         require('lspsaga.symbol.winbar').get_bar() ~= nil
-        -- end } },
         lualine_c = { 
             {
                 'filename',
                 path = 3,  -- Show absolute path
             }
         },
-        -- lualine_x = { diff, spaces, "encoding", filetype },
-        -- lualine_x = { diff, lanuage_server, spaces, filetype },
-        -- lualine_x = { lanuage_server, spaces, filetype },
-        -- lualine_x = { lanuage_server, spaces, filetype },
         lualine_x = { lanuage_server, spaces },
-        lualine_y = {
-            -- "buffers",
-            -- show_filename_only = true,
-            -- show_modified_status = true,
-
-            -- mode = 0,
-            -- max_length = vim.o.columns * 2 / 3,
-
-            -- buffer_color = {
-            --   active = "lualine_x_normal",
-            --   inactive = "lualine_x_inactive",
-            -- },
-        },
-        -- {
-        --   "filename",
-        --   file_status = true,
-        --   path = 3,
-        -- },
+        lualine_y = {},
         lualine_z = { location, progress },
     },
     winbar = {
@@ -369,85 +541,7 @@ lualine.setup {
                 path = 1,  -- Show relative path
             },
             {
-                function()
-                    -- Hierarchical breadcrumb: class → function → current_node
-                    local ok, ts_utils = pcall(require, 'nvim-treesitter.ts_utils')
-                    if not ok then return '' end
-                    
-                    local node = ts_utils.get_node_at_cursor()
-                    if not node then return '' end
-                    
-                    local breadcrumbs = {}
-                    local current_node_type = node:type()
-                    
-                    -- Define node types for different languages
-                    local class_types = {
-                        'class_declaration', 'class_definition', 'impl_item', 'struct_item',
-                        'interface_declaration', 'trait_item', 'enum_item', 'type_item'
-                    }
-                    
-                    local function_types = {
-                        'function_item', 'function_definition', 'function_declaration',
-                        'method_definition', 'method_declaration', 'arrow_function'
-                    }
-                    
-                    -- Walk up the tree to collect hierarchy
-                    local current = node:parent()
-                    local class_name = nil
-                    local function_name = nil
-                    
-                    while current do
-                        local type = current:type()
-                        
-                        -- Look for class/struct/impl
-                        if not class_name then
-                            for _, class_type in ipairs(class_types) do
-                                if type == class_type then
-                                    local name_node = current:field('name')[1] or 
-                                                     current:field('type')[1] or
-                                                     current:field('identifier')[1]
-                                    if name_node then
-                                        class_name = vim.treesitter.get_node_text(name_node, 0)
-                                        break
-                                    end
-                                end
-                            end
-                        end
-                        
-                        -- Look for function/method
-                        if not function_name then
-                            for _, func_type in ipairs(function_types) do
-                                if type == func_type then
-                                    local name_node = current:field('name')[1] or 
-                                                     current:field('identifier')[1]
-                                    if name_node then
-                                        function_name = vim.treesitter.get_node_text(name_node, 0)
-                                        break
-                                    end
-                                end
-                            end
-                        end
-                        
-                        current = current:parent()
-                    end
-                    
-                    -- Build breadcrumb string
-                    local parts = {}
-                    if class_name then
-                        table.insert(parts, class_name)
-                    end
-                    if function_name then
-                        table.insert(parts, function_name)
-                    end
-                    -- Always show current node type (useful for debugging and context)
-                    table.insert(parts, current_node_type)
-                    
-                    if #parts > 0 then
-                        return ' → ' .. table.concat(parts, ' → ')
-                    end
-                    
-                    return ''
-                end,
+                get_cached_breadcrumbs,
                 cond = function() 
                     return vim.bo.filetype ~= 'help' and vim.bo.filetype ~= 'alpha' and vim.bo.filetype ~= ''
                 end

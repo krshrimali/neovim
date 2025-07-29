@@ -382,11 +382,8 @@ require("lazy").setup {
         keys = { "<leader>fb" },
     },
 
-    -- Winbar - LAZY LOAD
-    {
-        "fgheng/winbar.nvim",
-        event = "BufReadPost",
-    },
+    -- Winbar functionality is now handled by lualine winbar
+    -- Removed fgheng/winbar.nvim to prevent conflicts and improve performance
 
     -- Telescope frecency - LAZY LOAD
     {
