@@ -86,5 +86,5 @@ vim.api.nvim_exec([[
     autocmd FileType c,cpp setlocal shiftwidth=4 tabstop=4 expandtab
 ]], false)
 
--- vim.g.tabby_inline_completion_keybinding_accept = "<C-l>" -- Disabled to avoid conflict with other keybindings
+vim.g.tabby_inline_completion_keybinding_accept = "<C-y>" -- Disabled to avoid conflict with other keybindings
 vim.opt.foldenable = false
