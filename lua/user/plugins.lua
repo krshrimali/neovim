@@ -50,11 +50,12 @@ require("lazy").setup {
     },
     
     -- For commenting (uses Treesitter to comment properly) - LAZY LOAD
-    {
-        "JoosepAlviste/nvim-ts-context-commentstring",
-        dependencies = "nvim-treesitter/nvim-treesitter",
-        event = { "BufReadPost", "BufNewFile" }
-    },
+    -- {
+    --     "JoosepAlviste/nvim-ts-context-commentstring",
+    --     dependencies = "nvim-treesitter/nvim-treesitter",
+    --     lazy = false,
+    --     event = { "BufReadPost", "BufNewFile" }
+    -- },
 
     -- Git integration - LAZY LOAD
     {
@@ -192,13 +193,17 @@ require("lazy").setup {
     -- Comment - LAZY LOAD
     {
         "numToStr/Comment.nvim",
-        keys = {
-            { "gc", mode = { "n", "v" } },
-            { "gb", mode = { "n", "v" } },
-        },
         config = function()
-            require("user.comment")
+            require("Comment").setup()
         end
+        -- keys = {
+        --     { "gc", mode = { "n", "v" } },
+        --     { "gb", mode = { "n", "v" } },
+        -- },
+        -- lazy = false,
+        -- config = function()
+        --     require("user.comment")
+        -- end
     },
     
     -- Todo comments - LAZY LOAD
