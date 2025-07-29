@@ -76,30 +76,42 @@ local function debug_coc_diagnostics()
     print("First diagnostic structure:")
     print(vim.inspect(diagnostics[1]))
     
-    local current_line = vim.api.nvim_win_get_cursor(0)[1] - 1
-    print("Current line (0-based):", current_line)
+    local cursor_pos = vim.api.nvim_win_get_cursor(0)
+    local current_line_1based = cursor_pos[1]
+    local current_line_0based = cursor_pos[1] - 1
+    print("Current cursor position (1-based):", current_line_1based)
+    print("Current cursor position (0-based):", current_line_0based)
     
-    for i, diag in ipairs(diagnostics) do
-      if i <= 3 then -- Show first 3 diagnostics
-        print(string.format("Diagnostic %d: lnum=%s, col=%s, severity=%s, file=%s", 
+    -- Filter diagnostics for current buffer
+    local current_file = vim.api.nvim_buf_get_name(0)
+    local buffer_diagnostics = {}
+    for _, diag in ipairs(diagnostics) do
+      if diag.file == current_file then
+        table.insert(buffer_diagnostics, diag)
+      end
+    end
+    print("Buffer diagnostics found:", #buffer_diagnostics)
+    
+    for i, diag in ipairs(buffer_diagnostics) do
+      if i <= 5 then -- Show first 5 diagnostics
+        print(string.format("Diagnostic %d: lnum=%s (display: Line %d), col=%s, severity=%s", 
           i, 
-          diag.lnum or "nil", 
+          diag.lnum or "nil",
+          (diag.lnum and (diag.lnum + 1)) or "nil",
           diag.col or "nil",
-          diag.severity or "nil",
-          diag.file or "nil"
+          diag.severity or "nil"
         ))
       end
     end
     
     -- Test current line filtering
-    local current_line = vim.api.nvim_win_get_cursor(0)[1] - 1
     local line_diagnostics = {}
-    for _, diag in ipairs(diagnostics) do
-      if diag.lnum == current_line then
+    for _, diag in ipairs(buffer_diagnostics) do
+      if diag.lnum == current_line_0based then
         table.insert(line_diagnostics, diag)
       end
     end
-    print("Line diagnostics found for current line:", #line_diagnostics)
+    print("Line diagnostics found for current line (0-based " .. current_line_0based .. "):", #line_diagnostics)
   else
     print("No COC diagnostics found or error:", diagnostics)
   end
@@ -139,20 +151,33 @@ local function get_coc_line_diagnostics()
     return {}
   end
   
-  local current_line = vim.api.nvim_win_get_cursor(0)[1] - 1 -- Convert to 0-based
+  local cursor_pos = vim.api.nvim_win_get_cursor(0)
+  local current_line_1based = cursor_pos[1]
+  local current_line_0based = cursor_pos[1] - 1
   
   -- Get all diagnostics and filter for current line
   local all_diagnostics = get_coc_diagnostics()
   local line_diagnostics = {}
   
+  -- Debug: print what we're looking for
+  -- print(string.format("Looking for diagnostics on line %d (1-based) / %d (0-based)", current_line_1based, current_line_0based))
+  
   for _, diagnostic in ipairs(all_diagnostics) do
-    -- Based on the debug output, COC diagnostics have 'lnum' field (0-based)
     local diag_line = diagnostic.lnum
     
-    if diag_line ~= nil and diag_line == current_line then
+    -- Debug: print diagnostic line numbers
+    -- if diag_line ~= nil then
+    --   print(string.format("Found diagnostic on lnum=%d (display: Line %d)", diag_line, diag_line + 1))
+    -- end
+    
+    -- Test: COC might actually use 1-based line numbers despite documentation
+    if diag_line ~= nil and diag_line == current_line_1based then
       table.insert(line_diagnostics, diagnostic)
     end
   end
+  
+  -- Debug: print results
+  -- print(string.format("Found %d diagnostics for current line", #line_diagnostics))
   
   return line_diagnostics
 end
@@ -168,9 +193,9 @@ local function format_diagnostic(diagnostic, show_line_info)
   }
   
   local line_info = ""
-  -- COC diagnostics use 'lnum' (0-based) and 'col' (0-based)
+  -- Test: COC diagnostics might use 'lnum' (1-based) and 'col' (0-based)
   if show_line_info and diagnostic.lnum ~= nil then
-    line_info = string.format("Line %d, Col %d: ", diagnostic.lnum + 1, diagnostic.col + 1)
+    line_info = string.format("Line %d, Col %d: ", diagnostic.lnum, (diagnostic.col or 0) + 1)
   end
   
   local source_info = ""
@@ -365,13 +390,13 @@ local function show_diagnostic_buffer(diagnostics, title, show_line_info)
       vim.cmd("close")
       
       -- Navigate to the diagnostic location
-      -- COC diagnostics use 'lnum' (0-based) and 'col' (0-based)
+      -- Test: COC diagnostics might use 'lnum' (1-based) and 'col' (0-based)
       local target_line = diagnostic.lnum
       local target_col = diagnostic.col or 0
       
       if target_line ~= nil then
-        -- Convert to 1-based for vim.api.nvim_win_set_cursor
-        vim.api.nvim_win_set_cursor(0, {target_line + 1, target_col})
+        -- COC lnum might be 1-based already, col is 0-based
+        vim.api.nvim_win_set_cursor(0, {target_line, target_col})
         
         -- Center the line on screen
         vim.cmd("normal! zz")
@@ -379,7 +404,8 @@ local function show_diagnostic_buffer(diagnostics, title, show_line_info)
         -- Flash the line to show where we jumped
         vim.defer_fn(function()
           local ns_id = vim.api.nvim_create_namespace("diagnostic_jump_flash")
-          vim.api.nvim_buf_add_highlight(0, ns_id, "Search", target_line, 0, -1)
+          -- Highlight uses 0-based line numbers
+          vim.api.nvim_buf_add_highlight(0, ns_id, "Search", target_line - 1, 0, -1)
           vim.defer_fn(function()
             vim.api.nvim_buf_clear_namespace(0, ns_id, 0, -1)
           end, 500)
@@ -427,6 +453,52 @@ end
 -- Debug function for troubleshooting
 function M.debug()
   debug_coc_diagnostics()
+end
+
+-- Temporary debug function to test line number assumptions
+function M.test_line_numbers()
+  if not is_coc_available() then
+    print("COC not available")
+    return
+  end
+  
+  local cursor_pos = vim.api.nvim_win_get_cursor(0)
+  local current_line_1based = cursor_pos[1]
+  local current_line_0based = cursor_pos[1] - 1
+  
+  print("=== LINE NUMBER TEST ===")
+  print("Cursor position (1-based):", current_line_1based)
+  print("Cursor position (0-based):", current_line_0based)
+  
+  local all_diagnostics = get_coc_diagnostics()
+  print("Total buffer diagnostics:", #all_diagnostics)
+  
+  -- Test both 0-based and 1-based matching
+  local matches_0based = 0
+  local matches_1based = 0
+  
+  for _, diag in ipairs(all_diagnostics) do
+    if diag.lnum == current_line_0based then
+      matches_0based = matches_0based + 1
+    end
+    if diag.lnum == current_line_1based then
+      matches_1based = matches_1based + 1
+    end
+  end
+  
+  print("Diagnostics matching current line (0-based):", matches_0based)
+  print("Diagnostics matching current line (1-based):", matches_1based)
+  
+  -- Show nearby diagnostics
+  print("Nearby diagnostics:")
+  for _, diag in ipairs(all_diagnostics) do
+    local diff_0based = math.abs(diag.lnum - current_line_0based)
+    local diff_1based = math.abs(diag.lnum - current_line_1based)
+    if diff_0based <= 2 or diff_1based <= 2 then
+      print(string.format("  lnum=%d (display: Line %d), distance from cursor: 0-based=%d, 1-based=%d", 
+        diag.lnum, diag.lnum + 1, diff_0based, diff_1based))
+    end
+  end
 end
 
 -- Setup function to configure the plugin
