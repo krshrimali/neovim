@@ -265,4 +265,10 @@ vim.keymap.set('n', '<leader>gb', function()
   }
 end, { desc = 'Live grep in base' })
 
+-- Diagnostic Display Plugin Keymaps
+keymap("n", "<leader>dl", "<cmd>lua require('user.diagnostics_display').show_current_line_diagnostics()<cr>", opts)
+keymap("n", "<leader>df", "<cmd>lua require('user.diagnostics_display').show_current_file_diagnostics()<cr>", opts)
+keymap("n", "<leader>dd", "<cmd>lua require('user.diagnostics_display').debug()<cr>", opts)
+keymap("n", "<leader>dt", "<cmd>lua require('user.diagnostics_display').test_line_numbers()<cr>", opts)
+
 return M
