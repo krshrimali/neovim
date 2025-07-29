@@ -156,18 +156,54 @@ M.open_buffer_browser = function()
   end
 end
 
+-- Global state for sidebar management
+M._sidebar_state = {
+  win = nil,
+  buf = nil,
+  is_open = false
+}
+
+-- Function to refresh sidebar content
+M.refresh_sidebar = function()
+  if not M._sidebar_state.is_open or not M._sidebar_state.win or not vim.api.nvim_win_is_valid(M._sidebar_state.win) then
+    return
+  end
+  
+  local buffers = M.get_sorted_buffers()
+  if #buffers == 0 then
+    return
+  end
+  
+  -- Update buffer content
+  local lines = { "📁 Buffers (Recent)" }
+  table.insert(lines, string.rep("─", 25))
+  
+  for i, buffer in ipairs(buffers) do
+    local filename = vim.fn.fnamemodify(buffer.name, ":t")
+    local indicator = buffer.bufnr == vim.api.nvim_get_current_buf() and "●" or " "
+    local modified = vim.bo[buffer.bufnr].modified and "+" or " "
+    local line = string.format("%s%s %s", indicator, modified, filename)
+    table.insert(lines, line)
+  end
+  
+  -- Update the buffer content
+  vim.bo[M._sidebar_state.buf].modifiable = true
+  vim.api.nvim_buf_set_lines(M._sidebar_state.buf, 0, -1, false, lines)
+  vim.bo[M._sidebar_state.buf].modifiable = false
+  
+  -- Store buffers for keymap access
+  M._sidebar_state.buffers = buffers
+end
+
 -- Function to create a sidebar buffer browser (persistent)
 M.toggle_sidebar = function()
-  local sidebar_name = "BufferBrowser"
-  
-  -- Check if sidebar already exists
-  for _, win in ipairs(vim.api.nvim_list_wins()) do
-    local buf = vim.api.nvim_win_get_buf(win)
-    if vim.api.nvim_buf_get_name(buf):match(sidebar_name) then
-      -- Close existing sidebar
-      vim.api.nvim_win_close(win, true)
-      return
-    end
+  -- If sidebar is open, close it
+  if M._sidebar_state.is_open and M._sidebar_state.win and vim.api.nvim_win_is_valid(M._sidebar_state.win) then
+    vim.api.nvim_win_close(M._sidebar_state.win, true)
+    M._sidebar_state.is_open = false
+    M._sidebar_state.win = nil
+    M._sidebar_state.buf = nil
+    return
   end
   
   -- Create new sidebar
@@ -180,7 +216,7 @@ M.toggle_sidebar = function()
   
   -- Create a new buffer for the sidebar
   local buf = vim.api.nvim_create_buf(false, true)
-  vim.api.nvim_buf_set_name(buf, sidebar_name)
+  M._sidebar_state.buf = buf
   
   -- Prepare content
   local lines = { "📁 Buffers (Recent)" }
@@ -201,6 +237,11 @@ M.toggle_sidebar = function()
   local win = vim.api.nvim_get_current_win()
   vim.api.nvim_win_set_buf(win, buf)
   
+  -- Store window reference
+  M._sidebar_state.win = win
+  M._sidebar_state.is_open = true
+  M._sidebar_state.buffers = buffers
+  
   -- Set buffer options
   vim.bo[buf].modifiable = false
   vim.bo[buf].readonly = true
@@ -216,29 +257,35 @@ M.toggle_sidebar = function()
   
   -- Close with q
   vim.keymap.set("n", "q", function()
-    vim.api.nvim_win_close(win, true)
+    M.toggle_sidebar() -- Use toggle to properly clean up state
+  end, opts)
+  
+  -- Refresh with r
+  vim.keymap.set("n", "r", function()
+    M.refresh_sidebar()
   end, opts)
   
   -- Select buffer with Enter
   vim.keymap.set("n", "<CR>", function()
     local line = vim.api.nvim_win_get_cursor(win)[1]
-    if line > 2 and line <= #buffers + 2 then
-      local buffer = buffers[line - 2]
+    if line > 2 and line <= #M._sidebar_state.buffers + 2 then
+      local buffer = M._sidebar_state.buffers[line - 2]
       -- Switch to previous window and open buffer
       vim.cmd("wincmd p")
       vim.api.nvim_set_current_buf(buffer.bufnr)
+      -- Refresh sidebar to update current buffer indicator
+      M.refresh_sidebar()
     end
   end, opts)
   
   -- Delete buffer with 'd'
   vim.keymap.set("n", "d", function()
     local line = vim.api.nvim_win_get_cursor(win)[1]
-    if line > 2 and line <= #buffers + 2 then
-      local buffer = buffers[line - 2]
+    if line > 2 and line <= #M._sidebar_state.buffers + 2 then
+      local buffer = M._sidebar_state.buffers[line - 2]
       vim.api.nvim_buf_delete(buffer.bufnr, { force = false })
-      -- Refresh the sidebar
-      vim.api.nvim_win_close(win, true)
-      vim.defer_fn(M.toggle_sidebar, 50)
+      -- Refresh the sidebar content
+      M.refresh_sidebar()
     end
   end, opts)
   
@@ -246,6 +293,31 @@ M.toggle_sidebar = function()
   if #buffers > 0 then
     vim.api.nvim_win_set_cursor(win, { 3, 0 })
   end
+  
+  -- Set up autocommands to refresh sidebar when buffers change
+  local augroup = vim.api.nvim_create_augroup("BufferSidebar", { clear = true })
+  
+  vim.api.nvim_create_autocmd({ "BufEnter", "BufAdd", "BufDelete", "BufWritePost" }, {
+    group = augroup,
+    callback = function()
+      -- Small delay to ensure buffer operations are complete
+      vim.defer_fn(function()
+        M.refresh_sidebar()
+      end, 10)
+    end,
+  })
+  
+  -- Clean up autocommands when sidebar is closed
+  vim.api.nvim_create_autocmd("WinClosed", {
+    group = augroup,
+    pattern = tostring(win),
+    callback = function()
+      M._sidebar_state.is_open = false
+      M._sidebar_state.win = nil
+      M._sidebar_state.buf = nil
+      vim.api.nvim_del_augroup_by_id(augroup)
+    end,
+  })
 end
 
 return M

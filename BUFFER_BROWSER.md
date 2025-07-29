@@ -27,12 +27,19 @@ Opens a centered floating window with all buffers listed by recency.
 
 ### Sidebar Buffer Browser (`<leader>bs`)
 
-Creates a persistent sidebar on the left showing all buffers.
+Creates a persistent sidebar on the left showing all buffers. The sidebar automatically updates when buffers are added, deleted, or modified.
 
 **Keymaps:**
 - `<CR>` - Open selected buffer in main window
 - `d` - Delete selected buffer and refresh sidebar
+- `r` - Manually refresh sidebar
 - `q` - Close sidebar
+
+**Auto-refresh triggers:**
+- New buffer opened (e.g., `gd` to definition)
+- Buffer deleted
+- Buffer modified/saved
+- Buffer focus changed
 
 ## Implementation
 
