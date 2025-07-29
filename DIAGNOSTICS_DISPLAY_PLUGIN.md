@@ -19,6 +19,7 @@ A Neovim plugin that displays COC.nvim diagnostics for the current line or curre
 | `<leader>dl` | `show_current_line_diagnostics()` | Show diagnostics for current line |
 | `<leader>df` | `show_current_file_diagnostics()` | Show diagnostics for current file |
 | `<leader>dd` | `debug()` | Debug COC diagnostics (troubleshooting) |
+| `<leader>dt` | `test_line_numbers()` | Test line number matching (temporary) |
 
 ### Within the diagnostic window:
 - `q` or `<Esc>` - Close the window
