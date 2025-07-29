@@ -7,47 +7,99 @@ local config = {
   border = "rounded",
   width = 80,
   height = 20,
-  title_current_line = "  Current Line Diagnostics",
-  title_current_file = "  Current File Diagnostics",
+  title_current_line = "  Current Line Diagnostics (COC)",
+  title_current_file = "  Current File Diagnostics (COC)",
   max_width = 120,
   max_height = 30,
 }
 
--- Diagnostic severity mapping
+-- COC diagnostic severity mapping
 local severity_map = {
-  [vim.diagnostic.severity.ERROR] = {
+  ["error"] = {
     icon = icons.diagnostics.Error,
     name = "Error",
-    hl = "DiagnosticError"
+    hl = "CocErrorSign"
   },
-  [vim.diagnostic.severity.WARN] = {
+  ["warning"] = {
     icon = icons.diagnostics.Warning,
     name = "Warning", 
-    hl = "DiagnosticWarn"
+    hl = "CocWarningSign"
   },
-  [vim.diagnostic.severity.INFO] = {
+  ["information"] = {
     icon = icons.diagnostics.Information,
     name = "Info",
-    hl = "DiagnosticInfo"
+    hl = "CocInfoSign"
   },
-  [vim.diagnostic.severity.HINT] = {
+  ["hint"] = {
     icon = icons.diagnostics.Hint,
     name = "Hint",
-    hl = "DiagnosticHint"
+    hl = "CocHintSign"
   }
 }
 
--- Helper function to format diagnostic message
+-- Helper function to check if COC is available
+local function is_coc_available()
+  return vim.fn.exists('*CocAction') == 1
+end
+
+-- Helper function to get COC diagnostics for current buffer
+local function get_coc_diagnostics()
+  if not is_coc_available() then
+    vim.notify("COC.nvim is not available", vim.log.levels.ERROR)
+    return {}
+  end
+  
+  -- Get COC diagnostics using CocAction
+  local ok, diagnostics = pcall(vim.fn.CocAction, 'diagnosticList')
+  if not ok or not diagnostics or vim.tbl_isempty(diagnostics) then
+    return {}
+  end
+  
+  -- Filter for current buffer
+  local current_buf = vim.api.nvim_get_current_buf()
+  local current_file = vim.api.nvim_buf_get_name(current_buf)
+  local filtered_diagnostics = {}
+  
+  for _, diagnostic in ipairs(diagnostics) do
+    if diagnostic.file == current_file then
+      table.insert(filtered_diagnostics, diagnostic)
+    end
+  end
+  
+  return filtered_diagnostics
+end
+
+-- Helper function to get COC diagnostics for current line
+local function get_coc_line_diagnostics()
+  local all_diagnostics = get_coc_diagnostics()
+  local current_line = vim.api.nvim_win_get_cursor(0)[1] - 1 -- Convert to 0-based
+  local line_diagnostics = {}
+  
+  for _, diagnostic in ipairs(all_diagnostics) do
+    local diag_line = diagnostic.lnum or diagnostic.line
+    if diag_line == current_line then
+      table.insert(line_diagnostics, diagnostic)
+    end
+  end
+  
+  return line_diagnostics
+end
+
+-- Helper function to format COC diagnostic message
 local function format_diagnostic(diagnostic, show_line_info)
-  local severity_info = severity_map[diagnostic.severity] or {
+  -- Handle different possible COC diagnostic structures
+  local severity = diagnostic.severity or diagnostic.type or "error"
+  local severity_info = severity_map[severity] or {
     icon = "?", 
     name = "Unknown", 
     hl = "Normal"
   }
   
   local line_info = ""
-  if show_line_info and diagnostic.lnum then
-    line_info = string.format("Line %d, Col %d: ", diagnostic.lnum + 1, diagnostic.col + 1)
+  local lnum = diagnostic.lnum or diagnostic.line
+  local col = diagnostic.col or diagnostic.column or 0
+  if show_line_info and lnum then
+    line_info = string.format("Line %d, Col %d: ", lnum + 1, col + 1)
   end
   
   local source_info = ""
@@ -60,19 +112,21 @@ local function format_diagnostic(diagnostic, show_line_info)
     code_info = string.format(" (%s)", diagnostic.code)
   end
   
+  local message = diagnostic.message or diagnostic.text or "No message"
+  
   return {
     icon = severity_info.icon,
     severity = severity_info.name,
     hl = severity_info.hl,
     line_info = line_info,
-    message = diagnostic.message,
+    message = message,
     source_info = source_info,
     code_info = code_info,
     full_text = string.format("%s %s: %s%s%s%s", 
       severity_info.icon, 
       severity_info.name,
       line_info,
-      diagnostic.message,
+      message,
       code_info,
       source_info
     )
@@ -96,22 +150,27 @@ local function create_buffer_content(diagnostics, title, show_line_info)
   
   -- Group diagnostics by severity
   local grouped = {
-    [vim.diagnostic.severity.ERROR] = {},
-    [vim.diagnostic.severity.WARN] = {},
-    [vim.diagnostic.severity.INFO] = {},
-    [vim.diagnostic.severity.HINT] = {}
+    ["error"] = {},
+    ["warning"] = {},
+    ["information"] = {},
+    ["hint"] = {}
   }
   
   for _, diagnostic in ipairs(diagnostics) do
-    table.insert(grouped[diagnostic.severity], diagnostic)
+    local severity = diagnostic.severity or "error"
+    if grouped[severity] then
+      table.insert(grouped[severity], diagnostic)
+    else
+      table.insert(grouped["error"], diagnostic) -- fallback to error
+    end
   end
   
   -- Add diagnostics by severity (errors first)
   for _, severity in ipairs({
-    vim.diagnostic.severity.ERROR,
-    vim.diagnostic.severity.WARN, 
-    vim.diagnostic.severity.INFO,
-    vim.diagnostic.severity.HINT
+    "error",
+    "warning", 
+    "information",
+    "hint"
   }) do
     local group = grouped[severity]
     if #group > 0 then
@@ -232,8 +291,7 @@ end
 
 -- Show diagnostics for current line
 function M.show_current_line_diagnostics()
-  local line = vim.api.nvim_win_get_cursor(0)[1] - 1
-  local diagnostics = vim.diagnostic.get(0, { lnum = line })
+  local diagnostics = get_coc_line_diagnostics()
   
   show_diagnostic_buffer(
     diagnostics, 
@@ -244,7 +302,7 @@ end
 
 -- Show diagnostics for current file
 function M.show_current_file_diagnostics()
-  local diagnostics = vim.diagnostic.get(0)
+  local diagnostics = get_coc_diagnostics()
   
   show_diagnostic_buffer(
     diagnostics, 

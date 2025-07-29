@@ -1,11 +1,12 @@
-# Diagnostics Display Plugin
+# COC Diagnostics Display Plugin
 
-A Neovim plugin that displays diagnostics for the current line or current file in a nicely formatted floating window.
+A Neovim plugin that displays COC.nvim diagnostics for the current line or current file in a nicely formatted floating window.
 
 ## Features
 
-- **Current Line Diagnostics**: Shows all diagnostics for the line where your cursor is positioned
-- **Current File Diagnostics**: Shows all diagnostics for the entire current file
+- **COC.nvim Integration**: Uses COC.nvim diagnostics exclusively
+- **Current Line Diagnostics**: Shows all COC diagnostics for the line where your cursor is positioned
+- **Current File Diagnostics**: Shows all COC diagnostics for the entire current file
 - **Beautiful UI**: Floating window with rounded borders and proper highlighting
 - **Organized Display**: Diagnostics are grouped by severity (Error, Warning, Info, Hint)
 - **Detailed Information**: Shows line numbers, columns, diagnostic codes, and sources
@@ -24,11 +25,11 @@ A Neovim plugin that displays diagnostics for the current line or current file i
 
 ## Display Format
 
-The plugin shows diagnostics in a structured format:
+The plugin shows COC diagnostics in a structured format:
 
 ```
-  Current Line Diagnostics
-────────────────────────────
+  Current Line Diagnostics (COC)
+─────────────────────────────────
 
 E Error (2)
 ───────────
@@ -53,17 +54,23 @@ require('user.diagnostics_display').setup({
   height = 20,              -- Default height
   max_width = 120,          -- Maximum width
   max_height = 30,          -- Maximum height
-  title_current_line = "  Current Line Diagnostics",
-  title_current_file = "  Current File Diagnostics",
+  title_current_line = "  Current Line Diagnostics (COC)",
+  title_current_file = "  Current File Diagnostics (COC)",
 })
 ```
+
+## Requirements
+
+- COC.nvim must be installed and configured
+- COC language servers must be set up for your file types
 
 ## Integration
 
 The plugin integrates with:
-- Native Neovim LSP diagnostics
+- **COC.nvim diagnostics exclusively** - uses `CocAction('diagnosticList')`
 - Which-key for keymap descriptions
 - Your existing diagnostic icons configuration
+- COC highlight groups for proper theming
 
 ## Installation
 
