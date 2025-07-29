@@ -329,7 +329,12 @@ lualine.setup {
         --     return
         --         require('lspsaga.symbol.winbar').get_bar() ~= nil
         -- end } },
-        lualine_c = { 'filename' },
+        lualine_c = { 
+            {
+                'filename',
+                path = 3,  -- Show absolute path
+            }
+        },
         -- lualine_x = { diff, spaces, "encoding", filetype },
         -- lualine_x = { diff, lanuage_server, spaces, filetype },
         -- lualine_x = { lanuage_server, spaces, filetype },
