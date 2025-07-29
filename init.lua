@@ -43,6 +43,15 @@ require "user.functions"
 require "user.surround"
 require "user.nvim_transparent"
 
+-- Setup buffer browser (lazy loaded on keymap)
+vim.keymap.set("n", "<leader>bb", function()
+  require("user.buffer_browser").open_buffer_browser()
+end, { desc = "Buffer Browser", silent = true })
+
+vim.keymap.set("n", "<leader>bs", function()
+  require("user.buffer_browser").toggle_sidebar()
+end, { desc = "Buffer Sidebar", silent = true })
+
 -- These are now handled by plugin lazy loading
 -- require("goto-preview").setup {} -- Now lazy loaded
 -- require("neogit").setup {} -- Now lazy loaded  
