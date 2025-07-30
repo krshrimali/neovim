@@ -1,61 +1,171 @@
-require "user.plugins"
-require "user.keymaps"
-require "user.autocommands"
-require "user.colorscheme"
-require "user.options"
+-- ⚡ ULTRA-FAST STARTUP INIT.LUA
+-- Only load absolute essentials immediately, defer everything else
+-- Integrates all advanced startup optimization systems
 
--- Load UI components immediately for consistent experience
--- require "user.lualine" -- Now loaded in plugin config
--- require "user.notify" -- Now loaded in plugin config  
--- require "user.dressing" -- Now loaded in plugin config
+-- Performance tracking (disabled in production)
+local startup_time = vim.fn.reltime()
 
--- Defer loading of heavy components
-vim.defer_fn(function()
-    -- Load terminal configuration when needed
-    require "user.terminal"
-end, 100)
+-- Essential immediate loads (UI-critical only)
+require "user.plugins"  -- Plugin manager (lazy.nvim)
+require "user.options"  -- Core vim options
 
--- Load these only when plugins are loaded (handled by lazy loading now)
--- telescope replaced with fzf-lua
--- require "user.treesitter" -- Now lazy loaded
--- require "user.comment" -- Now lazy loaded
--- require "user.gitsigns" -- Now lazy loaded
--- require "user.nvim-tree" -- Replaced with custom simple_tree.lua
--- require "user.toggleterm" -- Now lazy loaded
--- require "user.whichkey" -- Now lazy loaded
--- require "user.numb" -- Now lazy loaded
--- require "user.colorizer" -- Still needed immediately for syntax highlighting
--- require "user.spectre" -- Now lazy loaded
--- require "user.todo-comments" -- Now lazy loaded
--- require "user.git-blame" -- Now lazy loaded
--- require "user.registers" -- Now lazy loaded
--- require "user.functions" -- Keep for immediate functions
--- require "user.illuminate" -- Now lazy loaded
--- require "user.cybu" -- Now lazy loaded
--- require "user.bqf" -- Now lazy loaded
--- require "user.surround" -- Still needed for immediate text operations
--- require "user.nvim_transparent" -- Keep for immediate UI
--- require "user.coc" -- Now lazy loaded with defer
+-- Initialize optimization systems
+local optimization_systems = {
+    { module = "user.startup_cache", name = "Startup Cache" },
+    { module = "user.minimal_mode", name = "Minimal Mode" },
+    { module = "user.async_loader", name = "Async Loader" },
+    { module = "user.intelligent_preloader", name = "Intelligent Preloader" },
+}
 
--- Keep essential immediate configurations
-require "user.colorizer"
-require "user.functions" 
-require "user.surround"
-require "user.nvim_transparent"
-require "user.diagnostics_display"
+-- Initialize optimization systems first
+local function init_optimization_systems()
+    for _, system in ipairs(optimization_systems) do
+        -- Skip minimal_mode as it's handled separately
+        if system.module ~= "user.minimal_mode" then
+            local ok, module = pcall(require, system.module)
+            if ok and module.init then
+                local init_ok, result = pcall(module.init)
+                if not init_ok then
+                    vim.defer_fn(function()
+                        vim.notify("Failed to initialize " .. system.name .. ": " .. tostring(result), vim.log.levels.WARN)
+                    end, 100)
+                end
+            end
+        end
+    end
+end
 
--- fzf-lua is now loaded via lazy.nvim
+-- Smart conditional loading based on context
+local function smart_load()
+    local argc = vim.fn.argc()
+    local is_stdin = vim.fn.getline(1) ~= ""
+    local is_directory = argc > 0 and vim.fn.isdirectory(vim.fn.argv(0)) == 1
+    
+    -- Check if minimal mode should be used
+    local minimal_mode = require("user.minimal_mode")
+    local is_minimal = minimal_mode.init()
+    
+    if is_minimal then
+        -- Minimal mode handles its own loading
+        return is_minimal
+    end
+    
+    -- Normal startup path
+    -- Load keymaps immediately only if interactive
+    if argc == 0 or not is_stdin then
+        require "user.keymaps"
+    else
+        -- Defer keymaps for file opening
+        vim.defer_fn(function()
+            require "user.keymaps"
+        end, 10)
+    end
+    
+    -- Colorscheme - load immediately for UI consistency
+    require "user.colorscheme"
+    
+    -- Defer non-critical immediate configs
+    vim.defer_fn(function()
+        -- Only load if we have files to work with
+        if argc > 0 or vim.bo.filetype ~= "" then
+            require "user.autocommands"
+        end
+    end, 50)
+    
+    return false
+end
 
--- Setup buffer browser (lazy loaded on keymap)
+-- Initialize optimization systems first
+init_optimization_systems()
+
+-- Execute smart loading
+local is_minimal = smart_load()
+
+-- Only load these configs if not in minimal mode
+if not is_minimal then
+    -- Ultra-fast essential configs (load immediately)
+    local essential_configs = {
+        "user.colorizer",    -- Syntax highlighting colors
+        "user.functions",    -- Core functions
+        "user.nvim_transparent", -- UI transparency
+    }
+
+    for _, config in ipairs(essential_configs) do
+        local ok, _ = pcall(require, config)
+        if not ok then
+            vim.defer_fn(function()
+                require(config)
+            end, 100)
+        end
+    end
+
+    -- Progressive loading system - load heavier configs progressively
+    local progressive_configs = {
+        { module = "user.surround", delay = 150 },
+        { module = "user.diagnostics_display", delay = 200 },
+        { module = "user.terminal", delay = 300 },
+    }
+
+    for _, config in ipairs(progressive_configs) do
+        vim.defer_fn(function()
+            require(config.module)
+        end, config.delay)
+    end
+end
+
+-- Buffer browser setup (lazy loaded on keymap)
 vim.keymap.set("n", "<leader>bb", function()
-  require("user.buffer_browser").open_buffer_browser()
+    require("user.buffer_browser").open_buffer_browser()
 end, { desc = "Buffer Browser", silent = true })
 
 vim.keymap.set("n", "<leader>bs", function()
-  require("user.buffer_browser").toggle_sidebar()
+    require("user.buffer_browser").toggle_sidebar()
 end, { desc = "Buffer Sidebar", silent = true })
 
--- These are now handled by plugin lazy loading
--- require("goto-preview").setup {} -- Now lazy loaded
--- require("neogit").setup {} -- Now lazy loaded  
--- telescope extensions replaced with fzf-lua
+-- Advanced optimization commands
+vim.api.nvim_create_user_command("StartupStats", function()
+    local cache = require("user.startup_cache")
+    local preloader = require("user.intelligent_preloader")
+    local minimal = require("user.minimal_mode")
+    
+    local stats = {
+        startup_time = vim.fn.reltimestr(vim.fn.reltime(startup_time)) .. "ms",
+        minimal_mode = minimal.is_enabled() and "ON" or "OFF",
+        enhancement_level = minimal.get_level(),
+        preloader_stats = preloader.get_stats(),
+        loaded_features = vim.tbl_count(minimal.get_loaded_features()),
+    }
+    
+    print("⚡ STARTUP OPTIMIZATION STATS ⚡")
+    print("Startup Time: " .. stats.startup_time)
+    print("Minimal Mode: " .. stats.minimal_mode)
+    print("Enhancement Level: " .. stats.enhancement_level)
+    print("Loaded Features: " .. stats.loaded_features)
+    print("Preloader: " .. vim.inspect(stats.preloader_stats))
+end, { desc = "Show startup optimization statistics" })
+
+vim.api.nvim_create_user_command("OptimizeNow", function()
+    local preloader = require("user.intelligent_preloader")
+    preloader.preload_category("editing")
+    preloader.preload_category("file_management")
+    vim.notify("⚡ Optimization triggered", vim.log.levels.INFO)
+end, { desc = "Trigger immediate optimization" })
+
+-- Smart startup completion callback
+vim.defer_fn(function()
+    -- Only calculate startup time in debug mode
+    if vim.env.NVIM_DEBUG then
+        local elapsed = vim.fn.reltimestr(vim.fn.reltime(startup_time))
+        print(string.format("⚡ Startup completed in %sms", elapsed))
+    end
+    
+    -- Trigger post-startup optimizations
+    vim.api.nvim_exec_autocmds("User", { pattern = "StartupComplete" })
+    
+    -- Show brief success message
+    vim.defer_fn(function()
+        if not vim.env.NVIM_MINIMAL then
+            vim.notify("⚡ Ultra-fast startup complete", vim.log.levels.INFO, { timeout = 1000 })
+        end
+    end, 100)
+end, 500)
