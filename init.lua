@@ -44,6 +44,9 @@ require "user.surround"
 require "user.nvim_transparent"
 require "user.diagnostics_display"
 
+-- Setup fast picker with disk caching
+require("user.fast_picker").setup()
+
 -- Setup buffer browser (lazy loaded on keymap)
 vim.keymap.set("n", "<leader>bb", function()
   require("user.buffer_browser").open_buffer_browser()

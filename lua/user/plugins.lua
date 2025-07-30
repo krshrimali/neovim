@@ -102,8 +102,8 @@ require("lazy").setup {
         "nvim-telescope/telescope.nvim",
         cmd = "Telescope",
         keys = {
-            { "<leader>ff", "<cmd>Telescope find_files<cr>" },
-            { "<leader>fr", "<cmd>Telescope oldfiles<cr>" },
+            { "<leader>ff", function() require("user.fast_picker").find_files() end },
+            { "<leader>fr", function() require("user.fast_picker").recent_files() end },
             { "<leader>fg", "<cmd>Telescope live_grep<cr>" },
             { "<leader>fb", "<cmd>Telescope buffers<cr>" },
             { "<leader>fh", "<cmd>Telescope help_tags<cr>" },
