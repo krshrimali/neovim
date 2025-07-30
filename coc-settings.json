@@ -1,0 +1,64 @@
+{
+  "python.defaultInterpreterPath": "python3",
+  "python.formatting.provider": "none",
+  "python.linting.enabled": false,
+  "python.linting.pylintEnabled": false,
+  "python.linting.flake8Enabled": false,
+  "python.linting.pycodestyleEnabled": false,
+  "python.linting.mypyEnabled": false,
+  
+  "pyright.enable": true,
+  "pyright.completion.enabled": true,
+  "pyright.hover.enabled": true,
+  "pyright.signature.enabled": true,
+  "pyright.rename.enabled": true,
+  "pyright.references.enabled": true,
+  "pyright.definition.enabled": true,
+  "pyright.typeDefinition.enabled": true,
+  "pyright.implementation.enabled": true,
+  "pyright.codeAction.enabled": true,
+  "pyright.diagnostics.enabled": true,
+  
+  "diagnostic-languageserver.enable": true,
+  "diagnostic-languageserver.filetypes": {
+    "python": "ruff-lsp"
+  },
+  "diagnostic-languageserver.linters": {
+    "ruff-lsp": {
+      "command": "ruff",
+      "debounce": 100,
+      "args": ["check", "--output-format=json", "--stdin-filename", "%filepath", "-"],
+      "offsetLine": 0,
+      "offsetColumn": 0,
+      "sourceName": "ruff",
+      "formatLines": 1,
+      "formatPattern": [
+        "^\\[(.*)\\]$",
+        {
+          "line": -1,
+          "column": -1,
+          "message": 1
+        }
+      ]
+    }
+  },
+  "diagnostic-languageserver.formatters": {
+    "ruff-format": {
+      "command": "ruff",
+      "args": ["format", "--stdin-filename", "%filepath", "-"]
+    }
+  },
+  "diagnostic-languageserver.formatFiletypes": {
+    "python": "ruff-format"
+  },
+  
+  "languageserver": {
+    "ruff-lsp": {
+      "command": "ruff-lsp",
+      "filetypes": ["python"]
+    }
+  },
+  
+  "coc.preferences.formatOnSaveFiletypes": ["python"],
+  "coc.preferences.extensionUpdateCheck": "weekly"
+}
