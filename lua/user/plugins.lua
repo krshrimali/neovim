@@ -14,66 +14,106 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = ","
 vim.g.maplocalleader = ","
 
+-- ⚡ ULTRA-OPTIMIZED PLUGIN LOADING
+-- Smart conditions for even better performance
+local function is_large_file(buf)
+    buf = buf or 0
+    local max_filesize = 50 * 1024 -- 50KB
+    local filename = vim.api.nvim_buf_get_name(buf)
+    if filename == "" then return false end
+    
+    local ok, stats = pcall(vim.loop.fs_stat, filename)
+    return ok and stats and stats.size > max_filesize
+end
+
+local function should_load_lsp()
+    -- Only load LSP for programming files
+    local ft = vim.bo.filetype
+    local programming_fts = {
+        "lua", "python", "javascript", "typescript", "rust", "go", 
+        "c", "cpp", "java", "php", "ruby", "vim", "sh", "zsh", "bash"
+    }
+    return vim.tbl_contains(programming_fts, ft)
+end
+
 -- Install your plugins here
 require("lazy").setup {
 
-    -- COC.nvim for LSP and completion - LAZY LOAD
+    -- ⚡ PERFORMANCE: Initialize startup cache system
     {
-        'neoclide/coc.nvim',
-        branch = 'release',
-        event = { "BufReadPre", "BufNewFile" }, -- Only load when opening files
+        dir = vim.fn.stdpath("config") .. "/lua/user",
+        name = "startup-cache",
+        priority = 1000,
         config = function()
-            -- Defer CoC extension installation to avoid startup delay
-            vim.defer_fn(function()
-                require("user.coc")
-            end, 1000)
+            require("user.startup_cache").init()
         end
     },
 
-    -- Highlight words under cursor - LAZY LOAD
+    -- COC.nvim for LSP and completion - ULTRA LAZY LOAD
+    {
+        'neoclide/coc.nvim',
+        branch = 'release',
+        event = { "BufReadPost", "BufNewFile" }, -- Changed from BufReadPre for faster startup
+        cond = function()
+            return not is_large_file() and should_load_lsp()
+        end,
+        config = function()
+            -- Even more delayed loading for CoC
+            vim.defer_fn(function()
+                require("user.coc")
+            end, 2000) -- Increased delay
+        end
+    },
+
+    -- Highlight words under cursor - SMART LAZY LOAD
     {
         "RRethy/vim-illuminate",
-        event = { "BufReadPost", "BufNewFile" },
+        event = { "CursorMoved", "CursorMovedI" }, -- Only load when cursor moves
+        cond = function()
+            return not is_large_file()
+        end,
         config = function()
             require("user.illuminate")
         end
     },
 
-    -- Treesitter - LAZY LOAD
+    -- Treesitter - CONDITIONAL LAZY LOAD
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
         event = { "BufReadPost", "BufNewFile" },
+        cond = function()
+            return not is_large_file() and should_load_lsp()
+        end,
         config = function()
             require("user.treesitter")
         end
     },
 
-    -- For commenting (uses Treesitter to comment properly) - LAZY LOAD
-    -- {
-    --     "JoosepAlviste/nvim-ts-context-commentstring",
-    --     dependencies = "nvim-treesitter/nvim-treesitter",
-    --     lazy = false,
-    --     event = { "BufReadPost", "BufNewFile" }
-    -- },
-
-    -- Git integration - LAZY LOAD
+    -- Git integration - ULTRA LAZY LOAD
     {
         "NeogitOrg/neogit",
         dependencies = {
-            "nvim-lua/plenary.nvim",         -- required
-            "ibhagwan/fzf-lua", -- optional
-            "sindrets/diffview.nvim",        -- optional
+            "nvim-lua/plenary.nvim",
+            "ibhagwan/fzf-lua",
+            "sindrets/diffview.nvim",
         },
         cmd = "Neogit",
         keys = { "<leader>gg" },
+        cond = function()
+            -- Only load in git repositories
+            return vim.fn.isdirectory(".git") == 1
+        end,
         config = true,
     },
 
-    -- Transparency - LOAD IMMEDIATELY (UI)
-    "xiyaowong/transparent.nvim",
+    -- Transparency - IMMEDIATE LOAD (Essential UI)
+    {
+        "xiyaowong/transparent.nvim",
+        priority = 900, -- High priority for UI consistency
+    },
 
-    -- Goto preview - LAZY LOAD
+    -- Goto preview - ULTRA SMART LAZY LOAD
     {
         "rmagatti/goto-preview",
         dependencies = { "rmagatti/logger.nvim" },
@@ -83,10 +123,11 @@ require("lazy").setup {
             { "gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>" },
             { "gP",  "<cmd>lua require('goto-preview').close_all_win()<CR>" },
         },
+        cond = should_load_lsp,
         config = true,
     },
 
-    -- Spider movement - LAZY LOAD
+    -- Spider movement - IMMEDIATE KEYS LOAD
     {
         "chrisgrieser/nvim-spider",
         keys = {
@@ -96,7 +137,7 @@ require("lazy").setup {
         }
     },
 
-    -- Telescope and extensions - LAZY LOAD
+    -- FZF-Lua - OPTIMIZED LAZY LOAD
     {
         "ibhagwan/fzf-lua",
         dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -109,49 +150,54 @@ require("lazy").setup {
             { "<leader>fh", "<cmd>FzfLua helptags<cr>", desc = "Help Tags" },
         },
         config = function()
-            -- Use minimal config for testing slow file opening
-            -- require("user.fzf-lua-fast")
-            -- Use full config (default)
-            require("user.fzf-lua")
+            -- Use fast config for better performance
+            require("user.fzf-lua-fast")
         end,
     },
 
-    -- THEMES - Keep minimal set, load immediately for UI consistency
-    { "decaycs/decay.nvim",                       name = "decay" },
-    "lunarvim/darkplus.nvim",
-    "folke/tokyonight.nvim",
+    -- THEMES - Ultra minimal set, smart loading
+    { 
+        "decaycs/decay.nvim", 
+        name = "decay",
+        lazy = false, -- Keep one theme always available
+        priority = 1000,
+    },
+    { "lunarvim/darkplus.nvim", lazy = true },
+    { "folke/tokyonight.nvim", lazy = true },
     {
         "uloco/bluloco.nvim",
         dependencies = { "rktjmp/lush.nvim" },
+        lazy = true,
     },
 
-    -- Notifications - LOAD IMMEDIATELY (UI)
+    -- UI Components - SMART IMMEDIATE LOADING
     {
         "rcarriga/nvim-notify",
+        priority = 800,
         config = function()
             require("user.notify")
         end
     },
 
-    -- Dressing - LOAD IMMEDIATELY (UI)
     {
         "stevearc/dressing.nvim",
+        priority = 800,
         config = function()
             require("user.dressing")
         end
     },
 
-    -- Buffer navigation - LAZY LOAD
+    -- Buffer navigation - VERY LAZY LOAD
     {
         "ghillb/cybu.nvim",
-        branch = "main", -- timely updates
-        event = { "BufReadPost", "BufNewFile" },
+        branch = "main",
+        event = "VeryLazy", -- Even more lazy
         config = function()
             require("user.cybu")
         end
     },
 
-    -- Registers - LAZY LOAD
+    -- Registers - KEYS ONLY LOAD
     {
         "tversteeg/registers.nvim",
         keys = { "\"", "<C-r>" },
@@ -160,52 +206,46 @@ require("lazy").setup {
         end
     },
 
-
-
-    -- Bufferline - LAZY LOAD
+    -- Bufferline - VERY LAZY LOAD
     {
         "akinsho/bufferline.nvim",
         event = "VeryLazy",
-        -- config handled in separate file
     },
 
-    -- Lualine - LOAD IMMEDIATELY (UI)
+    -- Lualine - IMMEDIATE LOAD (Critical UI)
     {
         "nvim-lualine/lualine.nvim",
+        priority = 850,
         config = function()
             require("user.lualine")
         end
     },
 
-    -- File explorer - Custom simple tree (replaced nvim-tree)
-    -- Using custom simple_tree.lua instead
-
-    -- Comment - LAZY LOAD
+    -- Comment - SMART LAZY LOAD
     {
         "numToStr/Comment.nvim",
+        keys = {
+            { "gc", mode = { "n", "v" } },
+            { "gb", mode = { "n", "v" } },
+        },
         config = function()
             require("Comment").setup()
         end
-        -- keys = {
-        --     { "gc", mode = { "n", "v" } },
-        --     { "gb", mode = { "n", "v" } },
-        -- },
-        -- lazy = false,
-        -- config = function()
-        --     require("user.comment")
-        -- end
     },
 
-    -- Todo comments - LAZY LOAD
+    -- Todo comments - CONDITIONAL LOAD
     {
         "folke/todo-comments.nvim",
         event = { "BufReadPost", "BufNewFile" },
+        cond = function()
+            return not is_large_file() and should_load_lsp()
+        end,
         config = function()
             require("user.todo-comments")
         end
     },
 
-    -- Terminal - LAZY LOAD
+    -- Terminal - COMMAND ONLY LOAD
     {
         "akinsho/toggleterm.nvim",
         cmd = "ToggleTerm",
@@ -215,7 +255,7 @@ require("lazy").setup {
         end
     },
 
-    -- Search and replace - LAZY LOAD
+    -- Search and replace - COMMAND ONLY LOAD
     {
         "nvim-pack/nvim-spectre",
         cmd = "Spectre",
@@ -225,7 +265,7 @@ require("lazy").setup {
         end
     },
 
-    -- Better quickfix - LAZY LOAD
+    -- Better quickfix - FILETYPE ONLY LOAD
     {
         "kevinhwang91/nvim-bqf",
         ft = "qf",
@@ -234,16 +274,19 @@ require("lazy").setup {
         end
     },
 
-    -- Git signs - LAZY LOAD
+    -- Git signs - CONDITIONAL GIT LOAD
     {
         "lewis6991/gitsigns.nvim",
-        event = { "BufReadPre", "BufNewFile" },
+        event = { "BufReadPost", "BufNewFile" },
+        cond = function()
+            return vim.fn.isdirectory(".git") == 1 and not is_large_file()
+        end,
         config = function()
             require("user.gitsigns")
         end
     },
 
-    -- Which key - LAZY LOAD
+    -- Which key - VERY LAZY LOAD
     {
         "folke/which-key.nvim",
         event = "VeryLazy",
@@ -252,103 +295,34 @@ require("lazy").setup {
         end
     },
 
-    -- THEMES - Move less used themes to lazy load
-    {
-        "krshrimali/vim-moonfly-colors",
-        lazy = true
-    },
-    {
-        "navarasu/onedark.nvim",
-        lazy = true
-    },
-    {
-        "ellisonleao/gruvbox.nvim",
-        lazy = true
-    },
-    {
-        "sainnhe/gruvbox-material",
-        lazy = true
-    },
-    {
-        "Shadorain/shadotheme",
-        lazy = true
-    },
-    {
-        "nyoom-engineering/oxocarbon.nvim",
-        lazy = true
-    },
-    {
-        "projekt0n/github-nvim-theme",
-        lazy = true
-    },
+    -- THEMES - All other themes ultra lazy
+    { "krshrimali/vim-moonfly-colors", lazy = true },
+    { "navarasu/onedark.nvim", lazy = true },
+    { "ellisonleao/gruvbox.nvim", lazy = true },
+    { "sainnhe/gruvbox-material", lazy = true },
+    { "Shadorain/shadotheme", lazy = true },
+    { "nyoom-engineering/oxocarbon.nvim", lazy = true },
+    { "projekt0n/github-nvim-theme", lazy = true },
 
-    -- Peek numbers - LAZY LOAD
+    -- Peek numbers - SMART LAZY LOAD
     {
         "nacro90/numb.nvim",
-        event = { "BufReadPost", "BufNewFile" },
+        keys = { ":" }, -- Only load when entering command mode
         config = function()
             require("user.numb")
         end
     },
 
-    -- Command line replaced with native fzf-lua functionality
-
-    -- Outline - LAZY LOAD (already configured correctly)
+    -- Outline - COMMAND ONLY LOAD
     {
         "hedyhli/outline.nvim",
         lazy = true,
         cmd = { "Outline", "OutlineToggle", "OutlineOpen" },
-        keys = {
-            {
-                "<leader>lo",
-                "<cmd>Outline<CR>",
-                desc = "Toggle Outline",
-            },
-        },
-        opts = {
-            outline_window = {
-                wrap = true,
-            },
-            symbol_folding = {
-                markers = { "> ", "v " },
-            },
-            symbols = {
-                icons = {
-                    File = { icon = 'F', hl = 'Identifier' },
-                    Module = { icon = 'M', hl = 'Include' },
-                    Namespace = { icon = 'N', hl = 'Include' },
-                    Package = { icon = 'P', hl = 'Include' },
-                    Class = { icon = 'C', hl = 'Type' },
-                    Method = { icon = 'm', hl = 'Function' },
-                    Property = { icon = 'p', hl = 'Identifier' },
-                    Field = { icon = 'f', hl = 'Identifier' },
-                    Constructor = { icon = 'c', hl = 'Special' },
-                    Enum = { icon = 'E', hl = 'Type' },
-                    Interface = { icon = 'I', hl = 'Type' },
-                    Function = { icon = 'F', hl = 'Function' },
-                    Variable = { icon = 'v', hl = 'Constant' },
-                    Constant = { icon = 'C', hl = 'Constant' },
-                    String = { icon = 's', hl = 'String' },
-                    Number = { icon = '#', hl = 'Number' },
-                    Boolean = { icon = 'b', hl = 'Boolean' },
-                    Array = { icon = 'A', hl = 'Constant' },
-                    Object = { icon = 'O', hl = 'Type' },
-                    Key = { icon = 'k', hl = 'Type' },
-                    Null = { icon = 'n', hl = 'Type' },
-                    EnumMember = { icon = 'e', hl = 'Identifier' },
-                    Struct = { icon = 'S', hl = 'Structure' },
-                    Event = { icon = 'E', hl = 'Type' },
-                    Operator = { icon = 'o', hl = 'Identifier' },
-                    TypeParameter = { icon = 't', hl = 'Identifier' },
-                    Component = { icon = 'C', hl = 'Function' },
-                    Fragment = { icon = 'f', hl = 'Constant' },
-                    TypeAlias = { icon = 'T', hl = 'Type' },
-                    Parameter = { icon = 'p', hl = 'Identifier' },
-                    StaticMethod = { icon = 'S', hl = 'Function' },
-                    Macro = { icon = 'M', hl = 'Function' },
-                }
-            }
-        },
+        keys = { "<leader>o" },
+        cond = should_load_lsp,
+        config = function()
+            require("outline").setup {}
+        end,
     },
 
     -- Python type stubs - DISABLED

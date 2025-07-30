@@ -1,195 +1,213 @@
--- Auto-open simple tree when starting Neovim (replaced nvim-tree)
-vim.api.nvim_create_autocmd({ "VimEnter" }, {
-  callback = function()
-    -- Only open tree if no file was specified on the command line
+-- ⚡ OPTIMIZED AUTOCOMMANDS
+-- Smart grouping and conditional execution for faster startup
+
+-- Create augroups for better organization and performance
+local startup_group = vim.api.nvim_create_augroup("StartupOptimized", { clear = true })
+local ui_group = vim.api.nvim_create_augroup("UIOptimized", { clear = true })
+local file_group = vim.api.nvim_create_augroup("FileOptimized", { clear = true })
+local git_group = vim.api.nvim_create_augroup("GitOptimized", { clear = true })
+
+-- ⚡ STARTUP OPTIMIZATIONS
+-- Only run essential autocommands immediately
+
+-- Smart tree opening - only if no files specified
+vim.api.nvim_create_autocmd("VimEnter", {
+    group = startup_group,
+    callback = function()
+        -- Defer tree opening to avoid blocking startup
+        vim.defer_fn(function()
+            if vim.fn.argc() == 0 and vim.bo.filetype == "" then
+                require("user.simple_tree").open_workspace()
+            end
+        end, 100)
+    end,
+})
+
+-- ⚡ UI OPTIMIZATIONS
+-- Defer UI-related autocommands
+
+vim.defer_fn(function()
+    -- Alpha status line handling
+    vim.api.nvim_create_autocmd("User", {
+        group = ui_group,
+        pattern = "AlphaReady",
+        callback = function()
+            vim.cmd("set laststatus=0 | autocmd BufUnload <buffer> set laststatus=3")
+        end,
+    })
+    
+    -- Quick close for special filetypes
+    vim.api.nvim_create_autocmd("FileType", {
+        group = ui_group,
+        pattern = {
+            "qf", "help", "man", "lspinfo", "spectre_panel", "lir",
+            "DressingSelect", "tsplayground", "Markdown",
+        },
+        callback = function()
+            vim.cmd([[
+                nnoremap <silent> <buffer> q :close<CR> 
+                nnoremap <silent> <buffer> <esc> :close<CR> 
+                set nobuflisted
+            ]])
+        end,
+    })
+    
+    -- Terminal optimizations
+    vim.api.nvim_create_autocmd("TermOpen", {
+        group = ui_group,
+        callback = function()
+            vim.opt_local.signcolumn = "no"
+        end,
+    })
+end, 200)
+
+-- ⚡ FILE OPTIMIZATIONS
+-- Smart file-related autocommands with conditions
+
+local function is_large_file(buf)
+    buf = buf or 0
+    local max_filesize = 50 * 1024 -- 50KB
+    local filename = vim.api.nvim_buf_get_name(buf)
+    if filename == "" then return false end
+    
+    local ok, stats = pcall(vim.loop.fs_stat, filename)
+    return ok and stats and stats.size > max_filesize
+end
+
+-- Defer file-related autocommands
+vim.defer_fn(function()
+    -- Format options - only for non-large files
+    vim.api.nvim_create_autocmd("FileType", {
+        group = file_group,
+        callback = function()
+            if not is_large_file() then
+                vim.opt_local.formatoptions:remove({ "c", "r", "o" })
+            end
+        end,
+    })
+    
+    -- Language-specific settings - only when needed
+    vim.api.nvim_create_autocmd("FileType", {
+        group = file_group,
+        pattern = { "c", "cpp" },
+        callback = function()
+            if not is_large_file() then
+                vim.opt_local.shiftwidth = 4
+                vim.opt_local.tabstop = 4
+                vim.opt_local.expandtab = true
+            end
+        end,
+    })
+    
+    -- Highlight on yank - only for interactive sessions
     if vim.fn.argc() == 0 then
-      require("user.simple_tree").open_workspace()
+        vim.api.nvim_create_autocmd("TextYankPost", {
+            group = file_group,
+            callback = function()
+                vim.highlight.on_yank({ timeout = 200 })
+            end,
+        })
     end
-  end,
+end, 300)
+
+-- ⚡ GIT OPTIMIZATIONS
+-- Only load git-related autocommands if in git repo
+
+vim.defer_fn(function()
+    if vim.fn.isdirectory(".git") == 1 then
+        -- Git-specific autocommands only in git repos
+        vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+            group = git_group,
+            callback = function()
+                -- Trigger git signs loading
+                vim.defer_fn(function()
+                    vim.cmd("Lazy load gitsigns.nvim")
+                end, 100)
+            end,
+            once = true, -- Only run once
+        })
+    end
+end, 500)
+
+-- ⚡ SMART PLUGIN LOADING
+-- Load plugins based on context and usage patterns
+
+local function smart_plugin_load()
+    local ft = vim.bo.filetype
+    local filename = vim.api.nvim_buf_get_name(0)
+    
+    -- Programming language detection
+    local programming_fts = {
+        "lua", "python", "javascript", "typescript", "rust", "go",
+        "c", "cpp", "java", "php", "ruby", "vim", "sh", "zsh", "bash"
+    }
+    
+    if vim.tbl_contains(programming_fts, ft) and not is_large_file() then
+        -- Load LSP and treesitter for programming files
+        vim.defer_fn(function()
+            vim.cmd("Lazy load coc.nvim")
+            vim.cmd("Lazy load nvim-treesitter")
+        end, 200)
+    end
+    
+    -- Load todo-comments for code files
+    if vim.tbl_contains(programming_fts, ft) then
+        vim.defer_fn(function()
+            vim.cmd("Lazy load todo-comments.nvim")
+        end, 300)
+    end
+end
+
+-- Smart loading based on file type
+vim.api.nvim_create_autocmd("FileType", {
+    group = startup_group,
+    callback = smart_plugin_load,
 })
 
-vim.api.nvim_create_autocmd({ "User" }, {
-  pattern = { "AlphaReady" },
-  callback = function()
-    vim.cmd [[
-      set laststatus=0 | autocmd BufUnload <buffer> set laststatus=3
-    ]]
-  end,
-})
+-- ⚡ PERFORMANCE MONITORING
+-- Optional performance tracking (only in debug mode)
 
-vim.api.nvim_create_autocmd({ "FileType" }, {
-  pattern = {
-    -- "Jaq",
-    "qf",
-    "help",
-    "man",
-    "lspinfo",
-    "spectre_panel",
-    "lir",
-    "DressingSelect",
-    "tsplayground",
-    "Markdown",
-  },
-  callback = function()
-    vim.cmd [[
-      nnoremap <silent> <buffer> q :close<CR> 
-      nnoremap <silent> <buffer> <esc> :close<CR> 
-      set nobuflisted
-    ]]
-  end,
-})
+if vim.env.NVIM_DEBUG then
+    vim.defer_fn(function()
+        vim.api.nvim_create_autocmd("User", {
+            pattern = "LazyLoad",
+            callback = function(event)
+                print("⚡ Loaded plugin: " .. event.data)
+            end,
+        })
+    end, 1000)
+end
 
--- vim.api.nvim_create_autocmd({ "BufEnter" }, {
---   pattern = { "" },
---   callback = function()
---     local buf_ft = vim.bo.filetype
---     if buf_ft == "" or buf_ft == nil then
---       vim.cmd [[
---       nnoremap <silent> <buffer> q :close<CR> 
---       nnoremap <silent> <buffer> <c-j> j<CR> 
---       nnoremap <silent> <buffer> <c-k> k<CR> 
---       set nobuflisted 
---     ]]
---     end
---   end,
--- })
+-- ⚡ CLEANUP AND MAINTENANCE
+-- Background cleanup tasks
 
--- vim.api.nvim_create_autocmd({ "BufEnter" }, {
---   pattern = { "" },
---   callback = function()
---     local get_project_dir = function()
---       local cwd = vim.fn.getcwd()
---       local project_dir = vim.split(cwd, "/")
---       local project_name = project_dir[#project_dir]
---       return project_name
---     end
+vim.defer_fn(function()
+    -- Clean up old swap files
+    vim.api.nvim_create_autocmd("VimEnter", {
+        callback = function()
+            local swap_dir = vim.fn.stdpath("state") .. "/swap"
+            if vim.fn.isdirectory(swap_dir) == 1 then
+                local files = vim.fn.glob(swap_dir .. "/*", false, true)
+                for _, file in ipairs(files) do
+                    local stat = vim.loop.fs_stat(file)
+                    if stat and stat.mtime.sec < (os.time() - 24 * 60 * 60) then -- 1 day old
+                        vim.fn.delete(file)
+                    end
+                end
+            end
+        end,
+        once = true,
+    })
+end, 2000)
 
---     vim.opt.titlestring = get_project_dir() .. " - nvim"
---   end,
--- })
+-- ⚡ STARTUP COMPLETION SIGNAL
+-- Signal when startup optimizations are complete
 
--- vim.api.nvim_create_autocmd({ "BufEnter" }, {
---   pattern = { "term://*" },
---   callback = function()
---     vim.cmd "set cmdheight=1"
---   end,
--- })
-
--- vim.api.nvim_create_autocmd({ "FileType" }, {
---   pattern = { "gitcommit", "markdown" },
---   callback = function()
---     vim.opt_local.wrap = true
---     vim.opt_local.spell = true
---   end,
--- })
-
--- vim.api.nvim_create_autocmd({ "FileType" }, {
---   pattern = { "lir" },
---   callback = function()
---     vim.opt_local.number = false
---     vim.opt_local.relativenumber = false
---   end,
--- })
-
--- vim.cmd "autocmd BufEnter * ++nested if winnr('$') == 1 && bufname() == 'NvimTree_' . tabpagenr() | quit | endif"
-
--- vim.api.nvim_create_autocmd({ "CmdWinEnter" }, {
---   callback = function()
---     vim.cmd "quit"
---   end,
--- })
-
-vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
-  callback = function()
-    vim.cmd "set formatoptions-=cro"
-  end,
-})
-
-vim.api.nvim_create_autocmd({ "TextYankPost" }, {
-  callback = function()
-    vim.highlight.on_yank { higroup = "Visual", timeout = 200 }
-  end,
-})
-
--- vim.api.nvim_create_autocmd({ "VimEnter" }, {
---   callback = function()
---     vim.cmd "hi link illuminatedWord LspReferenceText"
---   end,
--- })
-
--- vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
---   pattern = { "*" },
---   callback = function()
---     vim.cmd "checktime"
---   end,
--- })
-
--- vim.api.nvim_create_autocmd({ "CursorHold" }, {
---   callback = function()
---     local status_ok, luasnip = pcall(require, "luasnip")
---     if not status_ok then
---       return
---     end
---     if luasnip.expand_or_jumpable() then
---       -- ask maintainer for option to make this silent
---       -- luasnip.unlink_current()
---       vim.cmd [[silent! lua require("luasnip").unlink_current()]]
---     end
---   end,
--- })
-
--- See: https://github.com/j-hui/fidget.nvim/issues/86
--- vim.api.nvim_create_autocmd("VimLeavePre", { command = [[silent! FidgetClose]] })
-
--- vim.api.nvim_create_autocmd(
---   { "BufWritePost", "BufEnter" },
---   { command = [[set nofoldenable foldmethod=manual foldlevelstart=99]] }
--- )
-
--- vim.api.nvim_create_autocmd({ "InsertEnter" }, {
---   callback = function()
---     vim.schedule(function()
---       local cmp = require "cmp"
---       cmp.complete {
---         config = { sources = { name = "buffer" }, { name = "copilot" } },
---       }
---     end)
---   end,
--- })
-
--- vim.cmd([[
--- autocmd CursorHold * call v:lua.s_on_insert_enter()
--- ]])
-
--- function s_on_insert_enter()
---   vim.schedule(function()
---     local cmp = require('cmp')
---     cmp.complete({
---       config = {
---         sources = {
---           { name = 'buffer' },
---           -- { name = 'copilot' },
---         }
---       }
---     })
---   end)
--- end
-
--- Removed old nvim-tree autocommand - now using simple_tree above
--- vim.api.nvim_create_autocmd("VimEnter", {
---   callback = function()
---     if vim.fn.argc() == 0 and vim.fn.line2byte(vim.fn.line("$") + 1) == -1 then
---       -- Use vim.schedule to ensure nvim-tree is loaded and give time for other plugins
---       vim.schedule(function()
---         -- Give more time for plugins to load
---         vim.defer_fn(function()
---           local status_ok, nvim_tree = pcall(require, "nvim-tree.api")
---           if status_ok and nvim_tree then
---             nvim_tree.tree.toggle()
---           end
---         end, 100)
---       end)
---     end
---   end,
--- })
+vim.defer_fn(function()
+    vim.api.nvim_exec_autocmds("User", { pattern = "StartupOptimizationComplete" })
+    
+    if vim.env.NVIM_DEBUG then
+        print("⚡ Startup optimizations completed")
+    end
+end, 1000)
 

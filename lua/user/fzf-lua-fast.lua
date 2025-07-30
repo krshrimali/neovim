@@ -1,73 +1,74 @@
--- Ultra-minimal fzf-lua configuration for debugging slow file opening
-local status_ok, fzf_lua = pcall(require, "fzf-lua")
-if not status_ok then
-    return
-end
+-- ⚡ Ultra-Fast FZF-Lua Configuration
+-- Minimal configuration for maximum startup speed
 
--- Minimal setup focused on pure speed
-fzf_lua.setup({
-    -- Use max-perf profile
-    "max-perf",
-    
-    -- Minimal window options
+local M = {}
+
+-- Only setup the most essential features
+require("fzf-lua").setup({
+    -- Minimal UI for speed
     winopts = {
-        height = 0.8,
+        height = 0.6,
         width = 0.8,
         preview = {
-            hidden = true, -- Always hidden
+            hidden = "hidden", -- Disable preview by default for speed
+            vertical = "down:45%",
+            horizontal = "right:50%",
         },
     },
     
-    -- Minimal fzf options
-    fzf_opts = {
-        ["--info"] = "hidden",
-        ["--no-scrollbar"] = true,
-        ["--no-separator"] = true,
-        ["--layout"] = "reverse",
+    -- Fast file operations
+    files = {
+        prompt = "Files❯ ",
+        cmd = "find . -type f -not -path '*/\\.git/*' -not -path '*/node_modules/*'",
+        git_icons = false, -- Disable for speed
+        file_icons = false, -- Disable for speed
+        color_icons = false, -- Disable for speed
     },
     
-    -- Minimal file picker
-    files = {
-        prompt = "Files> ",
-        cmd = "fd --type f --strip-cwd-prefix",
-        multiprocess = false, -- Try single process
+    -- Fast grep
+    grep = {
+        prompt = "Grep❯ ",
+        cmd = "rg --column --line-number --no-heading --color=always --smart-case",
         git_icons = false,
         file_icons = false,
         color_icons = false,
-        previewer = false,
-        cwd_prompt = false,
-        path_shorten = false,
+    },
+    
+    -- Fast buffer switching
+    buffers = {
+        prompt = "Buffers❯ ",
+        file_icons = false,
+        color_icons = false,
+        git_icons = false,
     },
     
     -- Minimal oldfiles
     oldfiles = {
-        prompt = "Recent> ",
-        stat_file = false,
+        prompt = "Recent❯ ",
         file_icons = false,
+        color_icons = false,
         git_icons = false,
-        color_icons = false,
-        previewer = false,
     },
     
-    -- Minimal buffers
-    buffers = {
-        prompt = "Buffers> ",
+    -- Fast help
+    helptags = {
+        prompt = "Help❯ ",
+    },
+    
+    -- Disable heavy features
+    previewers = {
+        builtin = {
+            syntax = false, -- Disable syntax highlighting in preview
+            treesitter = { enable = false }, -- Disable treesitter in preview
+        },
+    },
+    
+    -- Fast defaults
+    defaults = {
+        git_icons = false,
         file_icons = false,
         color_icons = false,
-        previewer = false,
-    },
-    
-    -- Simple actions
-    actions = {
-        files = {
-            ["enter"] = function(selected)
-                if selected and #selected > 0 then
-                    -- Direct file opening
-                    vim.cmd.edit(selected[1])
-                end
-            end,
-        },
     },
 })
 
-return fzf_lua
+return M
