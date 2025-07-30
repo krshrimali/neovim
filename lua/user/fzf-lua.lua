@@ -5,8 +5,13 @@ end
 
 -- Setup fzf-lua with performance optimizations
 fzf_lua.setup({
-    -- Use fzf-native profile for best performance
-    "fzf-native",
+    -- Use max-perf profile for absolute best performance
+    "max-perf",
+    
+    -- Global performance settings
+    global_resume = true, -- Enable global resume for faster subsequent calls
+    global_resume_query = true, -- Resume with query
+    file_icon_padding = '', -- Remove padding for performance
     
     -- Global options
     winopts = {
@@ -17,16 +22,16 @@ fzf_lua.setup({
         border = "rounded",
         backdrop = 60,
         preview = {
-            default = "bat", -- Use bat for previews
+            default = false, -- Disable preview by default for speed
             border = "rounded",
             wrap = false,
-            hidden = false,
+            hidden = true, -- Start with preview hidden
             vertical = "down:45%",
             horizontal = "right:60%",
             layout = "flex",
             flip_columns = 120,
-            scrollbar = "float",
-            delay = 20, -- Fast preview
+            scrollbar = false, -- Disable scrollbar for performance
+            delay = 0, -- No delay
         },
     },
     
@@ -55,38 +60,57 @@ fzf_lua.setup({
     
     -- FZF options for performance
     fzf_opts = {
-        ["--ansi"] = true,
-        ["--info"] = "inline-right",
+        ["--ansi"] = false, -- Disable ANSI for performance
+        ["--info"] = "hidden", -- Hide info for performance
         ["--height"] = "100%",
         ["--layout"] = "reverse",
         ["--border"] = "none",
-        ["--highlight-line"] = true,
+        ["--highlight-line"] = false, -- Disable for performance
+        ["--no-scrollbar"] = true, -- Disable scrollbar
+        ["--no-separator"] = true, -- Disable separator
+    },
+    
+    -- Actions optimized for speed
+    actions = {
+        files = {
+            ["enter"] = function(selected, opts)
+                -- Fast file opening without additional processing
+                if #selected > 0 then
+                    vim.cmd("edit " .. vim.fn.fnameescape(selected[1]))
+                end
+            end,
+        },
     },
     
     -- File picker optimizations
     files = {
         prompt = "Files❯ ",
         multiprocess = true,
-        git_icons = true,
-        file_icons = true,
-        color_icons = true,
-        cmd = "rg --files --hidden --follow -g '!.git'",
-        -- Fast find options
-        find_opts = [[-type f -not -path '*/\.git/*' -printf '%P\n']],
-        rg_opts = "--color=never --files --hidden --follow -g '!.git'",
-        fd_opts = "--color=never --type f --hidden --follow --exclude .git",
+        git_icons = false, -- Disable for max performance
+        file_icons = false, -- Disable for max performance  
+        color_icons = false, -- Disable for max performance
+        cmd = "fd --type f --hidden --follow --exclude .git",
+        -- Fast find options optimized for speed
+        find_opts = [[-type f -not -path '*/\.git/*']],
+        rg_opts = "--color=never --files --hidden --follow -g '!.git' --no-heading",
+        fd_opts = "--color=never --type f --hidden --follow --exclude .git --strip-cwd-prefix",
         -- Performance settings
-        cwd_prompt = true,
-        cwd_prompt_shorten_len = 32,
-        cwd_prompt_shorten_val = 1,
+        cwd_prompt = false, -- Disable for speed
+        previewer = false, -- Disable previewer for instant opening
+        -- Disable path transformations for speed
+        path_shorten = false,
     },
     
     -- Oldfiles (recent files) optimizations
     oldfiles = {
         prompt = "Recent❯ ",
         cwd_only = false,
-        stat_file = true, -- Verify files exist
+        stat_file = false, -- Disable file verification for speed
         include_current_session = false,
+        file_icons = false, -- Disable for performance
+        git_icons = false, -- Disable for performance
+        color_icons = false, -- Disable for performance
+        previewer = false, -- Disable previewer for instant opening
     },
     
     -- Grep optimizations
@@ -118,11 +142,12 @@ fzf_lua.setup({
     -- Buffer optimizations  
     buffers = {
         prompt = "Buffers❯ ",
-        file_icons = true,
-        color_icons = true,
+        file_icons = false, -- Disable for performance
+        color_icons = false, -- Disable for performance
         sort_lastused = true,
         show_unloaded = true,
         cwd_only = false,
+        previewer = false, -- Disable previewer for instant opening
     },
     
     -- Help tags

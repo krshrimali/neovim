@@ -109,6 +109,9 @@ require("lazy").setup {
             { "<leader>fh", "<cmd>FzfLua helptags<cr>", desc = "Help Tags" },
         },
         config = function()
+            -- Use minimal config for testing slow file opening
+            -- require("user.fzf-lua-fast")
+            -- Use full config (default)
             require("user.fzf-lua")
         end,
     },
