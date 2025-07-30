@@ -19,8 +19,13 @@ which_key.add {
   },
   {
     "<leader>e",
-    "<cmd>NvimTreeToggle<cr>",
-    desc = "Explorer",
+    "<cmd>lua require('user.simple_tree').open_current_dir()<cr>",
+    desc = "Explorer (Current Dir)",
+  },
+  {
+    "<leader>E",
+    "<cmd>lua require('user.simple_tree').open_workspace()<cr>",
+    desc = "Explorer (Workspace)",
   },
   {
     "<leader>w",

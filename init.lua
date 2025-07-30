@@ -20,7 +20,7 @@ end, 100)
 -- require "user.treesitter" -- Now lazy loaded
 -- require "user.comment" -- Now lazy loaded
 -- require "user.gitsigns" -- Now lazy loaded
--- require "user.nvim-tree" -- Now lazy loaded
+-- require "user.nvim-tree" -- Replaced with custom simple_tree.lua
 -- require "user.toggleterm" -- Now lazy loaded
 -- require "user.whichkey" -- Now lazy loaded
 -- require "user.numb" -- Now lazy loaded
