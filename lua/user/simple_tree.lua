@@ -17,6 +17,8 @@ local search_mode = false
 local search_buf = nil
 local search_win = nil
 local filtered_items = {}
+local search_pattern = ""
+local search_selected_idx = 1
 
 -- Utility functions
 local function get_icon(is_dir, is_open)
@@ -140,25 +142,36 @@ local function get_item_at_cursor()
   return flat_items[line_num]
 end
 
-local function open_file(path)
-  -- Find a suitable window to open the file
-  local wins = vim.api.nvim_list_wins()
+local function open_file(path, split_type)
+  split_type = split_type or 'default'
+  
   local target_win = nil
   
-  for _, win in ipairs(wins) do
-    if win ~= tree_win and win ~= search_win then
-      local buf = vim.api.nvim_win_get_buf(win)
-      local buf_type = vim.api.nvim_buf_get_option(buf, 'buftype')
-      if buf_type == '' then
-        target_win = win
-        break
+  if split_type == 'default' then
+    -- Find a suitable window to open the file
+    local wins = vim.api.nvim_list_wins()
+    
+    for _, win in ipairs(wins) do
+      if win ~= tree_win and win ~= search_win then
+        local buf = vim.api.nvim_win_get_buf(win)
+        local buf_type = vim.api.nvim_buf_get_option(buf, 'buftype')
+        if buf_type == '' then
+          target_win = win
+          break
+        end
       end
     end
-  end
-  
-  if not target_win then
-    -- Create a new window
+    
+    if not target_win then
+      -- Create a new window
+      vim.cmd('vsplit')
+      target_win = vim.api.nvim_get_current_win()
+    end
+  elseif split_type == 'vertical' then
     vim.cmd('vsplit')
+    target_win = vim.api.nvim_get_current_win()
+  elseif split_type == 'horizontal' then
+    vim.cmd('split')
     target_win = vim.api.nvim_get_current_win()
   end
   
@@ -168,6 +181,92 @@ local function open_file(path)
   if config.auto_close then
     M.close()
   end
+end
+
+local function copy_to_clipboard(text)
+  vim.fn.setreg('+', text)
+  vim.fn.setreg('"', text)
+  print("Copied: " .. text)
+end
+
+local function get_relative_path(path)
+  local cwd = vim.fn.getcwd()
+  local relative = path:gsub("^" .. vim.fn.escape(cwd, "^$()%.[]*+-?") .. "/", "")
+  return relative
+end
+
+local function get_git_remote_url()
+  local handle = io.popen("git remote get-url origin 2>/dev/null")
+  if not handle then return nil end
+  
+  local result = handle:read("*a")
+  handle:close()
+  
+  if result and result ~= "" then
+    return result:gsub("%s+", "") -- trim whitespace
+  end
+  return nil
+end
+
+local function open_github_link(path)
+  local git_url = get_git_remote_url()
+  if not git_url then
+    print("Not a git repository or no remote origin found")
+    return
+  end
+  
+  -- Convert SSH to HTTPS if needed
+  if git_url:match("^git@") then
+    git_url = git_url:gsub("^git@([^:]+):", "https://%1/")
+    git_url = git_url:gsub("%.git$", "")
+  elseif git_url:match("^https://") then
+    git_url = git_url:gsub("%.git$", "")
+  else
+    print("Unsupported git URL format")
+    return
+  end
+  
+  -- Get current branch
+  local branch_handle = io.popen("git branch --show-current 2>/dev/null")
+  local branch = "main"
+  if branch_handle then
+    local branch_result = branch_handle:read("*a")
+    branch_handle:close()
+    if branch_result and branch_result ~= "" then
+      branch = branch_result:gsub("%s+", "")
+    end
+  end
+  
+  -- Get relative path from git root
+  local git_root_handle = io.popen("git rev-parse --show-toplevel 2>/dev/null")
+  if not git_root_handle then
+    print("Error getting git root")
+    return
+  end
+  
+  local git_root = git_root_handle:read("*a")
+  git_root_handle:close()
+  
+  if not git_root or git_root == "" then
+    print("Error getting git root")
+    return
+  end
+  
+  git_root = git_root:gsub("%s+", "")
+  local relative_path = path:gsub("^" .. vim.fn.escape(git_root, "^$()%.[]*+-?") .. "/", "")
+  
+  local github_url = git_url .. "/blob/" .. branch .. "/" .. relative_path
+  
+  -- Open in browser
+  local open_cmd = "xdg-open"
+  if vim.fn.has("mac") == 1 then
+    open_cmd = "open"
+  elseif vim.fn.has("win32") == 1 then
+    open_cmd = "start"
+  end
+  
+  os.execute(open_cmd .. " '" .. github_url .. "'")
+  print("Opening: " .. github_url)
 end
 
 local function toggle_directory()
@@ -191,6 +290,69 @@ local function handle_enter()
     toggle_directory()
   else
     open_file(item.path)
+  end
+end
+
+local function handle_l_key()
+  local item = get_item_at_cursor()
+  if not item then return end
+  
+  if item.type == "directory" then
+    if not item.expanded then
+      expand_directory(item)
+      render_tree()
+    end
+  else
+    open_file(item.path)
+  end
+end
+
+local function handle_copy_relative()
+  local item = get_item_at_cursor()
+  if not item then return end
+  
+  local relative_path = get_relative_path(item.path)
+  copy_to_clipboard(relative_path)
+end
+
+local function handle_copy_absolute()
+  local item = get_item_at_cursor()
+  if not item then return end
+  
+  copy_to_clipboard(item.path)
+end
+
+local function handle_github_open()
+  local item = get_item_at_cursor()
+  if not item then return end
+  
+  if item.type == "directory" then
+    print("GitHub links are only available for files")
+    return
+  end
+  
+  open_github_link(item.path)
+end
+
+local function handle_vertical_split()
+  local item = get_item_at_cursor()
+  if not item then return end
+  
+  if item.type == "directory" then
+    return -- Do nothing for directories
+  else
+    open_file(item.path, 'vertical')
+  end
+end
+
+local function handle_horizontal_split()
+  local item = get_item_at_cursor()
+  if not item then return end
+  
+  if item.type == "directory" then
+    return -- Do nothing for directories
+  else
+    open_file(item.path, 'horizontal')
   end
 end
 
@@ -259,9 +421,6 @@ local function render_search_results(pattern)
     vim.api.nvim_win_set_cursor(search_win, {search_selected_idx + 1, 0}) -- +1 for header
   end
 end
-
-local search_pattern = ""
-local search_selected_idx = 1
 
 local function setup_search_window()
   if search_win and vim.api.nvim_win_is_valid(search_win) then
@@ -344,7 +503,7 @@ local function setup_search_window()
       if selected.type == "directory" then
         M.close_search()
       else
-        open_file(selected.path)
+        open_file(selected.path, 'default')
         M.close_search()
       end
     end
@@ -417,11 +576,17 @@ function M.open(root_path)
   local opts = { buffer = tree_buf, silent = true }
   vim.keymap.set('n', '<CR>', handle_enter, opts)
   vim.keymap.set('n', 'o', handle_enter, opts)
+  vim.keymap.set('n', 'l', handle_l_key, opts)
   vim.keymap.set('n', '<Space>', toggle_directory, opts)
   vim.keymap.set('n', 'q', function() M.close() end, opts)
   vim.keymap.set('n', '/', function() setup_search_window() end, opts)
   vim.keymap.set('n', 'R', function() M.refresh() end, opts)
   vim.keymap.set('n', 'H', function() config.show_hidden = not config.show_hidden; M.refresh() end, opts)
+  vim.keymap.set('n', '<C-v>', handle_vertical_split, opts)
+  vim.keymap.set('n', '<C-x>', handle_horizontal_split, opts)
+  vim.keymap.set('n', 'y', handle_copy_relative, opts)
+  vim.keymap.set('n', 'Y', handle_copy_absolute, opts)
+  vim.keymap.set('n', 'g', handle_github_open, opts)
   
   -- Set cursor to first item
   if #tree_data > 0 then

@@ -179,16 +179,8 @@ require("lazy").setup {
         end
     },
 
-    -- File explorer - LAZY LOAD
-    {
-        "nvim-tree/nvim-tree.lua",
-        version = "*",
-        cmd = { "NvimTreeToggle", "NvimTreeOpen", "NvimTreeFocus" },
-        keys = { "<leader>e" },
-        config = function()
-            require("user.nvim-tree")
-        end
-    },
+    -- File explorer - Custom simple tree (replaced nvim-tree)
+    -- Using custom simple_tree.lua instead
 
     -- Comment - LAZY LOAD
     {
