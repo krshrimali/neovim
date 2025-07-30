@@ -234,8 +234,8 @@ which_key.add {
   },
   {
     "<leader>ff",
-    "<cmd>Telescope find_files<cr>",
-    desc = "Find files",
+    function() require("user.fast_picker").find_files() end,
+    desc = "Find files (Fast)",
   },
   {
     "<leader>fg",
@@ -314,8 +314,8 @@ which_key.add {
   },
   {
     "<leader>fr",
-    "<cmd>Telescope oldfiles<cr>",
-    desc = "Recent File",
+    function() require("user.fast_picker").recent_files() end,
+    desc = "Recent Files (Fast)",
   },
   {
     "<leader>fp",
