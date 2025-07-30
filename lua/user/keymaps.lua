@@ -76,8 +76,6 @@ keymap("v", "U", ":m '<-2<CR>gv=gv", opts)
 keymap("n", "<leader>d", '"_d', opts)
 keymap("x", "<leader>d", '"_d', opts)
 keymap("x", "<leader>p", '"_dP', opts)
-
-keymap("x", "<leader>p", '"_dP', opts)
 -- keymap("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>", opts)
 keymap("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>//gI<Left><Left><Left>", opts)
 
@@ -140,11 +138,7 @@ vim.cmd [[
   endfunction
 ]]
 
--- nvim-spider
-vim.keymap.set({ "n", "o", "x" }, "w", function() require("spider").motion "w" end, { desc = "Spider-w" })
-vim.keymap.set({ "n", "o", "x" }, "e", function() require("spider").motion "e" end, { desc = "Spider-e" })
-vim.keymap.set({ "n", "o", "x" }, "b", function() require("spider").motion "b" end, { desc = "Spider-b" })
-vim.keymap.set({ "n", "o", "x" }, "ge", function() require("spider").motion "ge" end, { desc = "Spider-ge" })
+-- nvim-spider keymaps are now handled by the plugin's lazy loading configuration in plugins.lua
 
 keymap("n", "<m-q>", ":call QuickFixToggle()<cr>", opts)
 

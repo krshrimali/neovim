@@ -119,7 +119,7 @@ require("lazy").setup {
     },
 
     -- THEMES - Keep minimal set, load immediately for UI consistency
-    { "decaycs/decay.nvim",                       as = "decay" },
+    { "decaycs/decay.nvim",                       name = "decay" },
     "lunarvim/darkplus.nvim",
     "folke/tokyonight.nvim",
     {
@@ -684,6 +684,6 @@ require("lazy").setup {
     },
     {
         "https://github.deshaw.com/genai/vim-ai",
-        -- tag: v0.0.1
+        tag = "v0.0.1"
     }
 }
