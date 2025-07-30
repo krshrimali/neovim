@@ -204,15 +204,12 @@ telescope.setup {
         find_files = {
             initial_mode = "insert",
             find_command = { "rg", "--files", "--iglob", "!.git", "--hidden" },
-            previewer = false, -- Disabled for instant startup
-            debounce = 30, -- Reduced for faster response
-            results_limit = 100, -- Reduced for faster initial display
-            path_display = { "smart" }, -- Smart path display for better performance
-            follow = false, -- Don't follow symlinks for better performance
+            previewer = require('telescope.previewers').vim_buffer_cat.new,
+            debounce = 50,
+            results_limit = 200,
+            path_display = { "absolute" },
+            follow = false,
             hidden = true,
-            -- Additional performance optimizations
-            disable_coordinates = true,
-            file_ignore_patterns = { "%.git/", "node_modules/", "__pycache__/" },
         },
         
         git_files = {
@@ -288,20 +285,13 @@ telescope.setup {
             results_limit = 100,
         },
         
-        -- Optimized oldfiles picker for instant first-time loading
         oldfiles = {
             initial_mode = "insert",
-            previewer = false, -- Disabled for instant startup - key optimization!
-            debounce = 30, -- Fast response
-            results_limit = 50, -- Reduced limit for instant display
-            path_display = { "smart" },
-            disable_coordinates = true,
-            only_cwd = false, -- Show all recent files, not just current directory
-            -- Additional performance settings for oldfiles
-            cache_picker = {
-                num_pickers = 3,
-                limit_entries = 50,
-            },
+            previewer = require('telescope.previewers').vim_buffer_cat.new,
+            debounce = 50,
+            results_limit = 200,
+            path_display = { "absolute" },
+            only_cwd = false,
         },
     },
     extensions = {
