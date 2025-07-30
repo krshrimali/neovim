@@ -90,7 +90,7 @@ keymap("n", "gR", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
 keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
 -- keymap("n", "gi", "<cmd>lua vim.lsp.buf.incoming_calls()<CR>", opts)
 keymap("n", "go", "<cmd>lua vim.lsp.buf.outgoing_calls()<CR>", opts)
-keymap("n", "<C-p>", "<cmd>Telescope projects<cr>", opts)
+keymap("n", "<C-p>", "<cmd>FzfLua files<cr>", opts)
 keymap("n", "<C-s>", "<cmd>lua vim.lsp.buf.document_symbol()<cr>", opts)
 keymap("n", "<C-z>", "<cmd>ZenMode<cr>", opts)
 
