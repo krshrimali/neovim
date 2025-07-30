@@ -209,7 +209,8 @@ local coc_extensions = {
     'coc-pyright', 
     'coc-rust-analyzer',
     'coc-lua',
-    'coc-snippets'
+    'coc-snippets',
+    'coc-diagnostic'
 }
 
 -- Defer extension installation to avoid blocking startup
