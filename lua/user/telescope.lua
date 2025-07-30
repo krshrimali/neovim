@@ -205,6 +205,7 @@ telescope.setup {
             path_display = { "absolute" }, -- absolute path display for better performance
             follow = false, -- Don't follow symlinks for better performance
             hidden = true,
+            disable_initial_results = true, -- Don't show any files until user starts typing
         },
         
         git_files = {
