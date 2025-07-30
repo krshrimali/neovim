@@ -131,9 +131,30 @@ require("lazy").setup {
     {
         "chrisgrieser/nvim-spider",
         keys = {
-            { "w", "<cmd>lua require('spider').motion('w')<CR>", mode = { "n", "o", "x" } },
-            { "e", "<cmd>lua require('spider').motion('e')<CR>", mode = { "n", "o", "x" } },
-            { "b", "<cmd>lua require('spider').motion('b')<CR>", mode = { "n", "o", "x" } },
+            { "w", function()
+                local ok, spider = pcall(require, 'spider')
+                if ok then
+                    spider.motion('w')
+                else
+                    vim.cmd('normal! w')
+                end
+            end, mode = { "n", "o", "x" } },
+            { "e", function()
+                local ok, spider = pcall(require, 'spider')
+                if ok then
+                    spider.motion('e')
+                else
+                    vim.cmd('normal! e')
+                end
+            end, mode = { "n", "o", "x" } },
+            { "b", function()
+                local ok, spider = pcall(require, 'spider')
+                if ok then
+                    spider.motion('b')
+                else
+                    vim.cmd('normal! b')
+                end
+            end, mode = { "n", "o", "x" } },
         }
     },
 

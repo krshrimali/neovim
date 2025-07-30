@@ -14,7 +14,8 @@ end
 -- Test 2: Check if essential modules can be loaded
 local essential_modules = {
     "user.options",
-    "user.plugins"
+    "user.plugins",
+    "user.coc"
 }
 
 for _, module in ipairs(essential_modules) do
@@ -41,5 +42,27 @@ else
     print("! LSP not available in this context")
 end
 
+-- Test 4: Check COC function availability
+if vim.fn.exists('*CocActionAsync') == 1 then
+    print("✓ CocActionAsync is available")
+else
+    print("! CocActionAsync not available (normal if COC not loaded yet)")
+end
+
+if vim.fn.exists('*CocAction') == 1 then
+    print("✓ CocAction is available")
+else
+    print("! CocAction not available (normal if COC not loaded yet)")
+end
+
+-- Test 5: Check spider plugin loading
+local ok, spider = pcall(require, 'spider')
+if ok then
+    print("✓ nvim-spider loaded successfully")
+else
+    print("! nvim-spider not loaded (normal if lazy-loaded)")
+end
+
 print("Configuration test completed!")
 print("Note: Some tests may not work in headless mode. Run inside Neovim for full testing.")
+print("COC functions may not be available until COC.nvim plugin is fully loaded.")

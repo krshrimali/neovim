@@ -1,6 +1,16 @@
 -- COC.nvim configuration
 -- Optimized for faster startup
 
+local M = {}
+
+-- Format selected function for formatexpr
+function M.format_selected()
+    if vim.fn.exists('*CocAction') == 1 then
+        return vim.fn.CocAction('formatSelected')
+    end
+    return 1
+end
+
 -- Some servers have issues with backup files, see #649
 vim.opt.backup = false
 vim.opt.writebackup = false
@@ -57,32 +67,55 @@ function _G.show_docs()
 end
 keyset("n", "K", '<CMD>lua _G.show_docs()<CR>', {silent = true})
 
--- Defer heavy autocmds to avoid startup delay
+-- Defer heavy autocmds to avoid startup delay and ensure COC is ready
 vim.defer_fn(function()
-    -- Highlight the symbol and its references when holding the cursor
-    vim.api.nvim_create_augroup("CocGroup", {})
-    vim.api.nvim_create_autocmd("CursorHold", {
-        group = "CocGroup",
-        command = "silent call CocActionAsync('highlight')",
-        desc = "Highlight symbol under cursor on CursorHold"
-    })
+    -- Only set up autocommands if COC functions are available
+    if vim.fn.exists('*CocActionAsync') == 1 and vim.fn.exists('*CocAction') == 1 then
+        -- Clear any existing autocommands to prevent duplicates
+        vim.api.nvim_create_augroup("CocGroup", { clear = true })
+        vim.api.nvim_create_autocmd("CursorHold", {
+            group = "CocGroup",
+            callback = function()
+                -- Double-check COC is still available before calling
+                if vim.fn.exists('*CocActionAsync') == 1 then
+                    vim.fn.CocActionAsync('highlight')
+                end
+            end,
+            desc = "Highlight symbol under cursor on CursorHold"
+        })
 
-    -- Setup formatexpr specified filetype(s)
-    vim.api.nvim_create_autocmd("FileType", {
-        group = "CocGroup",
-        pattern = "typescript,json",
-        command = "setl formatexpr=CocAction('formatSelected')",
-        desc = "Setup formatexpr specified filetype(s)."
-    })
+        -- Setup formatexpr specified filetype(s)
+        vim.api.nvim_create_autocmd("FileType", {
+            group = "CocGroup",
+            pattern = "typescript,json",
+                         callback = function()
+                 if vim.fn.exists('*CocAction') == 1 then
+                     vim.opt_local.formatexpr = "CocAction('formatSelected')"
+                 end
+             end,
+            desc = "Setup formatexpr specified filetype(s)."
+        })
 
-    -- Update signature help on jump placeholder
-    vim.api.nvim_create_autocmd("User", {
-        group = "CocGroup",
-        pattern = "CocJumpPlaceholder",
-        command = "call CocActionAsync('showSignatureHelp')",
-        desc = "Update signature help on jump placeholder"
-    })
-end, 500)
+        -- Update signature help on jump placeholder
+        vim.api.nvim_create_autocmd("User", {
+            group = "CocGroup",
+            pattern = "CocJumpPlaceholder",
+            callback = function()
+                if vim.fn.exists('*CocActionAsync') == 1 then
+                    vim.fn.CocActionAsync('showSignatureHelp')
+                end
+            end,
+            desc = "Update signature help on jump placeholder"
+        })
+    else
+        -- Retry after additional delay if COC isn't ready yet
+        vim.defer_fn(function()
+            if vim.fn.exists('*CocActionAsync') == 1 then
+                require('user.coc') -- Reload this module to set up autocommands
+            end
+        end, 2000)
+    end
+end, 3000) -- Increased delay to ensure COC is fully loaded
 
 -- Symbol renaming
 keyset("n", "<leader>rn", "<Plug>(coc-rename)", {silent = true})
@@ -238,3 +271,5 @@ vim.defer_fn(function()
         end
     end
 end, 3000) -- Increased delay to avoid startup impact
+
+return M
