@@ -383,6 +383,11 @@ local function open_telescope_in_directory()
     cwd = current_root,
     prompt_title = "Find Files in " .. vim.fn.fnamemodify(current_root, ":t"),
     hidden = config.show_hidden,
+    layout_config = {
+      height = 0.8,
+      width = 0.8,
+    },
+    results_limit = 100,
   })
 end
 
