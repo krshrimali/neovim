@@ -149,8 +149,10 @@ local function load_enhancement_level(level)
     for _, plugin in ipairs(features.plugins) do
         if not minimal_mode.loaded_features[plugin] then
             vim.defer_fn(function()
-                vim.cmd("Lazy load " .. plugin)
-                minimal_mode.loaded_features[plugin] = true
+                local ok, _ = pcall(vim.cmd, "Lazy load " .. plugin)
+                if ok then
+                    minimal_mode.loaded_features[plugin] = true
+                end
             end, 50)
         end
     end

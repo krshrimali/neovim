@@ -126,7 +126,7 @@ function M.smart_plugin_load(filetype)
     local plugins = ft_plugins[filetype] or {}
     for _, plugin in ipairs(plugins) do
         vim.defer_fn(function()
-            vim.cmd("Lazy load " .. plugin)
+            pcall(vim.cmd, "Lazy load " .. plugin)
         end, 100)
     end
 end

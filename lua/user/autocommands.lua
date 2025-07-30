@@ -121,7 +121,7 @@ vim.defer_fn(function()
             callback = function()
                 -- Trigger git signs loading
                 vim.defer_fn(function()
-                    vim.cmd("Lazy load gitsigns.nvim")
+                    pcall(vim.cmd, "Lazy load gitsigns.nvim")
                 end, 100)
             end,
             once = true, -- Only run once
@@ -145,15 +145,15 @@ local function smart_plugin_load()
     if vim.tbl_contains(programming_fts, ft) and not is_large_file() then
         -- Load LSP and treesitter for programming files
         vim.defer_fn(function()
-            vim.cmd("Lazy load coc.nvim")
-            vim.cmd("Lazy load nvim-treesitter")
+            pcall(vim.cmd, "Lazy load coc.nvim")
+            pcall(vim.cmd, "Lazy load nvim-treesitter")
         end, 200)
     end
     
     -- Load todo-comments for code files
     if vim.tbl_contains(programming_fts, ft) then
         vim.defer_fn(function()
-            vim.cmd("Lazy load todo-comments.nvim")
+            pcall(vim.cmd, "Lazy load todo-comments.nvim")
         end, 300)
     end
 end

@@ -162,14 +162,14 @@ function M.smart_preload()
     -- Preload git-related plugins if in git repo
     if is_git_repo then
         vim.defer_fn(function()
-            vim.cmd("Lazy load gitsigns.nvim")
+            pcall(vim.cmd, "Lazy load gitsigns.nvim")
         end, 300)
     end
     
     -- Preload file management tools for large directories
     if file_count > 50 then
         vim.defer_fn(function()
-            vim.cmd("Lazy load fzf-lua")
+            pcall(vim.cmd, "Lazy load fzf-lua")
         end, 200)
     end
 end

@@ -153,6 +153,24 @@ local function save_usage_data()
     end
 end
 
+-- Update predictions based on usage patterns
+local function update_predictions(ctx_key)
+    if not usage_data.patterns[ctx_key] then return end
+    
+    local total_usage = 0
+    for _, count in pairs(usage_data.patterns[ctx_key]) do
+        total_usage = total_usage + count
+    end
+    
+    if total_usage == 0 then return end
+    
+    -- Calculate probabilities
+    usage_data.predictions[ctx_key] = {}
+    for plugin, count in pairs(usage_data.patterns[ctx_key]) do
+        usage_data.predictions[ctx_key][plugin] = count / total_usage
+    end
+end
+
 -- Record plugin usage
 local function record_plugin_usage(plugin_name)
     local context = get_current_context()
@@ -175,26 +193,47 @@ local function record_plugin_usage(plugin_name)
     
     -- Save data periodically
     if os.time() - usage_data.last_update > 300 then -- Every 5 minutes
+        usage_data.last_update = os.time()
         save_usage_data()
     end
 end
 
--- Update predictions based on usage patterns
-local function update_predictions(ctx_key)
-    if not usage_data.patterns[ctx_key] then return end
+-- Context-based predictions (rule-based fallback)
+local function get_context_based_predictions(context)
+    local predictions = {}
     
-    local total_usage = 0
-    for _, count in pairs(usage_data.patterns[ctx_key]) do
-        total_usage = total_usage + count
+    -- File type based predictions
+    local ft = context.filetype
+    if ft and ft ~= "unknown" then
+        local programming_fts = {
+            "lua", "python", "javascript", "typescript", "rust", "go",
+            "c", "cpp", "java", "php", "ruby", "vim", "sh", "zsh", "bash"
+        }
+        
+        if vim.tbl_contains(programming_fts, ft) then
+            table.insert(predictions, { plugin = "coc.nvim", probability = 0.8 })
+            table.insert(predictions, { plugin = "nvim-treesitter", probability = 0.7 })
+            table.insert(predictions, { plugin = "Comment.nvim", probability = 0.6 })
+        end
     end
     
-    if total_usage == 0 then return end
-    
-    -- Calculate probabilities
-    usage_data.predictions[ctx_key] = {}
-    for plugin, count in pairs(usage_data.patterns[ctx_key]) do
-        usage_data.predictions[ctx_key][plugin] = count / total_usage
+    -- Project type based predictions
+    local project = context.project_type
+    if project == "git_project" then
+        table.insert(predictions, { plugin = "gitsigns.nvim", probability = 0.7 })
+        table.insert(predictions, { plugin = "neogit", probability = 0.5 })
     end
+    
+    -- File size based predictions
+    local file_size = context.file_size_context
+    if file_size == "large_file" then
+        -- Avoid heavy plugins for large files
+    else
+        table.insert(predictions, { plugin = "fzf-lua", probability = 0.6 })
+        table.insert(predictions, { plugin = "which-key.nvim", probability = 0.4 })
+    end
+    
+    return predictions
 end
 
 -- Get predicted plugins for current context
@@ -241,44 +280,6 @@ local function get_predicted_plugins()
     return predicted
 end
 
--- Context-based predictions (rule-based fallback)
-local function get_context_based_predictions(context)
-    local predictions = {}
-    
-    -- File type based predictions
-    local ft = context.filetype
-    if ft and ft ~= "unknown" then
-        local programming_fts = {
-            "lua", "python", "javascript", "typescript", "rust", "go",
-            "c", "cpp", "java", "php", "ruby", "vim", "sh", "zsh", "bash"
-        }
-        
-        if vim.tbl_contains(programming_fts, ft) then
-            table.insert(predictions, { plugin = "coc.nvim", probability = 0.8 })
-            table.insert(predictions, { plugin = "nvim-treesitter", probability = 0.7 })
-            table.insert(predictions, { plugin = "Comment.nvim", probability = 0.6 })
-        end
-    end
-    
-    -- Project type based predictions
-    local project = context.project_type
-    if project == "git_project" then
-        table.insert(predictions, { plugin = "gitsigns.nvim", probability = 0.7 })
-        table.insert(predictions, { plugin = "neogit", probability = 0.5 })
-    end
-    
-    -- File size based predictions
-    local file_size = context.file_size_context
-    if file_size == "large_file" then
-        -- Avoid heavy plugins for large files
-    else
-        table.insert(predictions, { plugin = "fzf-lua", probability = 0.6 })
-        table.insert(predictions, { plugin = "which-key.nvim", probability = 0.4 })
-    end
-    
-    return predictions
-end
-
 -- Preload predicted plugins
 local function preload_plugins()
     local predicted = get_predicted_plugins()
@@ -289,12 +290,12 @@ local function preload_plugins()
         if pred.probability > 0.5 then
             -- High probability - preload immediately
             vim.defer_fn(function()
-                vim.cmd("Lazy load " .. pred.plugin)
+                pcall(vim.cmd, "Lazy load " .. pred.plugin)
             end, 100 * i)
         elseif pred.probability > 0.3 then
             -- Medium probability - preload with delay
             vim.defer_fn(function()
-                vim.cmd("Lazy load " .. pred.plugin)
+                pcall(vim.cmd, "Lazy load " .. pred.plugin)
             end, 500 + (100 * i))
         end
     end
@@ -306,7 +307,9 @@ local function setup_usage_tracking()
     vim.api.nvim_create_autocmd("User", {
         pattern = "LazyLoad",
         callback = function(event)
-            record_plugin_usage(event.data)
+            if event.data then
+                record_plugin_usage(event.data)
+            end
         end,
     })
     
@@ -359,7 +362,7 @@ function M.preload_category(category)
     if plugins then
         for i, plugin in ipairs(plugins) do
             vim.defer_fn(function()
-                vim.cmd("Lazy load " .. plugin)
+                pcall(vim.cmd, "Lazy load " .. plugin)
             end, 50 * i)
         end
     end

@@ -39,16 +39,6 @@ end
 -- Install your plugins here
 require("lazy").setup {
 
-    -- ⚡ PERFORMANCE: Initialize startup cache system
-    {
-        dir = vim.fn.stdpath("config") .. "/lua/user",
-        name = "startup-cache",
-        priority = 1000,
-        config = function()
-            require("user.startup_cache").init()
-        end
-    },
-
     -- COC.nvim for LSP and completion - ULTRA LAZY LOAD
     {
         'neoclide/coc.nvim',

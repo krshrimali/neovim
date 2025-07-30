@@ -17,6 +17,24 @@ local optimization_systems = {
     { module = "user.intelligent_preloader", name = "Intelligent Preloader" },
 }
 
+-- Initialize optimization systems first
+local function init_optimization_systems()
+    for _, system in ipairs(optimization_systems) do
+        -- Skip minimal_mode as it's handled separately
+        if system.module ~= "user.minimal_mode" then
+            local ok, module = pcall(require, system.module)
+            if ok and module.init then
+                local init_ok, result = pcall(module.init)
+                if not init_ok then
+                    vim.defer_fn(function()
+                        vim.notify("Failed to initialize " .. system.name .. ": " .. tostring(result), vim.log.levels.WARN)
+                    end, 100)
+                end
+            end
+        end
+    end
+end
+
 -- Smart conditional loading based on context
 local function smart_load()
     local argc = vim.fn.argc()
@@ -29,7 +47,7 @@ local function smart_load()
     
     if is_minimal then
         -- Minimal mode handles its own loading
-        return
+        return is_minimal
     end
     
     -- Normal startup path
@@ -53,56 +71,46 @@ local function smart_load()
             require "user.autocommands"
         end
     end, 50)
+    
+    return false
 end
 
--- Initialize optimization systems
-local function init_optimization_systems()
-    for _, system in ipairs(optimization_systems) do
-        local ok, module = pcall(require, system.module)
-        if ok and module.init then
-            local init_ok, result = pcall(module.init)
-            if not init_ok then
-                vim.defer_fn(function()
-                    vim.notify("Failed to initialize " .. system.name .. ": " .. tostring(result), vim.log.levels.WARN)
-                end, 100)
-            end
-        end
-    end
-end
-
--- Execute smart loading
-smart_load()
-
--- Initialize optimization systems
+-- Initialize optimization systems first
 init_optimization_systems()
 
--- Ultra-fast essential configs (load immediately)
-local essential_configs = {
-    "user.colorizer",    -- Syntax highlighting colors
-    "user.functions",    -- Core functions
-    "user.nvim_transparent", -- UI transparency
-}
+-- Execute smart loading
+local is_minimal = smart_load()
 
-for _, config in ipairs(essential_configs) do
-    local ok, _ = pcall(require, config)
-    if not ok then
-        vim.defer_fn(function()
-            require(config)
-        end, 100)
+-- Only load these configs if not in minimal mode
+if not is_minimal then
+    -- Ultra-fast essential configs (load immediately)
+    local essential_configs = {
+        "user.colorizer",    -- Syntax highlighting colors
+        "user.functions",    -- Core functions
+        "user.nvim_transparent", -- UI transparency
+    }
+
+    for _, config in ipairs(essential_configs) do
+        local ok, _ = pcall(require, config)
+        if not ok then
+            vim.defer_fn(function()
+                require(config)
+            end, 100)
+        end
     end
-end
 
--- Progressive loading system - load heavier configs progressively
-local progressive_configs = {
-    { module = "user.surround", delay = 150 },
-    { module = "user.diagnostics_display", delay = 200 },
-    { module = "user.terminal", delay = 300 },
-}
+    -- Progressive loading system - load heavier configs progressively
+    local progressive_configs = {
+        { module = "user.surround", delay = 150 },
+        { module = "user.diagnostics_display", delay = 200 },
+        { module = "user.terminal", delay = 300 },
+    }
 
-for _, config in ipairs(progressive_configs) do
-    vim.defer_fn(function()
-        require(config.module)
-    end, config.delay)
+    for _, config in ipairs(progressive_configs) do
+        vim.defer_fn(function()
+            require(config.module)
+        end, config.delay)
+    end
 end
 
 -- Buffer browser setup (lazy loaded on keymap)
