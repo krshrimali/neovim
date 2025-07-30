@@ -4,7 +4,7 @@ if not status_ok then return end
 which_key.add {
   {
     "<leader>b",
-    "<cmd>Telescope buffers<cr>",
+    "<cmd>FzfLua buffers<cr>",
     desc = "Buffers",
   },
   {
@@ -218,7 +218,7 @@ which_key.add {
   -- Find using Telescope
   {
     "<leader>fB",
-    "<cmd>Telescope git_branches<cr>",
+    "<cmd>FzfLua git_branches<cr>",
     desc = "Checkout branch",
   },
   -- Duplicate of <leader>b - removed
@@ -229,117 +229,117 @@ which_key.add {
   -- },
   {
     "<leader>fc",
-    "<cmd>Telescope colorscheme<cr>",
+    "<cmd>FzfLua colorschemes<cr>",
     desc = "Colorscheme",
   },
   {
     "<leader>ff",
-    "<cmd>Telescope find_files<cr>",
+    "<cmd>FzfLua files<cr>",
     desc = "Find files",
   },
   {
     "<leader>fg",
-    "<cmd>Telescope git_files<cr>",
+    "<cmd>FzfLua git_files<cr>",
     desc = "Git Files",
   },
   {
     "<leader>ftt",
-    "<cmd>Telescope live_grep<cr>",
+    "<cmd>FzfLua live_grep<cr>",
     desc = "Find Text",
   },
   {
     "<leader>fta",
-    "<cmd>Telescope live_grep_args<cr>",
+    "<cmd>FzfLua live_grep<cr>",
     desc = "Find text (live grep args)",
   },
   {
     "<leader>fts",
-    "<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args(default_text=vim.fn.expand('<cword>'))<cr>",
+    "<cmd>FzfLua grep_cword<cr>",
     desc = "Live Grep Args with the word under cursor",
   },
   {
     "<leader>fss",
-    "<cmd>lua require('telescope.builtin').live_grep({default_text=vim.fn.expand('<cword>')})<cr>",
+    "<cmd>FzfLua grep_cword<cr>",
     desc = "Find string in the workspace",
   },
   {
     "<leader>fsb",
-    "<cmd>lua require('telescope.builtin').live_grep({default_text=vim.fn.expand('<cword>'), grep_open_files=true})<cr>",
+    "<cmd>FzfLua grep_curbuf<cr>",
     desc = "Grep only open files",
   },
   {
     "<leader>fTT",
-    "<cmd>lua require('telescope.builtin').live_grep({previewer = true})<cr>",
+    "<cmd>FzfLua live_grep<cr>",
     desc = "Live Grep (with preview)",
   },
   {
     "<leader>fSS",
-    "<cmd>lua require('telescope.builtin').grep_string({default_text=vim.fn.expand('<cword>'), previewer = true})<cr>",
+    "<cmd>FzfLua grep_cword<cr>",
     desc = "Grep String under cursor (with preview)",
   },
   {
     "<leader>fh",
-    "<cmd>Telescope help_tags<cr>",
+    "<cmd>FzfLua helptags<cr>",
     desc = "Help",
   },
   {
     "<leader>fH",
-    "<cmd>Telescope highlights<cr>",
+    "<cmd>FzfLua highlights<cr>",
     desc = "Highlights",
   },
   {
     "<leader>fi",
-    "<cmd>Telescope lsp_incoming_calls<cr>",
+    "<cmd>FzfLua lsp_incoming_calls<cr>",
     desc = "Incoming calls",
   },
   {
     "<leader>fo",
-    "<cmd>Telescope lsp_outgoing_calls<cr>",
+    "<cmd>FzfLua lsp_outgoing_calls<cr>",
     desc = "Outgoing calls",
   },
   {
     "<leader>fI",
-    "<cmd>Telescope lsp_implementations<cr>",
+    "<cmd>FzfLua lsp_implementations<cr>",
     desc = "Implementations",
   },
   {
     "<leader>fl",
-    "<cmd>Telescope resume<cr>",
+    "<cmd>FzfLua resume<cr>",
     desc = "Last Search",
   },
   {
     "<leader>fM",
-    "<cmd>Telescope man_pages<cr>",
+    "<cmd>FzfLua manpages<cr>",
     desc = "Man Pages",
   },
   {
     "<leader>fr",
-    "<cmd>Telescope oldfiles<cr>",
-    desc = "Recent File",
+    "<cmd>FzfLua oldfiles<cr>",
+    desc = "Recent Files",
   },
   {
     "<leader>fp",
-    "<cmd>Telescope frecency workspace=CWD<cr>",
+    "<cmd>FzfLua oldfiles<cr>",
     desc = "Frecency recent file",
   },
   {
     "<leader>fR",
-    "<cmd>Telescope registers<cr>",
+    "<cmd>FzfLua registers<cr>",
     desc = "Registers",
   },
   {
     "<leader>fk",
-    "<cmd>Telescope keymaps<cr>",
+    "<cmd>FzfLua keymaps<cr>",
     desc = "Keymaps",
   },
   {
     "<leader>fC",
-    "<cmd>Telescope commands<cr>",
+    "<cmd>FzfLua commands<cr>",
     desc = "Commands",
   },
   {
     "<leader>fF",
-    "<cmd>lua require('telescope.builtin').find_files({previewer = true})<cr>",
+    "<cmd>FzfLua files<cr>",
     desc = "Find Files (with preview)",
   },
 
@@ -418,7 +418,7 @@ which_key.add {
   },
   {
     "<leader>go",
-    "<cmd>Telescope git_status<cr>",
+    "<cmd>FzfLua git_status<cr>",
     desc = "Open changed file",
   },
   -- Commented out duplicates - functionality available via other keymaps
@@ -537,8 +537,8 @@ which_key.add {
   },
   {
     "<leader>lQ",
-    "<cmd>lua require('telescope.builtin').quickfix()<cr>",
-    desc = "Quickfix (Telescope)",
+    "<cmd>FzfLua quickfix<cr>",
+    desc = "Quickfix",
   },
   {
     "<leader>lR",
@@ -552,12 +552,12 @@ which_key.add {
   },
   {
     "<leader>ls",
-    "<cmd>Telescope lsp_document_symbols<cr>",
+    "<cmd>FzfLua lsp_document_symbols<cr>",
     desc = "Document Symbols",
   },
   {
     "<leader>lS",
-    "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>",
+    "<cmd>FzfLua lsp_live_workspace_symbols<cr>",
     desc = "Workspace Symbols",
   },
   {
@@ -712,7 +712,7 @@ which_key.add {
   -- },
   {
     "<leader>tgS",
-    "<cmd>Telescope git_stash<cr>",
+    "<cmd>FzfLua git_stash<cr>",
     desc = "Git Stash",
   },
   -- Duplicate of <leader>ff - removed
@@ -723,12 +723,12 @@ which_key.add {
   -- },
   {
     "<leader>tC",
-    "<cmd>Telescope command_history<cr>",
+    "<cmd>FzfLua command_history<cr>",
     desc = "Command History",
   },
   {
     "<leader>tj",
-    "<cmd>Telescope jumplist<cr>",
+    "<cmd>FzfLua jumps<cr>",
     desc = "Jumplist",
   },
   -- Duplicate of <leader>fl - removed
@@ -744,12 +744,12 @@ which_key.add {
   -- },
   {
     "<leader>th",
-    "<cmd>Telescope search_history<cr>",
+    "<cmd>FzfLua search_history<cr>",
     desc = "Search History",
   },
   {
     "<leader>tb",
-    "<cmd>Telescope builtin<cr>",
+    "<cmd>FzfLua builtin<cr>",
     desc = "Builtin",
   },
   -- Duplicate of <leader>b - removed
@@ -760,7 +760,7 @@ which_key.add {
   -- },
   {
     "<leader>tS",
-    "<cmd>Telescope current_buffer_fuzzy_find<cr>",
+    "<cmd>FzfLua blines<cr>",
     desc = "Search Buffer",
   },
 
@@ -780,7 +780,7 @@ which_key.add {
   -- Project
   {
     "<leader>tp",
-    "<cmd>Telescope projects<cr>",
+    "<cmd>FzfLua files<cr>",
     desc = "Switch project",
   },
 

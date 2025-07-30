@@ -16,7 +16,7 @@ vim.defer_fn(function()
 end, 100)
 
 -- Load these only when plugins are loaded (handled by lazy loading now)
--- require "user.telescope" -- Now lazy loaded
+-- telescope replaced with fzf-lua
 -- require "user.treesitter" -- Now lazy loaded
 -- require "user.comment" -- Now lazy loaded
 -- require "user.gitsigns" -- Now lazy loaded
@@ -44,6 +44,8 @@ require "user.surround"
 require "user.nvim_transparent"
 require "user.diagnostics_display"
 
+-- fzf-lua is now loaded via lazy.nvim
+
 -- Setup buffer browser (lazy loaded on keymap)
 vim.keymap.set("n", "<leader>bb", function()
   require("user.buffer_browser").open_buffer_browser()
@@ -56,5 +58,4 @@ end, { desc = "Buffer Sidebar", silent = true })
 -- These are now handled by plugin lazy loading
 -- require("goto-preview").setup {} -- Now lazy loaded
 -- require("neogit").setup {} -- Now lazy loaded  
--- require("telescope").load_extension "cmdline" -- Now lazy loaded
--- require("telescope").load_extension "projects" -- Now lazy loaded
+-- telescope extensions replaced with fzf-lua

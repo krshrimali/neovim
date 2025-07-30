@@ -62,7 +62,7 @@ require("lazy").setup {
         "NeogitOrg/neogit",
         dependencies = {
             "nvim-lua/plenary.nvim",         -- required
-            "nvim-telescope/telescope.nvim", -- optional
+            "ibhagwan/fzf-lua", -- optional
             "sindrets/diffview.nvim",        -- optional
         },
         cmd = "Neogit",
@@ -97,24 +97,22 @@ require("lazy").setup {
     },
 
     -- Telescope and extensions - LAZY LOAD
-    { "nvim-telescope/telescope-fzf-native.nvim", build = 'make', lazy = true },
     {
-        "nvim-telescope/telescope.nvim",
-        cmd = "Telescope",
+        "ibhagwan/fzf-lua",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        cmd = "FzfLua",
         keys = {
-            { "<leader>ff", "<cmd>Telescope find_files<cr>" },
-            { "<leader>fg", "<cmd>Telescope live_grep<cr>" },
-            { "<leader>fb", "<cmd>Telescope buffers<cr>" },
-            { "<leader>fh", "<cmd>Telescope help_tags<cr>" },
-        },
-        dependencies = {
-            { "nvim-telescope/telescope-live-grep-args.nvim" },
-            { "nvim-telescope/telescope-fzf-native.nvim" },
+            { "<leader>ff", "<cmd>FzfLua files<cr>", desc = "Find Files" },
+            { "<leader>fr", "<cmd>FzfLua oldfiles<cr>", desc = "Recent Files" },
+            { "<leader>fg", "<cmd>FzfLua live_grep<cr>", desc = "Live Grep" },
+            { "<leader>fb", "<cmd>FzfLua buffers<cr>", desc = "Buffers" },
+            { "<leader>fh", "<cmd>FzfLua helptags<cr>", desc = "Help Tags" },
         },
         config = function()
-            require("user.telescope")
-            require("telescope").load_extension "live_grep_args"
-            require('telescope').load_extension('fzf')
+            -- Use minimal config for testing slow file opening
+            -- require("user.fzf-lua-fast")
+            -- Use full config (default)
+            require("user.fzf-lua")
         end,
     },
 
@@ -293,14 +291,7 @@ require("lazy").setup {
         end
     },
 
-    -- Telescope cmdline - LAZY LOAD
-    {
-        "jonarrien/telescope-cmdline.nvim",
-        keys = { ":" },
-        config = function()
-            require("telescope").load_extension "cmdline"
-        end
-    },
+    -- Command line replaced with native fzf-lua functionality
 
     -- Outline - LAZY LOAD (already configured correctly)
     {
@@ -366,13 +357,7 @@ require("lazy").setup {
         cond = false,
     },
 
-    -- Telescope file browser - LAZY LOAD
-    {
-        "nvim-telescope/telescope-file-browser.nvim",
-        dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
-        cmd = "Telescope file_browser",
-        keys = { "<leader>fb" },
-    },
+    -- File browser functionality available through fzf-lua files command
 
     -- Winbar - LAZY LOAD
     {
@@ -380,15 +365,7 @@ require("lazy").setup {
         event = "BufReadPost",
     },
 
-    -- Telescope frecency - LAZY LOAD
-    {
-        "nvim-telescope/telescope-frecency.nvim",
-        dependencies = { "nvim-telescope/telescope.nvim" },
-        cmd = "Telescope frecency",
-        config = function()
-            require("telescope").load_extension "frecency"
-        end,
-    },
+    -- Frecency functionality replaced with fzf-lua oldfiles
 
     -- Trouble - LAZY LOAD (already configured correctly)
     {
@@ -492,7 +469,7 @@ require("lazy").setup {
                 scope_chdir = 'global',
                 datapath = vim.fn.stdpath("data"),
             })
-            require("telescope").load_extension "projects"
+            -- projects extension removed - using fzf-lua for file navigation
         end,
     },
 
@@ -514,8 +491,7 @@ require("lazy").setup {
     {
         "krshrimali/context-pilot.nvim",
         dependencies = {
-            "nvim-telescope/telescope.nvim",
-            "nvim-telescope/telescope-fzy-native.nvim"
+            "ibhagwan/fzf-lua"
         },
         cmd = "ContextPilot",
         config = function()
@@ -604,7 +580,7 @@ require("lazy").setup {
             "MunifTanjim/nui.nvim",
             --- The below dependencies are optional,
             "echasnovski/mini.pick",         -- for file_selector provider mini.pick
-            "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
+            -- "nvim-telescope/telescope.nvim", -- replaced with fzf-lua
             "hrsh7th/nvim-cmp",              -- autocompletion for avante commands and mentions
             "ibhagwan/fzf-lua",              -- for file_selector provider fzf
             "stevearc/dressing.nvim",        -- for input provider dressing
