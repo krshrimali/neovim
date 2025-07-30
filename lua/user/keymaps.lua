@@ -169,6 +169,16 @@ keymap("n", "<m-q>", ":call QuickFixToggle()<cr>", opts)
 vim.g.copilot_no_tab_map = true
 
 
+-- Custom path display function to show relative paths from workspace root
+local function relative_path_display(opts, path)
+    local cwd = vim.fn.getcwd()
+    local relative_path = vim.fn.fnamemodify(path, ":~:.")
+    if path:sub(1, #cwd) == cwd then
+        relative_path = path:sub(#cwd + 2) -- +2 to remove the leading slash
+    end
+    return relative_path
+end
+
 -- Helper functions to fetch the current scope and set `search_dirs`
 _G.find_files = function()
     local current_path = vim.fn.expand "%:p:h"
@@ -178,7 +188,7 @@ _G.find_files = function()
         search_dirs = { relative_path },
         debounce = 50,
         results_limit = 100,
-        path_display = { "smart" },
+        path_display = relative_path_display,
         previewer = false,
         follow = false,
     }
@@ -191,7 +201,7 @@ _G.live_grep = function()
         search_dirs = { relative_path },
         debounce = 50,
         results_limit = 100,
-        path_display = { "smart" },
+        path_display = relative_path_display,
         previewer = false,
     }
 end

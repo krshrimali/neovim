@@ -1,5 +1,15 @@
 local themes = {}
 
+-- Custom path display function to show relative paths from workspace root
+local function relative_path_display(opts, path)
+  local cwd = vim.fn.getcwd()
+  local relative_path = vim.fn.fnamemodify(path, ":~:.")
+  if path:sub(1, #cwd) == cwd then
+    relative_path = path:sub(#cwd + 2) -- +2 to remove the leading slash
+  end
+  return relative_path
+end
+
 function themes.get_ivy_vertical(opts)
   opts = opts or {}
 
@@ -16,7 +26,7 @@ function themes.get_ivy_vertical(opts)
     },
 
     wrap_results = true,
-    path_display = { "absolute" },
+    path_display = relative_path_display,
 
     border = true,
     borderchars = {

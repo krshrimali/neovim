@@ -9,6 +9,16 @@ local lga_actions = require "telescope-live-grep-args.actions"
 local icons = require "user.icons"
 local themes = require "user.telescope.user_themes"
 
+-- Custom path display function to show relative paths from workspace root
+local function relative_path_display(opts, path)
+    local cwd = vim.fn.getcwd()
+    local relative_path = vim.fn.fnamemodify(path, ":~:.")
+    if path:sub(1, #cwd) == cwd then
+        relative_path = path:sub(#cwd + 2) -- +2 to remove the leading slash
+    end
+    return relative_path
+end
+
 telescope.setup {
     defaults = {
         wrap_results = true,
@@ -69,7 +79,7 @@ telescope.setup {
         prompt_prefix = "> ",
         selection_caret = "> ",
         entry_prefix = " ",
-        path_display = { "absolute" }, -- Changed from absolute to absolute for better performance
+        path_display = relative_path_display,
 
         color_devicons = false, -- Disabled to avoid nerd fonts
 
@@ -170,7 +180,7 @@ telescope.setup {
     pickers = {
         live_grep = {
             find_command = { "rg", "--no-heading", "--with-filename", "--line-number", "--column", "--smart-case" },
-            path_display = { "absolute" },
+            path_display = relative_path_display,
             previewer = false,
             debounce = 50, -- Reduced from 100 for faster response
             results_limit = 100, -- Added limit for faster results
@@ -202,7 +212,7 @@ telescope.setup {
             previewer = false,
             debounce = 50, -- Added debouncing for better performance
             results_limit = 150, -- Added limit for faster initial display
-            path_display = { "absolute" }, -- absolute path display for better performance
+            path_display = relative_path_display,
             follow = false, -- Don't follow symlinks for better performance
             hidden = true,
         },
@@ -285,7 +295,7 @@ telescope.setup {
             auto_quoting = false,
             find_command = "rg",
             theme = "ivy",
-            path_display = { "absolute" },
+            path_display = relative_path_display,
             debounce = 50,
             results_limit = 100,
         },
