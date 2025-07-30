@@ -6,6 +6,7 @@ local config = {
   side = 'left',
   auto_close = true,
   show_hidden = false,
+  preserve_window_proportions = true,
 }
 
 -- State
@@ -13,12 +14,7 @@ local tree_buf = nil
 local tree_win = nil
 local current_root = nil
 local tree_data = {}
-local search_mode = false
-local search_buf = nil
-local search_win = nil
-local filtered_items = {}
-local search_pattern = ""
-local search_selected_idx = 1
+
 
 -- Utility functions
 local function get_icon(is_dir, is_open)
@@ -35,12 +31,28 @@ local function get_file_type(path)
   return stat.type
 end
 
+-- Cache for directory contents to speed up repeated access
+local dir_cache = {}
+
 local function scan_directory(path, level)
   level = level or 0
-  local items = {}
   
+  -- Check cache first
+  local cache_key = path .. ":" .. tostring(config.show_hidden)
+  if dir_cache[cache_key] then
+    -- Update levels for cached items
+    for _, item in ipairs(dir_cache[cache_key]) do
+      item.level = level
+    end
+    return dir_cache[cache_key]
+  end
+  
+  local items = {}
   local handle = vim.loop.fs_scandir(path)
-  if not handle then return items end
+  if not handle then 
+    dir_cache[cache_key] = items
+    return items 
+  end
   
   local entries = {}
   while true do
@@ -84,6 +96,8 @@ local function scan_directory(path, level)
     table.insert(items, item)
   end
   
+  -- Cache the results
+  dir_cache[cache_key] = items
   return items
 end
 
@@ -152,7 +166,7 @@ local function open_file(path, split_type)
     local wins = vim.api.nvim_list_wins()
     
     for _, win in ipairs(wins) do
-      if win ~= tree_win and win ~= search_win then
+      if win ~= tree_win then
         local buf = vim.api.nvim_win_get_buf(win)
         local buf_type = vim.api.nvim_buf_get_option(buf, 'buftype')
         if buf_type == '' then
@@ -356,186 +370,20 @@ local function handle_horizontal_split()
   end
 end
 
--- Search functionality
-local function fuzzy_match(str, pattern)
-  if pattern == "" then return true end
-  
-  local str_lower = str:lower()
-  local pattern_lower = pattern:lower()
-  
-  -- Simple fuzzy matching
-  local str_idx = 1
-  for i = 1, #pattern_lower do
-    local char = pattern_lower:sub(i, i)
-    local found = str_lower:find(char, str_idx, true)
-    if not found then return false end
-    str_idx = found + 1
-  end
-  
-  return true
-end
-
-local function filter_tree(pattern)
-  filtered_items = {}
-  local flat_items = flatten_tree(tree_data)
-  
-  for _, item in ipairs(flat_items) do
-    if fuzzy_match(item.name, pattern) then
-      table.insert(filtered_items, item)
-    end
-  end
-end
-
-local function render_search_results(pattern)
-  if not search_buf or not vim.api.nvim_buf_is_valid(search_buf) then return end
-  
-  filter_tree(pattern)
-  local lines = {}
-  
-  -- Add header with search pattern
-  local header = "Search: " .. pattern
-  if pattern == "" then
-    header = "Search: (type to filter)"
-  end
-  table.insert(lines, header)
-  
-  -- Add filtered results
-  for i, item in ipairs(filtered_items) do
-    local icon = get_icon(item.type == "directory", false)
-    local relative_path = item.path:gsub("^" .. vim.fn.escape(current_root, "^$()%.[]*+-?") .. "/", "")
-    local prefix = (i == search_selected_idx) and "→ " or "  "
-    local line = prefix .. icon .. relative_path
-    table.insert(lines, line)
-  end
-  
-  if #filtered_items == 0 and pattern ~= "" then
-    table.insert(lines, "  No matches found")
-  end
-  
-  vim.api.nvim_buf_set_option(search_buf, 'modifiable', true)
-  vim.api.nvim_buf_set_lines(search_buf, 0, -1, false, lines)
-  vim.api.nvim_buf_set_option(search_buf, 'modifiable', false)
-  
-  -- Set cursor to selected item
-  if #filtered_items > 0 then
-    vim.api.nvim_win_set_cursor(search_win, {search_selected_idx + 1, 0}) -- +1 for header
-  end
-end
-
-local function setup_search_window()
-  if search_win and vim.api.nvim_win_is_valid(search_win) then
-    vim.api.nvim_set_current_win(search_win)
+-- Telescope integration for search
+local function open_telescope_in_directory()
+  local telescope_ok, telescope = pcall(require, 'telescope.builtin')
+  if not telescope_ok then
+    print("Telescope not available")
     return
   end
   
-  search_pattern = ""
-  search_selected_idx = 1
-  
-  -- Create search buffer
-  search_buf = vim.api.nvim_create_buf(false, true)
-  vim.api.nvim_buf_set_option(search_buf, 'buftype', 'nofile')
-  vim.api.nvim_buf_set_option(search_buf, 'swapfile', false)
-  vim.api.nvim_buf_set_option(search_buf, 'bufhidden', 'wipe')
-  vim.api.nvim_buf_set_option(search_buf, 'modifiable', false)
-  
-  -- Create floating window for search
-  local width = math.floor(vim.o.columns * 0.6)
-  local height = math.floor(vim.o.lines * 0.6)
-  local row = math.floor((vim.o.lines - height) / 2)
-  local col = math.floor((vim.o.columns - width) / 2)
-  
-  search_win = vim.api.nvim_open_win(search_buf, true, {
-    relative = 'editor',
-    width = width,
-    height = height,
-    row = row,
-    col = col,
-    style = 'minimal',
-    border = 'rounded',
-    title = ' Search Files (ESC to close) ',
-    title_pos = 'center'
+  -- Use current_root as the search directory
+  telescope.find_files({
+    cwd = current_root,
+    prompt_title = "Find Files in " .. vim.fn.fnamemodify(current_root, ":t"),
+    hidden = config.show_hidden,
   })
-  
-  -- Window options
-  vim.api.nvim_win_set_option(search_win, 'cursorline', true)
-  
-  -- Key mappings for search window
-  local search_opts = { buffer = search_buf, silent = true }
-  
-  -- Close search
-  vim.keymap.set('n', '<Esc>', function() M.close_search() end, search_opts)
-  vim.keymap.set('n', '<C-c>', function() M.close_search() end, search_opts)
-  vim.keymap.set('n', 'q', function() M.close_search() end, search_opts)
-  
-  -- Navigation
-  vim.keymap.set('n', 'j', function()
-    if #filtered_items > 0 then
-      search_selected_idx = math.min(search_selected_idx + 1, #filtered_items)
-      vim.api.nvim_win_set_cursor(search_win, {search_selected_idx + 1, 0}) -- +1 for header line
-    end
-  end, search_opts)
-  
-  vim.keymap.set('n', 'k', function()
-    if #filtered_items > 0 then
-      search_selected_idx = math.max(search_selected_idx - 1, 1)
-      vim.api.nvim_win_set_cursor(search_win, {search_selected_idx + 1, 0}) -- +1 for header line
-    end
-  end, search_opts)
-  
-  vim.keymap.set('n', '<Down>', function()
-    if #filtered_items > 0 then
-      search_selected_idx = math.min(search_selected_idx + 1, #filtered_items)
-      vim.api.nvim_win_set_cursor(search_win, {search_selected_idx + 1, 0})
-    end
-  end, search_opts)
-  
-  vim.keymap.set('n', '<Up>', function()
-    if #filtered_items > 0 then
-      search_selected_idx = math.max(search_selected_idx - 1, 1)
-      vim.api.nvim_win_set_cursor(search_win, {search_selected_idx + 1, 0})
-    end
-  end, search_opts)
-  
-  -- Open selected file
-  vim.keymap.set('n', '<CR>', function()
-    if #filtered_items > 0 and search_selected_idx <= #filtered_items then
-      local selected = filtered_items[search_selected_idx]
-      if selected.type == "directory" then
-        M.close_search()
-      else
-        open_file(selected.path, 'default')
-        M.close_search()
-      end
-    end
-  end, search_opts)
-  
-  -- Character input for search
-  for i = 32, 126 do -- printable ASCII characters
-    local char = string.char(i)
-    vim.keymap.set('n', char, function()
-      search_pattern = search_pattern .. char
-      search_selected_idx = 1
-      render_search_results(search_pattern)
-      if #filtered_items > 0 then
-        vim.api.nvim_win_set_cursor(search_win, {2, 0}) -- First result line
-      end
-    end, search_opts)
-  end
-  
-  -- Backspace to delete characters
-  vim.keymap.set('n', '<BS>', function()
-    if #search_pattern > 0 then
-      search_pattern = search_pattern:sub(1, -2)
-      search_selected_idx = 1
-      render_search_results(search_pattern)
-      if #filtered_items > 0 then
-        vim.api.nvim_win_set_cursor(search_win, {2, 0})
-      end
-    end
-  end, search_opts)
-  
-  -- Initial render
-  render_search_results(search_pattern)
 end
 
 -- Main functions
@@ -560,6 +408,9 @@ function M.open(root_path)
   tree_win = vim.api.nvim_get_current_win()
   vim.api.nvim_win_set_buf(tree_win, tree_buf)
   
+  -- Prevent auto-resizing
+  vim.api.nvim_win_set_option(tree_win, 'winfixwidth', true)
+  
   -- Window options
   vim.api.nvim_win_set_option(tree_win, 'number', false)
   vim.api.nvim_win_set_option(tree_win, 'relativenumber', false)
@@ -579,9 +430,13 @@ function M.open(root_path)
   vim.keymap.set('n', 'l', handle_l_key, opts)
   vim.keymap.set('n', '<Space>', toggle_directory, opts)
   vim.keymap.set('n', 'q', function() M.close() end, opts)
-  vim.keymap.set('n', '/', function() setup_search_window() end, opts)
+  vim.keymap.set('n', '/', function() open_telescope_in_directory() end, opts)
   vim.keymap.set('n', 'R', function() M.refresh() end, opts)
-  vim.keymap.set('n', 'H', function() config.show_hidden = not config.show_hidden; M.refresh() end, opts)
+  vim.keymap.set('n', 'H', function() 
+    config.show_hidden = not config.show_hidden
+    clear_cache() -- Clear cache since hidden file setting changed
+    M.refresh() 
+  end, opts)
   vim.keymap.set('n', '<C-v>', handle_vertical_split, opts)
   vim.keymap.set('n', '<C-x>', handle_horizontal_split, opts)
   vim.keymap.set('n', 'y', handle_copy_relative, opts)
@@ -595,29 +450,10 @@ function M.open(root_path)
 end
 
 function M.close()
-  if search_win and vim.api.nvim_win_is_valid(search_win) then
-    vim.api.nvim_win_close(search_win, true)
-    search_win = nil
-    search_buf = nil
-  end
-  
   if tree_win and vim.api.nvim_win_is_valid(tree_win) then
     vim.api.nvim_win_close(tree_win, true)
     tree_win = nil
     tree_buf = nil
-  end
-end
-
-function M.close_search()
-  if search_win and vim.api.nvim_win_is_valid(search_win) then
-    vim.api.nvim_win_close(search_win, true)
-    search_win = nil
-    search_buf = nil
-  end
-  
-  -- Return focus to tree window
-  if tree_win and vim.api.nvim_win_is_valid(tree_win) then
-    vim.api.nvim_set_current_win(tree_win)
   end
 end
 
@@ -629,9 +465,15 @@ function M.toggle(root_path)
   end
 end
 
+local function clear_cache()
+  dir_cache = {}
+end
+
 function M.refresh()
   if not current_root then return end
   
+  -- Clear cache to force refresh
+  clear_cache()
   tree_data = scan_directory(current_root, 0)
   render_tree()
 end
