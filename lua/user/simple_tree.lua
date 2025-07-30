@@ -21,7 +21,7 @@ local filtered_items = {}
 -- Utility functions
 local function get_icon(is_dir, is_open)
   if is_dir then
-    return is_open and "▼ " or "▶ "
+    return "> "
   else
     return "  "
   end
@@ -230,17 +230,38 @@ local function render_search_results(pattern)
   filter_tree(pattern)
   local lines = {}
   
-  for _, item in ipairs(filtered_items) do
+  -- Add header with search pattern
+  local header = "Search: " .. pattern
+  if pattern == "" then
+    header = "Search: (type to filter)"
+  end
+  table.insert(lines, header)
+  
+  -- Add filtered results
+  for i, item in ipairs(filtered_items) do
     local icon = get_icon(item.type == "directory", false)
     local relative_path = item.path:gsub("^" .. vim.fn.escape(current_root, "^$()%.[]*+-?") .. "/", "")
-    local line = icon .. relative_path
+    local prefix = (i == search_selected_idx) and "→ " or "  "
+    local line = prefix .. icon .. relative_path
     table.insert(lines, line)
+  end
+  
+  if #filtered_items == 0 and pattern ~= "" then
+    table.insert(lines, "  No matches found")
   end
   
   vim.api.nvim_buf_set_option(search_buf, 'modifiable', true)
   vim.api.nvim_buf_set_lines(search_buf, 0, -1, false, lines)
   vim.api.nvim_buf_set_option(search_buf, 'modifiable', false)
+  
+  -- Set cursor to selected item
+  if #filtered_items > 0 then
+    vim.api.nvim_win_set_cursor(search_win, {search_selected_idx + 1, 0}) -- +1 for header
+  end
 end
+
+local search_pattern = ""
+local search_selected_idx = 1
 
 local function setup_search_window()
   if search_win and vim.api.nvim_win_is_valid(search_win) then
@@ -248,11 +269,15 @@ local function setup_search_window()
     return
   end
   
+  search_pattern = ""
+  search_selected_idx = 1
+  
   -- Create search buffer
   search_buf = vim.api.nvim_create_buf(false, true)
   vim.api.nvim_buf_set_option(search_buf, 'buftype', 'nofile')
   vim.api.nvim_buf_set_option(search_buf, 'swapfile', false)
   vim.api.nvim_buf_set_option(search_buf, 'bufhidden', 'wipe')
+  vim.api.nvim_buf_set_option(search_buf, 'modifiable', false)
   
   -- Create floating window for search
   local width = math.floor(vim.o.columns * 0.6)
@@ -268,51 +293,90 @@ local function setup_search_window()
     col = col,
     style = 'minimal',
     border = 'rounded',
-    title = ' Search Files ',
+    title = ' Search Files (ESC to close) ',
     title_pos = 'center'
   })
   
-  -- Set up search input
-  vim.fn.prompt_start(search_buf, '> ', function(text)
-    local pattern = text:gsub('^> ', '')
+  -- Window options
+  vim.api.nvim_win_set_option(search_win, 'cursorline', true)
+  
+  -- Key mappings for search window
+  local search_opts = { buffer = search_buf, silent = true }
+  
+  -- Close search
+  vim.keymap.set('n', '<Esc>', function() M.close_search() end, search_opts)
+  vim.keymap.set('n', '<C-c>', function() M.close_search() end, search_opts)
+  vim.keymap.set('n', 'q', function() M.close_search() end, search_opts)
+  
+  -- Navigation
+  vim.keymap.set('n', 'j', function()
     if #filtered_items > 0 then
-      local selected = filtered_items[1]
+      search_selected_idx = math.min(search_selected_idx + 1, #filtered_items)
+      vim.api.nvim_win_set_cursor(search_win, {search_selected_idx + 1, 0}) -- +1 for header line
+    end
+  end, search_opts)
+  
+  vim.keymap.set('n', 'k', function()
+    if #filtered_items > 0 then
+      search_selected_idx = math.max(search_selected_idx - 1, 1)
+      vim.api.nvim_win_set_cursor(search_win, {search_selected_idx + 1, 0}) -- +1 for header line
+    end
+  end, search_opts)
+  
+  vim.keymap.set('n', '<Down>', function()
+    if #filtered_items > 0 then
+      search_selected_idx = math.min(search_selected_idx + 1, #filtered_items)
+      vim.api.nvim_win_set_cursor(search_win, {search_selected_idx + 1, 0})
+    end
+  end, search_opts)
+  
+  vim.keymap.set('n', '<Up>', function()
+    if #filtered_items > 0 then
+      search_selected_idx = math.max(search_selected_idx - 1, 1)
+      vim.api.nvim_win_set_cursor(search_win, {search_selected_idx + 1, 0})
+    end
+  end, search_opts)
+  
+  -- Open selected file
+  vim.keymap.set('n', '<CR>', function()
+    if #filtered_items > 0 and search_selected_idx <= #filtered_items then
+      local selected = filtered_items[search_selected_idx]
       if selected.type == "directory" then
-        -- For directories, just close search
         M.close_search()
       else
         open_file(selected.path)
         M.close_search()
       end
     end
-  end)
+  end, search_opts)
   
-  -- Set up real-time filtering
-  vim.api.nvim_create_autocmd('TextChangedI', {
-    buffer = search_buf,
-    callback = function()
-      local line = vim.api.nvim_get_current_line()
-      local pattern = line:gsub('^> ', '')
-      render_search_results(pattern)
+  -- Character input for search
+  for i = 32, 126 do -- printable ASCII characters
+    local char = string.char(i)
+    vim.keymap.set('n', char, function()
+      search_pattern = search_pattern .. char
+      search_selected_idx = 1
+      render_search_results(search_pattern)
+      if #filtered_items > 0 then
+        vim.api.nvim_win_set_cursor(search_win, {2, 0}) -- First result line
+      end
+    end, search_opts)
+  end
+  
+  -- Backspace to delete characters
+  vim.keymap.set('n', '<BS>', function()
+    if #search_pattern > 0 then
+      search_pattern = search_pattern:sub(1, -2)
+      search_selected_idx = 1
+      render_search_results(search_pattern)
+      if #filtered_items > 0 then
+        vim.api.nvim_win_set_cursor(search_win, {2, 0})
+      end
     end
-  })
-  
-  -- Key mappings for search window
-  local search_opts = { buffer = search_buf, silent = true }
-  vim.keymap.set('i', '<Esc>', function() M.close_search() end, search_opts)
-  vim.keymap.set('i', '<C-c>', function() M.close_search() end, search_opts)
-  vim.keymap.set('i', '<Down>', function()
-    -- TODO: Implement navigation in search results
   end, search_opts)
-  vim.keymap.set('i', '<Up>', function()
-    -- TODO: Implement navigation in search results
-  end, search_opts)
-  
-  -- Start in insert mode
-  vim.cmd('startinsert')
   
   -- Initial render
-  render_search_results('')
+  render_search_results(search_pattern)
 end
 
 -- Main functions
