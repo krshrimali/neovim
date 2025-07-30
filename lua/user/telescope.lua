@@ -12,7 +12,7 @@ local themes = require "user.telescope.user_themes"
 telescope.setup {
     defaults = {
         wrap_results = true,
-        results_limit = 200, -- Reduced from 1000 for faster initial display
+        results_limit = 100, -- Further reduced for faster initial display
         dynamic_preview_title = false,
         file_sorter = require('telescope.sorters').get_fuzzy_file,
         generic_sorter = require('telescope.sorters').get_generic_fuzzy_sorter,
@@ -22,6 +22,11 @@ telescope.setup {
         selection_strategy = "reset",
         sorting_strategy = "ascending", -- Changed from descending for better performance
         scroll_strategy = "cycle",
+        -- Additional startup optimizations
+        multi_icon = "",
+        entry_prefix = " ",
+        prompt_prefix = " ",
+        selection_caret = " ",
         
         -- Faster file processing
         file_previewer = require('telescope.previewers').vim_buffer_cat.new,
@@ -29,15 +34,15 @@ telescope.setup {
         qflist_previewer = require('telescope.previewers').vim_buffer_qflist.new,
         
         layout_config = {
-            width = 0.90, -- Reduced from 0.95 for faster rendering
-            height = 0.80, -- Reduced from 0.85 for faster rendering
+            width = 0.85, -- Further reduced for faster rendering
+            height = 0.75, -- Further reduced for faster rendering
             
             horizontal = {
                 preview_width = function(_, cols, _)
                     if cols > 200 then
-                        return math.floor(cols * 0.35) -- Reduced preview width
+                        return math.floor(cols * 0.3) -- Further reduced preview width
                     else
-                        return math.floor(cols * 0.5)
+                        return math.floor(cols * 0.4)
                     end
                 end,
             },
@@ -56,8 +61,8 @@ telescope.setup {
         },
         
         cache_picker = {
-            num_pickers = 5, -- Reduced from 10
-            limit_entries = 200, -- Reduced from 1000
+            num_pickers = 3, -- Further reduced for better startup
+            limit_entries = 100, -- Reduced for faster initial loading
             ignore_empty_prompt = true,
         },
         
@@ -199,12 +204,15 @@ telescope.setup {
         find_files = {
             initial_mode = "insert",
             find_command = { "rg", "--files", "--iglob", "!.git", "--hidden" },
-            previewer = false,
-            debounce = 50, -- Added debouncing for better performance
-            results_limit = 150, -- Added limit for faster initial display
-            path_display = { "absolute" }, -- absolute path display for better performance
+            previewer = false, -- Disabled for instant startup
+            debounce = 30, -- Reduced for faster response
+            results_limit = 100, -- Reduced for faster initial display
+            path_display = { "smart" }, -- Smart path display for better performance
             follow = false, -- Don't follow symlinks for better performance
             hidden = true,
+            -- Additional performance optimizations
+            disable_coordinates = true,
+            file_ignore_patterns = { "%.git/", "node_modules/", "__pycache__/" },
         },
         
         git_files = {
@@ -278,6 +286,22 @@ telescope.setup {
             initial_mode = "normal",
             preview = true,
             results_limit = 100,
+        },
+        
+        -- Optimized oldfiles picker for instant first-time loading
+        oldfiles = {
+            initial_mode = "insert",
+            previewer = false, -- Disabled for instant startup - key optimization!
+            debounce = 30, -- Fast response
+            results_limit = 50, -- Reduced limit for instant display
+            path_display = { "smart" },
+            disable_coordinates = true,
+            only_cwd = false, -- Show all recent files, not just current directory
+            -- Additional performance settings for oldfiles
+            cache_picker = {
+                num_pickers = 3,
+                limit_entries = 50,
+            },
         },
     },
     extensions = {
