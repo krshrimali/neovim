@@ -37,7 +37,14 @@ local function should_load_lsp()
 end
 
 -- Install your plugins here
+-- Ensure at least one plugin is always loaded to prevent lazy.nvim warnings
 require("lazy").setup {
+    -- Essential plugin that's always loaded
+    {
+        "nvim-lua/plenary.nvim",
+        lazy = false,
+        priority = 1000,
+    },
 
     -- COC.nvim for LSP and completion - ULTRA LAZY LOAD
     {
@@ -48,9 +55,12 @@ require("lazy").setup {
             return not is_large_file() and should_load_lsp()
         end,
         config = function()
-            -- Even more delayed loading for CoC
+            -- Load COC configuration with proper error handling
             vim.defer_fn(function()
-                require("user.coc")
+                local ok, err = pcall(require, "user.coc")
+                if not ok then
+                    vim.notify("Failed to load COC config: " .. tostring(err), vim.log.levels.WARN)
+                end
             end, 2000) -- Increased delay
         end
     },

@@ -5,6 +5,15 @@
 -- Performance tracking (disabled in production)
 local startup_time = vim.fn.reltime()
 
+-- Fix deprecated function warnings early
+if vim.lsp and vim.lsp.buf_get_clients then
+    -- Create compatibility wrapper for deprecated function
+    local old_buf_get_clients = vim.lsp.buf_get_clients
+    vim.lsp.buf_get_clients = function(bufnr)
+        return vim.lsp.get_clients({bufnr = bufnr or 0})
+    end
+end
+
 -- Essential immediate loads (UI-critical only)
 require "user.plugins"  -- Plugin manager (lazy.nvim)
 require "user.options"  -- Core vim options

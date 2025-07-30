@@ -168,12 +168,17 @@ keyset("n", "<leader>ld", "<cmd>call CocActionAsync('diagnosticInfo')<cr>", {sil
 
 -- Disable diagnostic signs (icons in sign column) for better performance
 vim.defer_fn(function()
-    vim.fn['coc#config']('diagnostic.enableSign', false)
-end, 100)
+    -- Check if COC is ready before calling coc#config
+    if vim.fn.exists('*coc#config') == 1 then
+        vim.fn['coc#config']('diagnostic.enableSign', false)
+    end
+end, 1000) -- Increased delay to ensure COC is loaded
 
 -- Configure completion item kinds without nerd font icons
 vim.defer_fn(function()
-    vim.fn['coc#config']('suggest.completionItemKindLabels', {
+    -- Check if COC is ready before calling coc#config
+    if vim.fn.exists('*coc#config') == 1 then
+        vim.fn['coc#config']('suggest.completionItemKindLabels', {
         method = 'Method',
         ['function'] = 'Function', 
         constructor = 'Constructor',
@@ -200,7 +205,8 @@ vim.defer_fn(function()
         typeParameter = 'TypeParameter',
         text = 'Text'
     })
-end, 200)
+    end
+end, 1000) -- Increased delay and added missing end for if statement
 
 -- Install extensions on first startup - DEFERRED for better startup time
 local coc_extensions = {
@@ -214,7 +220,8 @@ local coc_extensions = {
 
 -- Defer extension installation to avoid blocking startup
 vim.defer_fn(function()
-    if vim.fn.exists(':CocInstall') == 2 then
+    -- Ensure COC is fully loaded before attempting extension installation
+    if vim.fn.exists(':CocInstall') == 2 and vim.fn.exists('*coc#config') == 1 then
         -- Check which extensions are missing
         local missing_extensions = {}
         for _, ext in ipairs(coc_extensions) do
