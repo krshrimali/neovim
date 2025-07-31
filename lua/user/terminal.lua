@@ -56,11 +56,11 @@ local function create_split_terminal(direction, size_ratio, cmd)
   return buf, job_id
 end
 
--- Set terminal keymaps
+-- Set terminal keymaps (for regular terminals, not lazygit)
 local function set_terminal_keymaps(buf)
   local opts = { buffer = buf, noremap = true, silent = true }
   
-  -- Exit terminal mode - only bind Escape, let fish handle jk
+  -- Exit terminal mode with Escape (regular terminals only)
   vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], opts)
   
   -- Window navigation from terminal
@@ -73,13 +73,18 @@ local function set_terminal_keymaps(buf)
   vim.keymap.set("n", "q", ":q<CR>", opts)
 end
 
--- Auto-enter insert mode for terminals
+-- Auto-enter insert mode for terminals (but not lazygit)
 vim.api.nvim_create_autocmd("TermOpen", {
   pattern = "*",
   callback = function()
     local buf = vim.api.nvim_get_current_buf()
-    set_terminal_keymaps(buf)
-    vim.cmd("startinsert")
+    local filetype = vim.api.nvim_buf_get_option(buf, "filetype")
+    
+    -- Skip lazygit buffers - they have their own keymaps
+    if filetype ~= "lazygit" then
+      set_terminal_keymaps(buf)
+      vim.cmd("startinsert")
+    end
   end,
 })
 
@@ -247,11 +252,25 @@ function M.lazygit_float()
   local buf, win = create_float_window(0.95, 0.95, "Lazygit")
   
   vim.api.nvim_set_current_buf(buf)
+  
+  -- Set buffer options before opening terminal to prevent autocmd interference
+  vim.api.nvim_buf_set_option(buf, "filetype", "lazygit")
+  
   local job_id = vim.fn.termopen("lazygit")
   
-  -- Lazygit-specific keymaps
+  -- Lazygit-specific keymaps - minimal set to avoid conflicts
   local opts = { buffer = buf, noremap = true, silent = true }
+  
+  -- Only allow Ctrl+\ Ctrl+n to exit terminal mode (not Esc)
   vim.keymap.set("t", "<C-\\><C-n>", [[<C-\><C-n>]], opts)
+  
+  -- Window navigation that works from terminal mode
+  vim.keymap.set("t", "<C-h>", [[<C-\><C-n><C-w>h]], opts)
+  vim.keymap.set("t", "<C-j>", [[<C-\><C-n><C-w>j]], opts)
+  vim.keymap.set("t", "<C-k>", [[<C-\><C-n><C-w>k]], opts)
+  vim.keymap.set("t", "<C-l>", [[<C-\><C-n><C-w>l]], opts)
+  
+  -- Close window from normal mode
   vim.keymap.set("n", "q", function()
     if vim.api.nvim_win_is_valid(win) then
       vim.api.nvim_win_close(win, true)
@@ -269,16 +288,38 @@ function M.lazygit_float()
     once = true,
   })
   
+  -- Start in insert mode
+  vim.cmd("startinsert")
+  
   return buf, win, job_id
 end
 
 function M.lazygit_tab()
   vim.cmd("tabnew")
   local buf = vim.api.nvim_get_current_buf()
+  
+  -- Set buffer options before opening terminal to prevent autocmd interference
+  vim.api.nvim_buf_set_option(buf, "filetype", "lazygit")
+  
   local job_id = vim.fn.termopen("lazygit")
   
   -- Set buffer name
   vim.api.nvim_buf_set_name(buf, "lazygit")
+  
+  -- Lazygit-specific keymaps for tab mode
+  local opts = { buffer = buf, noremap = true, silent = true }
+  
+  -- Only allow Ctrl+\ Ctrl+n to exit terminal mode (not Esc)
+  vim.keymap.set("t", "<C-\\><C-n>", [[<C-\><C-n>]], opts)
+  
+  -- Window navigation
+  vim.keymap.set("t", "<C-h>", [[<C-\><C-n><C-w>h]], opts)
+  vim.keymap.set("t", "<C-j>", [[<C-\><C-n><C-w>j]], opts)
+  vim.keymap.set("t", "<C-k>", [[<C-\><C-n><C-w>k]], opts)
+  vim.keymap.set("t", "<C-l>", [[<C-\><C-n><C-w>l]], opts)
+  
+  -- Start in insert mode
+  vim.cmd("startinsert")
   
   return buf, job_id
 end
