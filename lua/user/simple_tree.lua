@@ -34,6 +34,10 @@ end
 -- Cache for directory contents to speed up repeated access
 local dir_cache = {}
 
+local function clear_cache()
+  dir_cache = {}
+end
+
 local function scan_directory(path, level)
   level = level or 0
   
@@ -534,10 +538,6 @@ function M.toggle(root_path)
   else
     M.open(root_path)
   end
-end
-
-local function clear_cache()
-  dir_cache = {}
 end
 
 function M.refresh()
