@@ -14,16 +14,19 @@ This configuration provides comprehensive lazygit integration with Neovim using 
 |--------|------|-------------|
 | `<leader>gg` | Normal | Open lazygit in floating window |
 | `<leader>gt` | Normal | Open lazygit in new tab |
-| `<Esc>` | Terminal | Exit insert mode (go to normal mode) |
-| `i` / `a` | Normal (in lazygit) | Enter insert mode |
-| `q` | Normal (in lazygit) | Close lazygit |
+| `<C-\><C-n>` | Terminal | Exit to Neovim normal mode (emergency escape) |
+| `i` / `<CR>` | Normal (in Neovim) | Return to lazygit interaction |
+| `q` | Normal (in Neovim) | Close lazygit |
+| All other keys | Terminal | Pass directly to lazygit (no interference) |
 
 ### 🎯 Terminal Mode Handling
 
 - **Always starts in insert mode**: Lazygit opens ready for interaction
-- **Proper escape handling**: `<Esc>` exits to normal mode without interfering with lazygit's bindings
+- **No key interference**: All lazygit keys work natively without Neovim interference
+- **Proper isolation**: Global terminal keymaps are disabled for lazygit buffers
 - **Clean UI**: Removes line numbers, sign column, and other UI elements for distraction-free experience
 - **Current workspace**: Always opens in the current Neovim working directory
+- **Raw terminal access**: Uses bash wrapper for direct lazygit execution
 
 ### 🔧 Configuration Details
 
@@ -56,10 +59,14 @@ The integration uses toggleterm's Terminal class to create two separate terminal
 - `lazygit_tab` (count: 97) - For tab mode
 
 Both instances are configured with:
-- `start_in_insert = true`
-- `close_on_exit = true`
-- Proper key mappings for terminal mode handling
-- Working directory synchronization
+- `cmd = "bash"` - Uses bash wrapper for better control
+- `start_in_insert = true` - Immediate interaction
+- `insert_mappings = false` - Prevents Neovim key interference
+- `terminal_mappings = false` - Disables conflicting mappings
+- `close_on_exit = true` - Clean exit behavior
+- Buffer marking (`is_lazygit = true`) to exclude from global terminal keymaps
+- Deferred keymap cleanup to remove any interference
+- Working directory synchronization via bash commands
 
 ### 🔄 Backward Compatibility
 
