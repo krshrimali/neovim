@@ -382,7 +382,6 @@ local function setup_keymaps()
   vim.keymap.set("t", "<C-\\>", M.toggle_centered_terminal, opts)
   
   -- Lazygit
-  vim.keymap.set("n", "<leader>gg", M.lazygit_float, { desc = "Lazygit Float", noremap = true, silent = true })
   vim.keymap.set("n", "<leader>gG", M.lazygit_tab, { desc = "Lazygit Tab", noremap = true, silent = true })
 end
 
