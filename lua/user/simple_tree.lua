@@ -34,6 +34,10 @@ end
 -- Cache for directory contents to speed up repeated access
 local dir_cache = {}
 
+local function clear_cache()
+  dir_cache = {}
+end
+
 local function scan_directory(path, level)
   level = level or 0
   
@@ -134,6 +138,12 @@ local function render_tree()
   local flat_items = flatten_tree(tree_data)
   local lines = {}
   
+  -- Add ".." entry for parent directory if we're not at the filesystem root
+  local parent_path = vim.fn.fnamemodify(current_root, ':h')
+  if current_root ~= parent_path and current_root ~= '/' then
+    table.insert(lines, ".. ")
+  end
+  
   for _, item in ipairs(flat_items) do
     local indent = string.rep("  ", item.level)
     local icon = get_icon(item.type == "directory", item.expanded)
@@ -152,8 +162,25 @@ local function get_item_at_cursor()
   local cursor = vim.api.nvim_win_get_cursor(tree_win)
   local line_num = cursor[1]
   
+  -- Check if cursor is on the ".." entry
+  local parent_path = vim.fn.fnamemodify(current_root, ':h')
+  local has_parent_entry = current_root ~= parent_path and current_root ~= '/'
+  
+  if has_parent_entry and line_num == 1 then
+    return {
+      name = "..",
+      path = parent_path,
+      type = "directory",
+      level = 0,
+      expanded = false,
+      children = {},
+      is_parent = true
+    }
+  end
+  
   local flat_items = flatten_tree(tree_data)
-  return flat_items[line_num]
+  local adjusted_line = has_parent_entry and line_num - 1 or line_num
+  return flat_items[adjusted_line]
 end
 
 local function open_file(path, split_type)
@@ -287,6 +314,12 @@ local function toggle_directory()
   local item = get_item_at_cursor()
   if not item or item.type ~= "directory" then return end
   
+  -- Handle ".." parent directory navigation
+  if item.is_parent then
+    navigate_to_parent()
+    return
+  end
+  
   if item.expanded then
     collapse_directory(item)
   else
@@ -296,9 +329,255 @@ local function toggle_directory()
   render_tree()
 end
 
+local function navigate_to_parent()
+  local parent_path = vim.fn.fnamemodify(current_root, ':h')
+  if current_root == parent_path or current_root == '/' then
+    print("Already at filesystem root")
+    return
+  end
+  
+  current_root = parent_path
+  clear_cache()
+  tree_data = scan_directory(current_root, 0)
+  render_tree()
+  
+  -- Set cursor to first item after parent entry
+  local cursor_line = 1
+  local parent_check_path = vim.fn.fnamemodify(current_root, ':h')
+  if current_root ~= parent_check_path and current_root ~= '/' then
+    cursor_line = 2  -- Skip the ".." entry
+  end
+  
+  if tree_win and vim.api.nvim_win_is_valid(tree_win) then
+    vim.api.nvim_win_set_cursor(tree_win, {cursor_line, 0})
+  end
+end
+
+local function create_file()
+  local input = vim.fn.input("Create file: ", "", "file")
+  if input == "" then return end
+  
+  local file_path = current_root .. "/" .. input
+  
+  -- Create parent directories if they don't exist
+  local parent_dir = vim.fn.fnamemodify(file_path, ':h')
+  if vim.fn.isdirectory(parent_dir) == 0 then
+    vim.fn.mkdir(parent_dir, 'p')
+  end
+  
+  -- Create the file
+  local file = io.open(file_path, 'w')
+  if file then
+    file:close()
+    print("Created file: " .. file_path)
+    
+    -- Refresh the tree
+    clear_cache()
+    tree_data = scan_directory(current_root, 0)
+    render_tree()
+  else
+    print("Error: Could not create file: " .. file_path)
+  end
+end
+
+local function create_directory()
+  local input = vim.fn.input("Create directory: ", "", "dir")
+  if input == "" then return end
+  
+  local dir_path = current_root .. "/" .. input
+  
+  -- Create directory recursively
+  if vim.fn.mkdir(dir_path, 'p') == 1 then
+    print("Created directory: " .. dir_path)
+    
+    -- Refresh the tree
+    clear_cache()
+    tree_data = scan_directory(current_root, 0)
+    render_tree()
+  else
+    print("Error: Could not create directory: " .. dir_path)
+  end
+end
+
+local function delete_item()
+  local item = get_item_at_cursor()
+  if not item or item.is_parent then
+    print("Cannot delete parent directory entry")
+    return
+  end
+  
+  local item_type = item.type == "directory" and "directory" or "file"
+  local confirm = vim.fn.input("Delete " .. item_type .. " '" .. item.name .. "'? (y/N): ")
+  
+  if confirm:lower() ~= 'y' and confirm:lower() ~= 'yes' then
+    print("Deletion cancelled")
+    return
+  end
+  
+  local success = false
+  if item.type == "directory" then
+    -- Use system command to remove directory
+    local result = os.execute("rm -rf '" .. item.path .. "'")
+    success = result == 0
+  else
+    -- Remove file
+    success = os.remove(item.path) ~= nil
+  end
+  
+  if success then
+    print("Deleted " .. item_type .. ": " .. item.path)
+    
+    -- Refresh the tree
+    clear_cache()
+    tree_data = scan_directory(current_root, 0)
+    render_tree()
+  else
+    print("Error: Could not delete " .. item_type .. ": " .. item.path)
+  end
+end
+
+local function rename_item()
+  local item = get_item_at_cursor()
+  if not item or item.is_parent then
+    print("Cannot rename parent directory entry")
+    return
+  end
+  
+  local item_type = item.type == "directory" and "directory" or "file"
+  local current_name = item.name
+  local new_name = vim.fn.input("Rename " .. item_type .. " '" .. current_name .. "' to: ", current_name)
+  
+  if new_name == "" or new_name == current_name then
+    print("Rename cancelled")
+    return
+  end
+  
+  -- Construct new path
+  local parent_dir = vim.fn.fnamemodify(item.path, ':h')
+  local new_path = parent_dir .. "/" .. new_name
+  
+  -- Check if target already exists
+  if vim.fn.filereadable(new_path) == 1 or vim.fn.isdirectory(new_path) == 1 then
+    print("Error: Target '" .. new_name .. "' already exists")
+    return
+  end
+  
+  -- Create parent directories if the new name contains path separators
+  local new_parent_dir = vim.fn.fnamemodify(new_path, ':h')
+  if new_parent_dir ~= parent_dir and vim.fn.isdirectory(new_parent_dir) == 0 then
+    if vim.fn.mkdir(new_parent_dir, 'p') ~= 1 then
+      print("Error: Could not create parent directories for: " .. new_path)
+      return
+    end
+  end
+  
+  -- Perform the rename
+  local success = os.rename(item.path, new_path)
+  
+  if success then
+    print("Renamed " .. item_type .. " '" .. current_name .. "' to '" .. new_name .. "'")
+    
+    -- Refresh the tree
+    clear_cache()
+    tree_data = scan_directory(current_root, 0)
+    render_tree()
+  else
+    print("Error: Could not rename " .. item_type .. " '" .. current_name .. "' to '" .. new_name .. "'")
+  end
+end
+
+local function show_help()
+  local help_lines = {
+    "SimpleTree Keymaps:",
+    "",
+    "Navigation:",
+    "  <CR>, o     - Open file/toggle directory",
+    "  l           - Expand directory/open file", 
+    "  <Space>     - Toggle directory",
+    "  u           - Go to parent directory",
+    "  ..          - Click to go to parent directory",
+    "",
+    "File Operations:",
+    "  a           - Create new file",
+    "  A           - Create new directory", 
+    "  r           - Rename file/directory",
+    "  d           - Delete file/directory",
+    "",
+    "Window Operations:",
+    "  <C-v>       - Open file in vertical split",
+    "  <C-x>       - Open file in horizontal split",
+    "",
+    "Copy Operations:",
+    "  y           - Copy relative path",
+    "  Y           - Copy absolute path",
+    "",
+    "Other:",
+    "  /           - Search files with Telescope",
+    "  R           - Refresh tree",
+    "  H           - Toggle hidden files",
+    "  g           - Open file in GitHub",
+    "  ?           - Show this help",
+    "  q           - Close tree",
+    "",
+    "Press any key to close this help..."
+  }
+  
+  -- Create help buffer
+  local help_buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_lines(help_buf, 0, -1, false, help_lines)
+  vim.api.nvim_buf_set_option(help_buf, 'modifiable', false)
+  vim.api.nvim_buf_set_option(help_buf, 'buftype', 'nofile')
+  
+  -- Calculate window size
+  local width = 50
+  local height = #help_lines + 2
+  local row = math.floor((vim.o.lines - height) / 2)
+  local col = math.floor((vim.o.columns - width) / 2)
+  
+  -- Create floating window
+  local help_win = vim.api.nvim_open_win(help_buf, true, {
+    relative = 'editor',
+    width = width,
+    height = height,
+    row = row,
+    col = col,
+    style = 'minimal',
+    border = 'rounded',
+    title = ' Help ',
+    title_pos = 'center'
+  })
+  
+  -- Set window options
+  vim.api.nvim_win_set_option(help_win, 'wrap', false)
+  vim.api.nvim_win_set_option(help_win, 'cursorline', false)
+  
+  -- Close on any key press
+  vim.keymap.set('n', '<buffer>', function()
+    if vim.api.nvim_win_is_valid(help_win) then
+      vim.api.nvim_win_close(help_win, true)
+    end
+  end, { buffer = help_buf, silent = true })
+  
+  -- Also handle common keys explicitly
+  local close_keys = {'<Esc>', 'q', '<CR>', '<Space>'}
+  for _, key in ipairs(close_keys) do
+    vim.keymap.set('n', key, function()
+      if vim.api.nvim_win_is_valid(help_win) then
+        vim.api.nvim_win_close(help_win, true)
+      end
+    end, { buffer = help_buf, silent = true })
+  end
+end
+
 local function handle_enter()
   local item = get_item_at_cursor()
   if not item then return end
+  
+  -- Handle ".." parent directory navigation
+  if item.is_parent then
+    navigate_to_parent()
+    return
+  end
   
   if item.type == "directory" then
     toggle_directory()
@@ -310,6 +589,12 @@ end
 local function handle_l_key()
   local item = get_item_at_cursor()
   if not item then return end
+  
+  -- Handle ".." parent directory navigation
+  if item.is_parent then
+    navigate_to_parent()
+    return
+  end
   
   if item.type == "directory" then
     if not item.expanded then
@@ -447,6 +732,12 @@ function M.open(root_path)
   vim.keymap.set('n', 'y', handle_copy_relative, opts)
   vim.keymap.set('n', 'Y', handle_copy_absolute, opts)
   vim.keymap.set('n', 'g', handle_github_open, opts)
+  vim.keymap.set('n', 'u', function() navigate_to_parent() end, opts)  -- Go to parent directory
+  vim.keymap.set('n', 'a', create_file, opts)
+  vim.keymap.set('n', 'A', create_directory, opts)
+  vim.keymap.set('n', 'r', rename_item, opts)
+  vim.keymap.set('n', 'd', delete_item, opts)
+  vim.keymap.set('n', '?', show_help, opts)
   
   -- Set cursor to first item
   if #tree_data > 0 then
@@ -468,10 +759,6 @@ function M.toggle(root_path)
   else
     M.open(root_path)
   end
-end
-
-local function clear_cache()
-  dir_cache = {}
 end
 
 function M.refresh()
