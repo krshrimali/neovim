@@ -436,6 +436,56 @@ local function delete_item()
   end
 end
 
+local function rename_item()
+  local item = get_item_at_cursor()
+  if not item or item.is_parent then
+    print("Cannot rename parent directory entry")
+    return
+  end
+  
+  local item_type = item.type == "directory" and "directory" or "file"
+  local current_name = item.name
+  local new_name = vim.fn.input("Rename " .. item_type .. " '" .. current_name .. "' to: ", current_name)
+  
+  if new_name == "" or new_name == current_name then
+    print("Rename cancelled")
+    return
+  end
+  
+  -- Construct new path
+  local parent_dir = vim.fn.fnamemodify(item.path, ':h')
+  local new_path = parent_dir .. "/" .. new_name
+  
+  -- Check if target already exists
+  if vim.fn.filereadable(new_path) == 1 or vim.fn.isdirectory(new_path) == 1 then
+    print("Error: Target '" .. new_name .. "' already exists")
+    return
+  end
+  
+  -- Create parent directories if the new name contains path separators
+  local new_parent_dir = vim.fn.fnamemodify(new_path, ':h')
+  if new_parent_dir ~= parent_dir and vim.fn.isdirectory(new_parent_dir) == 0 then
+    if vim.fn.mkdir(new_parent_dir, 'p') ~= 1 then
+      print("Error: Could not create parent directories for: " .. new_path)
+      return
+    end
+  end
+  
+  -- Perform the rename
+  local success = os.rename(item.path, new_path)
+  
+  if success then
+    print("Renamed " .. item_type .. " '" .. current_name .. "' to '" .. new_name .. "'")
+    
+    -- Refresh the tree
+    clear_cache()
+    tree_data = scan_directory(current_root, 0)
+    render_tree()
+  else
+    print("Error: Could not rename " .. item_type .. " '" .. current_name .. "' to '" .. new_name .. "'")
+  end
+end
+
 local function show_help()
   local help_lines = {
     "SimpleTree Keymaps:",
@@ -450,6 +500,7 @@ local function show_help()
     "File Operations:",
     "  a           - Create new file",
     "  A           - Create new directory", 
+    "  r           - Rename file/directory",
     "  d           - Delete file/directory",
     "",
     "Window Operations:",
@@ -684,6 +735,7 @@ function M.open(root_path)
   vim.keymap.set('n', 'u', function() navigate_to_parent() end, opts)  -- Go to parent directory
   vim.keymap.set('n', 'a', create_file, opts)
   vim.keymap.set('n', 'A', create_directory, opts)
+  vim.keymap.set('n', 'r', rename_item, opts)
   vim.keymap.set('n', 'd', delete_item, opts)
   vim.keymap.set('n', '?', show_help, opts)
   
