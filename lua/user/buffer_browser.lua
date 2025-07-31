@@ -37,9 +37,9 @@ M.open_buffer_browser = function()
     return
   end
   
-  -- Create a floating window for buffer selection
+  -- Create a floating window for buffer selection with increased height
   local width = math.floor(vim.o.columns * 0.4)
-  local height = math.min(#buffers + 2, math.floor(vim.o.lines * 0.8))
+  local height = math.min(#buffers + 6, math.floor(vim.o.lines * 0.9))  -- Increased from 0.8 to 0.9 and added more padding
   local row = math.floor((vim.o.lines - height) / 2)
   local col = math.floor((vim.o.columns - width) / 2)
   
@@ -160,7 +160,8 @@ end
 M._sidebar_state = {
   win = nil,
   buf = nil,
-  is_open = false
+  is_open = false,
+  width = 30  -- Store the sidebar width
 }
 
 -- Function to refresh sidebar content
@@ -176,6 +177,9 @@ M.refresh_sidebar = function()
   
   -- Update buffer content
   local lines = { "📁 Buffers (Recent)" }
+  table.insert(lines, string.rep("─", 25))
+  table.insert(lines, "Keys: <CR>=open, d=delete")
+  table.insert(lines, "r=refresh, +=wider, -=narrower")
   table.insert(lines, string.rep("─", 25))
   
   for i, buffer in ipairs(buffers) do
@@ -199,6 +203,8 @@ end
 M.toggle_sidebar = function()
   -- If sidebar is open, close it
   if M._sidebar_state.is_open and M._sidebar_state.win and vim.api.nvim_win_is_valid(M._sidebar_state.win) then
+    -- Store the current width before closing
+    M._sidebar_state.width = vim.api.nvim_win_get_width(M._sidebar_state.win)
     vim.api.nvim_win_close(M._sidebar_state.win, true)
     M._sidebar_state.is_open = false
     M._sidebar_state.win = nil
@@ -221,6 +227,9 @@ M.toggle_sidebar = function()
   -- Prepare content
   local lines = { "📁 Buffers (Recent)" }
   table.insert(lines, string.rep("─", 25))
+  table.insert(lines, "Keys: <CR>=open, d=delete")
+  table.insert(lines, "r=refresh, +=wider, -=narrower")
+  table.insert(lines, string.rep("─", 25))
   
   for i, buffer in ipairs(buffers) do
     local filename = vim.fn.fnamemodify(buffer.name, ":t")
@@ -232,8 +241,8 @@ M.toggle_sidebar = function()
   
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
   
-  -- Create sidebar window (left side)
-  vim.cmd("topleft 30vnew")
+  -- Create sidebar window (left side) with preserved width
+  vim.cmd("topleft " .. M._sidebar_state.width .. "vnew")
   local win = vim.api.nvim_get_current_win()
   vim.api.nvim_win_set_buf(win, buf)
   
@@ -251,6 +260,7 @@ M.toggle_sidebar = function()
   vim.wo[win].number = false
   vim.wo[win].relativenumber = false
   vim.wo[win].wrap = false
+  vim.wo[win].winfixwidth = true  -- Fix the width to prevent automatic resizing
   
   -- Set up keymaps for the sidebar
   local opts = { buffer = buf, silent = true }
@@ -265,11 +275,26 @@ M.toggle_sidebar = function()
     M.refresh_sidebar()
   end, opts)
   
+  -- Resize sidebar with + and -
+  vim.keymap.set("n", "+", function()
+    if M._sidebar_state.win and vim.api.nvim_win_is_valid(M._sidebar_state.win) then
+      M._sidebar_state.width = M._sidebar_state.width + 5
+      vim.api.nvim_win_set_width(M._sidebar_state.win, M._sidebar_state.width)
+    end
+  end, opts)
+  
+  vim.keymap.set("n", "-", function()
+    if M._sidebar_state.win and vim.api.nvim_win_is_valid(M._sidebar_state.win) then
+      M._sidebar_state.width = math.max(15, M._sidebar_state.width - 5)  -- Minimum width of 15
+      vim.api.nvim_win_set_width(M._sidebar_state.win, M._sidebar_state.width)
+    end
+  end, opts)
+  
   -- Select buffer with Enter
   vim.keymap.set("n", "<CR>", function()
     local line = vim.api.nvim_win_get_cursor(win)[1]
-    if line > 2 and line <= #M._sidebar_state.buffers + 2 then
-      local buffer = M._sidebar_state.buffers[line - 2]
+    if line > 5 and line <= #M._sidebar_state.buffers + 5 then
+      local buffer = M._sidebar_state.buffers[line - 5]
       -- Switch to previous window and open buffer
       vim.cmd("wincmd p")
       vim.api.nvim_set_current_buf(buffer.bufnr)
@@ -281,8 +306,8 @@ M.toggle_sidebar = function()
   -- Delete buffer with 'd'
   vim.keymap.set("n", "d", function()
     local line = vim.api.nvim_win_get_cursor(win)[1]
-    if line > 2 and line <= #M._sidebar_state.buffers + 2 then
-      local buffer = M._sidebar_state.buffers[line - 2]
+    if line > 5 and line <= #M._sidebar_state.buffers + 5 then
+      local buffer = M._sidebar_state.buffers[line - 5]
       vim.api.nvim_buf_delete(buffer.bufnr, { force = false })
       -- Refresh the sidebar content
       M.refresh_sidebar()
@@ -291,7 +316,7 @@ M.toggle_sidebar = function()
   
   -- Position cursor on first buffer
   if #buffers > 0 then
-    vim.api.nvim_win_set_cursor(win, { 3, 0 })
+    vim.api.nvim_win_set_cursor(win, { 6, 0 })
   end
   
   -- Set up autocommands to refresh sidebar when buffers change
@@ -303,6 +328,10 @@ M.toggle_sidebar = function()
       -- Small delay to ensure buffer operations are complete
       vim.defer_fn(function()
         M.refresh_sidebar()
+        -- Ensure width is maintained after buffer operations
+        if M._sidebar_state.win and vim.api.nvim_win_is_valid(M._sidebar_state.win) then
+          vim.api.nvim_win_set_width(M._sidebar_state.win, M._sidebar_state.width)
+        end
       end, 10)
     end,
   })
@@ -312,6 +341,10 @@ M.toggle_sidebar = function()
     group = augroup,
     pattern = tostring(win),
     callback = function()
+      -- Store the width before cleanup
+      if vim.api.nvim_win_is_valid(M._sidebar_state.win) then
+        M._sidebar_state.width = vim.api.nvim_win_get_width(M._sidebar_state.win)
+      end
       M._sidebar_state.is_open = false
       M._sidebar_state.win = nil
       M._sidebar_state.buf = nil
