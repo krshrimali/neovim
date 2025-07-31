@@ -598,15 +598,20 @@ require("lazy").setup {
                     },
                 },
             },
-            {
-                -- Make sure to set this up properly if you have lazy=true
-                'MeanderingProgrammer/render-markdown.nvim',
-                opts = {
-                    file_types = { "markdown", "Avante" },
-                },
-                ft = { "markdown", "Avante" },
-            },
+            -- Removed render-markdown.nvim to avoid weird buffer rendering
         },
+    },
+
+    -- Markdown Preview - LAZY LOAD
+    {
+        "ellisonleao/glow.nvim",
+        ft = "markdown",
+        cmd = "Glow",
+        config = function()
+            local markdown_preview = require("user.markdown_preview")
+            markdown_preview.setup()
+            markdown_preview.setup_keymaps()
+        end,
     },
 
     -- LSP Saga - LAZY LOAD
