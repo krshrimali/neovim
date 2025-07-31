@@ -292,6 +292,9 @@ function M.lazygit_float()
     once = true,
   })
   
+  -- Start in insert mode for immediate lazygit interaction
+  vim.cmd("startinsert")
+  
   return buf, win, job_id
 end
 
