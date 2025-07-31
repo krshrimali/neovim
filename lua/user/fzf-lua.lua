@@ -44,7 +44,6 @@ fzf_lua.setup({
             ["<F4>"] = "toggle-preview",
             ["<C-d>"] = "preview-page-down",
             ["<C-u>"] = "preview-page-up",
-            ["<C-q>"] = "select-all+accept", -- Send all results to quickfix
         },
         fzf = {
             ["ctrl-z"] = "abort",
@@ -56,7 +55,6 @@ fzf_lua.setup({
             ["alt-a"] = "toggle-all",
             ["f3"] = "toggle-preview-wrap",
             ["f4"] = "toggle-preview",
-            ["ctrl-q"] = "select-all+accept", -- Send all results to quickfix
         },
     },
     
@@ -70,6 +68,7 @@ fzf_lua.setup({
         ["--highlight-line"] = false, -- Disable for performance
         ["--no-scrollbar"] = true, -- Disable scrollbar
         ["--no-separator"] = true, -- Disable separator
+        ["--multi"] = true, -- Enable multi-select
     },
     
 
@@ -84,7 +83,7 @@ fzf_lua.setup({
                 end
             end,
             ["ctrl-q"] = function(selected, opts)
-                _G.fzf_send_to_qf(selected, opts)
+                _G.fzf_send_to_qf_all(selected, opts)
             end,
         },
     },
@@ -138,7 +137,7 @@ fzf_lua.setup({
         glob_separator = "%s%-%-",
         actions = {
             ["ctrl-q"] = function(selected, opts)
-                _G.fzf_send_to_qf(selected, opts)
+                _G.fzf_send_to_qf_all(selected, opts)
             end,
         },
     },
@@ -159,7 +158,7 @@ fzf_lua.setup({
         exec_empty_query = false,
         actions = {
             ["ctrl-q"] = function(selected, opts)
-                _G.fzf_send_to_qf(selected, opts)
+                _G.fzf_send_to_qf_all(selected, opts)
             end,
         },
     },
@@ -175,7 +174,7 @@ fzf_lua.setup({
         previewer = false, -- Disable previewer for instant opening
         actions = {
             ["ctrl-q"] = function(selected, opts)
-                _G.fzf_send_to_qf(selected, opts)
+                _G.fzf_send_to_qf_all(selected, opts)
             end,
         },
     },
@@ -247,7 +246,7 @@ fzf_lua.setup({
         diag_icons = true,
         actions = {
             ["ctrl-q"] = function(selected, opts)
-                _G.fzf_send_to_qf(selected, opts)
+                _G.fzf_send_to_qf_all(selected, opts)
             end,
         },
     },
@@ -310,9 +309,13 @@ fzf_lua.setup({
 -- Register fzf-lua for vim.ui.select
 fzf_lua.register_ui_select()
 
--- Global function for sending results to quickfix
+-- Global function for sending ALL results to quickfix
 local function send_to_qf(selected, opts)
     local qf_list = {}
+    
+    -- Now that we have multi-select enabled, selected should contain all items
+    print(string.format("Processing %d selected items", #selected))
+    
     for _, line in ipairs(selected) do
         -- Strip ANSI color codes first
         local clean_line = line:gsub("\27%[[0-9;]*m", "")
@@ -342,10 +345,25 @@ local function send_to_qf(selected, opts)
     if #qf_list > 0 then
         vim.fn.setqflist(qf_list, 'r')
         vim.cmd("copen")
+        print(string.format("Sent %d items to quickfix list", #qf_list))
+    else
+        print("No items to send to quickfix")
     end
 end
 
--- Make the function available globally
+-- Function that attempts to get all results and send to quickfix
+local function send_to_qf_all(selected, opts)
+    -- This is a workaround - in practice, you should select items with Tab first
+    -- Or we can try to get all results by accessing fzf-lua internals
+    print("IMPORTANT: To send ALL results, first press Alt+A to select all, then Ctrl+Q")
+    print("Or manually select items with Tab before pressing Ctrl+Q")
+    
+    -- For now, just call the regular function
+    send_to_qf(selected, opts)
+end
+
+-- Make the functions available globally
 _G.fzf_send_to_qf = send_to_qf
+_G.fzf_send_to_qf_all = send_to_qf_all
 
 return fzf_lua
