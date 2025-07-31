@@ -56,11 +56,11 @@ local function create_split_terminal(direction, size_ratio, cmd)
   return buf, job_id
 end
 
--- Set terminal keymaps
+-- Set terminal keymaps (for regular terminals, not lazygit)
 local function set_terminal_keymaps(buf)
   local opts = { buffer = buf, noremap = true, silent = true }
   
-  -- Exit terminal mode - only bind Escape, let fish handle jk
+  -- Exit terminal mode with Escape (regular terminals only)
   vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], opts)
   
   -- Window navigation from terminal
@@ -73,13 +73,18 @@ local function set_terminal_keymaps(buf)
   vim.keymap.set("n", "q", ":q<CR>", opts)
 end
 
--- Auto-enter insert mode for terminals
+-- Auto-enter insert mode for terminals (but not lazygit)
 vim.api.nvim_create_autocmd("TermOpen", {
   pattern = "*",
   callback = function()
     local buf = vim.api.nvim_get_current_buf()
-    set_terminal_keymaps(buf)
-    vim.cmd("startinsert")
+    local filetype = vim.api.nvim_buf_get_option(buf, "filetype")
+    
+    -- Skip lazygit buffers - they have their own keymaps
+    if filetype ~= "lazygit" then
+      set_terminal_keymaps(buf)
+      vim.cmd("startinsert")
+    end
   end,
 })
 
@@ -244,19 +249,37 @@ end
 
 -- Lazygit integration
 function M.lazygit_float()
-  local buf, win = create_float_window(0.95, 0.95, "Lazygit")
+  -- Create buffer first and set its properties
+  local buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_option(buf, "filetype", "lazygit")
   
-  vim.api.nvim_set_current_buf(buf)
+  -- Create floating window
+  local width = math.floor(vim.o.columns * 0.95)
+  local height = math.floor(vim.o.lines * 0.95)
+  local col = math.floor((vim.o.columns - width) / 2)
+  local row = math.floor((vim.o.lines - height) / 2)
+  
+  local win = vim.api.nvim_open_win(buf, true, {
+    relative = "editor",
+    width = width,
+    height = height,
+    col = col,
+    row = row,
+    border = config.border,
+    title = "Lazygit",
+    title_pos = "center",
+    style = "minimal",
+  })
+  
+  -- Open terminal
   local job_id = vim.fn.termopen("lazygit")
   
-  -- Lazygit-specific keymaps
-  local opts = { buffer = buf, noremap = true, silent = true }
-  vim.keymap.set("t", "<C-\\><C-n>", [[<C-\><C-n>]], opts)
+  -- Minimal keymaps - only close function
   vim.keymap.set("n", "q", function()
     if vim.api.nvim_win_is_valid(win) then
       vim.api.nvim_win_close(win, true)
     end
-  end, opts)
+  end, { buffer = buf, noremap = true, silent = true })
   
   -- Auto-close window when lazygit exits
   vim.api.nvim_create_autocmd("TermClose", {
@@ -269,16 +292,26 @@ function M.lazygit_float()
     once = true,
   })
   
+  -- Start in insert mode for immediate lazygit interaction
+  vim.cmd("startinsert")
+  
   return buf, win, job_id
 end
 
 function M.lazygit_tab()
   vim.cmd("tabnew")
   local buf = vim.api.nvim_get_current_buf()
+  
+  -- Set buffer options before opening terminal to prevent autocmd interference
+  vim.api.nvim_buf_set_option(buf, "filetype", "lazygit")
+  
   local job_id = vim.fn.termopen("lazygit")
   
   -- Set buffer name
   vim.api.nvim_buf_set_name(buf, "lazygit")
+  
+  -- Start in insert mode
+  vim.cmd("startinsert")
   
   return buf, job_id
 end
@@ -382,7 +415,6 @@ local function setup_keymaps()
   vim.keymap.set("t", "<C-\\>", M.toggle_centered_terminal, opts)
   
   -- Lazygit
-  vim.keymap.set("n", "<leader>gg", M.lazygit_float, { desc = "Lazygit Float", noremap = true, silent = true })
   vim.keymap.set("n", "<leader>gG", M.lazygit_tab, { desc = "Lazygit Tab", noremap = true, silent = true })
 end
 

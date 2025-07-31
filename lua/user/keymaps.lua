@@ -286,7 +286,7 @@ keymap("n", "<leader>dd", "<cmd>lua require('user.diagnostics_display').debug()<
 keymap("n", "<leader>dt", "<cmd>lua require('user.diagnostics_display').test_line_numbers()<cr>", opts)
 
 -- Lazygit keymaps
-keymap("n", "<leader>gg", "<cmd>lua require('user.lazygit').lazygit_toggle_float()<cr>", opts)
-keymap("n", "<leader>gt", "<cmd>lua require('user.lazygit').lazygit_toggle_tab()<cr>", opts)
+keymap("n", "<leader>gg", "<cmd>lua require('user.terminal').lazygit_float()<cr>", opts)
+keymap("n", "<leader>gt", "<cmd>lua require('user.terminal').lazygit_tab()<cr>", opts)
 
 return M
