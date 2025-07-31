@@ -134,6 +134,12 @@ local function render_tree()
   local flat_items = flatten_tree(tree_data)
   local lines = {}
   
+  -- Add ".." entry for parent directory if we're not at the filesystem root
+  local parent_path = vim.fn.fnamemodify(current_root, ':h')
+  if current_root ~= parent_path and current_root ~= '/' then
+    table.insert(lines, ".. ")
+  end
+  
   for _, item in ipairs(flat_items) do
     local indent = string.rep("  ", item.level)
     local icon = get_icon(item.type == "directory", item.expanded)
@@ -152,8 +158,25 @@ local function get_item_at_cursor()
   local cursor = vim.api.nvim_win_get_cursor(tree_win)
   local line_num = cursor[1]
   
+  -- Check if cursor is on the ".." entry
+  local parent_path = vim.fn.fnamemodify(current_root, ':h')
+  local has_parent_entry = current_root ~= parent_path and current_root ~= '/'
+  
+  if has_parent_entry and line_num == 1 then
+    return {
+      name = "..",
+      path = parent_path,
+      type = "directory",
+      level = 0,
+      expanded = false,
+      children = {},
+      is_parent = true
+    }
+  end
+  
   local flat_items = flatten_tree(tree_data)
-  return flat_items[line_num]
+  local adjusted_line = has_parent_entry and line_num - 1 or line_num
+  return flat_items[adjusted_line]
 end
 
 local function open_file(path, split_type)
@@ -287,6 +310,12 @@ local function toggle_directory()
   local item = get_item_at_cursor()
   if not item or item.type ~= "directory" then return end
   
+  -- Handle ".." parent directory navigation
+  if item.is_parent then
+    navigate_to_parent()
+    return
+  end
+  
   if item.expanded then
     collapse_directory(item)
   else
@@ -296,9 +325,39 @@ local function toggle_directory()
   render_tree()
 end
 
+local function navigate_to_parent()
+  local parent_path = vim.fn.fnamemodify(current_root, ':h')
+  if current_root == parent_path or current_root == '/' then
+    print("Already at filesystem root")
+    return
+  end
+  
+  current_root = parent_path
+  clear_cache()
+  tree_data = scan_directory(current_root, 0)
+  render_tree()
+  
+  -- Set cursor to first item after parent entry
+  local cursor_line = 1
+  local parent_check_path = vim.fn.fnamemodify(current_root, ':h')
+  if current_root ~= parent_check_path and current_root ~= '/' then
+    cursor_line = 2  -- Skip the ".." entry
+  end
+  
+  if tree_win and vim.api.nvim_win_is_valid(tree_win) then
+    vim.api.nvim_win_set_cursor(tree_win, {cursor_line, 0})
+  end
+end
+
 local function handle_enter()
   local item = get_item_at_cursor()
   if not item then return end
+  
+  -- Handle ".." parent directory navigation
+  if item.is_parent then
+    navigate_to_parent()
+    return
+  end
   
   if item.type == "directory" then
     toggle_directory()
@@ -310,6 +369,12 @@ end
 local function handle_l_key()
   local item = get_item_at_cursor()
   if not item then return end
+  
+  -- Handle ".." parent directory navigation
+  if item.is_parent then
+    navigate_to_parent()
+    return
+  end
   
   if item.type == "directory" then
     if not item.expanded then
@@ -447,6 +512,7 @@ function M.open(root_path)
   vim.keymap.set('n', 'y', handle_copy_relative, opts)
   vim.keymap.set('n', 'Y', handle_copy_absolute, opts)
   vim.keymap.set('n', 'g', handle_github_open, opts)
+  vim.keymap.set('n', 'u', function() navigate_to_parent() end, opts)  -- Go to parent directory
   
   -- Set cursor to first item
   if #tree_data > 0 then
