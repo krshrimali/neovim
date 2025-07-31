@@ -52,7 +52,7 @@ fzf_lua.setup({
             ["ctrl-b"] = "half-page-up",
             ["ctrl-a"] = "beginning-of-line",
             ["ctrl-e"] = "end-of-line",
-            ["alt-a"] = "toggle-all",
+            ["alt-a"] = "select-all",
             ["f3"] = "toggle-preview-wrap",
             ["f4"] = "toggle-preview",
         },
@@ -69,6 +69,7 @@ fzf_lua.setup({
         ["--no-scrollbar"] = true, -- Disable scrollbar
         ["--no-separator"] = true, -- Disable separator
         ["--multi"] = true, -- Enable multi-select
+        ["--bind"] = "ctrl-q:select-all+accept", -- Ctrl+Q selects all and accepts
     },
     
 
@@ -310,6 +311,11 @@ fzf_lua.setup({
 fzf_lua.register_ui_select()
 
 -- Global function for sending ALL results to quickfix
+-- How ctrl-q works now:
+-- 1. The fzf_opts includes "--bind=ctrl-q:select-all+accept" which automatically
+--    selects ALL items when ctrl-q is pressed and then accepts them
+-- 2. This means all visible results get passed to the selected parameter
+-- 3. The function below parses each item and adds it to the quickfix list
 local function send_to_qf(selected, opts)
     local qf_list = {}
     
@@ -351,14 +357,9 @@ local function send_to_qf(selected, opts)
     end
 end
 
--- Function that attempts to get all results and send to quickfix
+-- Function that sends all selected results to quickfix
 local function send_to_qf_all(selected, opts)
-    -- This is a workaround - in practice, you should select items with Tab first
-    -- Or we can try to get all results by accessing fzf-lua internals
-    print("IMPORTANT: To send ALL results, first press Alt+A to select all, then Ctrl+Q")
-    print("Or manually select items with Tab before pressing Ctrl+Q")
-    
-    -- For now, just call the regular function
+    -- With the --bind="ctrl-q:select-all+accept" option, all items should be selected automatically
     send_to_qf(selected, opts)
 end
 
