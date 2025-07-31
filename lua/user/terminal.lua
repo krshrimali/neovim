@@ -216,6 +216,40 @@ _G._CARGO_TEST = M.cargo_test
 _G.LAZYGIT_TOGGLE_FLOAT = M.lazygit_float
 _G.LAZYGIT_TOGGLE_TAB = M.lazygit_tab
 
+-- Toggle centered float terminal (60% screen)
+function M.toggle_centered_terminal()
+  if terminals.centered and vim.api.nvim_win_is_valid(terminals.centered.win) then
+    vim.api.nvim_win_close(terminals.centered.win, true)
+    terminals.centered = nil
+  else
+    M.centered_terminal()
+  end
+end
+
+-- Centered terminal (60% screen)
+function M.centered_terminal(cmd)
+  local buf, win = create_float_window(0.6, 0.6, "Terminal")
+  
+  vim.api.nvim_set_current_buf(buf)
+  local job_id = vim.fn.termopen(cmd or config.shell)
+  
+  terminals.centered = { buf = buf, win = win, job_id = job_id }
+  
+  -- Auto-close window when terminal exits
+  vim.api.nvim_create_autocmd("TermClose", {
+    buffer = buf,
+    callback = function()
+      if vim.api.nvim_win_is_valid(win) then
+        vim.api.nvim_win_close(win, true)
+      end
+      terminals.centered = nil
+    end,
+    once = true,
+  })
+  
+  return buf, win, job_id
+end
+
 -- Set up keymaps
 local function setup_keymaps()
   local opts = { noremap = true, silent = true }
@@ -232,6 +266,11 @@ local function setup_keymaps()
   vim.keymap.set("n", "<A-3>", function() M.horizontal_terminal() end, opts)
   vim.keymap.set("i", "<A-3>", function() M.horizontal_terminal() end, opts)
   vim.keymap.set("t", "<A-3>", function() M.horizontal_terminal() end, opts)
+  
+  -- Ctrl+\ for centered floating terminal (60% screen)
+  vim.keymap.set("n", "<C-\\>", M.toggle_centered_terminal, opts)
+  vim.keymap.set("i", "<C-\\>", M.toggle_centered_terminal, opts)
+  vim.keymap.set("t", "<C-\\>", M.toggle_centered_terminal, opts)
   
   -- Lazygit
   vim.keymap.set("n", "<leader>gg", M.lazygit_float, { desc = "Lazygit Float", noremap = true, silent = true })
