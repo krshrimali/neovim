@@ -205,15 +205,8 @@ require("lazy").setup {
         end
     },
 
-    -- Terminal - LAZY LOAD
-    {
-        "akinsho/toggleterm.nvim",
-        cmd = "ToggleTerm",
-        keys = { "<C-\\>" },
-        config = function()
-            require("user.toggleterm")
-        end
-    },
+    -- Terminal functionality is now handled by native Neovim terminal
+    -- Configuration in lua/user/terminal.lua
 
     -- Search and replace - LAZY LOAD
     {

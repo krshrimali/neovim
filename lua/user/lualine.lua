@@ -71,7 +71,17 @@ local filetype = {
             "lir",
             "Outline",
             "spectre_panel",
-            "toggleterm",
+            "terminal",
+            "fterm_float",
+            "fterm_vertical", 
+            "fterm_horizontal",
+            "fterm_lazygit",
+            "fterm_node",
+            "fterm_ncdu",
+            "fterm_htop",
+            "fterm_make",
+            "fterm_cargo_run",
+            "fterm_cargo_test",
             "DressingSelect",
             "",
             "nil",
@@ -94,9 +104,9 @@ local filetype = {
             return toggle_num
         end
 
-        if str == "toggleterm" then
-            -- 
-            local term = " " .. "%*" .. get_term_num() .. "%*"
+        if str == "terminal" or str:match("^fterm_") then
+            -- 
+            local term = " " .. "%*" .. "TERM" .. "%*"
 
             return return_val(term)
         end
@@ -143,7 +153,7 @@ local progress = {
 --   function()
 --     local buf_ft = vim.bo.filetype
 
---     if buf_ft == "toggleterm" or buf_ft == "TelescopePrompt" then
+--     if buf_ft == "terminal" or buf_ft == "TelescopePrompt" then
 --       return ""
 --     end
 --     -- if not pcall(require, "lsp_signature") then
@@ -179,6 +189,17 @@ local spaces = {
             "lir",
             "Outline",
             "spectre_panel",
+            "terminal",
+            "fterm_float",
+            "fterm_vertical", 
+            "fterm_horizontal",
+            "fterm_lazygit",
+            "fterm_node",
+            "fterm_ncdu",
+            "fterm_htop",
+            "fterm_make",
+            "fterm_cargo_run",
+            "fterm_cargo_test",
             "DressingSelect",
             "",
         }
@@ -214,7 +235,17 @@ local lanuage_server = {
             "lir",
             "Outline",
             "spectre_panel",
-            "toggleterm",
+            "terminal",
+            "fterm_float",
+            "fterm_vertical", 
+            "fterm_horizontal",
+            "fterm_lazygit",
+            "fterm_node",
+            "fterm_ncdu",
+            "fterm_htop",
+            "fterm_make",
+            "fterm_cargo_run",
+            "fterm_cargo_test",
             "DressingSelect",
             "TelescopePrompt",
             "lspinfo",
