@@ -4,12 +4,12 @@ local Terminal = require("toggleterm.terminal").Terminal
 
 -- Lazygit floating window configuration
 local lazygit_float = Terminal:new {
-  cmd = "lazygit",
+  cmd = "bash",
   hidden = true,
   direction = "float",
   start_in_insert = true,
-  insert_mappings = true,
-  terminal_mappings = true,
+  insert_mappings = false, -- Disable insert mappings to prevent interference
+  terminal_mappings = false, -- Disable terminal mappings to prevent interference
   persist_mode = false,
   close_on_exit = true,
   float_opts = {
@@ -27,30 +27,42 @@ local lazygit_float = Terminal:new {
     },
   },
   on_open = function(term)
-    -- Start in insert mode
+    -- Start in insert mode for immediate interaction
     vim.cmd("startinsert!")
     
-    -- Set up proper keymaps for the lazygit buffer
-    local opts = { buffer = term.bufnr, noremap = true, silent = true }
-    
-    -- Escape should go to normal mode in the terminal
-    vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], opts)
-    
-    -- Allow easy navigation back to insert mode
-    vim.keymap.set("n", "i", "i", opts)
-    vim.keymap.set("n", "a", "a", opts)
-    
-    -- Close lazygit with q in normal mode
-    vim.keymap.set("n", "q", function()
-      term:close()
-    end, opts)
-    
-    -- Disable line numbers and other UI elements for clean experience
+    -- Disable all UI elements for clean experience
     vim.wo.number = false
     vim.wo.relativenumber = false
     vim.wo.signcolumn = "no"
     vim.wo.foldcolumn = "0"
     vim.wo.statuscolumn = ""
+    
+    -- Mark this buffer as lazygit to prevent global terminal keymaps
+    vim.b[term.bufnr].is_lazygit = true
+    
+    -- Set up minimal keymaps that don't interfere with lazygit
+    local opts = { buffer = term.bufnr, noremap = true, silent = true }
+    
+    -- Only map Ctrl+\ Ctrl+n to exit terminal mode (standard Neovim terminal escape)
+    vim.keymap.set("t", "<C-\\><C-n>", [[<C-\><C-n>]], opts)
+    
+    -- In normal mode, provide ways to get back to terminal or close
+    vim.keymap.set("n", "i", "i", opts) -- Back to insert/terminal mode
+    vim.keymap.set("n", "<CR>", "i", opts) -- Enter also goes back to terminal mode
+    vim.keymap.set("n", "q", function()
+      term:close()
+    end, opts)
+    
+    -- Use a timer to clear interfering keymaps after they're set by the global autocmd
+    vim.defer_fn(function()
+      -- Clear all interfering terminal keymaps
+      pcall(vim.keymap.del, "t", "<Esc>", { buffer = term.bufnr })
+      pcall(vim.keymap.del, "t", "jk", { buffer = term.bufnr })
+      pcall(vim.keymap.del, "t", "<C-h>", { buffer = term.bufnr })
+      pcall(vim.keymap.del, "t", "<C-j>", { buffer = term.bufnr })
+      pcall(vim.keymap.del, "t", "<C-k>", { buffer = term.bufnr })
+      pcall(vim.keymap.del, "t", "<C-l>", { buffer = term.bufnr })
+    end, 100) -- Small delay to ensure global keymaps are set first, then cleared
   end,
   on_close = function(_)
     -- Reset any global settings if needed
@@ -60,34 +72,19 @@ local lazygit_float = Terminal:new {
 
 -- Lazygit tab configuration
 local lazygit_tab = Terminal:new {
-  cmd = "lazygit",
+  cmd = "bash",
   hidden = true,
   direction = "tab",
   start_in_insert = true,
-  insert_mappings = true,
-  terminal_mappings = true,
+  insert_mappings = false, -- Disable insert mappings to prevent interference
+  terminal_mappings = false, -- Disable terminal mappings to prevent interference
   persist_mode = false,
   close_on_exit = true,
   on_open = function(term)
-    -- Start in insert mode
+    -- Start in insert mode for immediate interaction
     vim.cmd("startinsert!")
     
-    -- Set up proper keymaps for the lazygit buffer
-    local opts = { buffer = term.bufnr, noremap = true, silent = true }
-    
-    -- Escape should go to normal mode in the terminal
-    vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], opts)
-    
-    -- Allow easy navigation back to insert mode
-    vim.keymap.set("n", "i", "i", opts)
-    vim.keymap.set("n", "a", "a", opts)
-    
-    -- Close lazygit with q in normal mode (will close the tab)
-    vim.keymap.set("n", "q", function()
-      term:close()
-    end, opts)
-    
-    -- Disable line numbers and other UI elements for clean experience
+    -- Disable all UI elements for clean experience
     vim.wo.number = false
     vim.wo.relativenumber = false
     vim.wo.signcolumn = "no"
@@ -96,6 +93,33 @@ local lazygit_tab = Terminal:new {
     
     -- Set tab title
     vim.cmd("file lazygit")
+    
+    -- Mark this buffer as lazygit to prevent global terminal keymaps
+    vim.b[term.bufnr].is_lazygit = true
+    
+    -- Set up minimal keymaps that don't interfere with lazygit
+    local opts = { buffer = term.bufnr, noremap = true, silent = true }
+    
+    -- Only map Ctrl+\ Ctrl+n to exit terminal mode (standard Neovim terminal escape)
+    vim.keymap.set("t", "<C-\\><C-n>", [[<C-\><C-n>]], opts)
+    
+    -- In normal mode, provide ways to get back to terminal or close
+    vim.keymap.set("n", "i", "i", opts) -- Back to insert/terminal mode
+    vim.keymap.set("n", "<CR>", "i", opts) -- Enter also goes back to terminal mode
+    vim.keymap.set("n", "q", function()
+      term:close()
+    end, opts)
+    
+    -- Use a timer to clear interfering keymaps after they're set by the global autocmd
+    vim.defer_fn(function()
+      -- Clear all interfering terminal keymaps
+      pcall(vim.keymap.del, "t", "<Esc>", { buffer = term.bufnr })
+      pcall(vim.keymap.del, "t", "jk", { buffer = term.bufnr })
+      pcall(vim.keymap.del, "t", "<C-h>", { buffer = term.bufnr })
+      pcall(vim.keymap.del, "t", "<C-j>", { buffer = term.bufnr })
+      pcall(vim.keymap.del, "t", "<C-k>", { buffer = term.bufnr })
+      pcall(vim.keymap.del, "t", "<C-l>", { buffer = term.bufnr })
+    end, 100) -- Small delay to ensure global keymaps are set first, then cleared
   end,
   on_close = function(_)
     -- Reset any global settings if needed
@@ -105,18 +129,24 @@ local lazygit_tab = Terminal:new {
 
 -- Function to toggle lazygit in floating window
 function M.lazygit_toggle_float()
-  -- Change to the current working directory before opening lazygit
   local cwd = vim.fn.getcwd()
-  lazygit_float.cmd = "lazygit -p " .. vim.fn.shellescape(cwd)
+  -- Send lazygit command to the bash terminal
   lazygit_float:toggle()
+  -- Wait a moment for terminal to be ready, then send the command
+  vim.defer_fn(function()
+    lazygit_float:send(string.format('cd %s && exec lazygit', vim.fn.shellescape(cwd)))
+  end, 50)
 end
 
 -- Function to toggle lazygit in a new tab
 function M.lazygit_toggle_tab()
-  -- Change to the current working directory before opening lazygit
   local cwd = vim.fn.getcwd()
-  lazygit_tab.cmd = "lazygit -p " .. vim.fn.shellescape(cwd)
+  -- Send lazygit command to the bash terminal
   lazygit_tab:toggle()
+  -- Wait a moment for terminal to be ready, then send the command
+  vim.defer_fn(function()
+    lazygit_tab:send(string.format('cd %s && exec lazygit', vim.fn.shellescape(cwd)))
+  end, 50)
 end
 
 -- Legacy function for backward compatibility (floating window)
