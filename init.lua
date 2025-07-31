@@ -44,6 +44,9 @@ require "user.surround"
 require "user.nvim_transparent"
 require "user.diagnostics_display"
 
+-- Setup COC virtual lines
+require("user.coc_virtual_lines").setup()
+
 -- fzf-lua is now loaded via lazy.nvim
 
 -- Setup buffer browser (lazy loaded on keymap)
