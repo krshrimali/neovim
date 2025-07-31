@@ -72,37 +72,7 @@ fzf_lua.setup({
         ["--no-separator"] = true, -- Disable separator
     },
     
-    -- Global action for sending to quickfix
-    _send_to_qf = function(selected, opts)
-        local qf_list = {}
-        for _, line in ipairs(selected) do
-            -- Try to parse as grep result first (filename:line:col:text)
-            local filename, lnum, col, text = line:match("([^:]+):(%d+):(%d+):(.*)")
-            if filename and lnum and col and text then
-                table.insert(qf_list, {
-                    filename = filename,
-                    lnum = tonumber(lnum),
-                    col = tonumber(col),
-                    text = text,
-                })
-            else
-                -- Fallback: treat as file path
-                local file_path = line:match("^%s*(.-)%s*$") -- trim whitespace
-                if file_path and file_path ~= "" then
-                    table.insert(qf_list, {
-                        filename = file_path,
-                        lnum = 1,
-                        col = 1,
-                        text = "File: " .. file_path,
-                    })
-                end
-            end
-        end
-        if #qf_list > 0 then
-            vim.fn.setqflist(qf_list, 'r')
-            vim.cmd("copen")
-        end
-    end,
+
 
     -- Actions optimized for speed
     actions = {
@@ -114,14 +84,14 @@ fzf_lua.setup({
                 end
             end,
             ["ctrl-q"] = function(selected, opts)
-                require("fzf-lua")._send_to_qf(selected, opts)
+                _G.fzf_send_to_qf(selected, opts)
             end,
         },
     },
     
     -- File picker optimizations
     files = {
-        prompt = "Files❯ ",
+        prompt = "Files> ",
         multiprocess = true,
         git_icons = false, -- Disable for max performance
         file_icons = false, -- Disable for max performance  
@@ -140,7 +110,7 @@ fzf_lua.setup({
     
     -- Oldfiles (recent files) optimizations
     oldfiles = {
-        prompt = "Recent❯ ",
+        prompt = "Recent> ",
         cwd_only = false,
         stat_file = false, -- Disable file verification for speed
         include_current_session = false,
@@ -152,43 +122,51 @@ fzf_lua.setup({
     
     -- Grep optimizations
     grep = {
-        prompt = "Rg❯ ",
-        input_prompt = "Grep For❯ ",
+        prompt = "Rg> ",
+        input_prompt = "Grep For> ",
         multiprocess = true,
         git_icons = false,
         file_icons = true,
         color_icons = true,
+        fn_transform = function(x)
+            -- Strip ANSI color codes from the output
+            return x:gsub("\27%[[0-9;]*m", "")
+        end,
         rg_opts = "--column --line-number --no-heading --color=never --smart-case --max-columns=4096 -e",
         rg_glob = true,
         glob_flag = "--iglob",
         glob_separator = "%s%-%-",
         actions = {
             ["ctrl-q"] = function(selected, opts)
-                require("fzf-lua")._send_to_qf(selected, opts)
+                _G.fzf_send_to_qf(selected, opts)
             end,
         },
     },
     
     -- Live grep optimizations
     live_grep = {
-        prompt = "LiveGrep❯ ",
+        prompt = "LiveGrep> ",
         multiprocess = true,
         git_icons = false,
         file_icons = true,
         color_icons = true,
         rg_opts = "--column --line-number --no-heading --color=never --smart-case --max-columns=4096",
         -- Performance: disable some features for speed
+        fn_transform = function(x)
+            -- Strip ANSI color codes from the output
+            return x:gsub("\27%[[0-9;]*m", "")
+        end,
         exec_empty_query = false,
         actions = {
             ["ctrl-q"] = function(selected, opts)
-                require("fzf-lua")._send_to_qf(selected, opts)
+                _G.fzf_send_to_qf(selected, opts)
             end,
         },
     },
     
     -- Buffer optimizations  
     buffers = {
-        prompt = "Buffers❯ ",
+        prompt = "Buffers> ",
         file_icons = false, -- Disable for performance
         color_icons = false, -- Disable for performance
         sort_lastused = true,
@@ -197,20 +175,20 @@ fzf_lua.setup({
         previewer = false, -- Disable previewer for instant opening
         actions = {
             ["ctrl-q"] = function(selected, opts)
-                require("fzf-lua")._send_to_qf(selected, opts)
+                _G.fzf_send_to_qf(selected, opts)
             end,
         },
     },
     
     -- Help tags
     helptags = {
-        prompt = "Help❯ ",
+        prompt = "Help> ",
     },
     
     -- Git files
     git = {
         files = {
-            prompt = "GitFiles❯ ",
+            prompt = "GitFiles> ",
             cmd = "git ls-files --exclude-standard",
             multiprocess = true,
             git_icons = true,
@@ -218,7 +196,7 @@ fzf_lua.setup({
             color_icons = true,
         },
         status = {
-            prompt = "GitStatus❯ ",
+            prompt = "GitStatus> ",
             cmd = "git -c color.status=false status -s",
             multiprocess = true,
             file_icons = true,
@@ -227,17 +205,17 @@ fzf_lua.setup({
             previewer = "git_diff",
         },
         commits = {
-            prompt = "Commits❯ ",
+            prompt = "Commits> ",
             cmd = "git log --color --pretty=format:'%C(yellow)%h%Creset %Cgreen(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'",
             preview = "git show --color {1}",
         },
         bcommits = {
-            prompt = "BCommits❯ ",
+            prompt = "BCommits> ",
             cmd = "git log --color --pretty=format:'%C(yellow)%h%Creset %Cgreen(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
             preview = "git show --color {1} -- {file}",
         },
         branches = {
-            prompt = "Branches❯ ",
+            prompt = "Branches> ",
             cmd = "git branch --all --color",
             preview = "git log --graph --pretty=oneline --abbrev-commit --color {1}",
         },
@@ -245,7 +223,7 @@ fzf_lua.setup({
     
     -- LSP settings
     lsp = {
-        prompt_postfix = "❯ ",
+        prompt_postfix = "> ",
         cwd_only = false,
         async_or_timeout = 5000,
         file_icons = true,
@@ -255,21 +233,21 @@ fzf_lua.setup({
             symbol_style = 1,
         },
         code_actions = {
-            prompt = "Code Actions❯ ",
+            prompt = "Code Actions> ",
             async_or_timeout = 5000,
         },
     },
     
     -- Diagnostics
     diagnostics = {
-        prompt = "Diagnostics❯ ",
+        prompt = "Diagnostics> ",
         cwd_only = false,
         file_icons = true,
         git_icons = false,
         diag_icons = true,
         actions = {
             ["ctrl-q"] = function(selected, opts)
-                require("fzf-lua")._send_to_qf(selected, opts)
+                _G.fzf_send_to_qf(selected, opts)
             end,
         },
     },
@@ -282,54 +260,92 @@ fzf_lua.setup({
     
     -- Colorschemes
     colorschemes = {
-        prompt = "Colorschemes❯ ",
+        prompt = "Colorschemes> ",
         live_preview = true,
         winopts = { height = 0.55, width = 0.30 },
     },
     
     -- Keymaps
     keymaps = {
-        prompt = "Keymaps❯ ",
+        prompt = "Keymaps> ",
         winopts = { preview = { layout = "vertical" } },
     },
     
     -- Commands
     commands = {
-        prompt = "Commands❯ ",
+        prompt = "Commands> ",
     },
     
     -- Command history
     command_history = {
-        prompt = "History❯ ",
+        prompt = "History> ",
     },
     
     -- Search history
     search_history = {
-        prompt = "Search❯ ",
+        prompt = "Search> ",
     },
     
     -- Marks
     marks = {
-        prompt = "Marks❯ ",
+        prompt = "Marks> ",
     },
     
     -- Registers
     registers = {
-        prompt = "Registers❯ ",
+        prompt = "Registers> ",
     },
     
     -- Autocmds
     autocmds = {
-        prompt = "Autocmds❯ ",
+        prompt = "Autocmds> ",
     },
     
     -- Highlights
     highlights = {
-        prompt = "Highlights❯ ",
+        prompt = "Highlights> ",
     },
 })
 
 -- Register fzf-lua for vim.ui.select
 fzf_lua.register_ui_select()
+
+-- Global function for sending results to quickfix
+local function send_to_qf(selected, opts)
+    local qf_list = {}
+    for _, line in ipairs(selected) do
+        -- Strip ANSI color codes first
+        local clean_line = line:gsub("\27%[[0-9;]*m", "")
+        
+        -- Try to parse as grep result first (filename:line:col:text)
+        local filename, lnum, col, text = clean_line:match("([^:]+):(%d+):(%d+):(.*)")
+        if filename and lnum and col and text then
+            table.insert(qf_list, {
+                filename = filename,
+                lnum = tonumber(lnum),
+                col = tonumber(col),
+                text = text,
+            })
+        else
+            -- Fallback: treat as file path
+            local file_path = clean_line:match("^%s*(.-)%s*$") -- trim whitespace
+            if file_path and file_path ~= "" then
+                table.insert(qf_list, {
+                    filename = file_path,
+                    lnum = 1,
+                    col = 1,
+                    text = "File: " .. file_path,
+                })
+            end
+        end
+    end
+    if #qf_list > 0 then
+        vim.fn.setqflist(qf_list, 'r')
+        vim.cmd("copen")
+    end
+end
+
+-- Make the function available globally
+_G.fzf_send_to_qf = send_to_qf
 
 return fzf_lua
