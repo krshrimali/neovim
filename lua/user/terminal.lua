@@ -60,9 +60,8 @@ end
 local function set_terminal_keymaps(buf)
   local opts = { buffer = buf, noremap = true, silent = true }
   
-  -- Exit terminal mode
+  -- Exit terminal mode - only bind Escape, let fish handle jk
   vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], opts)
-  vim.keymap.set("t", "jk", [[<C-\><C-n>]], opts)
   
   -- Window navigation from terminal
   vim.keymap.set("t", "<C-h>", [[<C-\><C-n><C-w>h]], opts)
@@ -122,11 +121,97 @@ function M.horizontal_terminal(cmd)
   return buf, job_id
 end
 
+-- Toggle vertical terminal
+function M.toggle_vertical_terminal()
+  if terminals.vertical and vim.api.nvim_buf_is_valid(terminals.vertical.buf) then
+    -- Find and close the vertical terminal window
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+      if vim.api.nvim_win_get_buf(win) == terminals.vertical.buf then
+        vim.api.nvim_win_close(win, true)
+        break
+      end
+    end
+    terminals.vertical.hidden = true
+  elseif terminals.vertical and terminals.vertical.hidden then
+    -- Restore the vertical terminal
+    local buf = terminals.vertical.buf
+    if vim.api.nvim_buf_is_valid(buf) then
+      vim.cmd("vsplit")
+      local width = math.floor(vim.o.columns * config.size.vertical.width)
+      vim.cmd("vertical resize " .. width)
+      vim.api.nvim_set_current_buf(buf)
+      terminals.vertical.hidden = false
+      vim.cmd("startinsert")
+    else
+      -- Buffer is invalid, create new terminal
+      terminals.vertical = nil
+      M.vertical_terminal()
+    end
+  else
+    M.vertical_terminal()
+  end
+end
+
+-- Toggle horizontal terminal
+function M.toggle_horizontal_terminal()
+  if terminals.horizontal and vim.api.nvim_buf_is_valid(terminals.horizontal.buf) then
+    -- Find and close the horizontal terminal window
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+      if vim.api.nvim_win_get_buf(win) == terminals.horizontal.buf then
+        vim.api.nvim_win_close(win, true)
+        break
+      end
+    end
+    terminals.horizontal.hidden = true
+  elseif terminals.horizontal and terminals.horizontal.hidden then
+    -- Restore the horizontal terminal
+    local buf = terminals.horizontal.buf
+    if vim.api.nvim_buf_is_valid(buf) then
+      vim.cmd("split")
+      local height = math.floor(vim.o.lines * config.size.horizontal.height)
+      vim.cmd("resize " .. height)
+      vim.api.nvim_set_current_buf(buf)
+      terminals.horizontal.hidden = false
+      vim.cmd("startinsert")
+    else
+      -- Buffer is invalid, create new terminal
+      terminals.horizontal = nil
+      M.horizontal_terminal()
+    end
+  else
+    M.horizontal_terminal()
+  end
+end
+
 -- Toggle float terminal
 function M.toggle_float_terminal()
   if terminals.float and vim.api.nvim_win_is_valid(terminals.float.win) then
-    vim.api.nvim_win_close(terminals.float.win, true)
-    terminals.float = nil
+    -- Hide the terminal instead of closing it
+    vim.api.nvim_win_hide(terminals.float.win)
+    terminals.float.hidden = true
+  elseif terminals.float and terminals.float.hidden then
+    -- Restore the hidden terminal
+    local buf = terminals.float.buf
+    if vim.api.nvim_buf_is_valid(buf) then
+      local win = vim.api.nvim_open_win(buf, true, {
+        relative = "editor",
+        width = math.floor(vim.o.columns * config.size.float.width),
+        height = math.floor(vim.o.lines * config.size.float.height),
+        col = math.floor((vim.o.columns - math.floor(vim.o.columns * config.size.float.width)) / 2),
+        row = math.floor((vim.o.lines - math.floor(vim.o.lines * config.size.float.height)) / 2),
+        border = config.border,
+        title = "Float Terminal",
+        title_pos = "center",
+        style = "minimal",
+      })
+      terminals.float.win = win
+      terminals.float.hidden = false
+      vim.cmd("startinsert")
+    else
+      -- Buffer is invalid, create new terminal
+      terminals.float = nil
+      M.float_terminal()
+    end
   else
     M.float_terminal()
   end
@@ -205,8 +290,8 @@ end
 
 -- Global functions for keybindings
 _G._FLOAT_TERM = M.toggle_float_terminal
-_G._VERTICAL_TERM = function() M.vertical_terminal() end
-_G._HORIZONTAL_TERM = function() M.horizontal_terminal() end
+_G._VERTICAL_TERM = M.toggle_vertical_terminal
+_G._HORIZONTAL_TERM = M.toggle_horizontal_terminal
 _G._NODE_TOGGLE = M.node_terminal
 _G._NCDU_TOGGLE = M.ncdu_terminal
 _G._HTOP_TOGGLE = M.htop_terminal
@@ -219,8 +304,32 @@ _G.LAZYGIT_TOGGLE_TAB = M.lazygit_tab
 -- Toggle centered float terminal (60% screen)
 function M.toggle_centered_terminal()
   if terminals.centered and vim.api.nvim_win_is_valid(terminals.centered.win) then
-    vim.api.nvim_win_close(terminals.centered.win, true)
-    terminals.centered = nil
+    -- Hide the terminal instead of closing it
+    vim.api.nvim_win_hide(terminals.centered.win)
+    terminals.centered.hidden = true
+  elseif terminals.centered and terminals.centered.hidden then
+    -- Restore the hidden terminal
+    local buf = terminals.centered.buf
+    if vim.api.nvim_buf_is_valid(buf) then
+      local win = vim.api.nvim_open_win(buf, true, {
+        relative = "editor",
+        width = math.floor(vim.o.columns * 0.6),
+        height = math.floor(vim.o.lines * 0.6),
+        col = math.floor((vim.o.columns - math.floor(vim.o.columns * 0.6)) / 2),
+        row = math.floor((vim.o.lines - math.floor(vim.o.lines * 0.6)) / 2),
+        border = config.border,
+        title = "Terminal",
+        title_pos = "center",
+        style = "minimal",
+      })
+      terminals.centered.win = win
+      terminals.centered.hidden = false
+      vim.cmd("startinsert")
+    else
+      -- Buffer is invalid, create new terminal
+      terminals.centered = nil
+      M.centered_terminal()
+    end
   else
     M.centered_terminal()
   end
@@ -259,13 +368,13 @@ local function setup_keymaps()
   vim.keymap.set("i", "<A-1>", M.toggle_float_terminal, opts)
   vim.keymap.set("t", "<A-1>", M.toggle_float_terminal, opts)
   
-  vim.keymap.set("n", "<A-2>", function() M.vertical_terminal() end, opts)
-  vim.keymap.set("i", "<A-2>", function() M.vertical_terminal() end, opts)
-  vim.keymap.set("t", "<A-2>", function() M.vertical_terminal() end, opts)
+  vim.keymap.set("n", "<A-2>", M.toggle_vertical_terminal, opts)
+  vim.keymap.set("i", "<A-2>", M.toggle_vertical_terminal, opts)
+  vim.keymap.set("t", "<A-2>", M.toggle_vertical_terminal, opts)
   
-  vim.keymap.set("n", "<A-3>", function() M.horizontal_terminal() end, opts)
-  vim.keymap.set("i", "<A-3>", function() M.horizontal_terminal() end, opts)
-  vim.keymap.set("t", "<A-3>", function() M.horizontal_terminal() end, opts)
+  vim.keymap.set("n", "<A-3>", M.toggle_horizontal_terminal, opts)
+  vim.keymap.set("i", "<A-3>", M.toggle_horizontal_terminal, opts)
+  vim.keymap.set("t", "<A-3>", M.toggle_horizontal_terminal, opts)
   
   -- Ctrl+\ for centered floating terminal (60% screen)
   vim.keymap.set("n", "<C-\\>", M.toggle_centered_terminal, opts)
