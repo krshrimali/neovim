@@ -548,6 +548,17 @@ which_key.add {
     desc = "Toggle Custom COC Virtual Lines",
   },
   {
+    "<leader>lec",
+    function()
+      -- Toggle COC Code Lens
+      local current = vim.fn.CocAction('getConfig', 'codeLens.enable')
+      local new_value = not current
+      vim.fn['coc#config']('codeLens.enable', new_value)
+      vim.notify('COC Code Lens: ' .. (new_value and 'enabled' or 'disabled'))
+    end,
+    desc = "Toggle COC Code Lens",
+  },
+  {
     "<leader>lo",
     "<cmd>Outline<cr>",
     desc = "Outline (toggles)",
