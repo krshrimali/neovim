@@ -69,6 +69,7 @@ fzf_lua.setup({
         ["--no-scrollbar"] = true, -- Disable scrollbar
         ["--no-separator"] = true, -- Disable separator
         ["--multi"] = true, -- Enable multi-select
+        ["--bind"] = "ctrl-q:select-all+accept", -- Ctrl+Q selects all and accepts
     },
     
 
@@ -83,7 +84,7 @@ fzf_lua.setup({
                 end
             end,
             ["ctrl-q"] = function(selected, opts)
-                _G.fzf_send_to_qf_all(selected, opts)
+                _G.fzf_send_to_qf(selected, opts)
             end,
         },
     },
@@ -137,7 +138,7 @@ fzf_lua.setup({
         glob_separator = "%s%-%-",
         actions = {
             ["ctrl-q"] = function(selected, opts)
-                _G.fzf_send_to_qf_all(selected, opts)
+                _G.fzf_send_to_qf(selected, opts)
             end,
         },
     },
@@ -158,7 +159,7 @@ fzf_lua.setup({
         exec_empty_query = false,
         actions = {
             ["ctrl-q"] = function(selected, opts)
-                _G.fzf_send_to_qf_all(selected, opts)
+                _G.fzf_send_to_qf(selected, opts)
             end,
         },
     },
@@ -174,7 +175,7 @@ fzf_lua.setup({
         previewer = false, -- Disable previewer for instant opening
         actions = {
             ["ctrl-q"] = function(selected, opts)
-                _G.fzf_send_to_qf_all(selected, opts)
+                _G.fzf_send_to_qf(selected, opts)
             end,
         },
     },
@@ -246,7 +247,7 @@ fzf_lua.setup({
         diag_icons = true,
         actions = {
             ["ctrl-q"] = function(selected, opts)
-                _G.fzf_send_to_qf_all(selected, opts)
+                _G.fzf_send_to_qf(selected, opts)
             end,
         },
     },
@@ -351,19 +352,7 @@ local function send_to_qf(selected, opts)
     end
 end
 
--- Function that attempts to get all results and send to quickfix
-local function send_to_qf_all(selected, opts)
-    -- This is a workaround - in practice, you should select items with Tab first
-    -- Or we can try to get all results by accessing fzf-lua internals
-    print("IMPORTANT: To send ALL results, first press Alt+A to select all, then Ctrl+Q")
-    print("Or manually select items with Tab before pressing Ctrl+Q")
-    
-    -- For now, just call the regular function
-    send_to_qf(selected, opts)
-end
-
--- Make the functions available globally
+-- Make the function available globally
 _G.fzf_send_to_qf = send_to_qf
-_G.fzf_send_to_qf_all = send_to_qf_all
 
 return fzf_lua
