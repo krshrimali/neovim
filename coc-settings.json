@@ -42,7 +42,7 @@
   "hover.target": "float",
   
   // Code lens
-  "codeLens.enable": true,
+  "codeLens.enable": false,
   
   // Outline
   "outline.enable": true,
@@ -53,5 +53,15 @@
   
   // Extensions
   "coc.preferences.extensionUpdateCheck": "daily",
-  "coc.preferences.formatOnSaveFiletypes": []
+  "coc.preferences.formatOnSaveFiletypes": [],
+  
+  // Python-specific settings
+  "python.analysis.autoImportCompletions": true,
+  "python.linting.enabled": true,
+  "pyright.disableLanguageServices": false,
+  
+  // Disable code lens for Python specifically
+  "[python]": {
+    "codeLens.enable": false
+  }
 }

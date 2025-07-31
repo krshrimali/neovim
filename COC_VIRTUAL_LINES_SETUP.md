@@ -130,11 +130,34 @@ To modify COC's virtual text settings permanently, edit the `coc-settings.json` 
 
 The native COC approach should not conflict with other diagnostic plugins since it uses COC's own rendering system.
 
+## Code Lens (Test Runner Ghost Text)
+
+If you see ">> [RUN unittest]" or similar ghost text above test functions, this is **Code Lens** functionality from your language server (e.g., Python's Pyright).
+
+### Disabling Code Lens
+
+**Option 1: Disable globally**
+- Press `<leader>lec` to toggle Code Lens on/off
+- Or set `"codeLens.enable": false` in `coc-settings.json`
+
+**Option 2: Disable only for Python**
+```json
+{
+  "[python]": {
+    "codeLens.enable": false
+  }
+}
+```
+
+**Option 3: Keep Code Lens but hide test runners**
+Some language servers allow you to configure which Code Lens actions to show. Check your language server's documentation.
+
 ## Additional COC.nvim Diagnostic Features
 
 - `:CocList diagnostics` - Show all diagnostics in a list
 - `[g` and `]g` - Navigate between diagnostics
 - `<leader>ld` - Show diagnostic info for current line
+- `<leader>lec` - Toggle Code Lens on/off
 - `:CocDiagnostics` - Open diagnostics in location list
 
 ## References
