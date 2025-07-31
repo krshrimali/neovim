@@ -181,6 +181,11 @@ _G.find_files = function()
         path_display = { "smart" },
         previewer = false,
         follow = false,
+        attach_mappings = function(_, map)
+            map("i", "<C-q>", require("telescope.actions").send_to_qflist + require("telescope.actions").open_qflist)
+            map("n", "<C-q>", require("telescope.actions").send_to_qflist + require("telescope.actions").open_qflist)
+            return true
+        end,
     }
 end
 _G.live_grep = function()
@@ -193,6 +198,11 @@ _G.live_grep = function()
         results_limit = 100,
         path_display = { "smart" },
         previewer = false,
+        attach_mappings = function(_, map)
+            map("i", "<C-q>", require("telescope.actions").send_to_qflist + require("telescope.actions").open_qflist)
+            map("n", "<C-q>", require("telescope.actions").send_to_qflist + require("telescope.actions").open_qflist)
+            return true
+        end,
     }
 end
 
@@ -250,12 +260,22 @@ vim.keymap.set('n', '<leader>fb', function()
   require('telescope.builtin').find_files {
     search_dirs = { '/prod/tools/base/' },
     theme = 'ivy',
+    attach_mappings = function(_, map)
+      map("i", "<C-q>", require("telescope.actions").send_to_qflist + require("telescope.actions").open_qflist)
+      map("n", "<C-q>", require("telescope.actions").send_to_qflist + require("telescope.actions").open_qflist)
+      return true
+    end,
   }
 end, { desc = 'Find files in base' })
 vim.keymap.set('n', '<leader>gb', function()
   require('telescope.builtin').live_grep {
     search_dirs = { '/prod/tools/base/' },
     theme = 'ivy',
+    attach_mappings = function(_, map)
+      map("i", "<C-q>", require("telescope.actions").send_to_qflist + require("telescope.actions").open_qflist)
+      map("n", "<C-q>", require("telescope.actions").send_to_qflist + require("telescope.actions").open_qflist)
+      return true
+    end,
   }
 end, { desc = 'Live grep in base' })
 
