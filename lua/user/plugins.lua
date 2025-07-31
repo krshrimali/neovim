@@ -205,14 +205,8 @@ require("lazy").setup {
         end
     },
 
-    -- Terminal - LAZY LOAD
-    {
-        "numToStr/FTerm.nvim",
-        keys = { "<A-1>", "<A-2>", "<A-3>", "<leader>T" },
-        config = function()
-            require("user.fterm")
-        end
-    },
+    -- Terminal functionality is now handled by native Neovim terminal
+    -- Configuration in lua/user/terminal.lua
 
     -- Search and replace - LAZY LOAD
     {

@@ -71,7 +71,7 @@ local filetype = {
             "lir",
             "Outline",
             "spectre_panel",
-            "FTerm",
+            "terminal",
             "fterm_float",
             "fterm_vertical", 
             "fterm_horizontal",
@@ -104,7 +104,7 @@ local filetype = {
             return toggle_num
         end
 
-        if str == "FTerm" or str:match("^fterm_") then
+        if str == "terminal" or str:match("^fterm_") then
             -- 
             local term = " " .. "%*" .. "TERM" .. "%*"
 
@@ -153,7 +153,7 @@ local progress = {
 --   function()
 --     local buf_ft = vim.bo.filetype
 
---     if buf_ft == "FTerm" or buf_ft == "TelescopePrompt" then
+--     if buf_ft == "terminal" or buf_ft == "TelescopePrompt" then
 --       return ""
 --     end
 --     -- if not pcall(require, "lsp_signature") then
@@ -189,7 +189,7 @@ local spaces = {
             "lir",
             "Outline",
             "spectre_panel",
-            "FTerm",
+            "terminal",
             "fterm_float",
             "fterm_vertical", 
             "fterm_horizontal",
@@ -235,7 +235,7 @@ local lanuage_server = {
             "lir",
             "Outline",
             "spectre_panel",
-            "FTerm",
+            "terminal",
             "fterm_float",
             "fterm_vertical", 
             "fterm_horizontal",
