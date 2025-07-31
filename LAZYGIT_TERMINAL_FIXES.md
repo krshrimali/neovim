@@ -25,15 +25,20 @@
 ## Technical Changes
 
 ### Modified Functions
-- `M.lazygit_float()`: Now sets filetype and uses minimal keymaps
-- `M.lazygit_tab()`: Now sets filetype and uses minimal keymaps
+- `M.lazygit_float()`: Optimized window creation, minimal keymaps, no unnecessary navigation bindings
+- `M.lazygit_tab()`: Simplified implementation with minimal overhead
 - Global `TermOpen` autocmd: Now skips lazygit buffers
 
+### Performance Optimizations
+- **Removed excessive keymaps**: Eliminated window navigation keymaps (`<C-h/j/k/l>`) that were causing conflicts
+- **Streamlined buffer creation**: Set buffer properties before window creation
+- **Inline window creation**: Avoided helper function overhead for floating windows
+- **Minimal keymap set**: Only essential keymaps to reduce processing overhead
+
 ### Keymaps for Lazygit
-- `<C-\><C-n>`: Exit terminal mode (only way to get to normal mode)
-- `<C-h/j/k/l>`: Window navigation from terminal mode
-- `q`: Close lazygit window (from normal mode)
+- `q`: Close lazygit window (from normal mode, floating window only)
 - `<Esc>`: **Unmapped** - passes through to lazygit
+- **No terminal mode keymaps**: All navigation handled by lazygit itself
 
 ### Keymaps for Regular Terminals
 - `<Esc>`: Exit terminal mode
