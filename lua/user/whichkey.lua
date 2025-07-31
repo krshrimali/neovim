@@ -363,8 +363,13 @@ which_key.add {
   -- Git
   {
     "<leader>gg",
-    "<cmd>lua require ('user.terminal').lazygit_toggle()<cr>",
-    desc = "Lazygit",
+    "<cmd>lua require('user.lazygit').lazygit_toggle_float()<cr>",
+    desc = "Lazygit (Float)",
+  },
+  {
+    "<leader>gt",
+    "<cmd>lua require('user.lazygit').lazygit_toggle_tab()<cr>",
+    desc = "Lazygit (Tab)",
   },
   {
     "<leader>gj",
