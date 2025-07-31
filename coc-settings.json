@@ -1,0 +1,57 @@
+{
+  // Diagnostic display settings
+  "diagnostic.enable": true,
+  "diagnostic.enableSign": false,
+  "diagnostic.enableHighlightText": true,
+  "diagnostic.enableMessage": "always",
+  
+  // Virtual text settings for diagnostics
+  "diagnostic.virtualText": false,
+  "diagnostic.virtualTextCurrentLineOnly": false,
+  "diagnostic.virtualTextAlign": "after",
+  "diagnostic.virtualTextPrefix": " ▎ ",
+  "diagnostic.virtualTextLines": 1,
+  "diagnostic.virtualTextLineSeparator": "\n",
+  
+  // Diagnostic levels
+  "diagnostic.level": "information",
+  "diagnostic.messageTarget": "float",
+  "diagnostic.messageDelay": 250,
+  "diagnostic.refreshOnInsertMode": false,
+  
+  // Suggestion settings
+  "suggest.noselect": false,
+  "suggest.enablePreview": true,
+  "suggest.maxCompleteItemCount": 50,
+  "suggest.timeout": 5000,
+  
+  // Language server settings
+  "languageserver": {},
+  
+  // Completion settings
+  "completion.enable": true,
+  "completion.triggerAfterInsertEnter": false,
+  "completion.noselect": false,
+  "completion.preferCompleteThanJumpPlaceholder": true,
+  
+  // Signature help
+  "signature.enable": true,
+  "signature.target": "float",
+  
+  // Hover settings
+  "hover.target": "float",
+  
+  // Code lens
+  "codeLens.enable": true,
+  
+  // Outline
+  "outline.enable": true,
+  
+  // Snippets
+  "snippets.enable": true,
+  "snippets.priority": 90,
+  
+  // Extensions
+  "coc.preferences.extensionUpdateCheck": "daily",
+  "coc.preferences.formatOnSaveFiletypes": []
+}

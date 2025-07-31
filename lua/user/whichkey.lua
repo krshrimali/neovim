@@ -503,28 +503,50 @@ which_key.add {
     "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>",
     desc = "Prev Diagnostic",
   },
-  -- {
-  --   "<leader>lev",
-  --   function()
-  --     local current = vim.fn.CocAction('getConfig', 'diagnostic.virtualText')
-  --     local new_value = not current
-  --     vim.fn['coc#config']('diagnostic.virtualText', new_value)
-  --     vim.fn['coc#config']('diagnostic.virtualTextCurrentLineOnly', false)
-  --     vim.notify('Virtual text: ' .. (new_value and 'enabled' or 'disabled'))
-  --   end,
-  --   desc = "Toggle Virtual Text",
-  -- },
-  -- {
-  --   "<leader>leV",
-  --   function()
-  --     local current = vim.fn.CocAction('getConfig', 'diagnostic.virtualTextAlign') or 'after'
-  --     local new_align = current == 'below' and 'after' or 'below'
-  --     vim.fn['coc#config']('diagnostic.virtualText', true)
-  --     vim.fn['coc#config']('diagnostic.virtualTextAlign', new_align)
-  --     vim.notify('Virtual lines: ' .. (new_align == 'below' and 'enabled' or 'disabled'))
-  --   end,
-  --   desc = "Toggle Virtual Lines",
-  -- },
+  {
+    "<leader>lev",
+    function()
+      -- Toggle coc.nvim virtual text
+      local current = vim.fn.CocAction('getConfig', 'diagnostic.virtualText')
+      local new_value = not current
+      vim.fn['coc#config']('diagnostic.virtualText', new_value)
+      vim.notify('COC Virtual Text: ' .. (new_value and 'enabled' or 'disabled'))
+    end,
+    desc = "Toggle COC Virtual Text",
+  },
+  {
+    "<leader>leV",
+    function()
+      -- Toggle coc.nvim virtual text current line only
+      local current = vim.fn.CocAction('getConfig', 'diagnostic.virtualTextCurrentLineOnly')
+      local new_value = not current
+      vim.fn['coc#config']('diagnostic.virtualText', true)
+      vim.fn['coc#config']('diagnostic.virtualTextCurrentLineOnly', new_value)
+      vim.notify('COC Virtual Text Current Line Only: ' .. (new_value and 'enabled' or 'disabled'))
+    end,
+    desc = "Toggle COC Virtual Text (Current Line Only)",
+  },
+  {
+    "<leader>lel",
+    function()
+      -- Toggle between 'after' and 'below' alignment for virtual text
+      local current = vim.fn.CocAction('getConfig', 'diagnostic.virtualTextAlign') or 'after'
+      local new_align = current == 'below' and 'after' or 'below'
+      vim.fn['coc#config']('diagnostic.virtualText', true)
+      vim.fn['coc#config']('diagnostic.virtualTextAlign', new_align)
+      local mode_text = new_align == 'below' and 'lines' or 'inline'
+      vim.notify('COC Virtual Text Mode: ' .. mode_text)
+    end,
+    desc = "Toggle COC Virtual Text Mode (Inline/Lines)",
+  },
+  {
+    "<leader>levv",
+    function()
+      -- Use custom virtual lines implementation
+      require("user.coc_virtual_lines").toggle()
+    end,
+    desc = "Toggle Custom COC Virtual Lines",
+  },
   {
     "<leader>lo",
     "<cmd>Outline<cr>",
