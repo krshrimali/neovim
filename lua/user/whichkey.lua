@@ -658,23 +658,23 @@ which_key.add {
   -- Terminal
   {
     "<leader>T1",
-    ":1ToggleTerm<cr>",
-    desc = "Terminal 1",
+    "<cmd>lua _FLOAT_TERM()<cr>",
+    desc = "Float Terminal",
   },
   {
     "<leader>T2",
-    ":2ToggleTerm<cr>",
-    desc = "Terminal 2",
+    "<cmd>lua _VERTICAL_TERM()<cr>",
+    desc = "Vertical Terminal",
   },
   {
     "<leader>T3",
-    ":3ToggleTerm<cr>",
-    desc = "Terminal 3",
+    "<cmd>lua _HORIZONTAL_TERM()<cr>",
+    desc = "Horizontal Terminal",
   },
   {
     "<leader>T4",
-    ":4ToggleTerm<cr>",
-    desc = "Terminal 4",
+    "<cmd>lua require('FTerm').toggle()<cr>",
+    desc = "Default Terminal",
   },
   {
     "<leader>Tn",
@@ -698,17 +698,17 @@ which_key.add {
   },
   {
     "<leader>Tf",
-    "<cmd>ToggleTerm direction=float<cr>",
+    "<cmd>lua _FLOAT_TERM()<cr>",
     desc = "Float",
   },
   {
     "<leader>Th",
-    "<cmd>ToggleTerm size=10 direction=horizontal<cr>",
+    "<cmd>lua _HORIZONTAL_TERM()<cr>",
     desc = "Horizontal",
   },
   {
     "<leader>Tv",
-    "<cmd>ToggleTerm size=80 direction=vertical<cr>",
+    "<cmd>lua _VERTICAL_TERM()<cr>",
     desc = "Vertical",
   },
 

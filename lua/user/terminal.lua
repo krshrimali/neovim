@@ -1,6 +1,8 @@
 -- Use the new comprehensive lazygit implementation
 local lazygit = require("user.lazygit")
 
+local M = {}
+
 -- Legacy function for backward compatibility
 M.lazygit_toggle = function()
   lazygit.lazygit_toggle_float()
