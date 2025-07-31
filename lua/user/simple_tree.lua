@@ -353,6 +353,171 @@ local function navigate_to_parent()
   end
 end
 
+local function create_file()
+  local input = vim.fn.input("Create file: ", "", "file")
+  if input == "" then return end
+  
+  local file_path = current_root .. "/" .. input
+  
+  -- Create parent directories if they don't exist
+  local parent_dir = vim.fn.fnamemodify(file_path, ':h')
+  if vim.fn.isdirectory(parent_dir) == 0 then
+    vim.fn.mkdir(parent_dir, 'p')
+  end
+  
+  -- Create the file
+  local file = io.open(file_path, 'w')
+  if file then
+    file:close()
+    print("Created file: " .. file_path)
+    
+    -- Refresh the tree
+    clear_cache()
+    tree_data = scan_directory(current_root, 0)
+    render_tree()
+  else
+    print("Error: Could not create file: " .. file_path)
+  end
+end
+
+local function create_directory()
+  local input = vim.fn.input("Create directory: ", "", "dir")
+  if input == "" then return end
+  
+  local dir_path = current_root .. "/" .. input
+  
+  -- Create directory recursively
+  if vim.fn.mkdir(dir_path, 'p') == 1 then
+    print("Created directory: " .. dir_path)
+    
+    -- Refresh the tree
+    clear_cache()
+    tree_data = scan_directory(current_root, 0)
+    render_tree()
+  else
+    print("Error: Could not create directory: " .. dir_path)
+  end
+end
+
+local function delete_item()
+  local item = get_item_at_cursor()
+  if not item or item.is_parent then
+    print("Cannot delete parent directory entry")
+    return
+  end
+  
+  local item_type = item.type == "directory" and "directory" or "file"
+  local confirm = vim.fn.input("Delete " .. item_type .. " '" .. item.name .. "'? (y/N): ")
+  
+  if confirm:lower() ~= 'y' and confirm:lower() ~= 'yes' then
+    print("Deletion cancelled")
+    return
+  end
+  
+  local success = false
+  if item.type == "directory" then
+    -- Use system command to remove directory
+    local result = os.execute("rm -rf '" .. item.path .. "'")
+    success = result == 0
+  else
+    -- Remove file
+    success = os.remove(item.path) ~= nil
+  end
+  
+  if success then
+    print("Deleted " .. item_type .. ": " .. item.path)
+    
+    -- Refresh the tree
+    clear_cache()
+    tree_data = scan_directory(current_root, 0)
+    render_tree()
+  else
+    print("Error: Could not delete " .. item_type .. ": " .. item.path)
+  end
+end
+
+local function show_help()
+  local help_lines = {
+    "SimpleTree Keymaps:",
+    "",
+    "Navigation:",
+    "  <CR>, o     - Open file/toggle directory",
+    "  l           - Expand directory/open file", 
+    "  <Space>     - Toggle directory",
+    "  u           - Go to parent directory",
+    "  ..          - Click to go to parent directory",
+    "",
+    "File Operations:",
+    "  a           - Create new file",
+    "  A           - Create new directory", 
+    "  d           - Delete file/directory",
+    "",
+    "Window Operations:",
+    "  <C-v>       - Open file in vertical split",
+    "  <C-x>       - Open file in horizontal split",
+    "",
+    "Copy Operations:",
+    "  y           - Copy relative path",
+    "  Y           - Copy absolute path",
+    "",
+    "Other:",
+    "  /           - Search files with Telescope",
+    "  R           - Refresh tree",
+    "  H           - Toggle hidden files",
+    "  g           - Open file in GitHub",
+    "  ?           - Show this help",
+    "  q           - Close tree",
+    "",
+    "Press any key to close this help..."
+  }
+  
+  -- Create help buffer
+  local help_buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_lines(help_buf, 0, -1, false, help_lines)
+  vim.api.nvim_buf_set_option(help_buf, 'modifiable', false)
+  vim.api.nvim_buf_set_option(help_buf, 'buftype', 'nofile')
+  
+  -- Calculate window size
+  local width = 50
+  local height = #help_lines + 2
+  local row = math.floor((vim.o.lines - height) / 2)
+  local col = math.floor((vim.o.columns - width) / 2)
+  
+  -- Create floating window
+  local help_win = vim.api.nvim_open_win(help_buf, true, {
+    relative = 'editor',
+    width = width,
+    height = height,
+    row = row,
+    col = col,
+    style = 'minimal',
+    border = 'rounded',
+    title = ' Help ',
+    title_pos = 'center'
+  })
+  
+  -- Set window options
+  vim.api.nvim_win_set_option(help_win, 'wrap', false)
+  vim.api.nvim_win_set_option(help_win, 'cursorline', false)
+  
+  -- Close on any key press
+  vim.keymap.set('n', '<buffer>', function()
+    if vim.api.nvim_win_is_valid(help_win) then
+      vim.api.nvim_win_close(help_win, true)
+    end
+  end, { buffer = help_buf, silent = true })
+  
+  -- Also handle common keys explicitly
+  local close_keys = {'<Esc>', 'q', '<CR>', '<Space>'}
+  for _, key in ipairs(close_keys) do
+    vim.keymap.set('n', key, function()
+      if vim.api.nvim_win_is_valid(help_win) then
+        vim.api.nvim_win_close(help_win, true)
+      end
+    end, { buffer = help_buf, silent = true })
+  end
+end
+
 local function handle_enter()
   local item = get_item_at_cursor()
   if not item then return end
@@ -517,6 +682,10 @@ function M.open(root_path)
   vim.keymap.set('n', 'Y', handle_copy_absolute, opts)
   vim.keymap.set('n', 'g', handle_github_open, opts)
   vim.keymap.set('n', 'u', function() navigate_to_parent() end, opts)  -- Go to parent directory
+  vim.keymap.set('n', 'a', create_file, opts)
+  vim.keymap.set('n', 'A', create_directory, opts)
+  vim.keymap.set('n', 'd', delete_item, opts)
+  vim.keymap.set('n', '?', show_help, opts)
   
   -- Set cursor to first item
   if #tree_data > 0 then
