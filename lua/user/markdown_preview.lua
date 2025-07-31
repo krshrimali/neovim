@@ -2,7 +2,7 @@ local M = {}
 
 function M.setup()
     require("glow").setup({
-        glow_path = "", -- will use glow from PATH
+        glow_path = "/nix/profiles/shrimali/default/bin/glow", -- explicit path to glow binary
         install_path = "~/.local/bin", -- fallback installation path
         border = "shadow", -- floating window border
         style = "dark", -- filled automatically with your current editor background
