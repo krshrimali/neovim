@@ -27,6 +27,11 @@ toggleterm.setup {
 }
 
 function _G.set_terminal_keymaps()
+  -- Skip setting keymaps for lazygit buffers to prevent interference
+  if vim.b.is_lazygit then
+    return
+  end
+  
   local opts = { noremap = true }
   vim.api.nvim_buf_set_keymap(0, 't', '<esc>', [[<C-\><C-n>]], opts)
   vim.api.nvim_buf_set_keymap(0, "t", "jk", [[<C-\><C-n>]], opts)

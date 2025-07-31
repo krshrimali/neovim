@@ -13,6 +13,8 @@ require "user.options"
 vim.defer_fn(function()
     -- Load terminal configuration when needed
     require "user.terminal"
+    -- Load lazygit configuration
+    require "user.lazygit"
 end, 100)
 
 -- Load these only when plugins are loaded (handled by lazy loading now)
