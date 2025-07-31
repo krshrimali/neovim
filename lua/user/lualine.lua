@@ -72,16 +72,6 @@ local filetype = {
             "Outline",
             "spectre_panel",
             "terminal",
-            "fterm_float",
-            "fterm_vertical", 
-            "fterm_horizontal",
-            "fterm_lazygit",
-            "fterm_node",
-            "fterm_ncdu",
-            "fterm_htop",
-            "fterm_make",
-            "fterm_cargo_run",
-            "fterm_cargo_test",
             "DressingSelect",
             "",
             "nil",
@@ -104,7 +94,7 @@ local filetype = {
             return toggle_num
         end
 
-        if str == "terminal" or str:match("^fterm_") then
+        if str == "terminal" then
             -- 
             local term = " " .. "%*" .. "TERM" .. "%*"
 
@@ -190,16 +180,6 @@ local spaces = {
             "Outline",
             "spectre_panel",
             "terminal",
-            "fterm_float",
-            "fterm_vertical", 
-            "fterm_horizontal",
-            "fterm_lazygit",
-            "fterm_node",
-            "fterm_ncdu",
-            "fterm_htop",
-            "fterm_make",
-            "fterm_cargo_run",
-            "fterm_cargo_test",
             "DressingSelect",
             "",
         }
@@ -236,16 +216,6 @@ local lanuage_server = {
             "Outline",
             "spectre_panel",
             "terminal",
-            "fterm_float",
-            "fterm_vertical", 
-            "fterm_horizontal",
-            "fterm_lazygit",
-            "fterm_node",
-            "fterm_ncdu",
-            "fterm_htop",
-            "fterm_make",
-            "fterm_cargo_run",
-            "fterm_cargo_test",
             "DressingSelect",
             "TelescopePrompt",
             "lspinfo",
