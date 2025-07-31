@@ -62,7 +62,7 @@ fzf_lua.setup({
     
     -- FZF options for performance
     fzf_opts = {
-        ["--ansi"] = true, -- Enable ANSI to properly handle colored grep output
+        ["--ansi"] = false, -- Disable ANSI since we're using --color=never in ripgrep
         ["--info"] = "hidden", -- Hide info for performance
         ["--height"] = "100%",
         ["--layout"] = "reverse",
@@ -72,6 +72,38 @@ fzf_lua.setup({
         ["--no-separator"] = true, -- Disable separator
     },
     
+    -- Global action for sending to quickfix
+    _send_to_qf = function(selected, opts)
+        local qf_list = {}
+        for _, line in ipairs(selected) do
+            -- Try to parse as grep result first (filename:line:col:text)
+            local filename, lnum, col, text = line:match("([^:]+):(%d+):(%d+):(.*)")
+            if filename and lnum and col and text then
+                table.insert(qf_list, {
+                    filename = filename,
+                    lnum = tonumber(lnum),
+                    col = tonumber(col),
+                    text = text,
+                })
+            else
+                -- Fallback: treat as file path
+                local file_path = line:match("^%s*(.-)%s*$") -- trim whitespace
+                if file_path and file_path ~= "" then
+                    table.insert(qf_list, {
+                        filename = file_path,
+                        lnum = 1,
+                        col = 1,
+                        text = "File: " .. file_path,
+                    })
+                end
+            end
+        end
+        if #qf_list > 0 then
+            vim.fn.setqflist(qf_list, 'r')
+            vim.cmd("copen")
+        end
+    end,
+
     -- Actions optimized for speed
     actions = {
         files = {
@@ -82,9 +114,7 @@ fzf_lua.setup({
                 end
             end,
             ["ctrl-q"] = function(selected, opts)
-                -- Send selected files to quickfix list
-                require("fzf-lua.actions").file_sel_to_qf(selected, opts)
-                vim.cmd("copen")
+                require("fzf-lua")._send_to_qf(selected, opts)
             end,
         },
     },
@@ -128,15 +158,13 @@ fzf_lua.setup({
         git_icons = false,
         file_icons = true,
         color_icons = true,
-        rg_opts = "--column --line-number --no-heading --color=always --smart-case --max-columns=4096 -e",
+        rg_opts = "--column --line-number --no-heading --color=never --smart-case --max-columns=4096 -e",
         rg_glob = true,
         glob_flag = "--iglob",
         glob_separator = "%s%-%-",
         actions = {
             ["ctrl-q"] = function(selected, opts)
-                -- Send grep results to quickfix list
-                require("fzf-lua.actions").grep_to_qf(selected, opts)
-                vim.cmd("copen")
+                require("fzf-lua")._send_to_qf(selected, opts)
             end,
         },
     },
@@ -148,14 +176,12 @@ fzf_lua.setup({
         git_icons = false,
         file_icons = true,
         color_icons = true,
-        rg_opts = "--column --line-number --no-heading --color=always --smart-case --max-columns=4096",
+        rg_opts = "--column --line-number --no-heading --color=never --smart-case --max-columns=4096",
         -- Performance: disable some features for speed
         exec_empty_query = false,
         actions = {
             ["ctrl-q"] = function(selected, opts)
-                -- Send live grep results to quickfix list
-                require("fzf-lua.actions").grep_to_qf(selected, opts)
-                vim.cmd("copen")
+                require("fzf-lua")._send_to_qf(selected, opts)
             end,
         },
     },
@@ -171,9 +197,7 @@ fzf_lua.setup({
         previewer = false, -- Disable previewer for instant opening
         actions = {
             ["ctrl-q"] = function(selected, opts)
-                -- Send buffer list to quickfix list
-                require("fzf-lua.actions").buf_sel_to_qf(selected, opts)
-                vim.cmd("copen")
+                require("fzf-lua")._send_to_qf(selected, opts)
             end,
         },
     },
@@ -245,9 +269,7 @@ fzf_lua.setup({
         diag_icons = true,
         actions = {
             ["ctrl-q"] = function(selected, opts)
-                -- Send diagnostics to quickfix list
-                require("fzf-lua.actions").diag_to_qf(selected, opts)
-                vim.cmd("copen")
+                require("fzf-lua")._send_to_qf(selected, opts)
             end,
         },
     },
