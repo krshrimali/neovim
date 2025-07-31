@@ -207,11 +207,10 @@ require("lazy").setup {
 
     -- Terminal - LAZY LOAD
     {
-        "akinsho/toggleterm.nvim",
-        cmd = "ToggleTerm",
-        keys = { "<C-\\>" },
+        "numToStr/FTerm.nvim",
+        keys = { "<A-1>", "<A-2>", "<A-3>", "<leader>T" },
         config = function()
-            require("user.toggleterm")
+            require("user.fterm")
         end
     },
 

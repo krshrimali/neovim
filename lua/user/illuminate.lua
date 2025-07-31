@@ -20,7 +20,7 @@ require("illuminate").configure {
     "lir",
     "Outline",
     "spectre_panel",
-    "toggleterm",
+    "FTerm",
     "DressingSelect",
     "FzfLuaNormal",
   },
