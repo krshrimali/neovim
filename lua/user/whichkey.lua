@@ -673,8 +673,8 @@ which_key.add {
   },
   {
     "<leader>T4",
-    "<cmd>lua require('FTerm').toggle()<cr>",
-    desc = "Default Terminal",
+    "<cmd>lua _FLOAT_TERM()<cr>",
+    desc = "Float Terminal",
   },
   {
     "<leader>Tn",
