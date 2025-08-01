@@ -26,12 +26,12 @@ local default_config = {
     },
   },
   
-  -- Keybindings (non-intrusive, CoC-safe)
+  -- Keybindings (Cursor/VSCode style)
   keymaps = {
-    accept = "<C-l>", -- Safe from CoC conflicts
-    dismiss = "<C-h>", -- Safe from CoC conflicts  
-    next = "<M-]>",
-    prev = "<M-[>",
+    accept = "<Tab>", -- Like Cursor/VSCode
+    dismiss = "<Esc>", -- Like Cursor/VSCode
+    next = "<Tab>", -- Same as accept - navigates to next after accepting
+    prev = "<S-Tab>", -- Shift+Tab for previous
   },
 }
 
@@ -139,31 +139,63 @@ function M.setup_autocommands()
   })
 end
 
--- Setup keymaps - non-intrusive like copilot
+-- Setup keymaps - Cursor/VSCode style with intelligent CoC handling
 function M.setup_keymaps()
   local opts = { noremap = true, silent = true }
   
-  -- Accept suggestion (insert mode, like copilot)
-  vim.keymap.set("i", state.config.keymaps.accept, function()
-    return M.accept_suggestion() and "" or state.config.keymaps.accept
-  end, vim.tbl_extend("force", opts, { expr = true, desc = "Accept next edit suggestion" }))
+  -- Smart Tab handling - works with CoC and Next Edit Suggestions
+  vim.keymap.set("i", "<Tab>", function()
+    -- If we have next edit suggestions, accept current and go to next
+    if #state.current_suggestions > 0 then
+      return M.accept_and_next_suggestion()
+    end
+    
+    -- Check if CoC completion is visible
+    local coc_pumvisible = vim.fn.exists('*coc#pum#visible') == 1 and vim.fn['coc#pum#visible']() == 1
+    if coc_pumvisible then
+      -- Let CoC handle Tab
+      return vim.fn['coc#pum#confirm']()
+    end
+    
+    -- Check if built-in completion is visible
+    if vim.fn.pumvisible() == 1 then
+      return "<C-n>"
+    end
+    
+    -- Default Tab behavior
+    return "<Tab>"
+  end, vim.tbl_extend("force", opts, { expr = true, desc = "Smart Tab - Next Edit or CoC completion" }))
   
-  -- Dismiss suggestion (insert mode, like copilot)
-  vim.keymap.set("i", state.config.keymaps.dismiss, function()
-    M.clear_suggestions()
-    return ""
-  end, vim.tbl_extend("force", opts, { expr = true, desc = "Dismiss next edit suggestions" }))
+  -- Shift+Tab for previous suggestion
+  vim.keymap.set("i", "<S-Tab>", function()
+    if #state.current_suggestions > 0 then
+      M.prev_suggestion()
+      return ""
+    end
+    
+    -- Check if CoC completion is visible
+    local coc_pumvisible = vim.fn.exists('*coc#pum#visible') == 1 and vim.fn['coc#pum#visible']() == 1
+    if coc_pumvisible then
+      return "<C-p>"
+    end
+    
+    -- Check if built-in completion is visible
+    if vim.fn.pumvisible() == 1 then
+      return "<C-p>"
+    end
+    
+    -- Default Shift+Tab behavior
+    return "<S-Tab>"
+  end, vim.tbl_extend("force", opts, { expr = true, desc = "Previous suggestion or completion" }))
   
-  -- Navigate suggestions (insert mode)
-  vim.keymap.set("i", state.config.keymaps.next, function()
-    M.next_suggestion()
-    return ""
-  end, vim.tbl_extend("force", opts, { expr = true, desc = "Next suggestion" }))
-  
-  vim.keymap.set("i", state.config.keymaps.prev, function()
-    M.prev_suggestion()
-    return ""
-  end, vim.tbl_extend("force", opts, { expr = true, desc = "Previous suggestion" }))
+  -- Escape to dismiss suggestions (but don't interfere with normal Escape)
+  vim.keymap.set("i", "<Esc>", function()
+    if #state.current_suggestions > 0 then
+      M.clear_suggestions()
+      -- Don't consume the Escape - let it work normally too
+    end
+    return "<Esc>"
+  end, vim.tbl_extend("force", opts, { expr = true, desc = "Dismiss suggestions and exit insert" }))
 end
 
 -- Save buffer state for change detection
@@ -312,7 +344,7 @@ function M.find_nearby_matches(bufnr, word, current_line, current_col)
   return suggestions
 end
 
--- Show virtual text suggestions (like copilot)
+-- Show virtual text suggestions (Cursor/VSCode style)
 function M.show_virtual_text_suggestions(suggestions)
   if not state.config.virtual_text.enabled or #suggestions == 0 then
     return
@@ -324,32 +356,71 @@ function M.show_virtual_text_suggestions(suggestions)
   local bufnr = vim.api.nvim_get_current_buf()
   state.current_suggestions = suggestions
   
-  -- Show virtual text for each suggestion
+  -- Show virtual text for each suggestion with Cursor-like styling
   for i, suggestion in ipairs(suggestions) do
+    local is_first = i == 1
+    local prefix = is_first and "💡 " or "  "
+    local suffix = is_first and " (Tab)" or ""
+    
     local virt_text = {
-      {state.config.virtual_text.prefix .. "Line " .. (suggestion.line + 1), state.config.virtual_text.hl_group}
+      {prefix .. "Line " .. (suggestion.line + 1) .. suffix, state.config.virtual_text.hl_group}
     }
     
     vim.api.nvim_buf_set_extmark(bufnr, state.namespace, suggestion.line, suggestion.col, {
       virt_text = virt_text,
       virt_text_pos = "eol",
-      priority = state.config.virtual_text.priority,
+      priority = state.config.virtual_text.priority + (is_first and 10 or 0), -- Higher priority for first suggestion
     })
+  end
+  
+  -- Show status message like Cursor
+  if #suggestions > 1 then
+    vim.notify(string.format("Found %d related edits. Press Tab to navigate.", #suggestions), vim.log.levels.INFO)
   end
 end
 
--- Accept current suggestion (like copilot)
+-- Accept current suggestion and navigate to next (like Cursor/VSCode)
+function M.accept_and_next_suggestion()
+  if #state.current_suggestions == 0 then
+    return "<Tab>" -- Fallback to normal Tab
+  end
+  
+  local suggestion = state.current_suggestions[1] -- Always accept first/closest
+  if not suggestion then
+    return "<Tab>"
+  end
+  
+  -- Remove the accepted suggestion from the list
+  table.remove(state.current_suggestions, 1)
+  
+  -- Jump to the suggestion location
+  vim.schedule(function()
+    vim.api.nvim_win_set_cursor(0, {suggestion.line + 1, suggestion.col})
+    
+    -- If there are more suggestions, update the display
+    if #state.current_suggestions > 0 then
+      M.show_virtual_text_suggestions(state.current_suggestions)
+    else
+      -- No more suggestions, clear everything
+      M.clear_suggestions()
+    end
+  end)
+  
+  return "" -- Don't insert anything
+end
+
+-- Accept current suggestion (simple version)
 function M.accept_suggestion()
   if #state.current_suggestions == 0 then
     return false
   end
   
-  local suggestion = state.current_suggestions[1] -- Always accept first/closest
+  local suggestion = state.current_suggestions[1]
   if not suggestion then
     return false
   end
   
-  -- Jump to the suggestion location and apply rename
+  -- Jump to the suggestion location
   vim.api.nvim_win_set_cursor(0, {suggestion.line + 1, suggestion.col})
   
   -- Clear suggestions after accepting

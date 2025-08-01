@@ -27,12 +27,12 @@ return {
         },
       },
       
-             -- Keybindings (CoC-safe, non-intrusive)
+             -- Keybindings (Cursor/VSCode style with intelligent CoC handling)
        keymaps = {
-         accept = "<C-l>", -- Safe from CoC conflicts
-         dismiss = "<C-h>", -- Safe from CoC conflicts
-         next = "<M-]>",
-         prev = "<M-[>",
+         accept = "<Tab>", -- Like Cursor/VSCode - intelligently handles CoC
+         dismiss = "<Esc>", -- Like Cursor/VSCode
+         next = "<Tab>", -- Same as accept
+         prev = "<S-Tab>", -- Shift+Tab for previous
        },
     })
   end,
