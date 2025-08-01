@@ -301,15 +301,48 @@ local location = {
     padding = 0,
 }
 
-local custom_auto_theme = require 'lualine.themes.auto'
-custom_auto_theme.normal.c.bg = NONE
+-- Create custom theme for Cursor Dark
+local function create_cursor_dark_theme()
+    local cursor_colors = require("user.themes.init").get_colors()
+    
+    return {
+        normal = {
+            a = { fg = cursor_colors.bg, bg = cursor_colors.blue, gui = 'bold' },
+            b = { fg = cursor_colors.fg_light, bg = cursor_colors.bg_light },
+            c = { fg = cursor_colors.fg, bg = cursor_colors.bg },
+        },
+        insert = {
+            a = { fg = cursor_colors.bg, bg = cursor_colors.green, gui = 'bold' },
+        },
+        visual = {
+            a = { fg = cursor_colors.bg, bg = cursor_colors.purple, gui = 'bold' },
+        },
+        replace = {
+            a = { fg = cursor_colors.bg, bg = cursor_colors.red, gui = 'bold' },
+        },
+        command = {
+            a = { fg = cursor_colors.bg, bg = cursor_colors.yellow, gui = 'bold' },
+        },
+        terminal = {
+            a = { fg = cursor_colors.bg, bg = cursor_colors.cyan, gui = 'bold' },
+        },
+        inactive = {
+            a = { fg = cursor_colors.fg_dark, bg = cursor_colors.bg_alt },
+            b = { fg = cursor_colors.fg_dark, bg = cursor_colors.bg_alt },
+            c = { fg = cursor_colors.fg_dark, bg = cursor_colors.bg_alt },
+        },
+    }
+end
+
+local cursor_theme = create_cursor_dark_theme()
 
 lualine.setup {
     options = {
         globalstatus = true,
         icons_enabled = false,
-        theme = auto,
-        -- theme = theme,
+        theme = cursor_theme,
+        -- Alternative themes (commented out):
+        -- theme = auto,
         -- theme = "shado",
         -- theme = "catppuccin",
         -- theme = "darkplus",
