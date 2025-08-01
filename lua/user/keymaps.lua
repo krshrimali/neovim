@@ -76,8 +76,6 @@ keymap("v", "U", ":m '<-2<CR>gv=gv", opts)
 keymap("n", "<leader>d", '"_d', opts)
 keymap("x", "<leader>d", '"_d', opts)
 keymap("x", "<leader>p", '"_dP', opts)
-
-keymap("x", "<leader>p", '"_dP', opts)
 -- keymap("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>", opts)
 keymap("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>//gI<Left><Left><Left>", opts)
 
@@ -92,7 +90,7 @@ keymap("n", "gR", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
 keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
 -- keymap("n", "gi", "<cmd>lua vim.lsp.buf.incoming_calls()<CR>", opts)
 keymap("n", "go", "<cmd>lua vim.lsp.buf.outgoing_calls()<CR>", opts)
-keymap("n", "<C-p>", "<cmd>Telescope projects<cr>", opts)
+keymap("n", "<C-p>", "<cmd>FzfLua files<cr>", opts)
 keymap("n", "<C-s>", "<cmd>lua vim.lsp.buf.document_symbol()<cr>", opts)
 keymap("n", "<C-z>", "<cmd>ZenMode<cr>", opts)
 
@@ -140,11 +138,7 @@ vim.cmd [[
   endfunction
 ]]
 
--- nvim-spider
-vim.keymap.set({ "n", "o", "x" }, "w", function() require("spider").motion "w" end, { desc = "Spider-w" })
-vim.keymap.set({ "n", "o", "x" }, "e", function() require("spider").motion "e" end, { desc = "Spider-e" })
-vim.keymap.set({ "n", "o", "x" }, "b", function() require("spider").motion "b" end, { desc = "Spider-b" })
-vim.keymap.set({ "n", "o", "x" }, "ge", function() require("spider").motion "ge" end, { desc = "Spider-ge" })
+-- nvim-spider keymaps are now handled by the plugin's lazy loading configuration in plugins.lua
 
 keymap("n", "<m-q>", ":call QuickFixToggle()<cr>", opts)
 
@@ -167,7 +161,7 @@ keymap("n", "<m-q>", ":call QuickFixToggle()<cr>", opts)
 -- ]]
 
 -- vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', {noremap = true})
-vim.api.nvim_set_keymap("i", "<C-l>", 'copilot#Accept("<CR>")', { expr = true, silent = true })
+-- vim.api.nvim_set_keymap("i", "<C-y>", 'copilot#Accept("<CR>")', { expr = true, silent = true })
 -- vim.keymap.set('v', '<leader>lf', vim.lsp.buf.format, bufopts)
 
 -- vim.api.nvim_set_keymap("n", ":", "<cmd>FineCmdline<CR>", { noremap = true })
@@ -182,6 +176,16 @@ _G.find_files = function()
 
     require("telescope.builtin").find_files {
         search_dirs = { relative_path },
+        debounce = 50,
+        results_limit = 100,
+        path_display = { "smart" },
+        previewer = false,
+        follow = false,
+        attach_mappings = function(_, map)
+            map("i", "<C-q>", require("telescope.actions").send_to_qflist + require("telescope.actions").open_qflist)
+            map("n", "<C-q>", require("telescope.actions").send_to_qflist + require("telescope.actions").open_qflist)
+            return true
+        end,
     }
 end
 _G.live_grep = function()
@@ -190,6 +194,15 @@ _G.live_grep = function()
 
     require("telescope.builtin").live_grep {
         search_dirs = { relative_path },
+        debounce = 50,
+        results_limit = 100,
+        path_display = { "smart" },
+        previewer = false,
+        attach_mappings = function(_, map)
+            map("i", "<C-q>", require("telescope.actions").send_to_qflist + require("telescope.actions").open_qflist)
+            map("n", "<C-q>", require("telescope.actions").send_to_qflist + require("telescope.actions").open_qflist)
+            return true
+        end,
     }
 end
 
@@ -240,5 +253,40 @@ vim.keymap.set(
   end,
   { desc = "Git Browse (copy)" }
 )
+
+-- nnoremap <leader>fb <cmd>Telescope find_files theme=ivy search_dirs={"/prod/tools/base/"}<cr>
+-- nnoremap <leader>gb <cmd>Telescope live_grep theme=ivy search_dirs={"/prod/tools/base/"}<cr>
+vim.keymap.set('n', '<leader>fb', function()
+  require('telescope.builtin').find_files {
+    search_dirs = { '/prod/tools/base/' },
+    theme = 'ivy',
+    attach_mappings = function(_, map)
+      map("i", "<C-q>", require("telescope.actions").send_to_qflist + require("telescope.actions").open_qflist)
+      map("n", "<C-q>", require("telescope.actions").send_to_qflist + require("telescope.actions").open_qflist)
+      return true
+    end,
+  }
+end, { desc = 'Find files in base' })
+vim.keymap.set('n', '<leader>gb', function()
+  require('telescope.builtin').live_grep {
+    search_dirs = { '/prod/tools/base/' },
+    theme = 'ivy',
+    attach_mappings = function(_, map)
+      map("i", "<C-q>", require("telescope.actions").send_to_qflist + require("telescope.actions").open_qflist)
+      map("n", "<C-q>", require("telescope.actions").send_to_qflist + require("telescope.actions").open_qflist)
+      return true
+    end,
+  }
+end, { desc = 'Live grep in base' })
+
+-- Diagnostic Display Plugin Keymaps
+keymap("n", "<leader>dl", "<cmd>lua require('user.diagnostics_display').show_current_line_diagnostics()<cr>", opts)
+keymap("n", "<leader>df", "<cmd>lua require('user.diagnostics_display').show_current_file_diagnostics()<cr>", opts)
+keymap("n", "<leader>dd", "<cmd>lua require('user.diagnostics_display').debug()<cr>", opts)
+keymap("n", "<leader>dt", "<cmd>lua require('user.diagnostics_display').test_line_numbers()<cr>", opts)
+
+-- Lazygit keymaps
+keymap("n", "<leader>gg", "<cmd>lua require('user.terminal').lazygit_float()<cr>", opts)
+keymap("n", "<leader>gt", "<cmd>lua require('user.terminal').lazygit_tab()<cr>", opts)
 
 return M

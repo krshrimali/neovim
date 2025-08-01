@@ -20,9 +20,9 @@ require("illuminate").configure {
     "lir",
     "Outline",
     "spectre_panel",
-    "toggleterm",
+    "terminal",
     "DressingSelect",
-    "TelescopePrompt",
+    "FzfLuaNormal",
   },
   -- filetypes_allowlist: filetypes to illuminate, this is overriden by filetypes_denylist
   filetypes_allowlist = {},

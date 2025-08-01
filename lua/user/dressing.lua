@@ -52,16 +52,18 @@ dressing.setup {
     enabled = true,
 
     -- Priority list of preferred vim.select implementations
-    -- backend = { "telescope", "fzf_lua", "fzf", "builtin", "nui" },
-    backend = { "builtin", "telescope", "nui" },
+            backend = { "fzf_lua", "builtin", "nui" },
 
     -- Trim trailing `:` from prompt
     trim_prompt = true,
 
-    -- Options for telescope selector
-    -- These are passed into the telescope picker directly. Can be used like:
-    -- telescope = require('telescope.themes').get_ivy({...})
-    telescope = nil,
+          -- Options for fzf_lua selector
+      fzf_lua = {
+        winopts = {
+          height = 0.5,
+          width = 0.5,
+        },
+      },
 
     -- Options for nui Menu
     nui = {

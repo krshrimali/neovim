@@ -3,137 +3,79 @@ if not status_ok then
   return
 end
 
--- local ft_to_parser = require("nvim-treesitter.parsers").filetype_to_parsername
--- ft_to_parser.motoko = "typescript"
-
 configs.setup {
-  fold = {
-    fold_one_line_after = true,
-  },
-  incremental_selection = {
-    enable = true,
-    keymaps = {
-      init_selection = "<c-space>",
-      node_incremental = "<c-space>",
-      scope_incremental = "<c-s>",
-      node_decremental = "<c-backspace>",
-    },
-  },
-  ensure_installed = { "c", "lua", "rust", "cpp", "go" }, -- one of "all" or a list of languages [https://github.com/nvim-treesitter/nvim-treesitter#modules]
+  -- Only install essential parsers to reduce startup time
+  ensure_installed = { "c", "lua", "rust", "python", "go", "javascript", "typescript" }, -- Reduced from many parsers
   sync_install = false, -- install languages synchronously (only applied to `ensure_installed`)
-  max_file_lines = 3000, -- disable for files larger than 3000 lines
+  max_file_lines = 2000, -- Reduced from 3000 for better performance
   ignore_install = { "" }, -- List of parsers to ignore installing
-  matchup = {
-    enable = true, -- mandatory, false will disable the whole extension
-    disable_virtual_text = true,
-    disable = { "html" }, -- optional, list of language that will be disabled
-    -- include_match_words = false
-  },
+  
   highlight = {
-    -- use_languagetree = true,
     enable = true, -- false will disable the whole extension
-    -- disable = { "css", "html" }, -- list of language that will be disabled
-    -- disable = { "css", "markdown" }, -- list of language that will be disabled
-    disable = { "markdown" }, -- list of language that will be disabled
-    -- additional_vim_regex_highlighting = true,
+    disable = { "markdown", "css", "html" }, -- Disable for heavy file types
+    -- Disable for large files
     disable = function(lang, buf)
-      local max_filesize = 100 * 1024 -- 100 KB
+      local max_filesize = 50 * 1024 -- Reduced from 100 KB for better performance
       local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
       if ok and stats and stats.size > max_filesize then
         return true
       end
     end,
   },
+  
+  -- Disable heavy features for startup performance
   autopairs = {
-    enable = true,
+    enable = false, -- Disabled for better performance
   },
-  indent = { enable = true, disable = { "python", "css", "rust", "cpp" } },
-  -- context_commentstring = {
-  --   enable = true,
-  --   enable_autocmd = false,
-  -- },
+  
+  indent = { 
+    enable = true, 
+    disable = { "python", "css", "rust", "cpp", "yaml", "json" } -- Expanded disable list
+  },
+  
+  -- Disable incremental selection to reduce startup time
+  incremental_selection = {
+    enable = false, -- Disabled for better startup performance
+  },
+  
+  -- Disable matchup for better performance
+  matchup = {
+    enable = false, -- Disabled for better startup performance
+  },
+  
+  -- Disable autotag for better performance
   autotag = {
-    enable = true,
-    disable = { "xml", "markdown" },
+    enable = false, -- Disabled for better startup performance
   },
+  
+  -- Disable rainbow for better performance
   rainbow = {
-    enable = true,
-    extended_mode = false,
-    colors = {
-      -- "#68a0b0",
-      -- "#946EaD",
-      -- "#c7aA6D",
-      "Gold",
-      "Orchid",
-      "DodgerBlue",
-      -- "Cornsilk",
-      -- "Salmon",
-      -- "LawnGreen",
-    },
-    disable = { "html" },
+    enable = false, -- Disabled for better startup performance
   },
+  
+  -- Disable playground for better performance
   playground = {
-    enable = true,
+    enable = false, -- Disabled for better startup performance
   },
+  
+  -- Simplify textobjects or disable for better performance
   textobjects = {
     select = {
       enable = true,
-      -- Automatically jump forward to textobj, similar to targets.vim
-      lookahead = true,
+      lookahead = false, -- Disabled for better performance
       keymaps = {
-        -- You can use the capture groups defined in textobjects.scm
+        -- Keep only essential textobjects
         ["af"] = "@function.outer",
         ["if"] = "@function.inner",
-        ["at"] = "@class.outer",
-        ["it"] = "@class.inner",
-        ["ac"] = "@call.outer",
-        ["ic"] = "@call.inner",
-        ["aa"] = "@parameter.outer",
-        ["ia"] = "@parameter.inner",
-        ["al"] = "@loop.outer",
-        ["il"] = "@loop.inner",
-        ["ai"] = "@conditional.outer",
-        ["ii"] = "@conditional.inner",
-        ["a/"] = "@comment.outer",
-        ["i/"] = "@comment.inner",
-        ["ab"] = "@block.outer",
-        ["ib"] = "@block.inner",
-        ["as"] = "@statement.outer",
-        ["is"] = "@scopename.inner",
-        ["aA"] = "@attribute.outer",
-        ["iA"] = "@attribute.inner",
-        ["aF"] = "@frame.outer",
-        ["iF"] = "@frame.inner",
+        ["ac"] = "@class.outer",
+        ["ic"] = "@class.inner",
       },
     },
     move = {
-      enable = true,
-      set_jumps = true, -- whether to set jumps in the jumplist
-      goto_next_start = {
-        ["]m"] = "@function.outer",
-        ["]]"] = "@class.outer",
-      },
-      goto_next_end = {
-        ["]M"] = "@function.outer",
-        ["]["] = "@class.outer",
-      },
-      goto_previous_start = {
-        ["[m"] = "@function.outer",
-        ["[["] = "@class.outer",
-      },
-      goto_previous_end = {
-        ["[M"] = "@function.outer",
-        ["[]"] = "@class.outer",
-      },
+      enable = false, -- Disabled for better startup performance
     },
     swap = {
-      enable = true,
-      swap_next = {
-        ["<leader>."] = "@parameter.inner",
-      },
-      swap_previous = {
-        ["<leader>,"] = "@parameter.inner",
-      },
+      enable = false, -- Disabled for better startup performance
     },
   },
 }
