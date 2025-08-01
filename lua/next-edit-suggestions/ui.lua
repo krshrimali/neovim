@@ -8,6 +8,9 @@ local state = {
   popup_win = nil,
   popup_buf = nil,
   ghost_text_extmark = nil,
+  edit_extmarks = {},
+  current_suggestions = {},
+  current_index = 1,
 }
 
 -- Setup UI module
@@ -23,6 +26,10 @@ function M.show_edit_suggestions(related_edits, change_info)
   end
   
   M.clear_suggestions()
+  
+  -- Store suggestions in state
+  state.current_suggestions = related_edits
+  state.current_index = 1
   
   local bufnr = vim.api.nvim_get_current_buf()
   
@@ -268,7 +275,7 @@ function M.clear_suggestions()
   
   -- Clear ghost text
   if state.ghost_text_extmark then
-    vim.api.nvim_buf_del_extmark(bufnr, state.namespace, state.ghost_text_extmark)
+    pcall(vim.api.nvim_buf_del_extmark, bufnr, state.namespace, state.ghost_text_extmark)
     state.ghost_text_extmark = nil
   end
   
@@ -280,19 +287,19 @@ function M.clear_suggestions()
     state.edit_extmarks = {}
   end
   
-  -- Clear popup
+  -- Clear popup safely
   if state.popup_win and vim.api.nvim_win_is_valid(state.popup_win) then
-    vim.api.nvim_win_close(state.popup_win, true)
+    pcall(vim.api.nvim_win_close, state.popup_win, true)
     state.popup_win = nil
   end
   
   if state.popup_buf and vim.api.nvim_buf_is_valid(state.popup_buf) then
-    vim.api.nvim_buf_delete(state.popup_buf, {force = true})
+    pcall(vim.api.nvim_buf_delete, state.popup_buf, {force = true})
     state.popup_buf = nil
   end
   
-  -- Clear any other extmarks
-  vim.api.nvim_buf_clear_namespace(bufnr, state.namespace, 0, -1)
+  -- Clear any other extmarks safely
+  pcall(vim.api.nvim_buf_clear_namespace, bufnr, state.namespace, 0, -1)
 end
 
 -- Show suggestion counter (like Cursor)
@@ -379,6 +386,88 @@ function M.show_status_window(status)
   end, {buffer = buf, nowait = true})
   
   return win
+end
+
+-- Update current suggestion highlight
+function M.update_current_suggestion(index)
+  if not state.current_suggestions or index > #state.current_suggestions then
+    return
+  end
+  
+  state.current_index = index
+  local bufnr = vim.api.nvim_get_current_buf()
+  
+  -- Re-highlight all suggestions with updated current
+  M.highlight_related_edits(state.current_suggestions, bufnr)
+  
+  -- Update popup if it exists
+  if state.popup_win and vim.api.nvim_win_is_valid(state.popup_win) then
+    M.update_popup_current(index)
+  end
+end
+
+-- Mark suggestion as applied
+function M.mark_suggestion_applied(index)
+  if not state.current_suggestions or index > #state.current_suggestions then
+    return
+  end
+  
+  local suggestion = state.current_suggestions[index]
+  local bufnr = vim.api.nvim_get_current_buf()
+  
+  -- Update highlight to show applied state
+  if state.edit_extmarks[index] then
+    pcall(vim.api.nvim_buf_del_extmark, bufnr, state.namespace, state.edit_extmarks[index])
+  end
+  
+  -- Add applied highlight
+  state.edit_extmarks[index] = vim.api.nvim_buf_set_extmark(bufnr, state.namespace, suggestion.line, suggestion.col_start, {
+    end_col = suggestion.col_end,
+    hl_group = "NextEditSuggestionApplied",
+    priority = 150,
+  })
+end
+
+-- Refresh suggestions display
+function M.refresh_suggestions()
+  if #state.current_suggestions > 0 then
+    local bufnr = vim.api.nvim_get_current_buf()
+    M.highlight_related_edits(state.current_suggestions, bufnr)
+  end
+end
+
+-- Update popup current selection
+function M.update_popup_current(index)
+  if not state.popup_buf or not vim.api.nvim_buf_is_valid(state.popup_buf) then
+    return
+  end
+  
+  -- Update popup content to show new current selection
+  local lines = vim.api.nvim_buf_get_lines(state.popup_buf, 0, -1, false)
+  
+  -- Find and update the arrow indicators
+  for i, line in ipairs(lines) do
+    if line:match("^→ %d+:") or line:match("^  %d+:") then
+      local line_num = tonumber(line:match("(%d+):"))
+      if line_num then
+        local suggestion_index = nil
+        for j, suggestion in ipairs(state.current_suggestions) do
+          if suggestion.line + 1 == line_num then
+            suggestion_index = j
+            break
+          end
+        end
+        
+        if suggestion_index then
+          local prefix = suggestion_index == index and "→ " or "  "
+          local new_line = prefix .. line:sub(3)
+          vim.api.nvim_buf_set_option(state.popup_buf, "modifiable", true)
+          vim.api.nvim_buf_set_lines(state.popup_buf, i - 1, i, false, {new_line})
+          vim.api.nvim_buf_set_option(state.popup_buf, "modifiable", false)
+        end
+      end
+    end
+  end
 end
 
 -- Animate suggestion appearance (subtle fade-in effect)

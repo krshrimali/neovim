@@ -8,7 +8,7 @@ local utils = require("next-edit-suggestions.utils")
 
 -- Default configuration
 local default_config = {
-  debounce_ms = 200, -- Slightly longer for edit detection
+  debounce_ms = 100, -- Fast response for better UX
   max_suggestions = 10, -- More suggestions for related edits
   cache_size = 1000,
   ui = {
@@ -42,6 +42,8 @@ local state = {
   current_index = 1,
   timer = nil,
   namespace = vim.api.nvim_create_namespace("next-edit-suggestions"),
+  undo_stack = {}, -- Track applied changes for undo
+  applied_suggestions = {}, -- Track which suggestions were applied
 }
 
 -- Setup function
@@ -85,7 +87,7 @@ function M.setup_highlights()
     fg = "#6e6a86" 
   })
   
-  -- Current suggestion highlight (bright)
+  -- Current suggestion highlight (bright yellow)
   vim.api.nvim_set_hl(0, "NextEditSuggestionCurrent", { 
     bg = "#3e4451",
     fg = "#e5c07b",
@@ -96,6 +98,13 @@ function M.setup_highlights()
   vim.api.nvim_set_hl(0, "NextEditSuggestionOther", { 
     bg = "#2c323c",
     fg = "#abb2bf"
+  })
+  
+  -- Applied suggestions highlight (green)
+  vim.api.nvim_set_hl(0, "NextEditSuggestionApplied", { 
+    bg = "#2d5016",
+    fg = "#98c379",
+    bold = true
   })
 end
 
@@ -151,9 +160,9 @@ function M.setup_keymaps()
     M.clear_suggestions()
   end, opts)
   
-  -- Navigate suggestions
+  -- Navigate suggestions with auto-apply on Tab
   vim.keymap.set("n", state.config.ui.next_key, function()
-    M.next_suggestion()
+    M.next_suggestion_with_apply()
   end, opts)
   
   vim.keymap.set("n", state.config.ui.prev_key, function()
@@ -164,6 +173,11 @@ function M.setup_keymaps()
   vim.keymap.set("n", state.config.ui.apply_all_key, function()
     M.apply_all_suggestions()
   end, opts)
+  
+  -- Undo last applied suggestion
+  vim.keymap.set("n", "<leader>u", function()
+    M.undo_last_suggestion()
+  end, vim.tbl_extend("force", opts, { desc = "Undo last suggestion" }))
 end
 
 -- Detect symbol changes and suggest related edits
@@ -224,28 +238,101 @@ function M.detect_symbol_rename(bufnr, line, col, new_name)
   }
 end
 
--- Find related edits that should be suggested
+-- Find related edits that should be suggested (optimized with chunked processing)
 function M.find_related_edits(bufnr, change_info)
   local related_edits = {}
-  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
   local new_name = change_info.new_name
+  local current_line = change_info.line
+  local total_lines = vim.api.nvim_buf_line_count(bufnr)
   
-  -- Search for potential matches using treesitter or simple patterns
-  for i, line_content in ipairs(lines) do
-    local line_num = i - 1
+  -- Process in chunks for better performance
+  local chunk_size = 50
+  local processed_lines = 0
+  
+  -- Start with nearby lines first (within 20 lines)
+  local nearby_range = 20
+  local start_nearby = math.max(0, current_line - nearby_range)
+  local end_nearby = math.min(total_lines - 1, current_line + nearby_range)
+  
+  -- Process nearby lines first
+  local nearby_lines = vim.api.nvim_buf_get_lines(bufnr, start_nearby, end_nearby + 1, false)
+  for i, line_content in ipairs(nearby_lines) do
+    local line_num = start_nearby + i - 1
     
     -- Skip the line where the change was made
-    if line_num == change_info.line then
-      goto continue
+    if line_num ~= current_line then
+      local matches = M.find_identifier_matches(line_content, new_name, line_num)
+      for _, match in ipairs(matches) do
+        match.distance = math.abs(line_num - current_line)
+        match.priority = "nearby"
+        table.insert(related_edits, match)
+      end
+    end
+  end
+  
+  -- Process remaining lines in chunks (async-like with vim.schedule)
+  local function process_chunk(start_line, end_line)
+    if start_line >= total_lines then
+      -- Finished processing, sort by distance
+      table.sort(related_edits, function(a, b)
+        if a.priority ~= b.priority then
+          return a.priority == "nearby"
+        end
+        return a.distance < b.distance
+      end)
+      
+      -- Limit to max suggestions
+      local max_suggestions = state.config.max_suggestions or 10
+      if #related_edits > max_suggestions then
+        for i = max_suggestions + 1, #related_edits do
+          related_edits[i] = nil
+        end
+      end
+      
+      -- Display results if we found any
+      if #related_edits > 0 then
+        M.display_edit_suggestions(related_edits, change_info)
+      end
+      return
     end
     
-    -- Find all occurrences of identifiers that might need renaming
-    local matches = M.find_identifier_matches(line_content, new_name, line_num)
-    for _, match in ipairs(matches) do
-      table.insert(related_edits, match)
+    local chunk_end = math.min(end_line, total_lines - 1)
+    local chunk_lines = vim.api.nvim_buf_get_lines(bufnr, start_line, chunk_end + 1, false)
+    
+    for i, line_content in ipairs(chunk_lines) do
+      local line_num = start_line + i - 1
+      
+      -- Skip already processed nearby lines and the change line
+      if (line_num < start_nearby or line_num > end_nearby) and line_num ~= current_line then
+        local matches = M.find_identifier_matches(line_content, new_name, line_num)
+        for _, match in ipairs(matches) do
+          match.distance = math.abs(line_num - current_line)
+          match.priority = "distant"
+          table.insert(related_edits, match)
+        end
+      end
     end
     
-    ::continue::
+    -- Schedule next chunk
+    vim.schedule(function()
+      process_chunk(chunk_end + 1, chunk_end + chunk_size)
+    end)
+  end
+  
+  -- Start processing distant chunks
+  if start_nearby > 0 or end_nearby < total_lines - 1 then
+    vim.schedule(function()
+      process_chunk(0, start_nearby - 1)
+    end)
+    vim.schedule(function()
+      process_chunk(end_nearby + 1, end_nearby + chunk_size)
+    end)
+  else
+    -- Only nearby lines exist, process immediately
+    table.sort(related_edits, function(a, b) return a.distance < b.distance end)
+    if #related_edits > 0 then
+      M.display_edit_suggestions(related_edits, change_info)
+    end
   end
   
   return related_edits
@@ -314,7 +401,36 @@ function M.accept_suggestion()
   return false
 end
 
--- Navigate to next suggestion
+-- Navigate to next suggestion with auto-apply
+function M.next_suggestion_with_apply()
+  if #state.current_suggestions == 0 then
+    return
+  end
+  
+  -- Apply current suggestion first
+  if state.current_index <= #state.current_suggestions then
+    local current_suggestion = state.current_suggestions[state.current_index]
+    if current_suggestion and not state.applied_suggestions[state.current_index] then
+      M.apply_suggestion_with_undo(current_suggestion, state.current_index)
+    end
+  end
+  
+  -- Move to next suggestion
+  if #state.current_suggestions > 1 then
+    state.current_index = state.current_index + 1
+    if state.current_index > #state.current_suggestions then
+      state.current_index = 1
+    end
+    
+    -- Update UI to highlight next suggestion
+    ui.update_current_suggestion(state.current_index)
+  else
+    -- Only one suggestion, clear after applying
+    M.clear_suggestions()
+  end
+end
+
+-- Navigate to next suggestion (without auto-apply)
 function M.next_suggestion()
   if #state.current_suggestions <= 1 then
     return
@@ -325,7 +441,7 @@ function M.next_suggestion()
     state.current_index = 1
   end
   
-  ui.show_suggestions(state.current_suggestions[state.current_index])
+  ui.update_current_suggestion(state.current_index)
 end
 
 -- Navigate to previous suggestion
@@ -382,8 +498,10 @@ function M.apply_all_suggestions()
   vim.api.nvim_exec_autocmds("User", { pattern = "NextEditSuggestionsApplied" })
 end
 
--- Apply a single edit suggestion
-function M.apply_single_edit(bufnr, suggestion)
+-- Apply a single edit suggestion with undo support
+function M.apply_suggestion_with_undo(suggestion, index)
+  local bufnr = vim.api.nvim_get_current_buf()
+  
   if suggestion.type ~= "rename_suggestion" then
     return false
   end
@@ -395,21 +513,67 @@ function M.apply_single_edit(bufnr, suggestion)
   end
   
   local line_content = current_lines[1]
+  local old_text = line_content:sub(suggestion.col_start + 1, suggestion.col_end)
   
-  -- Apply the edit (this is a simplified version)
-  -- In a real implementation, you'd want more sophisticated text replacement
+  -- Store undo information
+  local undo_info = {
+    bufnr = bufnr,
+    line = suggestion.line,
+    col_start = suggestion.col_start,
+    col_end = suggestion.col_end,
+    old_text = old_text,
+    new_text = suggestion.text,
+    original_line = line_content,
+  }
+  
+  -- Apply the edit
   local new_line = line_content:sub(1, suggestion.col_start) .. 
                    suggestion.text .. 
                    line_content:sub(suggestion.col_end + 1)
   
   vim.api.nvim_buf_set_lines(bufnr, suggestion.line, suggestion.line + 1, false, {new_line})
+  
+  -- Track the change
+  table.insert(state.undo_stack, undo_info)
+  state.applied_suggestions[index] = true
+  
+  -- Update highlights to show applied change
+  ui.mark_suggestion_applied(index)
+  
+  vim.notify(string.format("Applied: %s → %s (Line %d)", old_text, suggestion.text, suggestion.line + 1), vim.log.levels.INFO)
   return true
+end
+
+-- Apply a single edit suggestion (legacy function)
+function M.apply_single_edit(bufnr, suggestion)
+  return M.apply_suggestion_with_undo(suggestion, 1)
+end
+
+-- Undo the last applied suggestion
+function M.undo_last_suggestion()
+  if #state.undo_stack == 0 then
+    vim.notify("No suggestions to undo", vim.log.levels.WARN)
+    return
+  end
+  
+  local undo_info = table.remove(state.undo_stack)
+  
+  -- Restore the original line
+  vim.api.nvim_buf_set_lines(undo_info.bufnr, undo_info.line, undo_info.line + 1, false, {undo_info.original_line})
+  
+  vim.notify(string.format("Undone: %s → %s (Line %d)", undo_info.new_text, undo_info.old_text, undo_info.line + 1), vim.log.levels.INFO)
+  
+  -- Update UI if suggestions are still active
+  if #state.current_suggestions > 0 then
+    ui.refresh_suggestions()
+  end
 end
 
 -- Clear all suggestions
 function M.clear_suggestions()
   state.current_suggestions = {}
   state.current_index = 1
+  state.applied_suggestions = {} -- Reset applied suggestions
   ui.clear_suggestions()
   
   if state.timer then
