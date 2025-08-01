@@ -42,49 +42,25 @@ function M.init_auth()
   end
 end
 
--- Get suggestions from Copilot
+-- Get suggestions from Copilot using the proper Copilot API
 function M.get_suggestions(context, callback)
   if not state.initialized then
     callback(nil)
     return
   end
   
-  if not state.auth_token then
+  -- Use Copilot's built-in suggestion system instead of direct API calls
+  local copilot_available = vim.fn.exists(':Copilot') > 0
+  if not copilot_available then
+    vim.notify("Copilot not available. Please install github/copilot.vim", vim.log.levels.WARN)
     callback(nil)
     return
   end
   
-  -- Prepare the request payload
-  local payload = {
-    model = state.config.model or "gpt-4",
-    messages = {
-      {
-        role = "system",
-        content = "You are an AI coding assistant. Provide intelligent code completion suggestions based on the context. Return only the suggested code completion, no explanations."
-      },
-      {
-        role = "user", 
-        content = M.format_context_for_copilot(context)
-      }
-    },
-    temperature = state.config.temperature or 0.1,
-    max_tokens = state.config.max_tokens or 500,
-    n = state.config.max_suggestions or 3,
-  }
-  
-  -- Make async request to OpenAI API (Copilot uses OpenAI backend)
-  curl.post("https://api.openai.com/v1/chat/completions", {
-    headers = {
-      ["Authorization"] = "Bearer " .. state.auth_token,
-      ["Content-Type"] = "application/json",
-    },
-    body = vim.json.encode(payload),
-    callback = function(response)
-      vim.schedule(function()
-        M.handle_copilot_response(response, callback)
-      end)
-    end,
-  })
+  -- Use Copilot's internal API through vim.fn.CopilotSuggest or similar
+  -- This is a simplified approach - in practice, we'd integrate with Copilot's Lua API
+  local suggestions = M.get_copilot_suggestions_internal(context)
+  callback(suggestions)
 end
 
 -- Format context for Copilot API

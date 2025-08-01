@@ -1,40 +1,38 @@
 return {
-  "github/copilot.vim",
+  "your-username/next-edit-suggestions",
   dependencies = {
     "nvim-lua/plenary.nvim",
     "nvim-treesitter/nvim-treesitter",
+    -- Optional: GitHub Copilot for enhanced suggestions
+    -- "github/copilot.vim",
   },
   config = function()
-    -- Enable Copilot
-    vim.g.copilot_enabled = true
-    vim.g.copilot_no_tab_map = true
-    vim.g.copilot_assume_mapped = true
-    
     -- Setup the next-edit-suggestions plugin
     require("next-edit-suggestions").setup({
       -- Performance optimizations
-      debounce_ms = 100,
-      max_suggestions = 5,
+      debounce_ms = 200, -- Wait 200ms after typing stops
+      max_suggestions = 10, -- Show up to 10 related edits
       cache_size = 1000,
       
-      -- UI configuration (Cursor-like)
+      -- UI configuration (Cursor-like next edit suggestions)
       ui = {
-        ghost_text = true,
-        inline_suggestions = true,
+        show_related_edits = true,
+        highlight_matches = true,
         popup_border = "rounded",
-        highlight_group = "CopilotSuggestion",
-        accept_key = "<Tab>",
-        dismiss_key = "<Esc>",
-        next_key = "<M-]>",
-        prev_key = "<M-[>",
+        highlight_group = "NextEditSuggestion",
+        accept_key = "<CR>", -- Enter to accept current suggestion
+        dismiss_key = "<leader>x", -- Leader+x to dismiss (avoid ESC conflict)
+        next_key = "<Tab>", -- Tab to go to next suggestion
+        prev_key = "<S-Tab>", -- Shift+Tab to go to previous
+        apply_all_key = "<leader>a", -- Apply all suggestions at once
       },
       
-      -- Copilot integration
-      copilot = {
-        enabled = true,
-        model = "gpt-4",
-        temperature = 0.1,
-        max_tokens = 500,
+      -- Detection settings
+      detection = {
+        min_word_length = 2,
+        track_symbol_changes = true,
+        ignore_comments = true,
+        ignore_strings = true,
       },
       
       -- File type support
@@ -44,5 +42,6 @@ return {
       },
     })
   end,
-  event = "InsertEnter",
+  -- Load when text changes (not just insert mode)
+  event = { "TextChanged", "TextChangedI" },
 }

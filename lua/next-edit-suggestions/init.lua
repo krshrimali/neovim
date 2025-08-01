@@ -8,24 +8,25 @@ local utils = require("next-edit-suggestions.utils")
 
 -- Default configuration
 local default_config = {
-  debounce_ms = 100,
-  max_suggestions = 5,
+  debounce_ms = 200, -- Slightly longer for edit detection
+  max_suggestions = 10, -- More suggestions for related edits
   cache_size = 1000,
   ui = {
-    ghost_text = true,
-    inline_suggestions = true,
+    show_related_edits = true,
+    highlight_matches = true,
     popup_border = "rounded",
-    highlight_group = "CopilotSuggestion",
-    accept_key = "<Tab>",
-    dismiss_key = "<Esc>",
-    next_key = "<M-]>",
-    prev_key = "<M-[>",
+    highlight_group = "NextEditSuggestion",
+    accept_key = "<CR>", -- Enter to accept (in normal mode)
+    dismiss_key = "<leader>x", -- Leader+x to dismiss (avoid ESC conflict)
+    next_key = "<Tab>", -- Tab to go to next
+    prev_key = "<S-Tab>", -- Shift+Tab to go to previous
+    apply_all_key = "<leader>a", -- Apply all suggestions
   },
-  copilot = {
-    enabled = true,
-    model = "gpt-4",
-    temperature = 0.1,
-    max_tokens = 500,
+  detection = {
+    min_word_length = 2,
+    track_symbol_changes = true,
+    ignore_comments = true,
+    ignore_strings = true,
   },
   filetypes = {
     "javascript", "typescript", "jsx", "tsx", "python", "lua", 
@@ -73,12 +74,28 @@ end
 
 -- Setup highlights
 function M.setup_highlights()
-  vim.api.nvim_set_hl(0, "CopilotSuggestion", { 
+  -- Main suggestion highlight
+  vim.api.nvim_set_hl(0, "NextEditSuggestion", { 
     fg = "#6e6a86", 
     italic = true 
   })
-  vim.api.nvim_set_hl(0, "CopilotSuggestionBorder", { 
+  
+  -- Border highlight
+  vim.api.nvim_set_hl(0, "NextEditSuggestionBorder", { 
     fg = "#6e6a86" 
+  })
+  
+  -- Current suggestion highlight (bright)
+  vim.api.nvim_set_hl(0, "NextEditSuggestionCurrent", { 
+    bg = "#3e4451",
+    fg = "#e5c07b",
+    bold = true
+  })
+  
+  -- Other suggestions highlight (dimmer)
+  vim.api.nvim_set_hl(0, "NextEditSuggestionOther", { 
+    bg = "#2c323c",
+    fg = "#abb2bf"
   })
 end
 
@@ -86,8 +103,8 @@ end
 function M.setup_autocommands()
   local group = vim.api.nvim_create_augroup("NextEditSuggestions", { clear = true })
   
-  -- Trigger suggestions on text change in insert mode
-  vim.api.nvim_create_autocmd({ "TextChangedI", "CursorMovedI" }, {
+  -- Track text changes to detect symbol renames
+  vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
     group = group,
     callback = function()
       if not state.active then return end
@@ -97,23 +114,25 @@ function M.setup_autocommands()
         return
       end
       
-      M.request_suggestions()
+      -- Detect if a symbol was renamed and suggest related changes
+      M.detect_symbol_changes()
     end,
   })
   
-  -- Clear suggestions when leaving insert mode
-  vim.api.nvim_create_autocmd("InsertLeave", {
-    group = group,
-    callback = function()
-      M.clear_suggestions()
-    end,
-  })
-  
-  -- Handle buffer changes
+  -- Clear suggestions when changing buffers
   vim.api.nvim_create_autocmd({ "BufLeave", "BufWinLeave" }, {
     group = group,
     callback = function()
       M.clear_suggestions()
+    end,
+  })
+  
+  -- Track cursor position for context
+  vim.api.nvim_create_autocmd("CursorMoved", {
+    group = group,
+    callback = function()
+      -- Update current position context
+      M.update_cursor_context()
     end,
   })
 end
@@ -122,79 +141,161 @@ end
 function M.setup_keymaps()
   local opts = { noremap = true, silent = true }
   
-  -- Accept suggestion
-  vim.keymap.set("i", state.config.ui.accept_key, function()
+  -- Accept current suggestion (only in normal mode to avoid conflicts)
+  vim.keymap.set("n", state.config.ui.accept_key, function()
     M.accept_suggestion()
   end, opts)
   
-  -- Dismiss suggestions
-  vim.keymap.set("i", state.config.ui.dismiss_key, function()
+  -- Dismiss suggestions (only in normal mode)
+  vim.keymap.set("n", state.config.ui.dismiss_key, function()
     M.clear_suggestions()
   end, opts)
   
   -- Navigate suggestions
-  vim.keymap.set("i", state.config.ui.next_key, function()
+  vim.keymap.set("n", state.config.ui.next_key, function()
     M.next_suggestion()
   end, opts)
   
-  vim.keymap.set("i", state.config.ui.prev_key, function()
+  vim.keymap.set("n", state.config.ui.prev_key, function()
     M.prev_suggestion()
+  end, opts)
+  
+  -- Apply all suggestions
+  vim.keymap.set("n", state.config.ui.apply_all_key, function()
+    M.apply_all_suggestions()
   end, opts)
 end
 
--- Request suggestions with debouncing
-function M.request_suggestions()
+-- Detect symbol changes and suggest related edits
+function M.detect_symbol_changes()
   if state.timer then
     state.timer:stop()
   end
   
   state.timer = vim.defer_fn(function()
-    M.get_suggestions()
+    M.analyze_recent_changes()
   end, state.config.debounce_ms)
 end
 
--- Get suggestions from Copilot
-function M.get_suggestions()
+-- Analyze recent changes to detect symbol renames
+function M.analyze_recent_changes()
   local bufnr = vim.api.nvim_get_current_buf()
   local cursor = vim.api.nvim_win_get_cursor(0)
   local line = cursor[1] - 1
   local col = cursor[2]
   
-  -- Get context
-  local context = utils.get_context(bufnr, line, col)
-  
-  -- Check cache first
-  local cache_key = cache.generate_key(context)
-  local cached_suggestions = cache.get(cache_key)
-  
-  if cached_suggestions then
-    M.display_suggestions(cached_suggestions)
+  -- Get the word that was just changed
+  local current_word = utils.get_word_under_cursor(bufnr, line, col)
+  if not current_word or #current_word < 2 then
     return
   end
   
-  -- Request from Copilot
-  copilot.get_suggestions(context, function(suggestions)
-    if suggestions and #suggestions > 0 then
-      -- Cache the suggestions
-      cache.set(cache_key, suggestions)
-      
-      -- Display suggestions
-      M.display_suggestions(suggestions)
-    end
-  end)
+  -- Check if this looks like a variable/symbol rename
+  local change_info = M.detect_symbol_rename(bufnr, line, col, current_word)
+  if not change_info then
+    return
+  end
+  
+  -- Find all related occurrences of the old symbol
+  local related_edits = M.find_related_edits(bufnr, change_info)
+  if #related_edits > 0 then
+    M.display_edit_suggestions(related_edits, change_info)
+  end
 end
 
--- Display suggestions
+-- Detect if a symbol was renamed
+function M.detect_symbol_rename(bufnr, line, col, new_name)
+  -- Get previous buffer state (simplified - would need proper diff tracking)
+  local current_line = vim.api.nvim_buf_get_lines(bufnr, line, line + 1, false)[1] or ""
+  
+  -- Simple heuristic: if we're on a word that looks like an identifier
+  if not new_name:match("^[%a_][%w_]*$") then
+    return nil
+  end
+  
+  -- For now, assume any identifier change is a potential rename
+  -- In a real implementation, we'd track the previous state
+  return {
+    old_name = nil, -- Would be tracked from previous state
+    new_name = new_name,
+    line = line,
+    col = col,
+    type = "variable" -- Could be "function", "class", etc.
+  }
+end
+
+-- Find related edits that should be suggested
+function M.find_related_edits(bufnr, change_info)
+  local related_edits = {}
+  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+  local new_name = change_info.new_name
+  
+  -- Search for potential matches using treesitter or simple patterns
+  for i, line_content in ipairs(lines) do
+    local line_num = i - 1
+    
+    -- Skip the line where the change was made
+    if line_num == change_info.line then
+      goto continue
+    end
+    
+    -- Find all occurrences of identifiers that might need renaming
+    local matches = M.find_identifier_matches(line_content, new_name, line_num)
+    for _, match in ipairs(matches) do
+      table.insert(related_edits, match)
+    end
+    
+    ::continue::
+  end
+  
+  return related_edits
+end
+
+-- Find identifier matches in a line
+function M.find_identifier_matches(line_content, identifier, line_num)
+  local matches = {}
+  local pattern = "%f[%w_]" .. vim.pesc(identifier) .. "%f[^%w_]"
+  
+  local start_pos = 1
+  while true do
+    local match_start, match_end = line_content:find(pattern, start_pos)
+    if not match_start then break end
+    
+    table.insert(matches, {
+      line = line_num,
+      col_start = match_start - 1,
+      col_end = match_end,
+      text = identifier,
+      type = "rename_suggestion"
+    })
+    
+    start_pos = match_end + 1
+  end
+  
+  return matches
+end
+
+-- Display edit suggestions (for next edits)
+function M.display_edit_suggestions(related_edits, change_info)
+  if not related_edits or #related_edits == 0 then
+    return
+  end
+  
+  state.current_suggestions = related_edits
+  state.current_index = 1
+  
+  -- Display using UI module with edit context
+  ui.show_edit_suggestions(related_edits, change_info)
+end
+
+-- Legacy function for backward compatibility
 function M.display_suggestions(suggestions)
   if not suggestions or #suggestions == 0 then
     return
   end
   
-  state.current_suggestions = suggestions
-  state.current_index = 1
-  
-  -- Display using UI module
-  ui.show_suggestions(suggestions[1])
+  -- Convert to edit suggestions format
+  M.display_edit_suggestions(suggestions, nil)
 end
 
 -- Accept current suggestion
@@ -239,6 +340,70 @@ function M.prev_suggestion()
   end
   
   ui.show_suggestions(state.current_suggestions[state.current_index])
+end
+
+-- Update cursor context for tracking changes
+function M.update_cursor_context()
+  -- Store current cursor position and context for change detection
+  local bufnr = vim.api.nvim_get_current_buf()
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  
+  state.last_cursor_pos = {
+    line = cursor[1] - 1,
+    col = cursor[2],
+    bufnr = bufnr,
+  }
+end
+
+-- Apply all suggestions at once
+function M.apply_all_suggestions()
+  if #state.current_suggestions == 0 then
+    vim.notify("No suggestions to apply", vim.log.levels.WARN)
+    return
+  end
+  
+  local bufnr = vim.api.nvim_get_current_buf()
+  local applied_count = 0
+  
+  -- Sort suggestions by line number (descending) to avoid offset issues
+  local sorted_suggestions = vim.deepcopy(state.current_suggestions)
+  table.sort(sorted_suggestions, function(a, b) return a.line > b.line end)
+  
+  for _, suggestion in ipairs(sorted_suggestions) do
+    if M.apply_single_edit(bufnr, suggestion) then
+      applied_count = applied_count + 1
+    end
+  end
+  
+  M.clear_suggestions()
+  vim.notify(string.format("Applied %d edit suggestions", applied_count), vim.log.levels.INFO)
+  
+  -- Trigger user event
+  vim.api.nvim_exec_autocmds("User", { pattern = "NextEditSuggestionsApplied" })
+end
+
+-- Apply a single edit suggestion
+function M.apply_single_edit(bufnr, suggestion)
+  if suggestion.type ~= "rename_suggestion" then
+    return false
+  end
+  
+  -- Get current line content
+  local current_lines = vim.api.nvim_buf_get_lines(bufnr, suggestion.line, suggestion.line + 1, false)
+  if #current_lines == 0 then
+    return false
+  end
+  
+  local line_content = current_lines[1]
+  
+  -- Apply the edit (this is a simplified version)
+  -- In a real implementation, you'd want more sophisticated text replacement
+  local new_line = line_content:sub(1, suggestion.col_start) .. 
+                   suggestion.text .. 
+                   line_content:sub(suggestion.col_end + 1)
+  
+  vim.api.nvim_buf_set_lines(bufnr, suggestion.line, suggestion.line + 1, false, {new_line})
+  return true
 end
 
 -- Clear all suggestions

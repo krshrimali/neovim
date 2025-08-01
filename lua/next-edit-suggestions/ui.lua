@@ -16,26 +16,118 @@ function M.setup(config, namespace)
   state.namespace = namespace
 end
 
--- Show suggestions with Cursor-like UI
-function M.show_suggestions(suggestion)
-  if not suggestion then
+-- Show edit suggestions (related changes after a symbol rename)
+function M.show_edit_suggestions(related_edits, change_info)
+  if not related_edits or #related_edits == 0 then
     return
   end
   
   M.clear_suggestions()
   
   local bufnr = vim.api.nvim_get_current_buf()
-  local cursor = vim.api.nvim_win_get_cursor(0)
-  local line = cursor[1] - 1
-  local col = cursor[2]
   
-  if state.config.ghost_text then
-    M.show_ghost_text(suggestion, bufnr, line, col)
+  if state.config.show_related_edits then
+    M.highlight_related_edits(related_edits, bufnr)
+    M.show_edit_popup(related_edits, change_info, bufnr)
+  end
+end
+
+-- Legacy function for backward compatibility
+function M.show_suggestions(suggestion)
+  if not suggestion then
+    return
   end
   
-  if state.config.inline_suggestions and #suggestion.lines > 1 then
-    M.show_popup_suggestion(suggestion, bufnr, line, col)
+  -- Convert single suggestion to edit format
+  local related_edits = {{ 
+    line = 0, 
+    col_start = 0, 
+    col_end = 0, 
+    text = suggestion.text or "", 
+    type = "legacy" 
+  }}
+  
+  M.show_edit_suggestions(related_edits, nil)
+end
+
+-- Highlight related edits in the buffer
+function M.highlight_related_edits(related_edits, bufnr)
+  if not state.config.highlight_matches then
+    return
   end
+  
+  for i, edit in ipairs(related_edits) do
+    local highlight_group = i == 1 and "NextEditSuggestionCurrent" or "NextEditSuggestionOther"
+    
+    -- Highlight the text that would be changed
+    local extmark_id = vim.api.nvim_buf_set_extmark(bufnr, state.namespace, edit.line, edit.col_start, {
+      end_col = edit.col_end,
+      hl_group = highlight_group,
+      priority = 100 + i,
+    })
+    
+    -- Store extmark for cleanup
+    if not state.edit_extmarks then
+      state.edit_extmarks = {}
+    end
+    table.insert(state.edit_extmarks, extmark_id)
+  end
+end
+
+-- Show popup with edit suggestions
+function M.show_edit_popup(related_edits, change_info, bufnr)
+  local lines = {
+    "🔄 Next Edit Suggestions",
+    "═══════════════════════════",
+    "",
+  }
+  
+  if change_info and change_info.new_name then
+    table.insert(lines, string.format("Symbol: %s", change_info.new_name))
+    table.insert(lines, "")
+  end
+  
+  table.insert(lines, string.format("Found %d related edit%s:", 
+    #related_edits, #related_edits == 1 and "" or "s"))
+  table.insert(lines, "")
+  
+  for i, edit in ipairs(related_edits) do
+    local prefix = i == 1 and "→ " or "  "
+    local line_text = vim.api.nvim_buf_get_lines(bufnr, edit.line, edit.line + 1, false)[1] or ""
+    local preview = line_text:sub(1, 50) .. (#line_text > 50 and "..." or "")
+    
+    table.insert(lines, string.format("%s%d: Line %d - %s", 
+      prefix, i, edit.line + 1, preview))
+  end
+  
+  table.insert(lines, "")
+  table.insert(lines, "Keys: <CR>=Accept <Tab>=Next <S-Tab>=Prev")
+  table.insert(lines, "      <leader>a=Accept All <leader>x=Dismiss")
+  
+  -- Create popup
+  state.popup_buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_lines(state.popup_buf, 0, -1, false, lines)
+  vim.api.nvim_buf_set_option(state.popup_buf, "bufhidden", "wipe")
+  vim.api.nvim_buf_set_option(state.popup_buf, "modifiable", false)
+  
+  -- Calculate popup size and position
+  local width = math.min(80, math.max(unpack(vim.tbl_map(function(l) return #l end, lines))))
+  local height = math.min(15, #lines)
+  
+  state.popup_win = vim.api.nvim_open_win(state.popup_buf, false, {
+    relative = "editor",
+    row = math.floor((vim.o.lines - height) / 2),
+    col = math.floor((vim.o.columns - width) / 2),
+    width = width,
+    height = height,
+    style = "minimal",
+    border = state.config.popup_border or "rounded",
+    focusable = false,
+  })
+  
+  -- Set highlight
+  vim.api.nvim_win_set_option(state.popup_win, "winhl", 
+    "Normal:NextEditSuggestion,FloatBorder:NextEditSuggestionBorder")
 end
 
 -- Show ghost text (inline suggestion like Cursor)
@@ -178,6 +270,14 @@ function M.clear_suggestions()
   if state.ghost_text_extmark then
     vim.api.nvim_buf_del_extmark(bufnr, state.namespace, state.ghost_text_extmark)
     state.ghost_text_extmark = nil
+  end
+  
+  -- Clear edit highlights
+  if state.edit_extmarks then
+    for _, extmark_id in ipairs(state.edit_extmarks) do
+      pcall(vim.api.nvim_buf_del_extmark, bufnr, state.namespace, extmark_id)
+    end
+    state.edit_extmarks = {}
   end
   
   -- Clear popup

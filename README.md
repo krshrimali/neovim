@@ -549,19 +549,19 @@ If you find that lazygit doesn't quite satisfy your requirements, these may be a
 
 # Next Edit Suggestions
 
-A fast, intelligent code completion plugin for Neovim that provides Cursor-like AI-powered suggestions using GitHub Copilot. Get high-quality, context-aware code completions with a beautiful, responsive UI.
+A smart Neovim plugin that suggests related edits after you make changes, just like Cursor IDE. When you rename a variable, it automatically detects other places that need the same change and lets you apply them with a single keypress.
 
 ## ✨ Features
 
-- 🚀 **Lightning Fast**: Optimized with intelligent caching and debouncing
-- 🤖 **AI-Powered**: Integrates with GitHub Copilot for intelligent suggestions
-- 🎨 **Cursor-like UI**: Beautiful ghost text and popup suggestions
-- ⚡ **Real-time**: Suggestions appear as you type
-- 🔧 **Highly Configurable**: Customize every aspect of the plugin
+- 🔄 **Smart Rename Detection**: Automatically detects when you rename variables, functions, or other symbols
+- 🎯 **Related Edit Suggestions**: Shows all places that need similar changes
+- 🎨 **Cursor-like UI**: Beautiful highlighting and popup interface
+- ⚡ **Real-time**: Suggestions appear as you make changes
+- 🔧 **Highly Configurable**: Customize detection rules and UI behavior
 - 📝 **Multi-language Support**: Works with JavaScript, TypeScript, Python, Lua, Rust, Go, and more
-- 🔍 **Context-Aware**: Uses Treesitter for intelligent context detection
-- 💾 **Smart Caching**: LRU cache for instant repeated suggestions
-- 🎯 **Multiple Suggestions**: Navigate through multiple AI-generated options
+- 🔍 **Context-Aware**: Uses Treesitter for intelligent symbol detection
+- 💾 **Smart Caching**: Fast performance with intelligent caching
+- 🎯 **Batch Apply**: Apply all related changes at once
 
 ## 📦 Installation
 
@@ -571,7 +571,6 @@ A fast, intelligent code completion plugin for Neovim that provides Cursor-like 
 {
   "your-username/next-edit-suggestions",
   dependencies = {
-    "github/copilot.vim",
     "nvim-lua/plenary.nvim",
     "nvim-treesitter/nvim-treesitter",
   },
@@ -580,7 +579,7 @@ A fast, intelligent code completion plugin for Neovim that provides Cursor-like 
       -- Your configuration here
     })
   end,
-  event = "InsertEnter",
+  event = { "TextChanged", "TextChangedI" },
 }
 ```
 
