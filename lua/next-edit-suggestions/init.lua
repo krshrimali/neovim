@@ -26,10 +26,10 @@ local default_config = {
     },
   },
   
-  -- Keybindings (non-intrusive)
+  -- Keybindings (non-intrusive, CoC-safe)
   keymaps = {
-    accept = "<C-y>", -- Like copilot
-    dismiss = "<C-e>", -- Like copilot
+    accept = "<C-l>", -- Safe from CoC conflicts
+    dismiss = "<C-h>", -- Safe from CoC conflicts  
     next = "<M-]>",
     prev = "<M-[>",
   },
@@ -43,6 +43,8 @@ local state = {
   current_suggestions = {},
   last_change = {},
   timers = {},
+  buffer_content = {}, -- Track buffer content to detect changes
+  last_cursor_pos = {},
 }
 
 -- Setup function - minimal and fast
@@ -78,7 +80,7 @@ end
 function M.setup_autocommands()
   local group = vim.api.nvim_create_augroup("NextEditSuggestions", { clear = true })
   
-  -- Only track text changes in insert mode (like copilot)
+  -- Track text changes in insert mode AND when editing existing code
   vim.api.nvim_create_autocmd("TextChangedI", {
     group = group,
     callback = function()
@@ -89,16 +91,34 @@ function M.setup_autocommands()
         return
       end
       
-      -- Fast symbol change detection
+      -- Fast symbol change detection (works for both new and existing code)
       M.detect_and_suggest()
     end,
   })
   
-  -- Clear suggestions when leaving insert mode (like copilot)
+  -- Also track cursor movement to detect when user is editing existing symbols
+  vim.api.nvim_create_autocmd("CursorMovedI", {
+    group = group,
+    callback = function()
+      if not state.enabled then return end
+      
+      local filetype = vim.bo.filetype
+      if not vim.tbl_contains(state.config.detection.enabled_filetypes, filetype) then
+        return
+      end
+      
+      -- Check if we moved to a different word - might be editing existing code
+      M.check_cursor_word_change()
+    end,
+  })
+  
+  -- Clear suggestions when leaving insert mode
   vim.api.nvim_create_autocmd("InsertLeave", {
     group = group,
     callback = function()
       M.clear_suggestions()
+      -- Save buffer state when leaving insert mode
+      M.save_buffer_state()
     end,
   })
   
@@ -107,6 +127,14 @@ function M.setup_autocommands()
     group = group,
     callback = function()
       M.clear_suggestions()
+    end,
+  })
+  
+  -- Track when entering insert mode to save initial state
+  vim.api.nvim_create_autocmd("InsertEnter", {
+    group = group,
+    callback = function()
+      M.save_buffer_state()
     end,
   })
 end
@@ -138,7 +166,36 @@ function M.setup_keymaps()
   end, vim.tbl_extend("force", opts, { expr = true, desc = "Previous suggestion" }))
 end
 
--- Fast detection and suggestion (like copilot)
+-- Save buffer state for change detection
+function M.save_buffer_state()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  
+  state.buffer_content[bufnr] = {
+    lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false),
+    cursor_pos = {cursor[1] - 1, cursor[2]},
+    timestamp = vim.loop.hrtime(),
+  }
+  
+  state.last_cursor_pos = {cursor[1] - 1, cursor[2]}
+end
+
+-- Check if cursor moved to a different word (editing existing code)
+function M.check_cursor_word_change()
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  local current_pos = {cursor[1] - 1, cursor[2]}
+  
+  -- If cursor moved significantly, trigger detection
+  if state.last_cursor_pos.line and 
+     (math.abs(current_pos[1] - state.last_cursor_pos[1]) > 0 or 
+      math.abs(current_pos[2] - state.last_cursor_pos[2]) > 3) then
+    
+    state.last_cursor_pos = current_pos
+    M.detect_and_suggest()
+  end
+end
+
+-- Fast detection and suggestion (works for new and existing code)
 function M.detect_and_suggest()
   -- Cancel any existing timer
   if state.timers.detect then
@@ -151,7 +208,7 @@ function M.detect_and_suggest()
   end, state.config.debounce_ms)
 end
 
--- Analyze and suggest - very fast implementation
+-- Analyze and suggest - enhanced for existing code changes
 function M.analyze_and_suggest()
   local bufnr = vim.api.nvim_get_current_buf()
   local cursor = vim.api.nvim_win_get_cursor(0)
@@ -164,15 +221,45 @@ function M.analyze_and_suggest()
   
   local word = utils.get_word_at_position(current_line, col)
   if not word or #word < state.config.detection.min_word_length then
-    return
+    -- If no word at cursor, try to detect if we just finished editing a word
+    word = M.detect_recently_changed_word(bufnr, line_num, col)
+    if not word then
+      return
+    end
   end
   
-  -- Fast symbol detection - only check nearby lines (like copilot)
+  -- Fast symbol detection - check nearby lines
   local suggestions = M.find_nearby_matches(bufnr, word, line_num, col)
   
   if #suggestions > 0 then
     M.show_virtual_text_suggestions(suggestions)
+  else
+    -- Clear suggestions if no matches found
+    M.clear_suggestions()
   end
+end
+
+-- Detect recently changed word (for existing code modifications)
+function M.detect_recently_changed_word(bufnr, line_num, col)
+  -- Look at the word before and after cursor position
+  local current_line = vim.api.nvim_buf_get_lines(bufnr, line_num, line_num + 1, false)[1]
+  if not current_line then return nil end
+  
+  -- Try positions around the cursor
+  local positions_to_check = {
+    col - 1, col, col + 1, col - 2, col + 2
+  }
+  
+  for _, pos in ipairs(positions_to_check) do
+    if pos >= 0 and pos <= #current_line then
+      local word = utils.get_word_at_position(current_line, pos)
+      if word and #word >= state.config.detection.min_word_length then
+        return word
+      end
+    end
+  end
+  
+  return nil
 end
 
 -- Find nearby matches very fast (within 50 lines like copilot)
@@ -353,5 +440,30 @@ function M.status()
     suggestions_count = #state.current_suggestions,
   }
 end
+
+-- Manual trigger for testing
+function M.manual_trigger()
+  if not state.enabled then
+    vim.notify("Plugin is disabled", vim.log.levels.WARN)
+    return
+  end
+  
+  vim.notify("Manually triggering next edit suggestions...", vim.log.levels.INFO)
+  M.detect_and_suggest()
+end
+
+-- Setup commands
+vim.api.nvim_create_user_command("NextEditToggle", function()
+  M.toggle()
+end, { desc = "Toggle Next Edit Suggestions" })
+
+vim.api.nvim_create_user_command("NextEditStatus", function()
+  local status = M.status()
+  vim.notify("Next Edit Suggestions Status: " .. vim.inspect(status), vim.log.levels.INFO)
+end, { desc = "Show Next Edit Suggestions status" })
+
+vim.api.nvim_create_user_command("NextEditTrigger", function()
+  M.manual_trigger()
+end, { desc = "Manually trigger Next Edit Suggestions" })
 
 return M

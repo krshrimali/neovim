@@ -27,13 +27,13 @@ return {
         },
       },
       
-      -- Keybindings (non-intrusive like copilot)
-      keymaps = {
-        accept = "<C-y>", -- Like copilot
-        dismiss = "<C-e>", -- Like copilot
-        next = "<M-]>",
-        prev = "<M-[>",
-      },
+             -- Keybindings (CoC-safe, non-intrusive)
+       keymaps = {
+         accept = "<C-l>", -- Safe from CoC conflicts
+         dismiss = "<C-h>", -- Safe from CoC conflicts
+         next = "<M-]>",
+         prev = "<M-[>",
+       },
     })
   end,
   -- Load only in insert mode for maximum performance
