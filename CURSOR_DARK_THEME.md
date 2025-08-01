@@ -177,8 +177,17 @@ custom_theme.setup()
 If the theme doesn't load properly:
 
 1. Check for errors: `:messages`
-2. Reload the theme: `:lua require("user.themes.init").reload()`
-3. Ensure all theme files are present in `lua/user/themes/`
+2. Reload the theme: `:lua require("user.themes.reload").reload()`
+3. Test the theme: `:lua require("user.themes.reload").test()`
+4. Check for invalid colors: `:lua require("user.themes.reload").fix_colors()`
+5. Ensure all theme files are present in `lua/user/themes/`
+
+### Invalid Color Error
+If you see an error like "Invalid highlight color: '#0064001a'":
+
+1. This indicates an 8-digit hex color (with alpha) which Neovim doesn't support
+2. Run: `:lua require("user.themes.reload").fix_colors()` to check for invalid colors
+3. The theme has been fixed to use valid 6-digit hex colors only
 
 ### Plugin Highlights Missing
 If a plugin isn't properly themed:
