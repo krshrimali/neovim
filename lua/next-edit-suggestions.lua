@@ -7,6 +7,8 @@ local state = {
   suggestions = {},
   current_index = 1,
   namespace = vim.api.nvim_create_namespace("next_edit_suggestions"),
+  last_buffer_content = {},
+  last_cursor_pos = {1, 0},
 }
 
 -- Setup function
@@ -23,13 +25,21 @@ function M.setup(opts)
   -- Set up autocommands
   local group = vim.api.nvim_create_augroup("NextEditSuggestions", { clear = true })
   
+  -- Save buffer state on insert enter
+  vim.api.nvim_create_autocmd("InsertEnter", {
+    group = group,
+    callback = function()
+      M.save_buffer_state()
+    end,
+  })
+  
   -- Detect changes in insert mode
   vim.api.nvim_create_autocmd("TextChangedI", {
     group = group,
     callback = function()
       vim.defer_fn(function()
         M.detect_changes()
-      end, 100)
+      end, 50)
     end,
   })
   
@@ -71,46 +81,155 @@ function M.setup(opts)
   print("Next Edit Suggestions loaded")
 end
 
+-- Save buffer state
+function M.save_buffer_state()
+  local bufnr = vim.api.nvim_get_current_buf()
+  state.last_buffer_content = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+  state.last_cursor_pos = vim.api.nvim_win_get_cursor(0)
+end
+
 -- Detect symbol changes
 function M.detect_changes()
   if not state.enabled then return end
   
   local bufnr = vim.api.nvim_get_current_buf()
+  local current_content = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
   local cursor = vim.api.nvim_win_get_cursor(0)
-  local line_num = cursor[1] - 1
-  local col = cursor[2]
   
-  -- Get current line
-  local lines = vim.api.nvim_buf_get_lines(bufnr, line_num, line_num + 1, false)
-  if #lines == 0 then return end
+  -- Find what changed by comparing with saved state
+  local changed_symbols = M.find_changed_symbols(state.last_buffer_content, current_content, cursor)
   
-  local line = lines[1]
-  
-  -- Find word at cursor
-  local word_start = col
-  local word_end = col
-  
-  -- Find start of word
-  while word_start > 0 and line:sub(word_start, word_start):match("[%w_]") do
-    word_start = word_start - 1
-  end
-  word_start = word_start + 1
-  
-  -- Find end of word
-  while word_end <= #line and line:sub(word_end + 1, word_end + 1):match("[%w_]") do
-    word_end = word_end + 1
-  end
-  
-  local word = line:sub(word_start, word_end)
-  
-  -- Only process valid identifiers
-  if not word or #word < 2 or not word:match("^[%a_][%w_]*$") then
+  if #changed_symbols > 0 then
+    -- Use the most recently changed symbol
+    local symbol_info = changed_symbols[1]
+    M.find_occurrences(bufnr, symbol_info.old_word, symbol_info.line)
+  else
     M.clear_suggestions()
-    return
   end
   
-  -- Find all occurrences of this word
-  M.find_occurrences(bufnr, word, line_num)
+  -- Update saved state
+  state.last_buffer_content = current_content
+  state.last_cursor_pos = cursor
+end
+
+-- Find changed symbols by comparing old and new content
+function M.find_changed_symbols(old_lines, new_lines, cursor)
+  local changed = {}
+  local cursor_line = cursor[1] - 1
+  local cursor_col = cursor[2]
+  
+  -- Compare line by line
+  for i = 1, math.max(#old_lines, #new_lines) do
+    local old_line = old_lines[i] or ""
+    local new_line = new_lines[i] or ""
+    
+    if old_line ~= new_line then
+      -- Find what symbols changed on this line
+      local line_changes = M.find_symbol_changes_in_line(old_line, new_line, i - 1)
+      for _, change in ipairs(line_changes) do
+        table.insert(changed, change)
+      end
+    end
+  end
+  
+  -- Sort by proximity to cursor
+  table.sort(changed, function(a, b)
+    local dist_a = math.abs(a.line - cursor_line) + math.abs(a.col - cursor_col)
+    local dist_b = math.abs(b.line - cursor_line) + math.abs(b.col - cursor_col)
+    return dist_a < dist_b
+  end)
+  
+  return changed
+end
+
+-- Find symbol changes within a single line
+function M.find_symbol_changes_in_line(old_line, new_line, line_num)
+  local changes = {}
+  
+  -- Extract all identifiers from both lines
+  local old_words = M.extract_identifiers(old_line)
+  local new_words = M.extract_identifiers(new_line)
+  
+  -- Find words that disappeared (were renamed/deleted)
+  for _, old_word in ipairs(old_words) do
+    local found_in_new = false
+    for _, new_word in ipairs(new_words) do
+      if old_word.word == new_word.word and math.abs(old_word.col - new_word.col) < 5 then
+        found_in_new = true
+        break
+      end
+    end
+    
+    if not found_in_new and #old_word.word >= 2 then
+      table.insert(changes, {
+        old_word = old_word.word,
+        line = line_num,
+        col = old_word.col,
+        type = "removed"
+      })
+    end
+  end
+  
+  return changes
+end
+
+-- Extract all identifiers from a line with their positions
+function M.extract_identifiers(line)
+  local identifiers = {}
+  local pos = 1
+  
+  while pos <= #line do
+    -- Find start of identifier
+    local start_pos = line:find("[%a_][%w_]*", pos)
+    if not start_pos then break end
+    
+    -- Find end of identifier
+    local end_pos = start_pos
+    while end_pos <= #line and line:sub(end_pos, end_pos):match("[%w_]") do
+      end_pos = end_pos + 1
+    end
+    end_pos = end_pos - 1
+    
+    local word = line:sub(start_pos, end_pos)
+    
+    -- Only include valid identifiers (not keywords)
+    if M.is_valid_identifier(word) then
+      table.insert(identifiers, {
+        word = word,
+        col = start_pos - 1,
+        start_pos = start_pos,
+        end_pos = end_pos
+      })
+    end
+    
+    pos = end_pos + 1
+  end
+  
+  return identifiers
+end
+
+-- Check if a word is a valid identifier (not a keyword)
+function M.is_valid_identifier(word)
+  if not word or #word < 2 then return false end
+  if not word:match("^[%a_][%w_]*$") then return false end
+  
+  -- Common keywords to ignore
+  local keywords = {
+    "if", "else", "for", "while", "do", "end", "then", "function", "local", "return",
+    "true", "false", "nil", "and", "or", "not", "in", "break", "repeat", "until",
+    "let", "const", "var", "function", "return", "if", "else", "for", "while", "do",
+    "class", "extends", "import", "export", "from", "as", "default", "async", "await",
+    "try", "catch", "finally", "throw", "new", "this", "super", "static", "public",
+    "private", "protected", "void", "int", "string", "bool", "float", "double"
+  }
+  
+  for _, keyword in ipairs(keywords) do
+    if word:lower() == keyword then
+      return false
+    end
+  end
+  
+  return true
 end
 
 -- Find all occurrences of a word
