@@ -10,7 +10,7 @@ return {
     -- Setup the next-edit-suggestions plugin
     require("next-edit-suggestions").setup({
       -- Performance optimizations
-      debounce_ms = 200, -- Wait 200ms after typing stops
+      debounce_ms = 50, -- Very fast response (50ms)
       max_suggestions = 10, -- Show up to 10 related edits
       cache_size = 1000,
       

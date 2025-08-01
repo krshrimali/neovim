@@ -60,13 +60,51 @@ function M.setup()
   
   -- Manual trigger command
   vim.api.nvim_create_user_command("NextEditTrigger", function()
-    if vim.api.nvim_get_mode().mode == "i" then
-      next_edit.request_suggestions()
-    else
-      vim.notify("Next Edit Suggestions: Must be in insert mode", vim.log.levels.WARN)
-    end
+    print("Manually triggering next edit suggestions...")
+    next_edit.detect_symbol_changes()
   end, {
     desc = "Manually trigger suggestions",
+  })
+  
+  -- Test command to create fake suggestions
+  vim.api.nvim_create_user_command("NextEditTest", function()
+    print("Creating test suggestions...")
+    local bufnr = vim.api.nvim_get_current_buf()
+    local cursor = vim.api.nvim_win_get_cursor(0)
+    local line = cursor[1] - 1
+    
+    -- Create fake suggestions for testing
+    local test_suggestions = {
+      {
+        line = line + 1,
+        col_start = 0,
+        col_end = 5,
+        text = "testVar",
+        type = "rename_suggestion",
+        distance = 1,
+        priority = "nearby"
+      },
+      {
+        line = line + 3,
+        col_start = 10,
+        col_end = 15,
+        text = "testVar",
+        type = "rename_suggestion", 
+        distance = 3,
+        priority = "nearby"
+      }
+    }
+    
+    local change_info = {
+      new_name = "testVar",
+      line = line,
+      col = cursor[2],
+      type = "variable"
+    }
+    
+    next_edit.display_edit_suggestions(test_suggestions, change_info)
+  end, {
+    desc = "Test suggestions display",
   })
   
   -- Configuration command
@@ -113,52 +151,25 @@ function M.setup()
   })
 end
 
--- Setup additional keymaps
+-- Setup additional keymaps (non-conflicting)
 function M.setup_keymaps()
   local opts = { noremap = true, silent = true }
   
-  -- Leader key mappings
-  vim.keymap.set("n", "<leader>nt", function()
-    next_edit.toggle()
-  end, vim.tbl_extend("force", opts, { desc = "Toggle Next Edit Suggestions" }))
-  
-  vim.keymap.set("n", "<leader>ns", function()
-    local status = next_edit.status()
-    local ui = require("next-edit-suggestions.ui")
-    ui.show_status_window(status)
-  end, vim.tbl_extend("force", opts, { desc = "Show Next Edit Status" }))
-  
+  -- Only set up non-conflicting leader key mappings
   vim.keymap.set("n", "<leader>nc", function()
     local cache = require("next-edit-suggestions.cache")
     cache.clear()
     vim.notify("Cache cleared", vim.log.levels.INFO)
   end, vim.tbl_extend("force", opts, { desc = "Clear Next Edit Cache" }))
   
-  -- Insert mode mappings for quick actions
+  -- Insert mode mappings for quick actions (non-conflicting)
   vim.keymap.set("i", "<C-g><C-t>", function()
-    next_edit.request_suggestions()
+    next_edit.detect_symbol_changes()
   end, vim.tbl_extend("force", opts, { desc = "Trigger suggestions manually" }))
   
   vim.keymap.set("i", "<C-g><C-c>", function()
     next_edit.clear_suggestions()
   end, vim.tbl_extend("force", opts, { desc = "Clear suggestions" }))
-  
-  -- Alternative accept keys
-  vim.keymap.set("i", "<C-y>", function()
-    if not next_edit.accept_suggestion() then
-      -- Fallback to default behavior
-      return "<C-y>"
-    end
-  end, vim.tbl_extend("force", opts, { expr = true, desc = "Accept suggestion or default" }))
-  
-  -- Quick navigation through suggestions
-  vim.keymap.set("i", "<C-n>", function()
-    next_edit.next_suggestion()
-  end, vim.tbl_extend("force", opts, { desc = "Next suggestion" }))
-  
-  vim.keymap.set("i", "<C-p>", function()
-    next_edit.prev_suggestion()
-  end, vim.tbl_extend("force", opts, { desc = "Previous suggestion" }))
 end
 
 -- Setup autocommands for additional functionality

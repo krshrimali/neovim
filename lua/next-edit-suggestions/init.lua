@@ -65,11 +65,15 @@ function M.setup(opts)
   M.setup_keymaps()
   
   -- Setup commands and integrations
-  local commands = require("next-edit-suggestions.commands")
-  commands.setup()
-  commands.setup_keymaps()
-  commands.setup_autocommands()
-  commands.setup_integrations()
+  local ok, commands = pcall(require, "next-edit-suggestions.commands")
+  if ok then
+    commands.setup()
+    commands.setup_keymaps()
+    commands.setup_autocommands()
+    commands.setup_integrations()
+  else
+    print("Warning: Could not load commands module:", commands)
+  end
   
   state.active = true
 end
@@ -150,34 +154,62 @@ end
 function M.setup_keymaps()
   local opts = { noremap = true, silent = true }
   
+  -- Debug: Print keymap setup
+  print("Setting up Next Edit Suggestions keymaps...")
+  print("Accept key:", state.config.ui.accept_key)
+  print("Dismiss key:", state.config.ui.dismiss_key)
+  print("Next key:", state.config.ui.next_key)
+  print("Prev key:", state.config.ui.prev_key)
+  print("Apply all key:", state.config.ui.apply_all_key)
+  
   -- Accept current suggestion (only in normal mode to avoid conflicts)
   vim.keymap.set("n", state.config.ui.accept_key, function()
+    print("Accept suggestion triggered")
     M.accept_suggestion()
-  end, opts)
+  end, vim.tbl_extend("force", opts, { desc = "Accept next edit suggestion" }))
   
   -- Dismiss suggestions (only in normal mode)
   vim.keymap.set("n", state.config.ui.dismiss_key, function()
+    print("Dismiss suggestions triggered")
     M.clear_suggestions()
-  end, opts)
+  end, vim.tbl_extend("force", opts, { desc = "Dismiss next edit suggestions" }))
   
   -- Navigate suggestions with auto-apply on Tab
   vim.keymap.set("n", state.config.ui.next_key, function()
+    print("Next suggestion with apply triggered")
     M.next_suggestion_with_apply()
-  end, opts)
+  end, vim.tbl_extend("force", opts, { desc = "Apply current and go to next suggestion" }))
   
   vim.keymap.set("n", state.config.ui.prev_key, function()
+    print("Previous suggestion triggered")
     M.prev_suggestion()
-  end, opts)
+  end, vim.tbl_extend("force", opts, { desc = "Go to previous suggestion" }))
   
   -- Apply all suggestions
   vim.keymap.set("n", state.config.ui.apply_all_key, function()
+    print("Apply all suggestions triggered")
     M.apply_all_suggestions()
-  end, opts)
+  end, vim.tbl_extend("force", opts, { desc = "Apply all suggestions" }))
   
   -- Undo last applied suggestion
   vim.keymap.set("n", "<leader>u", function()
+    print("Undo last suggestion triggered")
     M.undo_last_suggestion()
-  end, vim.tbl_extend("force", opts, { desc = "Undo last suggestion" }))
+  end, vim.tbl_extend("force", opts, { desc = "Undo last applied suggestion" }))
+  
+  -- Also set up some simpler fallback keymaps for testing
+  vim.keymap.set("n", "<leader>nt", function()
+    print("Toggle next edit suggestions")
+    M.toggle()
+  end, vim.tbl_extend("force", opts, { desc = "Toggle Next Edit Suggestions" }))
+  
+  vim.keymap.set("n", "<leader>ns", function()
+    print("Show next edit status")
+    local status = M.status()
+    print(vim.inspect(status))
+  end, vim.tbl_extend("force", opts, { desc = "Show Next Edit Status" }))
+  
+  print("Keymaps setup complete!")
 end
 
 -- Detect symbol changes and suggest related edits
@@ -193,27 +225,42 @@ end
 
 -- Analyze recent changes to detect symbol renames
 function M.analyze_recent_changes()
+  print("Analyzing recent changes...")
   local bufnr = vim.api.nvim_get_current_buf()
   local cursor = vim.api.nvim_win_get_cursor(0)
   local line = cursor[1] - 1
   local col = cursor[2]
   
+  print("Cursor position:", line, col)
+  
   -- Get the word that was just changed
   local current_word = utils.get_word_under_cursor(bufnr, line, col)
+  print("Current word:", current_word)
+  
   if not current_word or #current_word < 2 then
+    print("Word too short or empty, skipping")
     return
   end
   
   -- Check if this looks like a variable/symbol rename
   local change_info = M.detect_symbol_rename(bufnr, line, col, current_word)
+  print("Change info:", vim.inspect(change_info))
+  
   if not change_info then
+    print("No change detected")
     return
   end
   
+  print("Finding related edits for:", current_word)
   -- Find all related occurrences of the old symbol
   local related_edits = M.find_related_edits(bufnr, change_info)
+  print("Found", #related_edits, "related edits")
+  
   if #related_edits > 0 then
+    print("Displaying edit suggestions")
     M.display_edit_suggestions(related_edits, change_info)
+  else
+    print("No related edits found")
   end
 end
 
@@ -600,5 +647,9 @@ function M.status()
     cache_stats = cache.get_stats(),
   }
 end
+
+-- Expose internal functions for testing
+M.display_edit_suggestions = M.display_edit_suggestions
+M.detect_symbol_changes = M.detect_symbol_changes
 
 return M
