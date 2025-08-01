@@ -271,26 +271,35 @@ function M.is_beginning_of_word(bufnr, line, col)
   return prev_char:match("%s") and curr_char:match("%w")
 end
 
--- Get word under cursor
-function M.get_word_under_cursor(bufnr, line, col)
-  local current_line = vim.api.nvim_buf_get_lines(bufnr, line, line + 1, false)[1] or ""
+-- Get word at position (fast version)
+function M.get_word_at_position(line_content, col)
+  if not line_content or col < 0 then
+    return nil
+  end
   
   -- Find word boundaries
   local start_col = col
   local end_col = col
   
   -- Find start of word
-  while start_col > 0 and current_line:sub(start_col, start_col):match("%w") do
+  while start_col > 0 and line_content:sub(start_col, start_col):match("[%w_]") do
     start_col = start_col - 1
   end
   start_col = start_col + 1
   
   -- Find end of word
-  while end_col <= #current_line and current_line:sub(end_col + 1, end_col + 1):match("%w") do
+  while end_col <= #line_content and line_content:sub(end_col + 1, end_col + 1):match("[%w_]") do
     end_col = end_col + 1
   end
   
-  return current_line:sub(start_col, end_col)
+  local word = line_content:sub(start_col, end_col)
+  return word:match("^[%a_][%w_]*$") and word or nil -- Only valid identifiers
+end
+
+-- Legacy function for compatibility
+function M.get_word_under_cursor(bufnr, line, col)
+  local current_line = vim.api.nvim_buf_get_lines(bufnr, line, line + 1, false)[1] or ""
+  return M.get_word_at_position(current_line, col)
 end
 
 -- Check if we should trigger suggestions
