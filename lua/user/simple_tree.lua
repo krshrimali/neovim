@@ -183,8 +183,9 @@ local function get_item_at_cursor()
   return flat_items[adjusted_line]
 end
 
-local function open_file(path, split_type)
+local function open_file(path, split_type, should_close_tree)
   split_type = split_type or 'default'
+  should_close_tree = should_close_tree == nil and config.auto_close or should_close_tree
   
   local target_win = nil
   
@@ -219,7 +220,7 @@ local function open_file(path, split_type)
   vim.api.nvim_set_current_win(target_win)
   vim.cmd('edit ' .. vim.fn.fnameescape(path))
   
-  if config.auto_close then
+  if should_close_tree then
     M.close()
   end
 end
@@ -515,7 +516,7 @@ local function show_help()
     "  /           - Search files with Telescope",
     "  R           - Refresh tree",
     "  H           - Toggle hidden files",
-    "  g           - Open file in GitHub",
+    "  w           - Open file in GitHub",
     "  ?           - Show this help",
     "  q           - Close tree",
     "",
@@ -582,7 +583,7 @@ local function handle_enter()
   if item.type == "directory" then
     toggle_directory()
   else
-    open_file(item.path)
+    open_file(item.path, 'default', false) -- Don't close tree when using Enter
   end
 end
 
@@ -602,7 +603,7 @@ local function handle_l_key()
       render_tree()
     end
   else
-    open_file(item.path)
+    open_file(item.path, 'default', false) -- Don't close tree when using 'l'
   end
 end
 
@@ -713,6 +714,50 @@ function M.open(root_path)
   tree_data = scan_directory(current_root, 0)
   render_tree()
   
+  -- Set up buffer protection to prevent replacement
+  vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
+    buffer = tree_buf,
+    callback = function()
+      -- Prevent any command from replacing the SimpleTree buffer
+      vim.api.nvim_buf_set_option(tree_buf, 'buftype', 'nofile')
+      vim.api.nvim_buf_set_option(tree_buf, 'modifiable', false)
+    end
+  })
+  
+  -- Intercept common file opening commands and redirect them to a proper window
+  vim.api.nvim_create_autocmd("BufReadCmd", {
+    buffer = tree_buf,
+    callback = function(args)
+      -- If someone tries to open a file in the SimpleTree buffer, redirect it
+      local file_path = args.file
+      if file_path and file_path ~= '' and file_path ~= 'SimpleTree' then
+        -- Find or create a suitable window for the file
+        local wins = vim.api.nvim_list_wins()
+        local target_win = nil
+        
+        for _, win in ipairs(wins) do
+          if win ~= tree_win then
+            local buf = vim.api.nvim_win_get_buf(win)
+            local buf_type = vim.api.nvim_buf_get_option(buf, 'buftype')
+            if buf_type == '' then
+              target_win = win
+              break
+            end
+          end
+        end
+        
+        if not target_win then
+          vim.cmd('vsplit')
+          target_win = vim.api.nvim_get_current_win()
+        end
+        
+        vim.api.nvim_set_current_win(target_win)
+        vim.cmd('edit ' .. vim.fn.fnameescape(file_path))
+        return
+      end
+    end
+  })
+
   -- Set up key mappings
   local opts = { buffer = tree_buf, silent = true }
   vim.keymap.set('n', '<CR>', handle_enter, opts)
@@ -731,13 +776,44 @@ function M.open(root_path)
   vim.keymap.set('n', '<C-x>', handle_horizontal_split, opts)
   vim.keymap.set('n', 'y', handle_copy_relative, opts)
   vim.keymap.set('n', 'Y', handle_copy_absolute, opts)
-  vim.keymap.set('n', 'g', handle_github_open, opts)
+  vim.keymap.set('n', 'w', handle_github_open, opts)
   vim.keymap.set('n', 'u', function() navigate_to_parent() end, opts)  -- Go to parent directory
   vim.keymap.set('n', 'a', create_file, opts)
   vim.keymap.set('n', 'A', create_directory, opts)
   vim.keymap.set('n', 'r', rename_item, opts)
   vim.keymap.set('n', 'd', delete_item, opts)
   vim.keymap.set('n', '?', show_help, opts)
+  
+  -- Override common file opening commands to prevent buffer replacement
+  vim.keymap.set('n', '<leader>ff', function()
+    -- Redirect telescope to open in a proper window, not replace SimpleTree
+    local telescope_ok, telescope = pcall(require, 'telescope.builtin')
+    if telescope_ok then
+      -- Switch to a non-tree window first
+      local wins = vim.api.nvim_list_wins()
+      local target_win = nil
+      
+      for _, win in ipairs(wins) do
+        if win ~= tree_win then
+          local buf = vim.api.nvim_win_get_buf(win)
+          local buf_type = vim.api.nvim_buf_get_option(buf, 'buftype')
+          if buf_type == '' then
+            target_win = win
+            break
+          end
+        end
+      end
+      
+      if not target_win then
+        vim.cmd('vsplit')
+        target_win = vim.api.nvim_get_current_win()
+      else
+        vim.api.nvim_set_current_win(target_win)
+      end
+      
+      telescope.find_files()
+    end
+  end, opts)
   
   -- Set cursor to first item
   if #tree_data > 0 then
