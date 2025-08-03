@@ -498,6 +498,10 @@ local function show_help()
     "  u           - Go to parent directory",
     "  ..          - Click to go to parent directory",
     "",
+    "Mouse Support:",
+    "  Left Click  - Open file/toggle directory",
+    "  Right Click - Show context menu",
+    "",
     "File Operations:",
     "  a           - Create new file",
     "  A           - Create new directory", 
@@ -677,6 +681,252 @@ local function open_telescope_in_directory()
   })
 end
 
+local function show_context_menu()
+  local item = get_item_at_cursor()
+  if not item then return end
+  
+  local menu_items = {}
+  local menu_actions = {}
+  
+  -- Basic operations
+  if item.type == "directory" then
+    if item.is_parent then
+      table.insert(menu_items, "Go to parent directory")
+      table.insert(menu_actions, function() navigate_to_parent() end)
+    else
+      if item.expanded then
+        table.insert(menu_items, "Collapse directory")
+        table.insert(menu_actions, function() toggle_directory() end)
+      else
+        table.insert(menu_items, "Expand directory")
+        table.insert(menu_actions, function() toggle_directory() end)
+      end
+    end
+  else
+    table.insert(menu_items, "Open file")
+    table.insert(menu_actions, function() open_file(item.path, 'default', false) end)
+    
+    table.insert(menu_items, "Open in vertical split")
+    table.insert(menu_actions, function() handle_vertical_split() end)
+    
+    table.insert(menu_items, "Open in horizontal split")
+    table.insert(menu_actions, function() handle_horizontal_split() end)
+  end
+  
+  if not item.is_parent then
+    table.insert(menu_items, "---") -- Separator
+    table.insert(menu_actions, nil)
+    
+    -- Copy operations
+    table.insert(menu_items, "Copy relative path")
+    table.insert(menu_actions, function() handle_copy_relative() end)
+    
+    table.insert(menu_items, "Copy absolute path")
+    table.insert(menu_actions, function() handle_copy_absolute() end)
+    
+    -- GitHub link for files only
+    if item.type ~= "directory" then
+      table.insert(menu_items, "Copy GitHub link")
+      table.insert(menu_actions, function() 
+        local git_url = get_git_remote_url()
+        if not git_url then
+          print("Not a git repository or no remote origin found")
+          return
+        end
+        
+        -- Convert SSH to HTTPS if needed
+        if git_url:match("^git@") then
+          git_url = git_url:gsub("^git@([^:]+):", "https://%1/")
+          git_url = git_url:gsub("%.git$", "")
+        elseif git_url:match("^https://") then
+          git_url = git_url:gsub("%.git$", "")
+        else
+          print("Unsupported git URL format")
+          return
+        end
+        
+        -- Get current branch
+        local branch_handle = io.popen("git branch --show-current 2>/dev/null")
+        local branch = "main"
+        if branch_handle then
+          local branch_result = branch_handle:read("*a")
+          branch_handle:close()
+          if branch_result and branch_result ~= "" then
+            branch = branch_result:gsub("%s+", "")
+          end
+        end
+        
+        -- Get relative path from git root
+        local git_root_handle = io.popen("git rev-parse --show-toplevel 2>/dev/null")
+        if not git_root_handle then
+          print("Error getting git root")
+          return
+        end
+        
+        local git_root = git_root_handle:read("*a")
+        git_root_handle:close()
+        
+        if not git_root or git_root == "" then
+          print("Error getting git root")
+          return
+        end
+        
+        git_root = git_root:gsub("%s+", "")
+        local relative_path = item.path:gsub("^" .. vim.fn.escape(git_root, "^$()%.[]*+-?") .. "/", "")
+        
+        local github_url = git_url .. "/blob/" .. branch .. "/" .. relative_path
+        copy_to_clipboard(github_url)
+      end)
+      
+      table.insert(menu_items, "Open in GitHub")
+      table.insert(menu_actions, function() handle_github_open() end)
+    end
+    
+    table.insert(menu_items, "---") -- Separator
+    table.insert(menu_actions, nil)
+    
+    -- File operations
+    table.insert(menu_items, "Rename")
+    table.insert(menu_actions, function() rename_item() end)
+    
+    table.insert(menu_items, "Delete")
+    table.insert(menu_actions, function() delete_item() end)
+  end
+  
+  table.insert(menu_items, "---") -- Separator
+  table.insert(menu_actions, nil)
+  
+  -- General operations
+  table.insert(menu_items, "Create file")
+  table.insert(menu_actions, function() create_file() end)
+  
+  table.insert(menu_items, "Create directory")
+  table.insert(menu_actions, function() create_directory() end)
+  
+  table.insert(menu_items, "---") -- Separator
+  table.insert(menu_actions, nil)
+  
+  table.insert(menu_items, "Search files")
+  table.insert(menu_actions, function() open_telescope_in_directory() end)
+  
+  table.insert(menu_items, "Refresh tree")
+  table.insert(menu_actions, function() M.refresh() end)
+  
+  table.insert(menu_items, "Toggle hidden files")
+  table.insert(menu_actions, function() 
+    config.show_hidden = not config.show_hidden
+    clear_cache()
+    M.refresh() 
+  end)
+  
+  table.insert(menu_items, "Show help")
+  table.insert(menu_actions, function() show_help() end)
+  
+  -- Create context menu buffer
+  local menu_buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_option(menu_buf, 'modifiable', true)
+  vim.api.nvim_buf_set_lines(menu_buf, 0, -1, false, menu_items)
+  vim.api.nvim_buf_set_option(menu_buf, 'modifiable', false)
+  vim.api.nvim_buf_set_option(menu_buf, 'buftype', 'nofile')
+  
+  -- Calculate menu position near cursor
+  local cursor = vim.api.nvim_win_get_cursor(tree_win)
+  local width = 25
+  local height = #menu_items
+  local win_width = vim.api.nvim_win_get_width(tree_win)
+  local win_height = vim.api.nvim_win_get_height(tree_win)
+  
+  -- Position menu to the right of the cursor, but within window bounds
+  local col = math.min(win_width - width - 1, 15)
+  local row = math.min(cursor[1] - 1, win_height - height - 1)
+  
+  -- Create floating window for context menu
+  local menu_win = vim.api.nvim_open_win(menu_buf, true, {
+    relative = 'win',
+    win = tree_win,
+    width = width,
+    height = height,
+    row = row,
+    col = col,
+    style = 'minimal',
+    border = 'rounded',
+    title = ' Context Menu ',
+    title_pos = 'center'
+  })
+  
+  -- Set window options
+  vim.api.nvim_win_set_option(menu_win, 'wrap', false)
+  vim.api.nvim_win_set_option(menu_win, 'cursorline', true)
+  
+  -- Set cursor to first non-separator item
+  local first_item = 1
+  for i, item_text in ipairs(menu_items) do
+    if item_text ~= "---" then
+      first_item = i
+      break
+    end
+  end
+  vim.api.nvim_win_set_cursor(menu_win, {first_item, 0})
+  
+  -- Handle menu navigation and selection
+  local function close_menu()
+    if vim.api.nvim_win_is_valid(menu_win) then
+      vim.api.nvim_win_close(menu_win, true)
+    end
+  end
+  
+  local function execute_action()
+    local menu_cursor = vim.api.nvim_win_get_cursor(menu_win)
+    local selected_idx = menu_cursor[1]
+    local action = menu_actions[selected_idx]
+    
+    close_menu()
+    
+    if action then
+      action()
+    end
+  end
+  
+  local function move_to_next_valid_item(direction)
+    local menu_cursor = vim.api.nvim_win_get_cursor(menu_win)
+    local current_idx = menu_cursor[1]
+    local next_idx = current_idx
+    
+    repeat
+      next_idx = next_idx + direction
+      if next_idx < 1 then
+        next_idx = #menu_items
+      elseif next_idx > #menu_items then
+        next_idx = 1
+      end
+      
+      if next_idx == current_idx then
+        break -- Prevent infinite loop
+      end
+    until menu_items[next_idx] ~= "---"
+    
+    vim.api.nvim_win_set_cursor(menu_win, {next_idx, 0})
+  end
+  
+  -- Menu key mappings
+  local menu_opts = { buffer = menu_buf, silent = true }
+  vim.keymap.set('n', '<CR>', execute_action, menu_opts)
+  vim.keymap.set('n', '<Esc>', close_menu, menu_opts)
+  vim.keymap.set('n', 'q', close_menu, menu_opts)
+  vim.keymap.set('n', '<LeftMouse>', execute_action, menu_opts)
+  vim.keymap.set('n', 'j', function() move_to_next_valid_item(1) end, menu_opts)
+  vim.keymap.set('n', 'k', function() move_to_next_valid_item(-1) end, menu_opts)
+  vim.keymap.set('n', '<Down>', function() move_to_next_valid_item(1) end, menu_opts)
+  vim.keymap.set('n', '<Up>', function() move_to_next_valid_item(-1) end, menu_opts)
+  
+  -- Close menu when clicking outside
+  vim.api.nvim_create_autocmd({"BufLeave", "WinLeave"}, {
+    buffer = menu_buf,
+    once = true,
+    callback = close_menu
+  })
+end
+
 -- Main functions
 function M.open(root_path)
   if tree_win and vim.api.nvim_win_is_valid(tree_win) then
@@ -709,6 +959,11 @@ function M.open(root_path)
   vim.api.nvim_win_set_option(tree_win, 'foldcolumn', '0')
   vim.api.nvim_win_set_option(tree_win, 'wrap', false)
   vim.api.nvim_win_set_option(tree_win, 'cursorline', true)
+  
+  -- Ensure mouse support is enabled globally for click functionality
+  if vim.o.mouse == '' then
+    vim.o.mouse = 'a'
+  end
   
   -- Load tree data
   tree_data = scan_directory(current_root, 0)
@@ -783,6 +1038,10 @@ function M.open(root_path)
   vim.keymap.set('n', 'r', rename_item, opts)
   vim.keymap.set('n', 'd', delete_item, opts)
   vim.keymap.set('n', '?', show_help, opts)
+  
+  -- Mouse support
+  vim.keymap.set('n', '<LeftMouse>', handle_enter, opts)  -- Left click opens file/toggles directory
+  vim.keymap.set('n', '<RightMouse>', show_context_menu, opts)  -- Right click shows context menu
   
   -- Override common file opening commands to prevent buffer replacement
   vim.keymap.set('n', '<leader>ff', function()
