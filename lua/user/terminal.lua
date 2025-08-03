@@ -203,15 +203,26 @@ end
 
 -- Toggle vertical terminal
 function M.toggle_vertical_terminal()
+  -- Check if terminal exists and is valid
   if terminals.vertical and vim.api.nvim_buf_is_valid(terminals.vertical.buf) then
-    -- Find and close the vertical terminal window
+    -- Check if terminal window is currently visible
+    local window_found = false
     for _, win in ipairs(vim.api.nvim_list_wins()) do
-      if vim.api.nvim_win_get_buf(win) == terminals.vertical.buf then
+      if vim.api.nvim_win_is_valid(win) and vim.api.nvim_win_get_buf(win) == terminals.vertical.buf then
+        window_found = true
+        -- Close the window
         vim.api.nvim_win_close(win, true)
         break
       end
     end
-    terminals.vertical.hidden = true
+    
+    if window_found then
+      terminals.vertical.hidden = true
+    else
+      -- Window not found, terminal was already closed, create new one
+      terminals.vertical = nil
+      M.vertical_terminal()
+    end
   elseif terminals.vertical and terminals.vertical.hidden then
     -- Restore the vertical terminal
     local buf = terminals.vertical.buf
@@ -228,21 +239,33 @@ function M.toggle_vertical_terminal()
       M.vertical_terminal()
     end
   else
+    -- No terminal exists, create new one
     M.vertical_terminal()
   end
 end
 
 -- Toggle horizontal terminal
 function M.toggle_horizontal_terminal()
+  -- Check if terminal exists and is valid
   if terminals.horizontal and vim.api.nvim_buf_is_valid(terminals.horizontal.buf) then
-    -- Find and close the horizontal terminal window
+    -- Check if terminal window is currently visible
+    local window_found = false
     for _, win in ipairs(vim.api.nvim_list_wins()) do
-      if vim.api.nvim_win_get_buf(win) == terminals.horizontal.buf then
+      if vim.api.nvim_win_is_valid(win) and vim.api.nvim_win_get_buf(win) == terminals.horizontal.buf then
+        window_found = true
+        -- Close the window
         vim.api.nvim_win_close(win, true)
         break
       end
     end
-    terminals.horizontal.hidden = true
+    
+    if window_found then
+      terminals.horizontal.hidden = true
+    else
+      -- Window not found, terminal was already closed, create new one
+      terminals.horizontal = nil
+      M.horizontal_terminal()
+    end
   elseif terminals.horizontal and terminals.horizontal.hidden then
     -- Restore the horizontal terminal
     local buf = terminals.horizontal.buf
@@ -259,6 +282,7 @@ function M.toggle_horizontal_terminal()
       M.horizontal_terminal()
     end
   else
+    -- No terminal exists, create new one
     M.horizontal_terminal()
   end
 end
@@ -512,6 +536,54 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
     if ok and buftype == "terminal" then
       -- Disable treesitter highlighting for terminal buffers
       disable_treesitter_for_terminal(buf)
+    end
+  end,
+})
+
+-- Clean up terminal tracking when windows are closed
+vim.api.nvim_create_autocmd("WinClosed", {
+  pattern = "*",
+  callback = function()
+    -- Check if any terminal windows are still open
+    local terminal_windows = {}
+    
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+      if vim.api.nvim_win_is_valid(win) then
+        local buf = vim.api.nvim_win_get_buf(win)
+        if vim.api.nvim_buf_is_valid(buf) then
+          local ok, buftype = pcall(vim.api.nvim_buf_get_option, buf, "buftype")
+          if ok and buftype == "terminal" then
+            table.insert(terminal_windows, buf)
+          end
+        end
+      end
+    end
+    
+    -- Clean up terminal tracking if terminals are no longer visible
+    if terminals.horizontal and vim.api.nvim_buf_is_valid(terminals.horizontal.buf) then
+      local found = false
+      for _, buf in ipairs(terminal_windows) do
+        if buf == terminals.horizontal.buf then
+          found = true
+          break
+        end
+      end
+      if not found then
+        terminals.horizontal = nil
+      end
+    end
+    
+    if terminals.vertical and vim.api.nvim_buf_is_valid(terminals.vertical.buf) then
+      local found = false
+      for _, buf in ipairs(terminal_windows) do
+        if buf == terminals.vertical.buf then
+          found = true
+          break
+        end
+      end
+      if not found then
+        terminals.vertical = nil
+      end
     end
   end,
 })

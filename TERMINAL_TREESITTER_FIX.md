@@ -64,6 +64,9 @@ To test the fix:
 - Fixed duplicate terminal creation issue in horizontal terminals
 - Improved buffer management to ensure only one terminal instance per window
 - Enhanced TermOpen autocmd to only process actual terminal buffers
+- Fixed terminal toggle functionality when terminals are manually closed
+- Added proper cleanup of terminal tracking when windows are closed
+- Improved toggle logic to handle edge cases and invalid buffers
 
 ## Notes
 - Floating terminals (`<leader>\`) were already working because they use a different creation method
