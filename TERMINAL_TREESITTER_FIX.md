@@ -57,9 +57,16 @@ To test the fix:
 1. Open Neovim
 2. Try creating a horizontal terminal with `<leader>T3`
 3. No treesitter errors should occur
-4. The terminal should work normally
+4. Only one terminal window should be created (no duplicate terminals)
+5. The terminal should work normally
+
+## Additional Fixes
+- Fixed duplicate terminal creation issue in horizontal terminals
+- Improved buffer management to ensure only one terminal instance per window
+- Enhanced TermOpen autocmd to only process actual terminal buffers
 
 ## Notes
 - Floating terminals (`<leader>\`) were already working because they use a different creation method
 - The fix maintains all existing terminal functionality while preventing the highlighting errors
 - Performance is improved as treesitter no longer processes terminal buffers unnecessarily
+- Horizontal terminals now create exactly one terminal window instead of duplicate instances

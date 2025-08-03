@@ -97,7 +97,11 @@ local function create_split_terminal(direction, size_ratio, cmd)
     vim.cmd("resize " .. height)
   end
   
-  local buf = vim.api.nvim_get_current_buf()
+  -- Create a new buffer for the terminal
+  local buf = vim.api.nvim_create_buf(false, true)
+  
+  -- Set the new buffer in the current window (which is the new split)
+  vim.api.nvim_set_current_buf(buf)
   
   -- Safely configure buffer options before opening terminal
   if configure_terminal_buffer(buf) then
@@ -133,17 +137,21 @@ vim.api.nvim_create_autocmd("TermOpen", {
   callback = function()
     local buf = vim.api.nvim_get_current_buf()
     local filetype = vim.api.nvim_buf_get_option(buf, "filetype")
+    local buftype = vim.api.nvim_buf_get_option(buf, "buftype")
     
-    -- Safely configure buffer options
-    configure_terminal_buffer(buf)
-    
-    -- Disable treesitter highlighting for terminal buffers
-    disable_treesitter_for_terminal(buf)
-    
-    -- Skip lazygit buffers - they have their own keymaps
-    if filetype ~= "lazygit" then
-      set_terminal_keymaps(buf)
-      vim.cmd("startinsert")
+    -- Only process if this is actually a terminal buffer
+    if buftype == "terminal" then
+      -- Safely configure buffer options
+      configure_terminal_buffer(buf)
+      
+      -- Disable treesitter highlighting for terminal buffers
+      disable_treesitter_for_terminal(buf)
+      
+      -- Skip lazygit buffers - they have their own keymaps
+      if filetype ~= "lazygit" then
+        set_terminal_keymaps(buf)
+        vim.cmd("startinsert")
+      end
     end
   end,
 })
