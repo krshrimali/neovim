@@ -116,11 +116,17 @@ The search patterns can be extended by modifying the `language_patterns` table i
 
 ## Implementation Notes
 
-The system provides two implementations:
-1. **Simple version** (`universal_search_simple.lua`): Uses vim's built-in grep with ripgrep backend - reliable and fast
-2. **Advanced version** (`universal_search.lua`): Uses fzf-lua for enhanced UI (requires fzf-lua plugin)
+The system provides multiple implementations:
+1. **Final version** (`universal_search_final.lua`): **CURRENT** - Uses Treesitter when available, falls back to text patterns
+2. **Treesitter version** (`universal_search_treesitter.lua`): Advanced Treesitter with project-wide search
+3. **Simple version** (`universal_search_simple.lua`): Basic text pattern matching
+4. **Advanced version** (`universal_search.lua`): fzf-lua integration (requires plugin)
 
-The current configuration uses the simple version for maximum reliability.
+The current configuration uses the **final version** which provides:
+- **Treesitter-based search** for accurate syntax-aware results in current buffer
+- **Automatic fallback** to text patterns when Treesitter is unavailable
+- **No external dependencies** beyond standard Neovim
+- **Reliable error handling** with informative notifications
 
 ## Tips
 
