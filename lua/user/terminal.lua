@@ -2,8 +2,15 @@ local M = {}
 
 -- Function to safely disable treesitter for terminal buffers
 local function disable_treesitter_for_terminal(buf)
-  -- Disable syntax highlighting for terminal buffers
-  vim.api.nvim_buf_set_option(buf, "syntax", "")
+  -- Check if buffer is valid
+  if not vim.api.nvim_buf_is_valid(buf) then
+    return
+  end
+  
+  -- Safely disable syntax highlighting for terminal buffers
+  pcall(function()
+    vim.api.nvim_buf_set_option(buf, "syntax", "")
+  end)
   
   -- Try to disable treesitter highlighting for this buffer
   local ok, ts_highlighter = pcall(require, "nvim-treesitter.highlighter")
@@ -13,6 +20,31 @@ local function disable_treesitter_for_terminal(buf)
       ts_highlighter.detach(buf)
     end)
   end
+end
+
+-- Function to safely configure terminal buffer options
+local function configure_terminal_buffer(buf)
+  -- Check if buffer is valid
+  if not vim.api.nvim_buf_is_valid(buf) then
+    return false
+  end
+  
+  -- Safely set buffer options
+  local success = true
+  
+  success = success and pcall(function()
+    vim.api.nvim_buf_set_option(buf, "buftype", "terminal")
+  end)
+  
+  success = success and pcall(function()
+    vim.api.nvim_buf_set_option(buf, "modifiable", true)
+  end)
+  
+  success = success and pcall(function()
+    vim.api.nvim_buf_set_option(buf, "swapfile", false)
+  end)
+  
+  return success
 end
 
 -- Terminal configuration
@@ -67,13 +99,11 @@ local function create_split_terminal(direction, size_ratio, cmd)
   
   local buf = vim.api.nvim_get_current_buf()
   
-  -- Set buffer options before opening terminal to prevent issues
-  vim.api.nvim_buf_set_option(buf, "buftype", "terminal")
-  vim.api.nvim_buf_set_option(buf, "modifiable", true)
-  vim.api.nvim_buf_set_option(buf, "swapfile", false)
-  
-  -- Disable treesitter highlighting for terminal buffers
-  disable_treesitter_for_terminal(buf)
+  -- Safely configure buffer options before opening terminal
+  if configure_terminal_buffer(buf) then
+    -- Disable treesitter highlighting for terminal buffers
+    disable_treesitter_for_terminal(buf)
+  end
   
   local job_id = vim.fn.termopen(cmd or config.shell)
   
@@ -104,10 +134,8 @@ vim.api.nvim_create_autocmd("TermOpen", {
     local buf = vim.api.nvim_get_current_buf()
     local filetype = vim.api.nvim_buf_get_option(buf, "filetype")
     
-    -- Ensure buffer is properly configured as terminal
-    vim.api.nvim_buf_set_option(buf, "buftype", "terminal")
-    vim.api.nvim_buf_set_option(buf, "modifiable", true)
-    vim.api.nvim_buf_set_option(buf, "swapfile", false)
+    -- Safely configure buffer options
+    configure_terminal_buffer(buf)
     
     -- Disable treesitter highlighting for terminal buffers
     disable_treesitter_for_terminal(buf)
@@ -126,13 +154,11 @@ function M.float_terminal(cmd)
   
   vim.api.nvim_set_current_buf(buf)
   
-  -- Set buffer options before opening terminal to prevent issues
-  vim.api.nvim_buf_set_option(buf, "buftype", "terminal")
-  vim.api.nvim_buf_set_option(buf, "modifiable", true)
-  vim.api.nvim_buf_set_option(buf, "swapfile", false)
-  
-  -- Disable treesitter highlighting for terminal buffers
-  disable_treesitter_for_terminal(buf)
+  -- Safely configure buffer options before opening terminal
+  if configure_terminal_buffer(buf) then
+    -- Disable treesitter highlighting for terminal buffers
+    disable_treesitter_for_terminal(buf)
+  end
   
   local job_id = vim.fn.termopen(cmd or config.shell)
   
@@ -415,13 +441,11 @@ function M.centered_terminal(cmd)
   
   vim.api.nvim_set_current_buf(buf)
   
-  -- Set buffer options before opening terminal to prevent issues
-  vim.api.nvim_buf_set_option(buf, "buftype", "terminal")
-  vim.api.nvim_buf_set_option(buf, "modifiable", true)
-  vim.api.nvim_buf_set_option(buf, "swapfile", false)
-  
-  -- Disable treesitter highlighting for terminal buffers
-  disable_treesitter_for_terminal(buf)
+  -- Safely configure buffer options before opening terminal
+  if configure_terminal_buffer(buf) then
+    -- Disable treesitter highlighting for terminal buffers
+    disable_treesitter_for_terminal(buf)
+  end
   
   local job_id = vim.fn.termopen(cmd or config.shell)
   
@@ -473,9 +497,11 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
   pattern = "*",
   callback = function()
     local buf = vim.api.nvim_get_current_buf()
-    local buftype = vim.api.nvim_buf_get_option(buf, "buftype")
     
-    if buftype == "terminal" then
+    -- Safely check buffer type
+    local ok, buftype = pcall(vim.api.nvim_buf_get_option, buf, "buftype")
+    
+    if ok and buftype == "terminal" then
       -- Disable treesitter highlighting for terminal buffers
       disable_treesitter_for_terminal(buf)
     end

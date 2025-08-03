@@ -16,24 +16,30 @@ The error occurs because:
 4. This causes the "Invalid 'end_row': out of range" error
 
 ## Solution
-The fix implements multiple layers of protection:
+The fix implements multiple layers of protection with safe error handling:
 
 ### 1. Treesitter Configuration Update (`lua/user/treesitter.lua`)
 - Added a check in the `disable` function to exclude terminal buffers from highlighting
 - Terminal buffers are identified by `buftype == "terminal"`
 
 ### 2. Terminal Buffer Safety (`lua/user/terminal.lua`)
-- Added `disable_treesitter_for_terminal()` function to safely disable highlighting
-- Updated all terminal creation functions to use this safety function
+- Added `disable_treesitter_for_terminal()` function with safe error handling
+- Added `configure_terminal_buffer()` function with buffer validation and safe option setting
+- Updated all terminal creation functions to use these safety functions
 - Added proper buffer configuration before opening terminals
-- Added autocmds to handle edge cases
+- Added autocmds to handle edge cases with error protection
 
-### 3. Buffer Configuration
-All terminal buffers now have these settings:
+### 3. Safe Buffer Configuration
+All terminal buffers now have these settings applied safely:
 - `buftype = "terminal"` - Properly identifies the buffer type
 - `modifiable = true` - Allows terminal input
 - `swapfile = false` - Prevents swap file creation
 - `syntax = ""` - Disables syntax highlighting
+
+### 4. Error Handling
+- All buffer operations are wrapped in `pcall()` for safety
+- Buffer validity is checked before any operations
+- Invalid arguments are handled gracefully
 
 ## Files Modified
 1. `lua/user/treesitter.lua` - Added terminal buffer exclusion
