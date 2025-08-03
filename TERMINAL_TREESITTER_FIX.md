@@ -1,0 +1,59 @@
+# Terminal Treesitter Fix
+
+## Problem
+When creating horizontal terminals in Neovim, you were experiencing this error:
+
+```
+Error in decoration provider "line" (ns=nvim.treesitter.highlighter):
+Error executing lua: ....3/share/nvim/runtime/lua/vim/treesitter/highlighter.lua:370: Invalid 'end_row': out of range
+```
+
+## Root Cause
+The error occurs because:
+1. Treesitter tries to apply syntax highlighting to terminal buffers
+2. Terminal buffers have dynamic content that changes rapidly
+3. The highlighter tries to set extmarks beyond the buffer boundaries
+4. This causes the "Invalid 'end_row': out of range" error
+
+## Solution
+The fix implements multiple layers of protection:
+
+### 1. Treesitter Configuration Update (`lua/user/treesitter.lua`)
+- Added a check in the `disable` function to exclude terminal buffers from highlighting
+- Terminal buffers are identified by `buftype == "terminal"`
+
+### 2. Terminal Buffer Safety (`lua/user/terminal.lua`)
+- Added `disable_treesitter_for_terminal()` function to safely disable highlighting
+- Updated all terminal creation functions to use this safety function
+- Added proper buffer configuration before opening terminals
+- Added autocmds to handle edge cases
+
+### 3. Buffer Configuration
+All terminal buffers now have these settings:
+- `buftype = "terminal"` - Properly identifies the buffer type
+- `modifiable = true` - Allows terminal input
+- `swapfile = false` - Prevents swap file creation
+- `syntax = ""` - Disables syntax highlighting
+
+## Files Modified
+1. `lua/user/treesitter.lua` - Added terminal buffer exclusion
+2. `lua/user/terminal.lua` - Added safety functions and buffer configuration
+
+## Testing
+The fix has been applied to all terminal types:
+- Horizontal terminals (`<leader>T3` or `<A-3>`)
+- Vertical terminals (`<leader>T2` or `<A-2>`)
+- Float terminals (`<leader>T1` or `<A-1>`)
+- Centered terminals (`<C-\>`)
+
+## Verification
+To test the fix:
+1. Open Neovim
+2. Try creating a horizontal terminal with `<leader>T3`
+3. No treesitter errors should occur
+4. The terminal should work normally
+
+## Notes
+- Floating terminals (`<leader>\`) were already working because they use a different creation method
+- The fix maintains all existing terminal functionality while preventing the highlighting errors
+- Performance is improved as treesitter no longer processes terminal buffers unnecessarily
