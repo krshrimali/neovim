@@ -1,5 +1,20 @@
 local M = {}
 
+-- Function to safely disable treesitter for terminal buffers
+local function disable_treesitter_for_terminal(buf)
+  -- Disable syntax highlighting for terminal buffers
+  vim.api.nvim_buf_set_option(buf, "syntax", "")
+  
+  -- Try to disable treesitter highlighting for this buffer
+  local ok, ts_highlighter = pcall(require, "nvim-treesitter.highlighter")
+  if ok and ts_highlighter then
+    -- Force disable treesitter highlighting for this buffer
+    pcall(function()
+      ts_highlighter.detach(buf)
+    end)
+  end
+end
+
 -- Terminal configuration
 local config = {
   shell = "fish", -- Default shell
@@ -51,6 +66,15 @@ local function create_split_terminal(direction, size_ratio, cmd)
   end
   
   local buf = vim.api.nvim_get_current_buf()
+  
+  -- Set buffer options before opening terminal to prevent issues
+  vim.api.nvim_buf_set_option(buf, "buftype", "terminal")
+  vim.api.nvim_buf_set_option(buf, "modifiable", true)
+  vim.api.nvim_buf_set_option(buf, "swapfile", false)
+  
+  -- Disable treesitter highlighting for terminal buffers
+  disable_treesitter_for_terminal(buf)
+  
   local job_id = vim.fn.termopen(cmd or config.shell)
   
   return buf, job_id
@@ -80,6 +104,14 @@ vim.api.nvim_create_autocmd("TermOpen", {
     local buf = vim.api.nvim_get_current_buf()
     local filetype = vim.api.nvim_buf_get_option(buf, "filetype")
     
+    -- Ensure buffer is properly configured as terminal
+    vim.api.nvim_buf_set_option(buf, "buftype", "terminal")
+    vim.api.nvim_buf_set_option(buf, "modifiable", true)
+    vim.api.nvim_buf_set_option(buf, "swapfile", false)
+    
+    -- Disable treesitter highlighting for terminal buffers
+    disable_treesitter_for_terminal(buf)
+    
     -- Skip lazygit buffers - they have their own keymaps
     if filetype ~= "lazygit" then
       set_terminal_keymaps(buf)
@@ -93,6 +125,15 @@ function M.float_terminal(cmd)
   local buf, win = create_float_window(config.size.float.width, config.size.float.height, "Float Terminal")
   
   vim.api.nvim_set_current_buf(buf)
+  
+  -- Set buffer options before opening terminal to prevent issues
+  vim.api.nvim_buf_set_option(buf, "buftype", "terminal")
+  vim.api.nvim_buf_set_option(buf, "modifiable", true)
+  vim.api.nvim_buf_set_option(buf, "swapfile", false)
+  
+  -- Disable treesitter highlighting for terminal buffers
+  disable_treesitter_for_terminal(buf)
+  
   local job_id = vim.fn.termopen(cmd or config.shell)
   
   terminals.float = { buf = buf, win = win, job_id = job_id }
@@ -373,6 +414,15 @@ function M.centered_terminal(cmd)
   local buf, win = create_float_window(0.6, 0.6, "Terminal")
   
   vim.api.nvim_set_current_buf(buf)
+  
+  -- Set buffer options before opening terminal to prevent issues
+  vim.api.nvim_buf_set_option(buf, "buftype", "terminal")
+  vim.api.nvim_buf_set_option(buf, "modifiable", true)
+  vim.api.nvim_buf_set_option(buf, "swapfile", false)
+  
+  -- Disable treesitter highlighting for terminal buffers
+  disable_treesitter_for_terminal(buf)
+  
   local job_id = vim.fn.termopen(cmd or config.shell)
   
   terminals.centered = { buf = buf, win = win, job_id = job_id }
@@ -417,6 +467,20 @@ local function setup_keymaps()
   -- Lazygit
   vim.keymap.set("n", "<leader>gG", M.lazygit_tab, { desc = "Lazygit Tab", noremap = true, silent = true })
 end
+
+-- Additional safety: Disable treesitter for terminal buffers
+vim.api.nvim_create_autocmd("BufWinEnter", {
+  pattern = "*",
+  callback = function()
+    local buf = vim.api.nvim_get_current_buf()
+    local buftype = vim.api.nvim_buf_get_option(buf, "buftype")
+    
+    if buftype == "terminal" then
+      -- Disable treesitter highlighting for terminal buffers
+      disable_treesitter_for_terminal(buf)
+    end
+  end,
+})
 
 -- Initialize
 setup_keymaps()
