@@ -290,45 +290,22 @@ keymap("n", "<leader>gg", "<cmd>lua require('user.terminal').lazygit_float()<cr>
 keymap("n", "<leader>gt", "<cmd>lua require('user.terminal').lazygit_tab()<cr>", opts)
 
 -- Universal Search keymaps (JetBrains-style functionality)
--- Multiple ways to trigger universal search for convenience
+-- Simple and reliable activation methods
 
--- Method 1: Double tap leader key (similar to shift+shift concept)
-local double_leader_timer = nil
-local leader_count = 0
+-- Method 1: Double comma (most reliable, similar to shift+shift)
+keymap("n", ",,", "<cmd>lua require('user.universal_search_simple').universal_search()<cr>", { noremap = true, silent = true, desc = "Universal Search (Double Comma)" })
 
-_G.handle_double_leader = function()
-  leader_count = leader_count + 1
-  
-  if leader_count == 1 then
-    double_leader_timer = vim.defer_fn(function()
-      leader_count = 0
-      double_leader_timer = nil
-    end, 400) -- 400ms timeout
-  elseif leader_count == 2 then
-    if double_leader_timer then
-      double_leader_timer:close()
-      double_leader_timer = nil
-    end
-    leader_count = 0
-    require("user.universal_search").universal_search()
-  end
-end
-
--- Method 2: Use a custom shift-like sequence (Shift+Shift simulation)
-keymap("n", ",,", "<cmd>lua require('user.universal_search').universal_search()<cr>", { noremap = true, silent = true, desc = "Universal Search (Double Comma)" })
-
--- Method 3: Double space (alternative)
-keymap("n", "<Space><Space>", "<cmd>lua require('user.universal_search').universal_search()<cr>", { noremap = true, silent = true, desc = "Universal Search (Double Space)" })
+-- Method 2: Leader + space (alternative)
+keymap("n", "<leader><space>", "<cmd>lua require('user.universal_search_simple').universal_search()<cr>", { noremap = true, silent = true, desc = "Universal Search" })
 
 -- Alternative keymaps for direct access
-keymap("n", "<leader>ss", "<cmd>lua require('user.universal_search').universal_search()<cr>", { noremap = true, silent = true, desc = "Universal Search" })
-keymap("n", "<leader>sf", "<cmd>lua require('user.universal_search').search_functions()<cr>", { noremap = true, silent = true, desc = "Search Functions" })
-keymap("n", "<leader>sc", "<cmd>lua require('user.universal_search').search_classes()<cr>", { noremap = true, silent = true, desc = "Search Classes" })
-keymap("n", "<leader>sv", "<cmd>lua require('user.universal_search').search_variables()<cr>", { noremap = true, silent = true, desc = "Search Variables" })
-keymap("n", "<leader>sm", "<cmd>lua require('user.universal_search').search_comments()<cr>", { noremap = true, silent = true, desc = "Search Comments" })
+keymap("n", "<leader>ss", "<cmd>lua require('user.universal_search_simple').universal_search()<cr>", { noremap = true, silent = true, desc = "Universal Search" })
+keymap("n", "<leader>sf", "<cmd>lua require('user.universal_search_simple').search_functions()<cr>", { noremap = true, silent = true, desc = "Search Functions" })
+keymap("n", "<leader>sv", "<cmd>lua require('user.universal_search_simple').search_variables()<cr>", { noremap = true, silent = true, desc = "Search Variables" })
+keymap("n", "<leader>sm", "<cmd>lua require('user.universal_search_simple').search_comments()<cr>", { noremap = true, silent = true, desc = "Search Comments" })
 
 -- Additional convenient keymaps
-keymap("n", "<C-S-f>", "<cmd>lua require('user.universal_search').universal_search()<cr>", { noremap = true, silent = true, desc = "Universal Search" })
-keymap("n", "<C-S-p>", "<cmd>lua require('user.universal_search').universal_search()<cr>", { noremap = true, silent = true, desc = "Universal Search" })
+keymap("n", "<C-S-f>", "<cmd>lua require('user.universal_search_simple').universal_search()<cr>", { noremap = true, silent = true, desc = "Universal Search" })
+keymap("n", "<C-S-p>", "<cmd>lua require('user.universal_search_simple').universal_search()<cr>", { noremap = true, silent = true, desc = "Universal Search" })
 
 return M

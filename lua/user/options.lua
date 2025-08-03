@@ -88,3 +88,9 @@ vim.api.nvim_exec([[
 
 vim.g.tabby_inline_completion_keybinding_accept = "<C-y>" -- Disabled to avoid conflict with other keybindings
 vim.opt.foldenable = false
+
+-- Configure grep to use ripgrep if available
+if vim.fn.executable("rg") == 1 then
+  vim.opt.grepprg = "rg --vimgrep --no-heading --smart-case"
+  vim.opt.grepformat = "%f:%l:%c:%m"
+end

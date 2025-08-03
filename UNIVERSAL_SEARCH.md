@@ -111,9 +111,16 @@ The search patterns can be extended by modifying the `language_patterns` table i
 
 ## Dependencies
 
-- `fzf-lua`: For the search interface
-- `ripgrep`: For fast text searching (should be installed system-wide)
-- `nvim-web-devicons`: For file type icons (optional)
+- `ripgrep`: For fast text searching (installed automatically)
+- Standard Neovim (no additional plugins required for basic functionality)
+
+## Implementation Notes
+
+The system provides two implementations:
+1. **Simple version** (`universal_search_simple.lua`): Uses vim's built-in grep with ripgrep backend - reliable and fast
+2. **Advanced version** (`universal_search.lua`): Uses fzf-lua for enhanced UI (requires fzf-lua plugin)
+
+The current configuration uses the simple version for maximum reliability.
 
 ## Tips
 

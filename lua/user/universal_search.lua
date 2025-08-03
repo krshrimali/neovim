@@ -1,41 +1,41 @@
 local M = {}
 
 -- Language-specific patterns for different search types
+-- Note: These patterns are for ripgrep, so we use single escaping
 local language_patterns = {
   -- JavaScript/TypeScript
   javascript = {
     functions = {
-      "function\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "([a-zA-Z_][a-zA-Z0-9_]*)\\s*[:=]\\s*function",
-      "([a-zA-Z_][a-zA-Z0-9_]*)\\s*[:=]\\s*\\([^)]*\\)\\s*=>",
-      "async\\s+function\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "([a-zA-Z_][a-zA-Z0-9_]*)\\s*\\([^)]*\\)\\s*{",
+      "function\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "[a-zA-Z_][a-zA-Z0-9_]*\\s*[:=]\\s*function",
+      "[a-zA-Z_][a-zA-Z0-9_]*\\s*[:=]\\s*\\([^)]*\\)\\s*=>",
+      "async\\s+function\\s+[a-zA-Z_][a-zA-Z0-9_]*",
     },
     classes = {
-      "class\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "interface\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "type\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "enum\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+      "class\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "interface\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "type\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "enum\\s+[a-zA-Z_][a-zA-Z0-9_]*",
     },
     variables = {
-      "let\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "const\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "var\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+      "let\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "const\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "var\\s+[a-zA-Z_][a-zA-Z0-9_]*",
     },
-    comments = { "//.*", "/\\*[\\s\\S]*?\\*/" }
+    comments = { "//.*", "/\\*.*?\\*/" }
   },
   
   -- Python
   python = {
     functions = {
-      "def\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "async\\s+def\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+      "def\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "async\\s+def\\s+[a-zA-Z_][a-zA-Z0-9_]*",
     },
     classes = {
-      "class\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+      "class\\s+[a-zA-Z_][a-zA-Z0-9_]*",
     },
     variables = {
-      "([a-zA-Z_][a-zA-Z0-9_]*)\\s*=",
+      "[a-zA-Z_][a-zA-Z0-9_]*\\s*=",
     },
     comments = { "#.*" }
   },
@@ -43,16 +43,16 @@ local language_patterns = {
   -- Lua
   lua = {
     functions = {
-      "function\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "local\\s+function\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "([a-zA-Z_][a-zA-Z0-9_]*)\\s*=\\s*function",
+      "function\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "local\\s+function\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "[a-zA-Z_][a-zA-Z0-9_]*\\s*=\\s*function",
     },
     classes = {
-      "([a-zA-Z_][a-zA-Z0-9_]*)\\s*=\\s*{",
+      "[a-zA-Z_][a-zA-Z0-9_]*\\s*=\\s*{",
     },
     variables = {
-      "local\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "([a-zA-Z_][a-zA-Z0-9_]*)\\s*=",
+      "local\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "[a-zA-Z_][a-zA-Z0-9_]*\\s*=",
     },
     comments = { "--.*" }
   },
@@ -60,90 +60,90 @@ local language_patterns = {
   -- Java
   java = {
     functions = {
-      "public\\s+.*\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s*\\(",
-      "private\\s+.*\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s*\\(",
-      "protected\\s+.*\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s*\\(",
-      "static\\s+.*\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s*\\(",
+      "public\\s+.*\\s+[a-zA-Z_][a-zA-Z0-9_]*\\s*\\(",
+      "private\\s+.*\\s+[a-zA-Z_][a-zA-Z0-9_]*\\s*\\(",
+      "protected\\s+.*\\s+[a-zA-Z_][a-zA-Z0-9_]*\\s*\\(",
+      "static\\s+.*\\s+[a-zA-Z_][a-zA-Z0-9_]*\\s*\\(",
     },
     classes = {
-      "class\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "interface\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "enum\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+      "class\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "interface\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "enum\\s+[a-zA-Z_][a-zA-Z0-9_]*",
     },
     variables = {
-      "([a-zA-Z_][a-zA-Z0-9_]*)\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s*[=;]",
+      "[a-zA-Z_][a-zA-Z0-9_]*\\s+[a-zA-Z_][a-zA-Z0-9_]*\\s*[=;]",
     },
-    comments = { "//.*", "/\\*[\\s\\S]*?\\*/" }
+    comments = { "//.*", "/\\*.*?\\*/" }
   },
   
   -- C/C++
   c = {
     functions = {
-      "([a-zA-Z_][a-zA-Z0-9_]*)\\s*\\([^)]*\\)\\s*{",
-      "static\\s+.*\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s*\\(",
+      "[a-zA-Z_][a-zA-Z0-9_]*\\s*\\([^)]*\\)\\s*{",
+      "static\\s+.*\\s+[a-zA-Z_][a-zA-Z0-9_]*\\s*\\(",
     },
     classes = {
-      "class\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "struct\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "typedef\\s+.*\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+      "class\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "struct\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "typedef\\s+.*\\s+[a-zA-Z_][a-zA-Z0-9_]*",
     },
     variables = {
-      "([a-zA-Z_][a-zA-Z0-9_]*)\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s*[=;]",
+      "[a-zA-Z_][a-zA-Z0-9_]*\\s+[a-zA-Z_][a-zA-Z0-9_]*\\s*[=;]",
     },
-    comments = { "//.*", "/\\*[\\s\\S]*?\\*/" }
+    comments = { "//.*", "/\\*.*?\\*/" }
   },
   
   -- Rust
   rust = {
     functions = {
-      "fn\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "pub\\s+fn\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "async\\s+fn\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+      "fn\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "pub\\s+fn\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "async\\s+fn\\s+[a-zA-Z_][a-zA-Z0-9_]*",
     },
     classes = {
-      "struct\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "enum\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "trait\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "impl\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+      "struct\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "enum\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "trait\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "impl\\s+[a-zA-Z_][a-zA-Z0-9_]*",
     },
     variables = {
-      "let\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "const\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "static\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+      "let\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "const\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "static\\s+[a-zA-Z_][a-zA-Z0-9_]*",
     },
-    comments = { "//.*", "/\\*[\\s\\S]*?\\*/" }
+    comments = { "//.*", "/\\*.*?\\*/" }
   },
   
   -- Go
   go = {
     functions = {
-      "func\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "func\\s+\\([^)]*\\)\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+      "func\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "func\\s+\\([^)]*\\)\\s+[a-zA-Z_][a-zA-Z0-9_]*",
     },
     classes = {
-      "type\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s+struct",
-      "type\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s+interface",
+      "type\\s+[a-zA-Z_][a-zA-Z0-9_]*\\s+struct",
+      "type\\s+[a-zA-Z_][a-zA-Z0-9_]*\\s+interface",
     },
     variables = {
-      "var\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "([a-zA-Z_][a-zA-Z0-9_]*)\\s*:=",
+      "var\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "[a-zA-Z_][a-zA-Z0-9_]*\\s*:=",
     },
-    comments = { "//.*", "/\\*[\\s\\S]*?\\*/" }
+    comments = { "//.*", "/\\*.*?\\*/" }
   },
   
   -- Ruby
   ruby = {
     functions = {
-      "def\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+      "def\\s+[a-zA-Z_][a-zA-Z0-9_]*",
     },
     classes = {
-      "class\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "module\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+      "class\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "module\\s+[a-zA-Z_][a-zA-Z0-9_]*",
     },
     variables = {
-      "([a-zA-Z_][a-zA-Z0-9_]*)\\s*=",
-      "@([a-zA-Z_][a-zA-Z0-9_]*)",
-      "@@([a-zA-Z_][a-zA-Z0-9_]*)",
+      "[a-zA-Z_][a-zA-Z0-9_]*\\s*=",
+      "@[a-zA-Z_][a-zA-Z0-9_]*",
+      "@@[a-zA-Z_][a-zA-Z0-9_]*",
     },
     comments = { "#.*" }
   },
@@ -151,44 +151,43 @@ local language_patterns = {
   -- PHP
   php = {
     functions = {
-      "function\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "public\\s+function\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "private\\s+function\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "protected\\s+function\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+      "function\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "public\\s+function\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "private\\s+function\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "protected\\s+function\\s+[a-zA-Z_][a-zA-Z0-9_]*",
     },
     classes = {
-      "class\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "interface\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-      "trait\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+      "class\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "interface\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+      "trait\\s+[a-zA-Z_][a-zA-Z0-9_]*",
     },
     variables = {
-      "\\$([a-zA-Z_][a-zA-Z0-9_]*)",
+      "\\$[a-zA-Z_][a-zA-Z0-9_]*",
     },
-    comments = { "//.*", "/\\*[\\s\\S]*?\\*/", "#.*" }
+    comments = { "//.*", "/\\*.*?\\*/", "#.*" }
   }
 }
 
 -- Generic fallback patterns for unknown languages
 local generic_patterns = {
   functions = {
-    "function\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-    "def\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-    "fn\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-    "([a-zA-Z_][a-zA-Z0-9_]*)\\s*\\([^)]*\\)\\s*{",
+    "function\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+    "def\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+    "fn\\s+[a-zA-Z_][a-zA-Z0-9_]*",
   },
   classes = {
-    "class\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-    "struct\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-    "interface\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-    "type\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+    "class\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+    "struct\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+    "interface\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+    "type\\s+[a-zA-Z_][a-zA-Z0-9_]*",
   },
   variables = {
-    "([a-zA-Z_][a-zA-Z0-9_]*)\\s*=",
-    "let\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-    "const\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
-    "var\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+    "[a-zA-Z_][a-zA-Z0-9_]*\\s*=",
+    "let\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+    "const\\s+[a-zA-Z_][a-zA-Z0-9_]*",
+    "var\\s+[a-zA-Z_][a-zA-Z0-9_]*",
   },
-  comments = { "//.*", "#.*", "/\\*[\\s\\S]*?\\*/" }
+  comments = { "//.*", "#.*", "/\\*.*?\\*/" }
 }
 
 -- Get file extension to determine language
@@ -240,17 +239,16 @@ local function create_search_pattern(search_type, language)
   end
   
   -- Join patterns with OR operator for ripgrep
-  -- Wrap each pattern in parentheses for proper grouping
-  local wrapped_patterns = {}
-  for _, pattern in ipairs(patterns) do
-    table.insert(wrapped_patterns, "(" .. pattern .. ")")
-  end
-  return table.concat(wrapped_patterns, "|")
+  return table.concat(patterns, "|")
 end
 
 -- Main search function
 function M.universal_search()
-  local fzf_lua = require("fzf-lua")
+  local fzf_lua_ok, fzf_lua = pcall(require, "fzf-lua")
+  if not fzf_lua_ok then
+    vim.notify("fzf-lua not available", vim.log.levels.ERROR)
+    return
+  end
   
   -- Search type options
   local search_types = {
@@ -302,7 +300,7 @@ function M.universal_search()
       -- Use fzf-lua live_grep with custom pattern
       fzf_lua.live_grep({
         prompt = string.format("Search %s> ", search_type),
-        rg_opts = string.format("--column --line-number --no-heading --color=always --smart-case --max-columns=512 -e '%s'", pattern),
+        search = pattern,
         winopts = {
           title = string.format("🔍 Universal Search - %s%s", 
             string.upper(search_type:sub(1,1)) .. search_type:sub(2),
@@ -310,19 +308,6 @@ function M.universal_search()
           ),
           height = 0.9,
           width = 0.9,
-        },
-        -- Allow user to modify the search after pattern is applied
-        query = "",
-        -- Custom actions
-        actions = {
-          ["default"] = function(selected)
-            -- Default action: go to selected item
-            fzf_lua.actions.file_edit_or_qf(selected)
-          end,
-          ["ctrl-s"] = function(selected)
-            -- Send to quickfix
-            fzf_lua.actions.file_sel_to_qf(selected)
-          end,
         }
       })
     end
@@ -331,7 +316,12 @@ end
 
 -- Quick search functions for direct access
 function M.search_functions()
-  local fzf_lua = require("fzf-lua")
+  local fzf_lua_ok, fzf_lua = pcall(require, "fzf-lua")
+  if not fzf_lua_ok then
+    vim.notify("fzf-lua not available", vim.log.levels.ERROR)
+    return
+  end
+  
   local current_file = vim.fn.expand("%:t")
   local language = get_language_from_extension(current_file)
   local pattern = create_search_pattern("functions", language)
@@ -343,7 +333,7 @@ function M.search_functions()
   
   fzf_lua.live_grep({
     prompt = "Search functions> ",
-    rg_opts = string.format("--column --line-number --no-heading --color=always --smart-case --max-columns=512 -e '%s'", pattern),
+    search = pattern,
     winopts = {
       title = "🔧 Search Functions" .. (language and (" (" .. language .. ")") or ""),
       height = 0.9,
@@ -353,7 +343,12 @@ function M.search_functions()
 end
 
 function M.search_classes()
-  local fzf_lua = require("fzf-lua")
+  local fzf_lua_ok, fzf_lua = pcall(require, "fzf-lua")
+  if not fzf_lua_ok then
+    vim.notify("fzf-lua not available", vim.log.levels.ERROR)
+    return
+  end
+  
   local current_file = vim.fn.expand("%:t")
   local language = get_language_from_extension(current_file)
   local pattern = create_search_pattern("classes", language)
@@ -365,7 +360,7 @@ function M.search_classes()
   
   fzf_lua.live_grep({
     prompt = "Search classes> ",
-    rg_opts = string.format("--column --line-number --no-heading --color=always --smart-case --max-columns=512 -e '%s'", pattern),
+    search = pattern,
     winopts = {
       title = "📦 Search Classes" .. (language and (" (" .. language .. ")") or ""),
       height = 0.9,
@@ -375,7 +370,12 @@ function M.search_classes()
 end
 
 function M.search_variables()
-  local fzf_lua = require("fzf-lua")
+  local fzf_lua_ok, fzf_lua = pcall(require, "fzf-lua")
+  if not fzf_lua_ok then
+    vim.notify("fzf-lua not available", vim.log.levels.ERROR)
+    return
+  end
+  
   local current_file = vim.fn.expand("%:t")
   local language = get_language_from_extension(current_file)
   local pattern = create_search_pattern("variables", language)
@@ -387,7 +387,7 @@ function M.search_variables()
   
   fzf_lua.live_grep({
     prompt = "Search variables> ",
-    rg_opts = string.format("--column --line-number --no-heading --color=always --smart-case --max-columns=512 -e '%s'", pattern),
+    search = pattern,
     winopts = {
       title = "📝 Search Variables" .. (language and (" (" .. language .. ")") or ""),
       height = 0.9,
@@ -397,7 +397,12 @@ function M.search_variables()
 end
 
 function M.search_comments()
-  local fzf_lua = require("fzf-lua")
+  local fzf_lua_ok, fzf_lua = pcall(require, "fzf-lua")
+  if not fzf_lua_ok then
+    vim.notify("fzf-lua not available", vim.log.levels.ERROR)
+    return
+  end
+  
   local current_file = vim.fn.expand("%:t")
   local language = get_language_from_extension(current_file)
   local pattern = create_search_pattern("comments", language)
@@ -409,7 +414,7 @@ function M.search_comments()
   
   fzf_lua.live_grep({
     prompt = "Search comments> ",
-    rg_opts = string.format("--column --line-number --no-heading --color=always --smart-case --max-columns=512 -e '%s'", pattern),
+    search = pattern,
     winopts = {
       title = "💬 Search Comments" .. (language and (" (" .. language .. ")") or ""),
       height = 0.9,
