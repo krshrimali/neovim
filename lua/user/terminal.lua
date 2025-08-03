@@ -47,6 +47,23 @@ local function configure_terminal_buffer(buf)
   return success
 end
 
+-- Function to enable vi mode in terminal
+local function enable_vi_mode(job_id, shell)
+  if not config.vi_mode or not job_id then
+    return
+  end
+  
+  -- Wait a moment for the terminal to be ready
+  vim.defer_fn(function()
+    if shell and shell:match("zsh") then
+      vim.fn.chansend(job_id, "bindkey -v\n")
+    else
+      -- Default to fish vi mode
+      vim.fn.chansend(job_id, "fish_vi_key_bindings\n")
+    end
+  end, 100)
+end
+
 -- Terminal configuration
 local config = {
   shell = "fish", -- Default shell
@@ -56,6 +73,8 @@ local config = {
     horizontal = { width = 0.9, height = 0.3 },
   },
   border = "rounded",
+  -- Enable vi mode for terminals
+  vi_mode = true,
 }
 
 -- Terminal instances storage
@@ -111,6 +130,9 @@ local function create_split_terminal(direction, size_ratio, cmd)
   
   local job_id = vim.fn.termopen(cmd or config.shell)
   
+  -- Enable vi mode
+  enable_vi_mode(job_id, cmd or config.shell)
+  
   return buf, job_id
 end
 
@@ -147,11 +169,11 @@ vim.api.nvim_create_autocmd("TermOpen", {
       -- Disable treesitter highlighting for terminal buffers
       disable_treesitter_for_terminal(buf)
       
-      -- Skip lazygit buffers - they have their own keymaps
-      if filetype ~= "lazygit" then
-        set_terminal_keymaps(buf)
-        vim.cmd("startinsert")
-      end
+              -- Skip lazygit buffers - they have their own keymaps
+        if filetype ~= "lazygit" then
+          set_terminal_keymaps(buf)
+          vim.cmd("startinsert")
+        end
     end
   end,
 })
@@ -169,6 +191,9 @@ function M.float_terminal(cmd)
   end
   
   local job_id = vim.fn.termopen(cmd or config.shell)
+  
+  -- Enable vi mode
+  enable_vi_mode(job_id, cmd or config.shell)
   
   terminals.float = { buf = buf, win = win, job_id = job_id }
   
@@ -480,6 +505,9 @@ function M.centered_terminal(cmd)
   end
   
   local job_id = vim.fn.termopen(cmd or config.shell)
+  
+  -- Enable vi mode
+  enable_vi_mode(job_id, cmd or config.shell)
   
   terminals.centered = { buf = buf, win = win, job_id = job_id }
   
