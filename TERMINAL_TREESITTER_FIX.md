@@ -67,9 +67,29 @@ To test the fix:
 - Fixed terminal toggle functionality when terminals are manually closed
 - Added proper cleanup of terminal tracking when windows are closed
 - Improved toggle logic to handle edge cases and invalid buffers
+- Added vi mode support for fish and zsh shells
+- Automatic vi key bindings enablement in all terminals
+
+## Vi Mode Support
+All terminals now automatically enable vi key bindings:
+- **Fish Shell**: Uses `fish_vi_key_bindings`
+- **Zsh Shell**: Uses `bindkey -v`
+- **Other Shells**: Defaults to fish vi mode
+
+### Vi Mode Features
+- Press `Esc` to enter normal mode
+- Use `h`, `j`, `k`, `l` for navigation
+- Use `i` to enter insert mode
+- Use `v` to enter visual mode
+- Use `w`, `b`, `e` for word navigation
+- Use `0`, `$` for line navigation
+- Use `dd` to delete lines
+- Use `yy` to yank lines
+- Use `p` to paste
 
 ## Notes
 - Floating terminals (`<leader>\`) were already working because they use a different creation method
 - The fix maintains all existing terminal functionality while preventing the highlighting errors
 - Performance is improved as treesitter no longer processes terminal buffers unnecessarily
 - Horizontal terminals now create exactly one terminal window instead of duplicate instances
+- Vi mode is automatically enabled for all new terminals
