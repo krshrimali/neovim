@@ -51,6 +51,12 @@ local function create_split_terminal(direction, size_ratio, cmd)
   end
   
   local buf = vim.api.nvim_get_current_buf()
+  
+  -- Preemptively disable treesitter and syntax highlighting to prevent errors
+  vim.api.nvim_buf_set_option(buf, "syntax", "off")
+  vim.wo.foldmethod = "manual"
+  vim.wo.foldexpr = ""
+  
   local job_id = vim.fn.termopen(cmd or config.shell)
   
   return buf, job_id
@@ -79,6 +85,9 @@ vim.api.nvim_create_autocmd("TermOpen", {
   callback = function()
     local buf = vim.api.nvim_get_current_buf()
     local filetype = vim.api.nvim_buf_get_option(buf, "filetype")
+    
+    -- Disable treesitter highlighting for all terminal buffers to prevent errors
+    vim.api.nvim_buf_set_option(buf, "syntax", "off")
     
     -- Skip lazygit buffers - they have their own keymaps
     if filetype ~= "lazygit" then
