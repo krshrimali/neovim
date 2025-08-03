@@ -47,6 +47,19 @@ local function configure_terminal_buffer(buf)
   return success
 end
 
+-- Terminal configuration
+local config = {
+  shell = "fish", -- Default shell
+  size = {
+    float = { width = 0.8, height = 0.8 },
+    vertical = { width = 0.5, height = 0.9 },
+    horizontal = { width = 0.9, height = 0.3 },
+  },
+  border = "rounded",
+  -- Enable vi mode for terminals
+  vi_mode = true,
+}
+
 -- Function to enable vi mode in terminal
 local function enable_vi_mode(job_id, shell)
   if not config.vi_mode or not job_id then
@@ -63,19 +76,6 @@ local function enable_vi_mode(job_id, shell)
     end
   end, 100)
 end
-
--- Terminal configuration
-local config = {
-  shell = "fish", -- Default shell
-  size = {
-    float = { width = 0.8, height = 0.8 },
-    vertical = { width = 0.5, height = 0.9 },
-    horizontal = { width = 0.9, height = 0.3 },
-  },
-  border = "rounded",
-  -- Enable vi mode for terminals
-  vi_mode = true,
-}
 
 -- Terminal instances storage
 local terminals = {}
