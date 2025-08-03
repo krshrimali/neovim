@@ -69,6 +69,20 @@ vim.cmd [[let g:python_recommended_style = 0]]
 vim.opt.foldmethod = "expr"
 vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
 
+-- Disable treesitter folding for terminal buffers to prevent highlighter errors
+vim.api.nvim_create_autocmd("TermOpen", {
+  pattern = "*",
+  callback = function()
+    local buf = vim.api.nvim_get_current_buf()
+    -- Set buffer-local options to prevent treesitter issues
+    vim.api.nvim_buf_set_option(buf, "filetype", "")
+    vim.wo.foldmethod = "manual"
+    vim.wo.foldexpr = ""
+    -- Disable syntax highlighting completely for terminal buffers
+    vim.cmd("setlocal syntax=off")
+  end,
+})
+
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1e222a" })
 vim.opt.whichwrap:append "<>[]hl"
 

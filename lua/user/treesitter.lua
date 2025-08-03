@@ -13,8 +13,14 @@ configs.setup {
   highlight = {
     enable = true, -- false will disable the whole extension
     disable = { "markdown", "css", "html" }, -- Disable for heavy file types
-    -- Disable for large files
+    -- Disable for large files and terminal buffers
     disable = function(lang, buf)
+      -- Disable for terminal buffers to prevent highlighter errors
+      local buftype = vim.api.nvim_buf_get_option(buf, "buftype")
+      if buftype == "terminal" then
+        return true
+      end
+      
       local max_filesize = 50 * 1024 -- Reduced from 100 KB for better performance
       local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
       if ok and stats and stats.size > max_filesize then
