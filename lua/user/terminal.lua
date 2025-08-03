@@ -1,5 +1,52 @@
 local M = {}
 
+-- Function to safely disable treesitter for terminal buffers
+local function disable_treesitter_for_terminal(buf)
+  -- Check if buffer is valid
+  if not vim.api.nvim_buf_is_valid(buf) then
+    return
+  end
+  
+  -- Safely disable syntax highlighting for terminal buffers
+  pcall(function()
+    vim.api.nvim_buf_set_option(buf, "syntax", "")
+  end)
+  
+  -- Try to disable treesitter highlighting for this buffer
+  local ok, ts_highlighter = pcall(require, "nvim-treesitter.highlighter")
+  if ok and ts_highlighter then
+    -- Force disable treesitter highlighting for this buffer
+    pcall(function()
+      ts_highlighter.detach(buf)
+    end)
+  end
+end
+
+-- Function to safely configure terminal buffer options
+local function configure_terminal_buffer(buf)
+  -- Check if buffer is valid
+  if not vim.api.nvim_buf_is_valid(buf) then
+    return false
+  end
+  
+  -- Safely set buffer options
+  local success = true
+  
+  success = success and pcall(function()
+    vim.api.nvim_buf_set_option(buf, "buftype", "terminal")
+  end)
+  
+  success = success and pcall(function()
+    vim.api.nvim_buf_set_option(buf, "modifiable", true)
+  end)
+  
+  success = success and pcall(function()
+    vim.api.nvim_buf_set_option(buf, "swapfile", false)
+  end)
+  
+  return success
+end
+
 -- Terminal configuration
 local config = {
   shell = "fish", -- Default shell
@@ -9,7 +56,26 @@ local config = {
     horizontal = { width = 0.9, height = 0.3 },
   },
   border = "rounded",
+  -- Enable vi mode for terminals
+  vi_mode = true,
 }
+
+-- Function to enable vi mode in terminal
+local function enable_vi_mode(job_id, shell)
+  if not config.vi_mode or not job_id then
+    return
+  end
+  
+  -- Wait a moment for the terminal to be ready
+  vim.defer_fn(function()
+    if shell and shell:match("zsh") then
+      vim.fn.chansend(job_id, "bindkey -v\n")
+    else
+      -- Default to fish vi mode
+      vim.fn.chansend(job_id, "fish_vi_key_bindings\n")
+    end
+  end, 100)
+end
 
 -- Terminal instances storage
 local terminals = {}
@@ -50,8 +116,22 @@ local function create_split_terminal(direction, size_ratio, cmd)
     vim.cmd("resize " .. height)
   end
   
-  local buf = vim.api.nvim_get_current_buf()
+  -- Create a new buffer for the terminal
+  local buf = vim.api.nvim_create_buf(false, true)
+  
+  -- Set the new buffer in the current window (which is the new split)
+  vim.api.nvim_set_current_buf(buf)
+  
+  -- Safely configure buffer options before opening terminal
+  if configure_terminal_buffer(buf) then
+    -- Disable treesitter highlighting for terminal buffers
+    disable_treesitter_for_terminal(buf)
+  end
+  
   local job_id = vim.fn.termopen(cmd or config.shell)
+  
+  -- Enable vi mode
+  enable_vi_mode(job_id, cmd or config.shell)
   
   return buf, job_id
 end
@@ -79,11 +159,21 @@ vim.api.nvim_create_autocmd("TermOpen", {
   callback = function()
     local buf = vim.api.nvim_get_current_buf()
     local filetype = vim.api.nvim_buf_get_option(buf, "filetype")
+    local buftype = vim.api.nvim_buf_get_option(buf, "buftype")
     
-    -- Skip lazygit buffers - they have their own keymaps
-    if filetype ~= "lazygit" then
-      set_terminal_keymaps(buf)
-      vim.cmd("startinsert")
+    -- Only process if this is actually a terminal buffer
+    if buftype == "terminal" then
+      -- Safely configure buffer options
+      configure_terminal_buffer(buf)
+      
+      -- Disable treesitter highlighting for terminal buffers
+      disable_treesitter_for_terminal(buf)
+      
+              -- Skip lazygit buffers - they have their own keymaps
+        if filetype ~= "lazygit" then
+          set_terminal_keymaps(buf)
+          vim.cmd("startinsert")
+        end
     end
   end,
 })
@@ -93,7 +183,17 @@ function M.float_terminal(cmd)
   local buf, win = create_float_window(config.size.float.width, config.size.float.height, "Float Terminal")
   
   vim.api.nvim_set_current_buf(buf)
+  
+  -- Safely configure buffer options before opening terminal
+  if configure_terminal_buffer(buf) then
+    -- Disable treesitter highlighting for terminal buffers
+    disable_treesitter_for_terminal(buf)
+  end
+  
   local job_id = vim.fn.termopen(cmd or config.shell)
+  
+  -- Enable vi mode
+  enable_vi_mode(job_id, cmd or config.shell)
   
   terminals.float = { buf = buf, win = win, job_id = job_id }
   
@@ -128,15 +228,26 @@ end
 
 -- Toggle vertical terminal
 function M.toggle_vertical_terminal()
+  -- Check if terminal exists and is valid
   if terminals.vertical and vim.api.nvim_buf_is_valid(terminals.vertical.buf) then
-    -- Find and close the vertical terminal window
+    -- Check if terminal window is currently visible
+    local window_found = false
     for _, win in ipairs(vim.api.nvim_list_wins()) do
-      if vim.api.nvim_win_get_buf(win) == terminals.vertical.buf then
+      if vim.api.nvim_win_is_valid(win) and vim.api.nvim_win_get_buf(win) == terminals.vertical.buf then
+        window_found = true
+        -- Close the window
         vim.api.nvim_win_close(win, true)
         break
       end
     end
-    terminals.vertical.hidden = true
+    
+    if window_found then
+      terminals.vertical.hidden = true
+    else
+      -- Window not found, terminal was already closed, create new one
+      terminals.vertical = nil
+      M.vertical_terminal()
+    end
   elseif terminals.vertical and terminals.vertical.hidden then
     -- Restore the vertical terminal
     local buf = terminals.vertical.buf
@@ -153,21 +264,33 @@ function M.toggle_vertical_terminal()
       M.vertical_terminal()
     end
   else
+    -- No terminal exists, create new one
     M.vertical_terminal()
   end
 end
 
 -- Toggle horizontal terminal
 function M.toggle_horizontal_terminal()
+  -- Check if terminal exists and is valid
   if terminals.horizontal and vim.api.nvim_buf_is_valid(terminals.horizontal.buf) then
-    -- Find and close the horizontal terminal window
+    -- Check if terminal window is currently visible
+    local window_found = false
     for _, win in ipairs(vim.api.nvim_list_wins()) do
-      if vim.api.nvim_win_get_buf(win) == terminals.horizontal.buf then
+      if vim.api.nvim_win_is_valid(win) and vim.api.nvim_win_get_buf(win) == terminals.horizontal.buf then
+        window_found = true
+        -- Close the window
         vim.api.nvim_win_close(win, true)
         break
       end
     end
-    terminals.horizontal.hidden = true
+    
+    if window_found then
+      terminals.horizontal.hidden = true
+    else
+      -- Window not found, terminal was already closed, create new one
+      terminals.horizontal = nil
+      M.horizontal_terminal()
+    end
   elseif terminals.horizontal and terminals.horizontal.hidden then
     -- Restore the horizontal terminal
     local buf = terminals.horizontal.buf
@@ -184,6 +307,7 @@ function M.toggle_horizontal_terminal()
       M.horizontal_terminal()
     end
   else
+    -- No terminal exists, create new one
     M.horizontal_terminal()
   end
 end
@@ -373,7 +497,17 @@ function M.centered_terminal(cmd)
   local buf, win = create_float_window(0.6, 0.6, "Terminal")
   
   vim.api.nvim_set_current_buf(buf)
+  
+  -- Safely configure buffer options before opening terminal
+  if configure_terminal_buffer(buf) then
+    -- Disable treesitter highlighting for terminal buffers
+    disable_treesitter_for_terminal(buf)
+  end
+  
   local job_id = vim.fn.termopen(cmd or config.shell)
+  
+  -- Enable vi mode
+  enable_vi_mode(job_id, cmd or config.shell)
   
   terminals.centered = { buf = buf, win = win, job_id = job_id }
   
@@ -417,6 +551,70 @@ local function setup_keymaps()
   -- Lazygit
   vim.keymap.set("n", "<leader>gG", M.lazygit_tab, { desc = "Lazygit Tab", noremap = true, silent = true })
 end
+
+-- Additional safety: Disable treesitter for terminal buffers
+vim.api.nvim_create_autocmd("BufWinEnter", {
+  pattern = "*",
+  callback = function()
+    local buf = vim.api.nvim_get_current_buf()
+    
+    -- Safely check buffer type
+    local ok, buftype = pcall(vim.api.nvim_buf_get_option, buf, "buftype")
+    
+    if ok and buftype == "terminal" then
+      -- Disable treesitter highlighting for terminal buffers
+      disable_treesitter_for_terminal(buf)
+    end
+  end,
+})
+
+-- Clean up terminal tracking when windows are closed
+vim.api.nvim_create_autocmd("WinClosed", {
+  pattern = "*",
+  callback = function()
+    -- Check if any terminal windows are still open
+    local terminal_windows = {}
+    
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+      if vim.api.nvim_win_is_valid(win) then
+        local buf = vim.api.nvim_win_get_buf(win)
+        if vim.api.nvim_buf_is_valid(buf) then
+          local ok, buftype = pcall(vim.api.nvim_buf_get_option, buf, "buftype")
+          if ok and buftype == "terminal" then
+            table.insert(terminal_windows, buf)
+          end
+        end
+      end
+    end
+    
+    -- Clean up terminal tracking if terminals are no longer visible
+    if terminals.horizontal and vim.api.nvim_buf_is_valid(terminals.horizontal.buf) then
+      local found = false
+      for _, buf in ipairs(terminal_windows) do
+        if buf == terminals.horizontal.buf then
+          found = true
+          break
+        end
+      end
+      if not found then
+        terminals.horizontal = nil
+      end
+    end
+    
+    if terminals.vertical and vim.api.nvim_buf_is_valid(terminals.vertical.buf) then
+      local found = false
+      for _, buf in ipairs(terminal_windows) do
+        if buf == terminals.vertical.buf then
+          found = true
+          break
+        end
+      end
+      if not found then
+        terminals.vertical = nil
+      end
+    end
+  end,
+})
 
 -- Initialize
 setup_keymaps()
