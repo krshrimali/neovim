@@ -58,6 +58,9 @@ vim.keymap.set("n", "<leader>bs", function()
   require("user.buffer_browser").toggle_sidebar()
 end, { desc = "Buffer Sidebar", silent = true })
 
+-- Load universal search functionality
+-- Note: Keymaps are loaded in keymaps.lua, this just ensures the module is available
+
 -- These are now handled by plugin lazy loading
 -- require("goto-preview").setup {} -- Now lazy loaded
 -- require("neogit").setup {} -- Now lazy loaded  
