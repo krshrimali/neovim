@@ -10,7 +10,7 @@ M.colors = {
   bg = "#120E1D",           -- Main background
   fg = "#F8F8F8",           -- Main foreground
   fg_alt = "#EEEEEE",       -- Alternative foreground
-  fg_dim = "#F9F9F990",     -- Dimmed foreground
+  fg_dim = "#B0B0B0",       -- Dimmed foreground
   
   -- Core colors from Hexxa theme
   blue = "#4D5BFC",         -- Primary blue
@@ -23,21 +23,21 @@ M.colors = {
   
   -- UI colors
   comment = "#666666",      -- Comments
-  selection = "#717DFF39",  -- Selection background
-  line_highlight = "#F9F9F907", -- Current line
-  line_highlight_border = "#F9F9F904",
+  selection = "#3D4A7A",    -- Selection background
+  line_highlight = "#1A1A1A", -- Current line
+  line_highlight_border = "#2A2A2A",
   
   -- Grays and neutrals
-  gray1 = "#F9F9F933",     -- Line numbers
-  gray2 = "#F9F9F966",     -- Whitespace, rulers
-  gray3 = "#F9F9F980",     -- Word highlight border
-  gray4 = "#F9F9F922",     -- Find match highlight
-  gray5 = "#F9F9F920",     -- Inactive selection, borders
-  gray6 = "#F9F9F910",     -- Hover backgrounds
-  gray7 = "#F9F9F907",     -- Very subtle backgrounds
+  gray1 = "#4A4A4A",       -- Line numbers
+  gray2 = "#6A6A6A",       -- Whitespace, rulers
+  gray3 = "#8A8A8A",       -- Word highlight border
+  gray4 = "#3A3A3A",       -- Find match highlight
+  gray5 = "#2A2A2A",       -- Inactive selection, borders
+  gray6 = "#1A1A1A",       -- Hover backgrounds
+  gray7 = "#151515",       -- Very subtle backgrounds
   
   -- Status and UI elements
-  border = "#F9F9F920",
+  border = "#2A2A2A",
   active_border = "#4D5BFC",
   error = "#DB5461",
   warning = "#4D5BFC",
