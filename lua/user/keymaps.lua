@@ -172,10 +172,9 @@ vim.g.copilot_no_tab_map = true
 -- Helper functions to fetch the current scope and set `search_dirs`
 _G.find_files = function()
     local current_path = vim.fn.expand "%:p:h"
-    local relative_path = vim.fn.fnamemodify(current_path, ":~:.")
 
     require("fzf-lua").files {
-        cwd = relative_path,
+        cwd = current_path,
         winopts = {
             preview = { hidden = true },
         },
@@ -183,10 +182,9 @@ _G.find_files = function()
 end
 _G.live_grep = function()
     local current_path = vim.fn.expand "%:p:h"
-    local relative_path = vim.fn.fnamemodify(current_path, ":~:.")
 
     require("fzf-lua").live_grep {
-        cwd = relative_path,
+        cwd = current_path,
         winopts = {
             preview = { hidden = true },
         },
@@ -203,7 +201,7 @@ _G.find_files_in_subdir = function()
             
             -- Check if directory exists
             if vim.fn.isdirectory(search_path) == 1 then
-                require("fzf-lua").files {
+                require("fzf-lua").live_grep {
                     cwd = search_path,
                     winopts = {
                         preview = { hidden = true },
