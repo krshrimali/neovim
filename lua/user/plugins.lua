@@ -581,9 +581,28 @@ require("lazy").setup {
         tag = "v0.0.1"
     },
     {
-        "rmagatti/goto-preview",
-        dependencies = { "rmagatti/logger.nvim" },
-        -- event = "BufEnter",
-        config = true, -- necessary as per https://github.com/rmagatti/goto-preview/issues/88
+        "Jersonrn/CodeInsight",
+        dependencies = { "neoclide/coc.nvim" },
+        keys = {
+            { "<leader>lgg", ":ShowFloatDefinition<CR>", desc = "Show Float Definition" },
+            { "<leader>lgr", ":ShowFloatReferences<CR>", desc = "Show Float References" },
+            { "<leader>lgt", ":ShowFloatTypeDefinition<CR>", desc = "Show Float Type Definition" },
+            { "<leader>lgw", ":q<CR>", desc = "Close Float Window" }, -- Close floating window with q
+        },
+        config = function()
+            -- Configure CodeInsight for COC.nvim compatibility
+            vim.g.code_insight_config = {
+                pos = 'top-right',
+                opts = {
+                    width = math.floor(vim.o.columns * 0.5),
+                    height = math.floor(vim.o.lines * 0.5),
+                    focusable = true,
+                    external = false,
+                    border = {'❖', '═', '╗', '║', '⇲', '═', '╚', '║'},
+                    title = {{"CodeInsight", 'FloatTitle'}},
+                    title_pos = 'left',
+                }
+            }
+        end,
     }
 }

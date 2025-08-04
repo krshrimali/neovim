@@ -59,6 +59,6 @@ vim.keymap.set("n", "<leader>bs", function()
 end, { desc = "Buffer Sidebar", silent = true })
 
 -- These are now handled by plugin lazy loading
-require("goto-preview").setup {} -- Now lazy loaded
+-- require("goto-preview").setup {} -- Now lazy loaded via plugins.lua
 -- require("neogit").setup {} -- Now lazy loaded  
 -- telescope extensions replaced with fzf-lua
