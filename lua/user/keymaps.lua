@@ -81,17 +81,19 @@ keymap("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>//gI<Left><Left><Left>", opts)
 
 -- NOTE: the fact that tab and ctrl-i are the same is stupid
 keymap("n", "<leader>Q", "<cmd>bdelete!<CR>", opts)
-keymap("n", "<F11>", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
-keymap("n", "<F12>", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-keymap("n", "gR", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+-- Commented out vim.lsp keymaps to avoid conflicts with COC.nvim
+-- These are handled by COC configuration in lua/user/coc.lua
+-- keymap("n", "<F11>", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+-- keymap("n", "<F12>", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
+-- keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
+-- keymap("n", "gR", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
 
 -- keymap("n", "gI", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
+-- keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
 -- keymap("n", "gi", "<cmd>lua vim.lsp.buf.incoming_calls()<CR>", opts)
-keymap("n", "go", "<cmd>lua vim.lsp.buf.outgoing_calls()<CR>", opts)
+-- keymap("n", "go", "<cmd>lua vim.lsp.buf.outgoing_calls()<CR>", opts)
 keymap("n", "<C-p>", "<cmd>FzfLua files<cr>", opts)
-keymap("n", "<C-s>", "<cmd>lua vim.lsp.buf.document_symbol()<cr>", opts)
+-- keymap("n", "<C-s>", "<cmd>lua vim.lsp.buf.document_symbol()<cr>", opts) -- Conflicts with COC
 keymap("n", "<C-z>", "<cmd>ZenMode<cr>", opts)
 
 -- keymap("n", "-", ":lua require'lir.float'.toggle()<cr>", opts)
