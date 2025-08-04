@@ -14,6 +14,13 @@ function M.setup()
     return
   end
   
+  -- Ensure vim.lsp doesn't interfere with COC globally
+  vim.lsp.handlers["textDocument/hover"] = function() end
+  vim.lsp.handlers["textDocument/signatureHelp"] = function() end
+  
+  -- Disable automatic LSP completion
+  vim.g.completion_enable_auto_popup = 0
+  
   -- Minimal LSP setup - only for goto-preview functionality
   -- NOTE: These language servers need to be installed separately:
   -- - pyright: npm install -g pyright
@@ -30,6 +37,16 @@ function M.setup()
   -- Minimal capabilities - only what goto-preview needs
   local capabilities = vim.lsp.protocol.make_client_capabilities()
   
+  -- Explicitly disable completion capabilities to avoid conflicts with COC
+  capabilities.textDocument.completion = nil
+  capabilities.textDocument.hover = nil
+  capabilities.textDocument.signatureHelp = nil
+  capabilities.textDocument.documentSymbol = nil
+  capabilities.textDocument.formatting = nil
+  capabilities.textDocument.rangeFormatting = nil
+  capabilities.textDocument.codeAction = nil
+  capabilities.textDocument.rename = nil
+  
   -- Disable most LSP features to avoid conflicts with COC
   local on_attach = function(client, bufnr)
     -- Disable most LSP features since COC handles them
@@ -41,6 +58,12 @@ function M.setup()
     client.server_capabilities.hoverProvider = false
     client.server_capabilities.signatureHelpProvider = false
     client.server_capabilities.renameProvider = false
+    
+    -- Ensure vim.lsp doesn't set omnifunc (let COC handle completion)
+    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', '')
+    
+    -- Disable LSP completion entirely for this buffer
+    vim.api.nvim_buf_set_option(bufnr, 'completefunc', '')
     
     -- Only keep what goto-preview needs
     -- client.server_capabilities.definitionProvider = true

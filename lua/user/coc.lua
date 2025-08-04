@@ -202,32 +202,27 @@ vim.defer_fn(function()
     })
 end, 200)
 
--- Install extensions on first startup - DEFERRED for better startup time
-local coc_extensions = {
-    'coc-json',
-    'coc-tsserver',
-    'coc-pyright', 
-    'coc-rust-analyzer',
-    'coc-lua',
-    'coc-snippets'
-}
+-- Install extensions using the dedicated helper
+require("user.coc_install").install_extensions()
 
--- Defer extension installation to avoid blocking startup
-vim.defer_fn(function()
-    if vim.fn.exists(':CocInstall') == 2 then
-        -- Check which extensions are missing
-        local missing_extensions = {}
-        for _, ext in ipairs(coc_extensions) do
-            local ext_path = vim.fn.expand('~/.config/coc/extensions/node_modules/' .. ext)
-            if vim.fn.isdirectory(ext_path) == 0 then
-                table.insert(missing_extensions, ext)
-            end
-        end
-        
-        -- Only install missing extensions
-        if #missing_extensions > 0 then
-            vim.cmd('silent! wall')
-            vim.cmd('CocInstall -sync ' .. table.concat(missing_extensions, ' '))
-        end
-    end
-end, 3000) -- Increased delay to avoid startup impact
+-- Create user commands for manual extension management
+vim.api.nvim_create_user_command("CocInstallMissing", function()
+    require("user.coc_install").install_missing()
+end, { desc = "Install missing COC extensions" })
+
+vim.api.nvim_create_user_command("CocExtensionStatus", function()
+    require("user.coc_install").check_status()
+end, { desc = "Check COC extension installation status" })
+
+-- Debug commands
+vim.api.nvim_create_user_command("CocDebug", function()
+    require("user.coc_debug").check_coc_status()
+end, { desc = "Debug COC completion issues" })
+
+vim.api.nvim_create_user_command("CocFixCompletion", function()
+    require("user.coc_debug").fix_completion()
+end, { desc = "Attempt to fix COC completion" })
+
+vim.api.nvim_create_user_command("CocTestCompletion", function()
+    require("user.coc_debug").test_completion()
+end, { desc = "Show completion testing instructions" })

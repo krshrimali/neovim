@@ -63,6 +63,15 @@ The following keymaps are configured for goto-preview:
 
 ## Troubleshooting
 
+### COC Completion Not Working
+If COC autocompletion isn't showing:
+
+1. **Check COC status**: Run `:CocDebug` to see detailed status information
+2. **Install missing extensions**: Run `:CocInstallMissing` to install required COC extensions
+3. **Check extension status**: Run `:CocExtensionStatus` to see which extensions are installed
+4. **Restart COC**: Run `:CocFixCompletion` to reset completion settings and restart COC
+5. **Manual restart**: Try `:CocRestart` if the above doesn't work
+
 ### Language server not working
 1. Check if the language server is installed and in your PATH
 2. Check `:LspInfo` to see if servers are attached
