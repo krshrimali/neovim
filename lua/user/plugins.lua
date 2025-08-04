@@ -61,9 +61,9 @@ require("lazy").setup {
     {
         "NeogitOrg/neogit",
         dependencies = {
-            "nvim-lua/plenary.nvim",         -- required
-            "ibhagwan/fzf-lua", -- optional
-            "sindrets/diffview.nvim",        -- optional
+            "nvim-lua/plenary.nvim",  -- required
+            "ibhagwan/fzf-lua",       -- optional
+            "sindrets/diffview.nvim", -- optional
         },
         cmd = "Neogit",
         keys = { "<leader>gg" },
@@ -74,17 +74,17 @@ require("lazy").setup {
     "xiyaowong/transparent.nvim",
 
     -- Goto preview - LAZY LOAD
-    {
-        "rmagatti/goto-preview",
-        dependencies = { "rmagatti/logger.nvim" },
-        keys = {
-            { "gpd", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>" },
-            { "gpi", "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>" },
-            { "gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>" },
-            { "gP",  "<cmd>lua require('goto-preview').close_all_win()<CR>" },
-        },
-        config = true,
-    },
+    -- {
+    --     "rmagatti/goto-preview",
+    --     dependencies = { "rmagatti/logger.nvim" },
+    --     keys = {
+    --         { "gpd", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>" },
+    --         { "gpi", "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>" },
+    --         { "gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>" },
+    --         { "gP",  "<cmd>lua require('goto-preview').close_all_win()<CR>" },
+    --     },
+    --     config = true,
+    -- },
 
     -- Spider movement - LAZY LOAD
     {
@@ -102,11 +102,11 @@ require("lazy").setup {
         dependencies = { "nvim-tree/nvim-web-devicons" },
         cmd = "FzfLua",
         keys = {
-            { "<leader>ff", "<cmd>FzfLua files<cr>", desc = "Find Files" },
-            { "<leader>fr", "<cmd>FzfLua oldfiles<cr>", desc = "Recent Files" },
+            { "<leader>ff", "<cmd>FzfLua files<cr>",     desc = "Find Files" },
+            { "<leader>fr", "<cmd>FzfLua oldfiles<cr>",  desc = "Recent Files" },
             { "<leader>fg", "<cmd>FzfLua live_grep<cr>", desc = "Live Grep" },
-            { "<leader>fb", "<cmd>FzfLua buffers<cr>", desc = "Buffers" },
-            { "<leader>fh", "<cmd>FzfLua helptags<cr>", desc = "Help Tags" },
+            { "<leader>fb", "<cmd>FzfLua buffers<cr>",   desc = "Buffers" },
+            { "<leader>fh", "<cmd>FzfLua helptags<cr>",  desc = "Help Tags" },
         },
         config = function()
             -- Use minimal config for testing slow file opening
@@ -117,7 +117,7 @@ require("lazy").setup {
     },
 
     -- THEMES - Keep minimal set, load immediately for UI consistency
-    { "decaycs/decay.nvim",                       name = "decay" },
+    { "decaycs/decay.nvim", name = "decay" },
     "lunarvim/darkplus.nvim",
     "folke/tokyonight.nvim",
     {
@@ -529,78 +529,6 @@ require("lazy").setup {
     },
 
     -- Avante - LAZY LOAD
-    {
-        "yetone/avante.nvim",
-        build = function()
-            if vim.fn.has("win32") == 1 then
-                return "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
-            else
-                return "make"
-            end
-        end,
-        cmd = { "AvanteAsk", "AvanteChat", "AvanteToggle" },
-        keys = { "<leader>aa", "<leader>ac", "<leader>at" },
-        version = false,
-        ---@module 'avante'
-        ---@type avante.Config
-        opts = {
-            -- add any opts here
-            -- for example
-            provider = "copilot",
-            providers = {
-                claude = {
-                    endpoint = "https://api.anthropic.com",
-                    model = "claude-sonnet-4-20250514",
-                    timeout = 30000, -- Timeout in milliseconds
-                    extra_request_body = {
-                        temperature = 0.75,
-                        max_tokens = 20480,
-                    },
-                },
-                moonshot = {
-                    endpoint = "https://api.moonshot.ai/v1",
-                    model = "kimi-k2-0711-preview",
-                    timeout = 30000, -- Timeout in milliseconds
-                    extra_request_body = {
-                        temperature = 0.75,
-                        max_tokens = 32768,
-                    },
-                },
-            },
-        },
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "MunifTanjim/nui.nvim",
-            --- The below dependencies are optional,
-            "echasnovski/mini.pick",         -- for file_selector provider mini.pick
-            -- "nvim-telescope/telescope.nvim", -- replaced with fzf-lua
-            "hrsh7th/nvim-cmp",              -- autocompletion for avante commands and mentions
-            "ibhagwan/fzf-lua",              -- for file_selector provider fzf
-            "stevearc/dressing.nvim",        -- for input provider dressing
-            "folke/snacks.nvim",             -- for input provider snacks
-            -- "nvim-tree/nvim-web-devicons",   -- or echasnovski/mini.icons
-            "github/copilot.vim",
-            -- "zbirenbaum/copilot.lua",        -- for providers='copilot'
-            {
-                -- support for image pasting
-                "HakonHarnes/img-clip.nvim",
-                event = "VeryLazy",
-                opts = {
-                    -- recommended settings
-                    default = {
-                        embed_image_as_base64 = false,
-                        prompt_for_file_name = false,
-                        drag_and_drop = {
-                            insert_mode = true,
-                        },
-                        -- required for Windows users
-                        use_absolute_path = true,
-                    },
-                },
-            },
-            -- Removed render-markdown.nvim to avoid weird buffer rendering
-        },
-    },
 
     -- Markdown Preview - LAZY LOAD
     {
@@ -651,5 +579,11 @@ require("lazy").setup {
     {
         "https://github.deshaw.com/genai/vim-ai",
         tag = "v0.0.1"
+    },
+    {
+        "rmagatti/goto-preview",
+        dependencies = { "rmagatti/logger.nvim" },
+        -- event = "BufEnter",
+        config = true, -- necessary as per https://github.com/rmagatti/goto-preview/issues/88
     }
 }

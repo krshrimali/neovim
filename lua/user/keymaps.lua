@@ -214,21 +214,21 @@ vim.api.nvim_set_keymap("n", "<leader><leader>s", ":FzfLua command_history<CR>",
 --   end
 -- end)
 -- Keymaps for goto-preview
-vim.keymap.set("n", "<leader>gpd", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>", { noremap = true })
-vim.keymap.set(
-  "n",
-  "<leader>gpi",
-  "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>",
-  { noremap = true }
-)
-vim.keymap.set(
-  "n",
-  "<leader>gpD",
-  "<cmd>lua require('goto-preview').goto_preview_declaration()<CR>",
-  { noremap = true }
-)
-vim.keymap.set("n", "<leader>gP", "<cmd>lua require('goto-preview').close_all_win()<CR>", { noremap = true })
-vim.keymap.set("n", "<leader>gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>", { noremap = true })
+vim.keymap.set("n", "<leader>lgg", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>", { noremap = true })
+-- vim.keymap.set(
+--   "n",
+--   "<leader>lgi",
+--   "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>",
+--   { noremap = true }
+-- )
+-- vim.keymap.set(
+--   "n",
+--   "<leader>lgd",
+--   "<cmd>lua require('goto-preview').goto_preview_declaration()<CR>",
+--   { noremap = true }
+-- )
+vim.keymap.set("n", "<leader>lgw", "<cmd>lua require('goto-preview').close_all_win()<CR>", { noremap = true })
+-- vim.keymap.set("n", "<leader>gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>", { noremap = true })
 vim.keymap.set(
   { "n", "x" },
   "<leader>gy",
