@@ -174,35 +174,22 @@ _G.find_files = function()
     local current_path = vim.fn.expand "%:p:h"
     local relative_path = vim.fn.fnamemodify(current_path, ":~:.")
 
-    require("telescope.builtin").find_files {
-        search_dirs = { relative_path },
-        debounce = 50,
-        results_limit = 100,
-        path_display = { "smart" },
-        previewer = false,
-        follow = false,
-        attach_mappings = function(_, map)
-            map("i", "<C-q>", require("telescope.actions").send_to_qflist + require("telescope.actions").open_qflist)
-            map("n", "<C-q>", require("telescope.actions").send_to_qflist + require("telescope.actions").open_qflist)
-            return true
-        end,
+    require("fzf-lua").files {
+        cwd = relative_path,
+        winopts = {
+            preview = { hidden = true },
+        },
     }
 end
 _G.live_grep = function()
     local current_path = vim.fn.expand "%:p:h"
     local relative_path = vim.fn.fnamemodify(current_path, ":~:.")
 
-    require("telescope.builtin").live_grep {
-        search_dirs = { relative_path },
-        debounce = 50,
-        results_limit = 100,
-        path_display = { "smart" },
-        previewer = false,
-        attach_mappings = function(_, map)
-            map("i", "<C-q>", require("telescope.actions").send_to_qflist + require("telescope.actions").open_qflist)
-            map("n", "<C-q>", require("telescope.actions").send_to_qflist + require("telescope.actions").open_qflist)
-            return true
-        end,
+    require("fzf-lua").live_grep {
+        cwd = relative_path,
+        winopts = {
+            preview = { hidden = true },
+        },
     }
 end
 
@@ -215,7 +202,7 @@ vim.api.nvim_set_keymap("n", "<Leader><leader>g", ":lua live_grep()<CR>", { nore
 -- vim.api.nvim_set_keymap("n", "<leader>zm", '[[:lua require("ufo").openAllFolds()<CR>]]', opts)
 -- vim.api.nvim_set_keymap("n", "<leader>zr", '[[:lua require("ufo").closeAllFolds()<CR>]]', opts)
 
-vim.api.nvim_set_keymap("n", "<leader><leader>s", ":silent Telescope cmdline<CR>", opts)
+vim.api.nvim_set_keymap("n", "<leader><leader>s", ":FzfLua command_history<CR>", opts)
 -- vim.keymap.set("n", "zR", require("ufo").openAllFolds)
 -- vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
 -- vim.keymap.set("n", "zr", require("ufo").openFoldsExceptKinds)
@@ -254,28 +241,24 @@ vim.keymap.set(
   { desc = "Git Browse (copy)" }
 )
 
--- nnoremap <leader>fb <cmd>Telescope find_files theme=ivy search_dirs={"/prod/tools/base/"}<cr>
--- nnoremap <leader>gb <cmd>Telescope live_grep theme=ivy search_dirs={"/prod/tools/base/"}<cr>
+-- nnoremap <leader>fb <cmd>FzfLua files cwd=/prod/tools/base/<cr>
+-- nnoremap <leader>gb <cmd>FzfLua live_grep cwd=/prod/tools/base/<cr>
 vim.keymap.set('n', '<leader>fb', function()
-  require('telescope.builtin').find_files {
-    search_dirs = { '/prod/tools/base/' },
-    theme = 'ivy',
-    attach_mappings = function(_, map)
-      map("i", "<C-q>", require("telescope.actions").send_to_qflist + require("telescope.actions").open_qflist)
-      map("n", "<C-q>", require("telescope.actions").send_to_qflist + require("telescope.actions").open_qflist)
-      return true
-    end,
+  require('fzf-lua').files {
+    cwd = '/prod/tools/base/',
+    winopts = {
+      height = 0.6,
+      width = 0.8,
+    },
   }
 end, { desc = 'Find files in base' })
 vim.keymap.set('n', '<leader>gb', function()
-  require('telescope.builtin').live_grep {
-    search_dirs = { '/prod/tools/base/' },
-    theme = 'ivy',
-    attach_mappings = function(_, map)
-      map("i", "<C-q>", require("telescope.actions").send_to_qflist + require("telescope.actions").open_qflist)
-      map("n", "<C-q>", require("telescope.actions").send_to_qflist + require("telescope.actions").open_qflist)
-      return true
-    end,
+  require('fzf-lua').live_grep {
+    cwd = '/prod/tools/base/',
+    winopts = {
+      height = 0.6,
+      width = 0.8,
+    },
   }
 end, { desc = 'Live grep in base' })
 
