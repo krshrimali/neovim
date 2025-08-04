@@ -3,8 +3,17 @@
 
 local M = {}
 
--- Expose colors for external use
-M.colors = require("user.themes.hexxa-dark").colors
+-- Expose colors for external use (lazy loaded)
+function M.get_colors()
+  return require("user.themes.hexxa-dark").colors
+end
+
+-- Backward compatibility
+M.colors = setmetatable({}, {
+  __index = function(_, key)
+    return M.get_colors()[key]
+  end
+})
 
 -- Setup function to initialize the complete theme
 function M.setup(opts)
@@ -105,17 +114,11 @@ function M.reload()
   vim.notify("Hexxa Dark theme reloaded!", vim.log.levels.INFO)
 end
 
--- Function to get theme colors (for external plugins)
-function M.get_colors()
-  return require("user.themes.hexxa-dark").colors
-end
+
 
 -- Function to apply custom highlights
 function M.highlight(group, opts)
   vim.api.nvim_set_hl(0, group, opts)
 end
-
--- Load the theme
-M.setup()
 
 return M
