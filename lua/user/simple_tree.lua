@@ -517,7 +517,7 @@ local function show_help()
     "  Y           - Copy absolute path",
     "",
     "Other:",
-    "  /           - Search files with Telescope",
+    "  /           - Search files with FzfLua",
     "  R           - Refresh tree",
     "  H           - Toggle hidden files",
     "  w           - Open file in GitHub",
@@ -660,24 +660,22 @@ local function handle_horizontal_split()
   end
 end
 
--- Telescope integration for search
+-- FzfLua integration for search
 local function open_telescope_in_directory()
-  local telescope_ok, telescope = pcall(require, 'telescope.builtin')
-  if not telescope_ok then
-    print("Telescope not available")
+  local fzf_ok, fzf = pcall(require, 'fzf-lua')
+  if not fzf_ok then
+    print("FzfLua not available")
     return
   end
   
   -- Use current_root as the search directory
-  telescope.find_files({
+  fzf.files({
     cwd = current_root,
-    prompt_title = "Find Files in " .. vim.fn.fnamemodify(current_root, ":t"),
-    hidden = config.show_hidden,
-    layout_config = {
+    winopts = {
+      title = "Find Files in " .. vim.fn.fnamemodify(current_root, ":t"),
       height = 0.8,
       width = 0.8,
     },
-    results_limit = 100,
   })
 end
 
@@ -1045,9 +1043,9 @@ function M.open(root_path)
   
   -- Override common file opening commands to prevent buffer replacement
   vim.keymap.set('n', '<leader>ff', function()
-    -- Redirect telescope to open in a proper window, not replace SimpleTree
-    local telescope_ok, telescope = pcall(require, 'telescope.builtin')
-    if telescope_ok then
+    -- Redirect fzf-lua to open in a proper window, not replace SimpleTree
+    local fzf_ok, fzf = pcall(require, 'fzf-lua')
+    if fzf_ok then
       -- Switch to a non-tree window first
       local wins = vim.api.nvim_list_wins()
       local target_win = nil
@@ -1070,7 +1068,7 @@ function M.open(root_path)
         vim.api.nvim_set_current_win(target_win)
       end
       
-      telescope.find_files()
+      fzf.files()
     end
   end, opts)
   
