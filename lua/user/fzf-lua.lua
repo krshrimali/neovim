@@ -77,6 +77,7 @@ fzf_lua.setup({
     -- Actions optimized for speed
     actions = {
         files = {
+            ["enter"] = "file_edit",
             ["ctrl-q"] = function(selected, opts)
                 _G.fzf_send_to_qf_all(selected, opts)
             end,
