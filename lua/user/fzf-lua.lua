@@ -78,9 +78,15 @@ fzf_lua.setup({
     actions = {
         files = {
             ["enter"] = function(selected, opts)
-                -- Fast file opening without additional processing
+                -- Fast file opening with proper path resolution
                 if #selected > 0 then
-                    vim.cmd("edit " .. vim.fn.fnameescape(selected[1]))
+                    local file_path = selected[1]
+                    -- If we have a cwd set in opts, prepend it to relative paths
+                    if opts and opts.cwd and not vim.fn.fnamemodify(file_path, ":p") == file_path then
+                        -- This is a relative path, prepend the cwd
+                        file_path = opts.cwd .. "/" .. file_path
+                    end
+                    vim.cmd("edit " .. vim.fn.fnameescape(file_path))
                 end
             end,
             ["ctrl-q"] = function(selected, opts)
