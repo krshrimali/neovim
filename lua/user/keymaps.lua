@@ -24,6 +24,33 @@ keymap("n", "glb", "<cmd>Gitsigns blame_line<cr>", opts)
 -- keymap("n", "<m-k>", "<C-w>k", opts)
 -- keymap("n", "<m-l>", "<C-w>l", opts)
 
+-- Enhanced buffer navigation with Alt+H/J/K/L (works with all buffers including SimpleTree)
+keymap("n", "<A-h>", "<cmd>lua require('user.buffer_navigation').navigate_left()<cr>", opts)
+keymap("n", "<A-j>", "<cmd>lua require('user.buffer_navigation').navigate_down()<cr>", opts)
+keymap("n", "<A-k>", "<cmd>lua require('user.buffer_navigation').navigate_up()<cr>", opts)
+keymap("n", "<A-l>", "<cmd>lua require('user.buffer_navigation').navigate_right()<cr>", opts)
+
+-- Alt navigation also works in insert and terminal modes
+keymap("i", "<A-h>", "<Esc><cmd>lua require('user.buffer_navigation').navigate_left()<cr>", opts)
+keymap("i", "<A-j>", "<Esc><cmd>lua require('user.buffer_navigation').navigate_down()<cr>", opts)
+keymap("i", "<A-k>", "<Esc><cmd>lua require('user.buffer_navigation').navigate_up()<cr>", opts)
+keymap("i", "<A-l>", "<Esc><cmd>lua require('user.buffer_navigation').navigate_right()<cr>", opts)
+
+keymap("t", "<A-h>", "<C-\\><C-n><cmd>lua require('user.buffer_navigation').navigate_left()<cr>", opts)
+keymap("t", "<A-j>", "<C-\\><C-n><cmd>lua require('user.buffer_navigation').navigate_down()<cr>", opts)
+keymap("t", "<A-k>", "<C-\\><C-n><cmd>lua require('user.buffer_navigation').navigate_up()<cr>", opts)
+keymap("t", "<A-l>", "<C-\\><C-n><cmd>lua require('user.buffer_navigation').navigate_right()<cr>", opts)
+
+-- Alternative keybindings using Meta key (in case Alt doesn't work in some terminals)
+-- Uncomment these if Alt keys don't work in your terminal:
+-- keymap("n", "<M-h>", "<cmd>lua require('user.buffer_navigation').navigate_left()<cr>", opts)
+-- keymap("n", "<M-j>", "<cmd>lua require('user.buffer_navigation').navigate_down()<cr>", opts)
+-- keymap("n", "<M-k>", "<cmd>lua require('user.buffer_navigation').navigate_up()<cr>", opts)
+-- keymap("n", "<M-l>", "<cmd>lua require('user.buffer_navigation').navigate_right()<cr>", opts)
+
+-- Debug window layout (useful for troubleshooting navigation)
+keymap("n", "<leader>wd", "<cmd>lua require('user.buffer_navigation').debug_windows()<cr>", opts)
+
 keymap("n", "+", "<C-a>", opts)
 keymap("n", "-", "<C-x>", opts)
 
