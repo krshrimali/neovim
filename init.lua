@@ -43,6 +43,7 @@ require "user.functions"
 require "user.surround"
 require "user.nvim_transparent"
 require "user.diagnostics_display"
+require "user.buffer_navigation"
 
 -- Setup COC virtual lines
 require("user.coc_virtual_lines").setup()
