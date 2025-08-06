@@ -240,8 +240,19 @@ vim.api.nvim_set_keymap("n", "<leader><leader>s", ":FzfLua command_history<CR>",
 --     vim.lsp.buf.hover()
 --   end
 -- end)
--- Keymaps for goto-preview
-vim.keymap.set("n", "<leader>lgg", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>", { noremap = true })
+-- Keymaps for goto-preview are now replaced with CodeInsight (COC-compatible)
+-- Alternative COC-based preview functionality using floating windows
+vim.keymap.set("n", "<leader>lgg", function()
+  -- Use COC's definition in floating window
+  vim.fn.CocActionAsync('jumpDefinition', 'float')
+end, { noremap = true, desc = "COC Definition Float" })
+
+vim.keymap.set("n", "<leader>lgr", function()
+  -- Use COC's references list
+  vim.cmd('CocList references')
+end, { noremap = true, desc = "COC References List" })
+
+-- vim.keymap.set("n", "<leader>lgg", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>", { noremap = true })
 -- vim.keymap.set(
 --   "n",
 --   "<leader>lgi",
@@ -254,7 +265,7 @@ vim.keymap.set("n", "<leader>lgg", "<cmd>lua require('goto-preview').goto_previe
 --   "<cmd>lua require('goto-preview').goto_preview_declaration()<CR>",
 --   { noremap = true }
 -- )
-vim.keymap.set("n", "<leader>lgw", "<cmd>lua require('goto-preview').close_all_win()<CR>", { noremap = true })
+-- vim.keymap.set("n", "<leader>lgw", "<cmd>lua require('goto-preview').close_all_win()<CR>", { noremap = true })
 -- vim.keymap.set("n", "<leader>gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>", { noremap = true })
 vim.keymap.set(
   { "n", "x" },
