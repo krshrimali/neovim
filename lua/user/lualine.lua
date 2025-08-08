@@ -71,7 +71,7 @@ local filetype = {
             "lir",
             "Outline",
             "spectre_panel",
-            "toggleterm",
+            "terminal",
             "DressingSelect",
             "",
             "nil",
@@ -94,9 +94,9 @@ local filetype = {
             return toggle_num
         end
 
-        if str == "toggleterm" then
-            -- 
-            local term = " " .. "%*" .. get_term_num() .. "%*"
+        if str == "terminal" then
+            -- 
+            local term = " " .. "%*" .. "TERM" .. "%*"
 
             return return_val(term)
         end
@@ -143,7 +143,7 @@ local progress = {
 --   function()
 --     local buf_ft = vim.bo.filetype
 
---     if buf_ft == "toggleterm" or buf_ft == "TelescopePrompt" then
+--     if buf_ft == "terminal" or buf_ft == "TelescopePrompt" then
 --       return ""
 --     end
 --     -- if not pcall(require, "lsp_signature") then
@@ -179,6 +179,7 @@ local spaces = {
             "lir",
             "Outline",
             "spectre_panel",
+            "terminal",
             "DressingSelect",
             "",
         }
@@ -214,7 +215,7 @@ local lanuage_server = {
             "lir",
             "Outline",
             "spectre_panel",
-            "toggleterm",
+            "terminal",
             "DressingSelect",
             "TelescopePrompt",
             "lspinfo",
@@ -300,15 +301,48 @@ local location = {
     padding = 0,
 }
 
-local custom_auto_theme = require 'lualine.themes.auto'
-custom_auto_theme.normal.c.bg = NONE
+-- Create custom theme for Cursor Dark
+local function create_cursor_dark_theme()
+    local cursor_colors = require("user.themes.init").get_colors()
+    
+    return {
+        normal = {
+            a = { fg = cursor_colors.bg, bg = cursor_colors.blue, gui = 'bold' },
+            b = { fg = cursor_colors.fg_light, bg = cursor_colors.bg_light },
+            c = { fg = cursor_colors.fg, bg = cursor_colors.bg },
+        },
+        insert = {
+            a = { fg = cursor_colors.bg, bg = cursor_colors.green, gui = 'bold' },
+        },
+        visual = {
+            a = { fg = cursor_colors.bg, bg = cursor_colors.purple, gui = 'bold' },
+        },
+        replace = {
+            a = { fg = cursor_colors.bg, bg = cursor_colors.red, gui = 'bold' },
+        },
+        command = {
+            a = { fg = cursor_colors.bg, bg = cursor_colors.yellow, gui = 'bold' },
+        },
+        terminal = {
+            a = { fg = cursor_colors.bg, bg = cursor_colors.cyan, gui = 'bold' },
+        },
+        inactive = {
+            a = { fg = cursor_colors.fg_dark, bg = cursor_colors.bg_alt },
+            b = { fg = cursor_colors.fg_dark, bg = cursor_colors.bg_alt },
+            c = { fg = cursor_colors.fg_dark, bg = cursor_colors.bg_alt },
+        },
+    }
+end
+
+local cursor_theme = create_cursor_dark_theme()
 
 lualine.setup {
     options = {
         globalstatus = true,
         icons_enabled = false,
-        theme = custom_auto_theme,
-        -- theme = theme,
+        theme = cursor_theme,
+        -- Alternative themes (commented out):
+        -- theme = auto,
         -- theme = "shado",
         -- theme = "catppuccin",
         -- theme = "darkplus",
@@ -329,7 +363,12 @@ lualine.setup {
         --     return
         --         require('lspsaga.symbol.winbar').get_bar() ~= nil
         -- end } },
-        lualine_c = { 'filename' },
+        lualine_c = { 
+            {
+                'filename',
+                path = 3,  -- Show absolute path
+            }
+        },
         -- lualine_x = { diff, spaces, "encoding", filetype },
         -- lualine_x = { diff, lanuage_server, spaces, filetype },
         -- lualine_x = { lanuage_server, spaces, filetype },

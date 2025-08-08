@@ -4,13 +4,28 @@ if not status_ok then return end
 which_key.add {
   {
     "<leader>b",
-    "<cmd>Telescope buffers<cr>",
+    "<cmd>FzfLua buffers<cr>",
     desc = "Buffers",
   },
   {
+    "<leader>bb",
+    "<cmd>lua require('user.buffer_browser').open_buffer_browser()<cr>",
+    desc = "Buffer Browser",
+  },
+  {
+    "<leader>bs",
+    "<cmd>lua require('user.buffer_browser').toggle_sidebar()<cr>",
+    desc = "Buffer Sidebar",
+  },
+  {
     "<leader>e",
-    "<cmd>NvimTreeToggle<cr>",
-    desc = "Explorer",
+    "<cmd>lua require('user.simple_tree').open_current_dir()<cr>",
+    desc = "Explorer (Current Dir)",
+  },
+  {
+    "<leader>E",
+    "<cmd>lua require('user.simple_tree').open_workspace()<cr>",
+    desc = "Explorer (Workspace)",
   },
   {
     "<leader>w",
@@ -203,7 +218,7 @@ which_key.add {
   -- Find using Telescope
   {
     "<leader>fB",
-    "<cmd>Telescope git_branches<cr>",
+    "<cmd>FzfLua git_branches<cr>",
     desc = "Checkout branch",
   },
   -- Duplicate of <leader>b - removed
@@ -214,125 +229,147 @@ which_key.add {
   -- },
   {
     "<leader>fc",
-    "<cmd>Telescope colorscheme<cr>",
+    "<cmd>FzfLua colorschemes<cr>",
     desc = "Colorscheme",
   },
   {
     "<leader>ff",
-    "<cmd>Telescope find_files<cr>",
+    "<cmd>FzfLua files<cr>",
     desc = "Find files",
   },
   {
     "<leader>fg",
-    "<cmd>Telescope git_files<cr>",
+    "<cmd>FzfLua git_files<cr>",
     desc = "Git Files",
   },
   {
     "<leader>ftt",
-    "<cmd>Telescope live_grep<cr>",
+    "<cmd>FzfLua live_grep<cr>",
     desc = "Find Text",
   },
   {
     "<leader>fta",
-    "<cmd>Telescope live_grep_args<cr>",
+    "<cmd>FzfLua live_grep<cr>",
     desc = "Find text (live grep args)",
   },
   {
     "<leader>fts",
-    "<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args(default_text=vim.fn.expand('<cword>'))<cr>",
+    "<cmd>FzfLua grep_cword<cr>",
     desc = "Live Grep Args with the word under cursor",
   },
   {
     "<leader>fss",
-    "<cmd>lua require('telescope.builtin').live_grep({default_text=vim.fn.expand('<cword>')})<cr>",
+    "<cmd>FzfLua grep_cword<cr>",
     desc = "Find string in the workspace",
   },
   {
     "<leader>fsb",
-    "<cmd>lua require('telescope.builtin').live_grep({default_text=vim.fn.expand('<cword>'), grep_open_files=true})<cr>",
+    "<cmd>FzfLua grep_curbuf<cr>",
     desc = "Grep only open files",
   },
   {
     "<leader>fTT",
-    "<cmd>lua require('telescope.builtin').live_grep({previewer = true})<cr>",
+    "<cmd>FzfLua live_grep<cr>",
     desc = "Live Grep (with preview)",
   },
   {
     "<leader>fSS",
-    "<cmd>lua require('telescope.builtin').grep_string({default_text=vim.fn.expand('<cword>'), previewer = true})<cr>",
+    "<cmd>FzfLua grep_cword<cr>",
     desc = "Grep String under cursor (with preview)",
   },
   {
     "<leader>fh",
-    "<cmd>Telescope help_tags<cr>",
+    "<cmd>FzfLua helptags<cr>",
     desc = "Help",
   },
   {
     "<leader>fH",
-    "<cmd>Telescope highlights<cr>",
+    "<cmd>FzfLua highlights<cr>",
     desc = "Highlights",
   },
   {
     "<leader>fi",
-    "<cmd>Telescope lsp_incoming_calls<cr>",
+    "<cmd>FzfLua lsp_incoming_calls<cr>",
     desc = "Incoming calls",
   },
   {
     "<leader>fo",
-    "<cmd>Telescope lsp_outgoing_calls<cr>",
+    "<cmd>FzfLua lsp_outgoing_calls<cr>",
     desc = "Outgoing calls",
   },
   {
     "<leader>fI",
-    "<cmd>Telescope lsp_implementations<cr>",
+    "<cmd>FzfLua lsp_implementations<cr>",
     desc = "Implementations",
   },
   {
     "<leader>fl",
-    "<cmd>Telescope resume<cr>",
+    "<cmd>FzfLua resume<cr>",
     desc = "Last Search",
   },
   {
     "<leader>fM",
-    "<cmd>Telescope man_pages<cr>",
+    "<cmd>FzfLua manpages<cr>",
     desc = "Man Pages",
   },
   {
     "<leader>fr",
-    "<cmd>Telescope oldfiles<cr>",
-    desc = "Recent File",
+    "<cmd>FzfLua oldfiles<cr>",
+    desc = "Recent Files",
   },
   {
     "<leader>fp",
-    "<cmd>Telescope frecency workspace=CWD<cr>",
+    "<cmd>FzfLua oldfiles<cr>",
     desc = "Frecency recent file",
   },
   {
     "<leader>fR",
-    "<cmd>Telescope registers<cr>",
+    "<cmd>FzfLua registers<cr>",
     desc = "Registers",
   },
   {
     "<leader>fk",
-    "<cmd>Telescope keymaps<cr>",
+    "<cmd>FzfLua keymaps<cr>",
     desc = "Keymaps",
   },
   {
     "<leader>fC",
-    "<cmd>Telescope commands<cr>",
+    "<cmd>FzfLua commands<cr>",
     desc = "Commands",
   },
   {
     "<leader>fF",
-    "<cmd>lua require('telescope.builtin').find_files({previewer = true})<cr>",
+    "<cmd>FzfLua files<cr>",
     desc = "Find Files (with preview)",
+  },
+
+  -- Diagnostics
+  {
+    "<leader>dl",
+    "<cmd>lua require('user.diagnostics_display').show_current_line_diagnostics()<cr>",
+    desc = "Line Diagnostics",
+  },
+  {
+    "<leader>df",
+    "<cmd>lua require('user.diagnostics_display').show_current_file_diagnostics()<cr>",
+    desc = "File Diagnostics",
+  },
+  {
+    "<leader>dd",
+    "<cmd>lua require('user.diagnostics_display').debug()<cr>",
+    desc = "Debug Diagnostics",
   },
 
   -- Git
   {
     "<leader>gg",
-    "<cmd>lua require ('user.terminal').lazygit_toggle()<cr>",
-    desc = "Lazygit",
+    "<cmd>lua require('user.terminal').lazygit_float()<cr>",
+    desc = "Lazygit (Float)",
+  },
+  {
+    "<leader>gt",
+    "<cmd>lua require('user.terminal').lazygit_tab()<cr>",
+    desc = "Lazygit (Tab)",
   },
   {
     "<leader>gj",
@@ -386,7 +423,7 @@ which_key.add {
   },
   {
     "<leader>go",
-    "<cmd>Telescope git_status<cr>",
+    "<cmd>FzfLua git_status<cr>",
     desc = "Open changed file",
   },
   -- Commented out duplicates - functionality available via other keymaps
@@ -471,28 +508,61 @@ which_key.add {
     "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>",
     desc = "Prev Diagnostic",
   },
-  -- {
-  --   "<leader>lev",
-  --   function()
-  --     local current = vim.fn.CocAction('getConfig', 'diagnostic.virtualText')
-  --     local new_value = not current
-  --     vim.fn['coc#config']('diagnostic.virtualText', new_value)
-  --     vim.fn['coc#config']('diagnostic.virtualTextCurrentLineOnly', false)
-  --     vim.notify('Virtual text: ' .. (new_value and 'enabled' or 'disabled'))
-  --   end,
-  --   desc = "Toggle Virtual Text",
-  -- },
-  -- {
-  --   "<leader>leV",
-  --   function()
-  --     local current = vim.fn.CocAction('getConfig', 'diagnostic.virtualTextAlign') or 'after'
-  --     local new_align = current == 'below' and 'after' or 'below'
-  --     vim.fn['coc#config']('diagnostic.virtualText', true)
-  --     vim.fn['coc#config']('diagnostic.virtualTextAlign', new_align)
-  --     vim.notify('Virtual lines: ' .. (new_align == 'below' and 'enabled' or 'disabled'))
-  --   end,
-  --   desc = "Toggle Virtual Lines",
-  -- },
+  {
+    "<leader>lev",
+    function()
+      -- Toggle coc.nvim virtual text
+      local current = vim.fn.CocAction('getConfig', 'diagnostic.virtualText')
+      local new_value = not current
+      vim.fn['coc#config']('diagnostic.virtualText', new_value)
+      vim.notify('COC Virtual Text: ' .. (new_value and 'enabled' or 'disabled'))
+    end,
+    desc = "Toggle COC Virtual Text",
+  },
+  {
+    "<leader>leV",
+    function()
+      -- Toggle coc.nvim virtual text current line only
+      local current = vim.fn.CocAction('getConfig', 'diagnostic.virtualTextCurrentLineOnly')
+      local new_value = not current
+      vim.fn['coc#config']('diagnostic.virtualText', true)
+      vim.fn['coc#config']('diagnostic.virtualTextCurrentLineOnly', new_value)
+      vim.notify('COC Virtual Text Current Line Only: ' .. (new_value and 'enabled' or 'disabled'))
+    end,
+    desc = "Toggle COC Virtual Text (Current Line Only)",
+  },
+  {
+    "<leader>lel",
+    function()
+      -- Toggle between 'after' and 'below' alignment for virtual text
+      local current = vim.fn.CocAction('getConfig', 'diagnostic.virtualTextAlign') or 'after'
+      local new_align = current == 'below' and 'after' or 'below'
+      vim.fn['coc#config']('diagnostic.virtualText', true)
+      vim.fn['coc#config']('diagnostic.virtualTextAlign', new_align)
+      local mode_text = new_align == 'below' and 'lines' or 'inline'
+      vim.notify('COC Virtual Text Mode: ' .. mode_text)
+    end,
+    desc = "Toggle COC Virtual Text Mode (Inline/Lines)",
+  },
+  {
+    "<leader>levv",
+    function()
+      -- Use custom virtual lines implementation
+      require("user.coc_virtual_lines").toggle()
+    end,
+    desc = "Toggle Custom COC Virtual Lines",
+  },
+  {
+    "<leader>lec",
+    function()
+      -- Toggle COC Code Lens
+      local current = vim.fn.CocAction('getConfig', 'codeLens.enable')
+      local new_value = not current
+      vim.fn['coc#config']('codeLens.enable', new_value)
+      vim.notify('COC Code Lens: ' .. (new_value and 'enabled' or 'disabled'))
+    end,
+    desc = "Toggle COC Code Lens",
+  },
   {
     "<leader>lo",
     "<cmd>Outline<cr>",
@@ -505,14 +575,15 @@ which_key.add {
   },
   {
     "<leader>lQ",
-    "<cmd>lua require('telescope.builtin').quickfix()<cr>",
-    desc = "Quickfix (Telescope)",
+    "<cmd>FzfLua quickfix<cr>",
+    desc = "Quickfix",
   },
-  {
-    "<leader>lR",
-    "<cmd>lua vim.lsp.buf.rename()<cr>",
-    desc = "Rename",
-  },
+  -- Commented out to avoid conflict with COC.nvim
+  -- {
+  --   "<leader>lR",
+  --   "<cmd>lua vim.lsp.buf.rename()<cr>",
+  --   desc = "Rename",
+  -- },
   {
     "<leader>lr",
     "<cmd>Trouble lsp_references<cr>",
@@ -520,12 +591,12 @@ which_key.add {
   },
   {
     "<leader>ls",
-    "<cmd>Telescope lsp_document_symbols<cr>",
+    "<cmd>FzfLua lsp_document_symbols<cr>",
     desc = "Document Symbols",
   },
   {
     "<leader>lS",
-    "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>",
+    "<cmd>FzfLua lsp_live_workspace_symbols<cr>",
     desc = "Workspace Symbols",
   },
   {
@@ -588,23 +659,23 @@ which_key.add {
   -- Terminal
   {
     "<leader>T1",
-    ":1ToggleTerm<cr>",
-    desc = "Terminal 1",
+    "<cmd>lua _FLOAT_TERM()<cr>",
+    desc = "Float Terminal",
   },
   {
     "<leader>T2",
-    ":2ToggleTerm<cr>",
-    desc = "Terminal 2",
+    "<cmd>lua _VERTICAL_TERM()<cr>",
+    desc = "Vertical Terminal",
   },
   {
     "<leader>T3",
-    ":3ToggleTerm<cr>",
-    desc = "Terminal 3",
+    "<cmd>lua _HORIZONTAL_TERM()<cr>",
+    desc = "Horizontal Terminal",
   },
   {
     "<leader>T4",
-    ":4ToggleTerm<cr>",
-    desc = "Terminal 4",
+    "<cmd>lua _FLOAT_TERM()<cr>",
+    desc = "Float Terminal",
   },
   {
     "<leader>Tn",
@@ -628,17 +699,17 @@ which_key.add {
   },
   {
     "<leader>Tf",
-    "<cmd>ToggleTerm direction=float<cr>",
+    "<cmd>lua _FLOAT_TERM()<cr>",
     desc = "Float",
   },
   {
     "<leader>Th",
-    "<cmd>ToggleTerm size=10 direction=horizontal<cr>",
+    "<cmd>lua _HORIZONTAL_TERM()<cr>",
     desc = "Horizontal",
   },
   {
     "<leader>Tv",
-    "<cmd>ToggleTerm size=80 direction=vertical<cr>",
+    "<cmd>lua _VERTICAL_TERM()<cr>",
     desc = "Vertical",
   },
 
@@ -680,7 +751,7 @@ which_key.add {
   -- },
   {
     "<leader>tgS",
-    "<cmd>Telescope git_stash<cr>",
+    "<cmd>FzfLua git_stash<cr>",
     desc = "Git Stash",
   },
   -- Duplicate of <leader>ff - removed
@@ -691,12 +762,12 @@ which_key.add {
   -- },
   {
     "<leader>tC",
-    "<cmd>Telescope command_history<cr>",
+    "<cmd>FzfLua command_history<cr>",
     desc = "Command History",
   },
   {
     "<leader>tj",
-    "<cmd>Telescope jumplist<cr>",
+    "<cmd>FzfLua jumps<cr>",
     desc = "Jumplist",
   },
   -- Duplicate of <leader>fl - removed
@@ -712,12 +783,12 @@ which_key.add {
   -- },
   {
     "<leader>th",
-    "<cmd>Telescope search_history<cr>",
+    "<cmd>FzfLua search_history<cr>",
     desc = "Search History",
   },
   {
     "<leader>tb",
-    "<cmd>Telescope builtin<cr>",
+    "<cmd>FzfLua builtin<cr>",
     desc = "Builtin",
   },
   -- Duplicate of <leader>b - removed
@@ -728,7 +799,7 @@ which_key.add {
   -- },
   {
     "<leader>tS",
-    "<cmd>Telescope current_buffer_fuzzy_find<cr>",
+    "<cmd>FzfLua blines<cr>",
     desc = "Search Buffer",
   },
 
@@ -748,7 +819,7 @@ which_key.add {
   -- Project
   {
     "<leader>tp",
-    "<cmd>Telescope projects<cr>",
+    "<cmd>FzfLua files<cr>",
     desc = "Switch project",
   },
 

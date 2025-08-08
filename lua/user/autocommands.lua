@@ -1,3 +1,13 @@
+-- Auto-open simple tree when starting Neovim (replaced nvim-tree)
+vim.api.nvim_create_autocmd({ "VimEnter" }, {
+  callback = function()
+    -- Only open tree if no file was specified on the command line
+    if vim.fn.argc() == 0 then
+      require("user.simple_tree").open_workspace()
+    end
+  end,
+})
+
 vim.api.nvim_create_autocmd({ "User" }, {
   pattern = { "AlphaReady" },
   callback = function()
@@ -165,7 +175,7 @@ vim.api.nvim_create_autocmd({ "TextYankPost" }, {
 --   end)
 -- end
 
--- Open nvim-tree when nvim starts with no arguments
+-- Removed old nvim-tree autocommand - now using simple_tree above
 -- vim.api.nvim_create_autocmd("VimEnter", {
 --   callback = function()
 --     if vim.fn.argc() == 0 and vim.fn.line2byte(vim.fn.line("$") + 1) == -1 then
