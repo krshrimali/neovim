@@ -578,11 +578,12 @@ which_key.add {
     "<cmd>FzfLua quickfix<cr>",
     desc = "Quickfix",
   },
-  {
-    "<leader>lR",
-    "<cmd>lua vim.lsp.buf.rename()<cr>",
-    desc = "Rename",
-  },
+  -- Commented out to avoid conflict with COC.nvim
+  -- {
+  --   "<leader>lR",
+  --   "<cmd>lua vim.lsp.buf.rename()<cr>",
+  --   desc = "Rename",
+  -- },
   {
     "<leader>lr",
     "<cmd>Trouble lsp_references<cr>",
