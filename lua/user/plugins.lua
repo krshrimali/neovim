@@ -574,10 +574,23 @@ require("lazy").setup {
             vim.g.tabby_inline_completion_trigger = "auto"
         end,
     },
+    -- LSP Configuration for goto-preview
+    {
+        "neovim/nvim-lspconfig",
+        event = { "BufReadPre", "BufNewFile" },
+        config = function()
+            -- Minimal LSP setup only for goto-preview
+            require("user.goto_preview_lsp").setup()
+        end
+    },
+    
     {
         "rmagatti/goto-preview",
-        dependencies = { "rmagatti/logger.nvim" },
-        -- event = "BufEnter",
-        config = true, -- necessary as per https://github.com/rmagatti/goto-preview/issues/88
+        dependencies = { 
+            "rmagatti/logger.nvim",
+            "neovim/nvim-lspconfig"
+        },
+        event = { "BufReadPre", "BufNewFile" },
+        config = false, -- Configuration handled in goto_preview_lsp.lua
     }
 }
