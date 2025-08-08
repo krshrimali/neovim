@@ -32,6 +32,7 @@ fzf_lua.setup({
             flip_columns = 120,
             scrollbar = false, -- Disable scrollbar for performance
             delay = 0, -- No delay
+            syntax = true, -- enable syntax in preview
         },
     },
     
@@ -60,7 +61,7 @@ fzf_lua.setup({
     
     -- FZF options for performance
     fzf_opts = {
-        ["--ansi"] = false, -- Disable ANSI since we're using --color=never in ripgrep
+        ["--ansi"] = true, -- Enable ANSI so ripgrep colors show in results
         ["--info"] = "hidden", -- Hide info for performance
         ["--height"] = "100%",
         ["--layout"] = "reverse",
@@ -90,23 +91,23 @@ fzf_lua.setup({
     },
     
     -- File picker optimizations
-    files = {
-        prompt = "Files> ",
-        multiprocess = true,
-        git_icons = false, -- Disable for max performance
-        file_icons = false, -- Disable for max performance  
-        color_icons = false, -- Disable for max performance
-        cmd = "fd --type f --hidden --follow --exclude .git",
-        -- Fast find options optimized for speed
-        find_opts = [[-type f -not -path '*/\.git/*']],
-        rg_opts = "--color=never --files --hidden --follow -g '!.git' --no-heading",
-        fd_opts = "--color=never --type f --hidden --follow --exclude .git --strip-cwd-prefix",
-        -- Performance settings
-        cwd_prompt = false, -- Disable for speed
-        previewer = false, -- Disable previewer for instant opening
-        -- Disable path transformations for speed
-        path_shorten = false,
-    },
+            files = {
+            prompt = "Files> ",
+            multiprocess = true,
+            git_icons = false, -- Disable for max performance
+            file_icons = false, -- Disable for max performance  
+            color_icons = false, -- Disable for max performance
+            cmd = "fd --type f --hidden --follow --exclude .git",
+            -- Fast find options optimized for speed
+            find_opts = [[-type f -not -path '*/\.git/*']],
+            rg_opts = "--color=never --files --hidden --follow -g '!.git' --no-heading",
+            fd_opts = "--color=never --type f --hidden --follow --exclude .git --strip-cwd-prefix",
+            -- Performance settings
+            cwd_prompt = false, -- Disable for speed
+            previewer = 'builtin', -- enable previewer for files picker when requested
+            -- Disable path transformations for speed
+            path_shorten = false,
+        },
     
     -- Oldfiles (recent files) optimizations
     oldfiles = {
@@ -128,11 +129,8 @@ fzf_lua.setup({
         git_icons = false,
         file_icons = true,
         color_icons = true,
-        fn_transform = function(x)
-            -- Strip ANSI color codes from the output
-            return x:gsub("\27%[[0-9;]*m", "")
-        end,
-        rg_opts = "--column --line-number --no-heading --color=never --smart-case --max-columns=4096 -e",
+        -- Keep ANSI color codes for colorized results
+        rg_opts = "--column --line-number --no-heading --color=always --smart-case --max-columns=4096 -e",
         rg_glob = true,
         glob_flag = "--iglob",
         glob_separator = "%s%-%-",
@@ -179,12 +177,8 @@ fzf_lua.setup({
         git_icons = false,
         file_icons = true,
         color_icons = true,
-        rg_opts = "--column --line-number --no-heading --color=never --smart-case --max-columns=4096",
-        -- Performance: disable some features for speed
-        fn_transform = function(x)
-            -- Strip ANSI color codes from the output
-            return x:gsub("\27%[[0-9;]*m", "")
-        end,
+        rg_opts = "--column --line-number --no-heading --color=always --smart-case --max-columns=4096",
+        -- Keep ANSI color codes for colorized results
         exec_empty_query = false,
         actions = {
             ["enter"] = function(selected, opts)
