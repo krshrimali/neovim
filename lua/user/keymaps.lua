@@ -24,22 +24,22 @@ keymap("n", "glb", "<cmd>Gitsigns blame_line<cr>", opts)
 -- keymap("n", "<m-k>", "<C-w>k", opts)
 -- keymap("n", "<m-l>", "<C-w>l", opts)
 
--- Enhanced buffer navigation with Alt+H/J/K/L (works with all buffers including SimpleTree)
-keymap("n", "<A-h>", "<cmd>lua require('user.buffer_navigation').navigate_left()<cr>", opts)
-keymap("n", "<A-j>", "<cmd>lua require('user.buffer_navigation').navigate_down()<cr>", opts)
-keymap("n", "<A-k>", "<cmd>lua require('user.buffer_navigation').navigate_up()<cr>", opts)
-keymap("n", "<A-l>", "<cmd>lua require('user.buffer_navigation').navigate_right()<cr>", opts)
+-- Enhanced buffer navigation with Ctrl+Alt+H/J/K/L (works with all buffers including SimpleTree)
+keymap("n", "<C-A-h>", "<cmd>lua require('user.buffer_navigation').navigate_left()<cr>", opts)
+keymap("n", "<C-A-j>", "<cmd>lua require('user.buffer_navigation').navigate_down()<cr>", opts)
+keymap("n", "<C-A-k>", "<cmd>lua require('user.buffer_navigation').navigate_up()<cr>", opts)
+keymap("n", "<C-A-l>", "<cmd>lua require('user.buffer_navigation').navigate_right()<cr>", opts)
 
--- Alt navigation also works in insert and terminal modes
-keymap("i", "<A-h>", "<Esc><cmd>lua require('user.buffer_navigation').navigate_left()<cr>", opts)
-keymap("i", "<A-j>", "<Esc><cmd>lua require('user.buffer_navigation').navigate_down()<cr>", opts)
-keymap("i", "<A-k>", "<Esc><cmd>lua require('user.buffer_navigation').navigate_up()<cr>", opts)
-keymap("i", "<A-l>", "<Esc><cmd>lua require('user.buffer_navigation').navigate_right()<cr>", opts)
+-- Ctrl+Alt navigation also works in insert and terminal modes
+keymap("i", "<C-A-h>", "<Esc><cmd>lua require('user.buffer_navigation').navigate_left()<cr>", opts)
+keymap("i", "<C-A-j>", "<Esc><cmd>lua require('user.buffer_navigation').navigate_down()<cr>", opts)
+keymap("i", "<C-A-k>", "<Esc><cmd>lua require('user.buffer_navigation').navigate_up()<cr>", opts)
+keymap("i", "<C-A-l>", "<Esc><cmd>lua require('user.buffer_navigation').navigate_right()<cr>", opts)
 
-keymap("t", "<A-h>", "<C-\\><C-n><cmd>lua require('user.buffer_navigation').navigate_left()<cr>", opts)
-keymap("t", "<A-j>", "<C-\\><C-n><cmd>lua require('user.buffer_navigation').navigate_down()<cr>", opts)
-keymap("t", "<A-k>", "<C-\\><C-n><cmd>lua require('user.buffer_navigation').navigate_up()<cr>", opts)
-keymap("t", "<A-l>", "<C-\\><C-n><cmd>lua require('user.buffer_navigation').navigate_right()<cr>", opts)
+keymap("t", "<C-A-h>", "<C-\\><C-n><cmd>lua require('user.buffer_navigation').navigate_left()<cr>", opts)
+keymap("t", "<C-A-j>", "<C-\\><C-n><cmd>lua require('user.buffer_navigation').navigate_down()<cr>", opts)
+keymap("t", "<C-A-k>", "<C-\\><C-n><cmd>lua require('user.buffer_navigation').navigate_up()<cr>", opts)
+keymap("t", "<C-A-l>", "<C-\\><C-n><cmd>lua require('user.buffer_navigation').navigate_right()<cr>", opts)
 
 -- Alternative keybindings using Meta key (in case Alt doesn't work in some terminals)
 -- Uncomment these if Alt keys don't work in your terminal:
