@@ -54,7 +54,7 @@ fzf_lua.setup({
         prompt = "Buffers> ",
         file_icons = false,
         color_icons = false,
-        previewer = false,
+        previewer = true,
     },
     
     -- Simple actions
