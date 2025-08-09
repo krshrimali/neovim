@@ -103,6 +103,7 @@ require("lazy").setup {
         cmd = "FzfLua",
         keys = {
             { "<leader>ff", "<cmd>FzfLua files<cr>",     desc = "Find Files" },
+            { "<leader>fF", "<cmd>lua require('fzf-lua').files({ previewer = 'builtin', winopts = { preview = { default = true, hidden = false } } })<cr>", desc = "Find Files (with preview)" },
             { "<leader>fr", "<cmd>FzfLua oldfiles<cr>",  desc = "Recent Files" },
             { "<leader>fg", "<cmd>FzfLua live_grep<cr>", desc = "Live Grep" },
             { "<leader>fb", "<cmd>FzfLua buffers<cr>",   desc = "Buffers" },
