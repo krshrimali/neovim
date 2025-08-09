@@ -1,6 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Neovim Virtual Environment Integration
 # Source this file in your ~/.bashrc or ~/.zshrc to enable enhanced virtualenv integration
+# Compatible with both Bash and Zsh
 
 # Configuration
 NVIM_VENV_STATE_FILE="${XDG_CACHE_HOME:-$HOME/.cache}/nvim/nvim_virtualenv_state"
@@ -15,18 +16,40 @@ nvim_notify_venv_change() {
         # Update state file for Neovim to detect
         echo "${VIRTUAL_ENV:-}" > "$NVIM_VENV_STATE_FILE"
         
+        # Also create a timestamp file to help with detection
+        echo "$(date +%s)" > "${NVIM_VENV_STATE_FILE}.timestamp"
+        
         # If we're inside a Neovim terminal, we can use nvim --remote-send
         if [[ -n "$NVIM" ]] && command -v nvr >/dev/null 2>&1; then
             # Use neovim-remote if available
             nvr --remote-send '<Esc>:VirtualEnvSync<CR>' 2>/dev/null || true
+        elif [[ -n "$NVIM_LISTEN_ADDRESS" ]] && command -v nvim >/dev/null 2>&1; then
+            # Try using nvim --server if available
+            nvim --server "$NVIM_LISTEN_ADDRESS" --remote-send '<Esc>:VirtualEnvSync<CR>' 2>/dev/null || true
+        fi
+        
+        # Debug output
+        if [[ -n "$VIRTUAL_ENV" ]]; then
+            echo "[DEBUG] Updated Neovim state: $VIRTUAL_ENV" >&2
+        else
+            echo "[DEBUG] Cleared Neovim virtualenv state" >&2
         fi
     fi
 }
 
-# Override the activate function to hook into virtualenv activation
-original_activate_virtualenv() {
+# Enhanced virtualenv activation function
+activate_venv() {
     if [[ -n "$1" && -f "$1/bin/activate" ]]; then
+        # Deactivate current virtualenv if active
+        if [[ -n "$VIRTUAL_ENV" ]] && declare -f deactivate >/dev/null 2>&1; then
+            deactivate
+        fi
+        
         source "$1/bin/activate"
+        
+        # Set up deactivate hook after activation
+        setup_deactivate_hook
+        
         nvim_notify_venv_change
         echo "Virtual environment activated: $1"
         echo "Neovim will be notified of this change."
@@ -36,23 +59,35 @@ original_activate_virtualenv() {
     fi
 }
 
-# Enhanced source command for virtualenv activation
-activate_venv() {
-    original_activate_virtualenv "$@"
+# Hook into deactivate function when virtualenv is activated
+# This will be set up when activate_venv is called
+setup_deactivate_hook() {
+    if declare -f deactivate >/dev/null 2>&1; then
+        # Check if we haven't already hooked it
+        if ! declare -f deactivate | grep -q "nvim_notify_venv_change"; then
+            # Save original deactivate function
+            if [[ -n "$ZSH_VERSION" ]]; then
+                # Zsh approach
+                eval "functions[original_deactivate]=\${functions[deactivate]}"
+                deactivate() {
+                    original_deactivate "$@"
+                    nvim_notify_venv_change
+                    echo "Virtual environment deactivated."
+                    echo "Neovim will be notified of this change."
+                }
+            else
+                # Bash approach
+                eval "original_$(declare -f deactivate)"
+                deactivate() {
+                    original_deactivate "$@"
+                    nvim_notify_venv_change
+                    echo "Virtual environment deactivated."
+                    echo "Neovim will be notified of this change."
+                }
+            fi
+        fi
+    fi
 }
-
-# Hook into deactivate if it exists
-if declare -f deactivate >/dev/null 2>&1; then
-    # Save original deactivate function
-    eval "original_$(declare -f deactivate)"
-    
-    deactivate() {
-        original_deactivate "$@"
-        nvim_notify_venv_change
-        echo "Virtual environment deactivated."
-        echo "Neovim will be notified of this change."
-    }
-fi
 
 # Function to create and activate a new virtualenv
 create_venv() {
@@ -108,10 +143,15 @@ list_venvs() {
     local found=0
     for path in "${search_paths[@]}"; do
         if [[ -d "$path" ]]; then
-            for venv in "$path"/*; do
+                         for venv in "$path"/*; do
                 if [[ -d "$venv" && (-f "$venv/bin/activate" || -f "$venv/pyvenv.cfg") ]]; then
-                    local name=$(basename "$venv")
-                    local full_path=$(realpath "$venv" 2>/dev/null || echo "$venv")
+                    local name="${venv##*/}"  # Zsh/Bash compatible basename
+                    local full_path
+                    if command -v realpath >/dev/null 2>&1; then
+                        full_path=$(realpath "$venv" 2>/dev/null || echo "$venv")
+                    else
+                        full_path="$venv"
+                    fi
                     echo "  $name -> $full_path"
                     found=1
                 fi
@@ -126,7 +166,8 @@ list_venvs() {
     
     echo
     if [[ -n "$VIRTUAL_ENV" ]]; then
-        echo "Currently active: $(basename "$VIRTUAL_ENV") -> $VIRTUAL_ENV"
+        local active_name="${VIRTUAL_ENV##*/}"  # Zsh/Bash compatible basename
+        echo "Currently active: $active_name -> $VIRTUAL_ENV"
     else
         echo "No virtual environment currently active."
     fi
@@ -162,7 +203,7 @@ switch_venv() {
     
     for path in "${search_paths[@]}"; do
         if [[ -f "$path/bin/activate" ]]; then
-            if [[ -n "$VIRTUAL_ENV" ]]; then
+            if [[ -n "$VIRTUAL_ENV" ]] && declare -f deactivate >/dev/null 2>&1; then
                 deactivate
             fi
             activate_venv "$path"
@@ -232,17 +273,18 @@ auto_venv_detect() {
 }
 
 # Hook into cd command for auto-detection
-if [[ "$BASH_VERSION" ]]; then
-    # Bash
-    original_cd=$(declare -f cd 2>/dev/null || echo "cd() { builtin cd \"\$@\"; }")
-    eval "$original_cd"
-    cd() {
-        builtin cd "$@" && auto_venv_detect
-    }
-elif [[ "$ZSH_VERSION" ]]; then
+if [[ -n "$ZSH_VERSION" ]]; then
     # Zsh
     autoload -U add-zsh-hook
     add-zsh-hook chpwd auto_venv_detect
+elif [[ -n "$BASH_VERSION" ]]; then
+    # Bash
+    if declare -f cd >/dev/null 2>&1; then
+        eval "original_$(declare -f cd)"
+    fi
+    cd() {
+        builtin cd "$@" && auto_venv_detect
+    }
 fi
 
 # Aliases for convenience
@@ -250,6 +292,16 @@ alias lsvenv='list_venvs'
 alias mkvenv='create_venv'
 alias rmvenv='rm -rf'  # Be careful with this!
 alias workon='switch_venv'
+
+# Manual sync command
+sync_nvim_venv() {
+    nvim_notify_venv_change
+    if [[ -n "$VIRTUAL_ENV" ]]; then
+        echo "Synced Neovim with virtual environment: ${VIRTUAL_ENV##*/}"
+    else
+        echo "Synced Neovim with system Python"
+    fi
+}
 
 # Initial notification on shell startup
 nvim_notify_venv_change
@@ -260,6 +312,7 @@ echo "  create_venv [name] [python_version] - Create and optionally activate a v
 echo "  activate_venv <path>                - Activate a virtual environment"
 echo "  list_venvs                          - List available virtual environments"
 echo "  switch_venv [name]                  - Switch to a virtual environment"
+echo "  sync_nvim_venv                      - Manually sync current venv with Neovim"
 echo "  toggle_nvim_venv_notify             - Toggle Neovim notifications"
 echo
 echo "Keymaps in Neovim:"

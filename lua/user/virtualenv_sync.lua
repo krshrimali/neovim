@@ -27,6 +27,7 @@ local config = {
 -- Internal state
 local current_virtualenv = nil
 local timer = nil
+local last_state_check = 0
 
 -- Debug logging
 local function debug_log(msg)
@@ -35,12 +36,47 @@ local function debug_log(msg)
   end
 end
 
--- Get current virtualenv from environment
+-- Get current virtualenv from environment and state file
 local function get_current_virtualenv()
+  -- First, try to get from current Neovim environment
   local virtual_env = vim.fn.getenv("VIRTUAL_ENV")
-  if virtual_env and virtual_env ~= vim.NIL then
+  if virtual_env and virtual_env ~= vim.NIL and virtual_env ~= "" then
     return virtual_env
   end
+  
+  -- If not found, try to read from state file (updated by shell integration)
+  local state = load_state()
+  if state and state ~= "" then
+    -- Verify the virtualenv still exists and is valid
+    local python_path = state .. "/bin/python"
+    if vim.fn.executable(python_path) == 1 then
+      return state
+    end
+  end
+  
+  -- Try to detect from parent shell process (if running in terminal)
+  if vim.fn.exists("$NVIM") == 1 then
+    local handle = io.popen("ps -o pid,ppid,command -p $PPID 2>/dev/null | grep -E '(bash|zsh|fish)' | head -1")
+    if handle then
+      local line = handle:read("*line")
+      handle:close()
+      if line then
+        -- Try to get VIRTUAL_ENV from parent shell
+        local parent_pid = line:match("(%d+)%s+%d+")
+        if parent_pid then
+          local env_handle = io.popen("ps eww " .. parent_pid .. " 2>/dev/null | tr ' ' '\\n' | grep '^VIRTUAL_ENV=' | cut -d= -f2-")
+          if env_handle then
+            local venv_path = env_handle:read("*line")
+            env_handle:close()
+            if venv_path and venv_path ~= "" then
+              return venv_path
+            end
+          end
+        end
+      end
+    end
+  end
+  
   return nil
 end
 
@@ -131,43 +167,65 @@ local function load_state()
   return nil
 end
 
+-- Check if state file has been updated
+local function has_state_file_changed()
+  local timestamp_file = config.state_file .. ".timestamp"
+  if vim.fn.filereadable(timestamp_file) == 1 then
+    local timestamp = tonumber(vim.fn.readfile(timestamp_file)[1] or "0")
+    if timestamp > last_state_check then
+      last_state_check = timestamp
+      return true
+    end
+  end
+  return false
+end
+
 -- Check for virtualenv changes and prompt user
 local function check_virtualenv_change()
+  -- Check if state file was updated (faster check)
+  local state_changed = has_state_file_changed()
+  
   local new_venv = get_current_virtualenv()
   
-  if new_venv ~= current_virtualenv then
+  if new_venv ~= current_virtualenv or state_changed then
     debug_log("Virtualenv change detected: " .. (current_virtualenv or "none") .. " -> " .. (new_venv or "none"))
     
     if new_venv then
       local python_path = new_venv .. "/bin/python"
       if vim.fn.executable(python_path) == 1 then
         -- Ask user if they want to sync
+        vim.schedule(function()
+          local choice = vim.fn.confirm(
+            "Virtual environment changed to:\n" .. new_venv .. "\n\nUpdate CoC Python path?",
+            "&Yes\n&No",
+            1
+          )
+          
+          if choice == 1 then
+            update_coc_python(python_path)
+            save_state(new_venv)
+            vim.notify("CoC Python updated to: " .. new_venv, vim.log.levels.INFO)
+          end
+        end)
+      end
+    else
+      -- Virtualenv deactivated, ask if should revert to system python
+      vim.schedule(function()
         local choice = vim.fn.confirm(
-          "Virtual environment changed to:\n" .. new_venv .. "\n\nUpdate CoC Python path?",
+          "Virtual environment deactivated.\n\nRevert CoC to system Python?",
           "&Yes\n&No",
           1
         )
         
         if choice == 1 then
-          update_coc_python(python_path)
-          save_state(new_venv)
+          local system_python = vim.fn.exepath("python3") or vim.fn.exepath("python")
+          if system_python then
+            update_coc_python(system_python)
+            save_state(nil)
+            vim.notify("CoC Python reverted to system Python", vim.log.levels.INFO)
+          end
         end
-      end
-    else
-      -- Virtualenv deactivated, ask if should revert to system python
-      local choice = vim.fn.confirm(
-        "Virtual environment deactivated.\n\nRevert CoC to system Python?",
-        "&Yes\n&No",
-        1
-      )
-      
-      if choice == 1 then
-        local system_python = vim.fn.exepath("python3") or vim.fn.exepath("python")
-        if system_python then
-          update_coc_python(system_python)
-          save_state(nil)
-        end
-      end
+      end)
     end
     
     current_virtualenv = new_venv
