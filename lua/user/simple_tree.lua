@@ -517,7 +517,7 @@ local function show_help()
     "  Y           - Copy absolute path",
     "",
     "Other:",
-    "  /           - Search files with FzfLua",
+    "  /           - Search files with Snacks picker",
     "  R           - Refresh tree",
     "  H           - Toggle hidden files",
     "  w           - Open file in GitHub",
@@ -660,22 +660,17 @@ local function handle_horizontal_split()
   end
 end
 
--- FzfLua integration for search
+-- Snacks picker integration for search
 local function open_telescope_in_directory()
-  local fzf_ok, fzf = pcall(require, 'fzf-lua')
-  if not fzf_ok then
-    print("FzfLua not available")
+  local snacks_ok, snacks = pcall(require, 'snacks')
+  if not snacks_ok then
+    print("Snacks not available")
     return
   end
   
   -- Use current_root as the search directory
-  fzf.files({
+  Snacks.picker.files({
     cwd = current_root,
-    winopts = {
-      title = "Find Files in " .. vim.fn.fnamemodify(current_root, ":t"),
-      height = 0.8,
-      width = 0.8,
-    },
   })
 end
 

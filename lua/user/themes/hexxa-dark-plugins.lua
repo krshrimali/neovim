@@ -11,36 +11,7 @@ function M.setup()
     vim.api.nvim_set_hl(0, group, opts)
   end
   
-  -- FZF-Lua
-  hl("FzfLuaNormal", { fg = colors.fg_alt, bg = colors.bg })
-  hl("FzfLuaBorder", { fg = colors.border, bg = colors.bg })
-  hl("FzfLuaTitle", { fg = colors.lime, bg = colors.bg, bold = true })
-  hl("FzfLuaPreviewNormal", { fg = colors.fg_alt, bg = colors.bg })
-  hl("FzfLuaPreviewBorder", { fg = colors.border, bg = colors.bg })
-  hl("FzfLuaCursor", { fg = colors.bg, bg = colors.cyan })
-  hl("FzfLuaCursorLine", { bg = colors.gray5 })
-  hl("FzfLuaSearch", { fg = colors.orange, bold = true })
-  hl("FzfLuaScrollBorderEmpty", { fg = colors.border })
-  hl("FzfLuaScrollBorderFull", { fg = colors.active_border })
-  hl("FzfLuaScrollFloatEmpty", { fg = colors.border })
-  hl("FzfLuaScrollFloatFull", { fg = colors.active_border })
-  hl("FzfLuaHelpNormal", { fg = colors.fg_alt, bg = colors.bg })
-  hl("FzfLuaHelpBorder", { fg = colors.border, bg = colors.bg })
-  
-  -- FZF-Lua file icons and types
-  hl("FzfLuaPathColNr", { fg = colors.gray2 })
-  hl("FzfLuaPathLineNr", { fg = colors.blue })
-  hl("FzfLuaTabTitle", { fg = colors.lime, bold = true })
-  hl("FzfLuaTabMarker", { fg = colors.orange })
-  hl("FzfLuaBufName", { fg = colors.cyan })
-  hl("FzfLuaBufNr", { fg = colors.blue })
-  hl("FzfLuaBufLineNr", { fg = colors.gray2 })
-  hl("FzfLuaBufFlagCur", { fg = colors.lime })
-  hl("FzfLuaBufFlagAlt", { fg = colors.orange })
-  hl("FzfLuaHeaderBind", { fg = colors.pink })
-  hl("FzfLuaHeaderText", { fg = colors.fg_alt })
-  hl("FzfLuaDirPart", { fg = colors.gray2 })
-  hl("FzfLuaFilePart", { fg = colors.fg_alt })
+  -- Snacks picker uses default highlighting, no custom themes needed
   
   -- Lualine (status line)
   hl("lualine_a_normal", { fg = colors.bg, bg = colors.lime, bold = true })

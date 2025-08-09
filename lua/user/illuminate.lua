@@ -22,7 +22,6 @@ require("illuminate").configure {
     "spectre_panel",
     "terminal",
     "DressingSelect",
-    "FzfLuaNormal",
   },
   -- filetypes_allowlist: filetypes to illuminate, this is overriden by filetypes_denylist
   filetypes_allowlist = {},
