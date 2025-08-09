@@ -3,6 +3,10 @@ if not status_ok then
     return
 end
 
+-- Ensure no color output from ripgrep regardless of terminal settings
+vim.env.NO_COLOR = "1"
+vim.env.RIPGREP_CONFIG_PATH = ""  -- Prevent user config from overriding our settings
+
 -- Setup fzf-lua with performance optimizations
 fzf_lua.setup({
     -- Use max-perf profile for absolute best performance
@@ -45,6 +49,8 @@ fzf_lua.setup({
             ["<F4>"] = "toggle-preview",
             ["<C-d>"] = "preview-page-down",
             ["<C-u>"] = "preview-page-up",
+            ["<Esc>"] = "abort", -- Ensure escape works in builtin mode
+            ["<C-c>"] = "abort", -- Alternative abort key
         },
         fzf = {
             ["ctrl-z"] = "abort",
@@ -56,7 +62,8 @@ fzf_lua.setup({
             ["alt-a"] = "select-all",
             ["f3"] = "toggle-preview-wrap",
             ["f4"] = "toggle-preview",
-            ["esc"] = "abort",
+            ["esc"] = "abort", -- Ensure escape works
+            ["ctrl-c"] = "abort", -- Alternative abort key
         },
     },
     
@@ -71,7 +78,7 @@ fzf_lua.setup({
         ["--no-scrollbar"] = true, -- Disable scrollbar
         ["--no-separator"] = true, -- Disable separator
         ["--multi"] = true, -- Enable multi-select
-        ["--bind"] = "esc:abort,ctrl-q:select-all+accept", -- Esc aborts; Ctrl+Q selects all and accepts
+        ["--bind"] = "esc:abort,ctrl-c:abort,ctrl-q:select-all+accept", -- Esc and Ctrl+C abort; Ctrl+Q selects all and accepts
     },
     
 
@@ -101,7 +108,7 @@ fzf_lua.setup({
             cmd = "fd --type f --hidden --follow --exclude .git",
             -- Fast find options optimized for speed
             find_opts = [[-type f -not -path '*/\.git/*']],
-            rg_opts = "--color=never --files --hidden --follow -g '!.git' --no-heading",
+            rg_opts = "--color=never --files --hidden --follow -g '!.git' --no-heading --no-config",
             fd_opts = "--color=never --type f --hidden --follow --exclude .git --strip-cwd-prefix",
             -- Performance settings
             cwd_prompt = false, -- Disable for speed
@@ -131,7 +138,7 @@ fzf_lua.setup({
         file_icons = true,
         color_icons = true,
         -- Keep ANSI color codes for colorized results
-        rg_opts = "--column --line-number --no-heading --color=never --smart-case --max-columns=4096 -e",
+        rg_opts = "--column --line-number --no-heading --color=never --smart-case --max-columns=4096 --no-config -e",
         rg_glob = true,
         glob_flag = "--iglob",
         glob_separator = "%s%-%-",
@@ -140,8 +147,8 @@ fzf_lua.setup({
                 -- Parse the grep result and open the file at the correct line and column
                 if #selected > 0 then
                     local line = selected[1]
-                    -- Strip ANSI color codes first
-                    local clean_line = line:gsub("\27%[[0-9;]*m", "")
+                    -- Strip ANSI color codes first - enhanced pattern to catch all variants
+                    local clean_line = line:gsub("\27%[[0-9;]*[mK]", ""):gsub("\27%[[0-9;]*m", ""):gsub("[\27\155]%[[0-9;]*[mK]", "")
                     
                     -- Parse grep result format: filename:line:col:text
                     local filename, lnum, col, text = clean_line:match("([^:]+):(%d+):(%d+):(.*)")
@@ -178,7 +185,7 @@ fzf_lua.setup({
         git_icons = false,
         file_icons = true,
         color_icons = true,
-        rg_opts = "--column --line-number --no-heading --color=never --smart-case --max-columns=4096",
+        rg_opts = "--column --line-number --no-heading --color=never --smart-case --max-columns=4096 --no-config",
         -- Keep ANSI color codes for colorized results
         exec_empty_query = false,
         actions = {
@@ -186,8 +193,8 @@ fzf_lua.setup({
                 -- Parse the grep result and open the file at the correct line and column
                 if #selected > 0 then
                     local line = selected[1]
-                    -- Strip ANSI color codes first
-                    local clean_line = line:gsub("\27%[[0-9;]*m", "")
+                    -- Strip ANSI color codes first - enhanced pattern to catch all variants
+                    local clean_line = line:gsub("\27%[[0-9;]*[mK]", ""):gsub("\27%[[0-9;]*m", ""):gsub("[\27\155]%[[0-9;]*[mK]", "")
                     
                     -- Parse grep result format: filename:line:col:text
                     local filename, lnum, col, text = clean_line:match("([^:]+):(%d+):(%d+):(.*)")
@@ -376,8 +383,8 @@ local function send_to_qf(selected, opts)
     print(string.format("Processing %d selected items", #selected))
     
     for _, line in ipairs(selected) do
-        -- Strip ANSI color codes first
-        local clean_line = line:gsub("\27%[[0-9;]*m", "")
+        -- Strip ANSI color codes first - enhanced pattern to catch all variants
+        local clean_line = line:gsub("\27%[[0-9;]*[mK]", ""):gsub("\27%[[0-9;]*m", ""):gsub("[\27\155]%[[0-9;]*[mK]", "")
         
         -- Try to parse as grep result first (filename:line:col:text)
         local filename, lnum, col, text = clean_line:match("([^:]+):(%d+):(%d+):(.*)")
