@@ -56,12 +56,13 @@ fzf_lua.setup({
             ["alt-a"] = "select-all",
             ["f3"] = "toggle-preview-wrap",
             ["f4"] = "toggle-preview",
+            ["esc"] = "abort",
         },
     },
     
     -- FZF options for performance
     fzf_opts = {
-        ["--ansi"] = true, -- Enable ANSI so ripgrep colors show in results
+        ["--ansi"] = false, -- Disable ANSI; we disable ripgrep colors to avoid escape codes
         ["--info"] = "hidden", -- Hide info for performance
         ["--height"] = "100%",
         ["--layout"] = "reverse",
@@ -70,7 +71,7 @@ fzf_lua.setup({
         ["--no-scrollbar"] = true, -- Disable scrollbar
         ["--no-separator"] = true, -- Disable separator
         ["--multi"] = true, -- Enable multi-select
-        ["--bind"] = "ctrl-q:select-all+accept", -- Ctrl+Q selects all and accepts
+        ["--bind"] = "esc:abort,ctrl-q:select-all+accept", -- Esc aborts; Ctrl+Q selects all and accepts
     },
     
 
@@ -130,7 +131,7 @@ fzf_lua.setup({
         file_icons = true,
         color_icons = true,
         -- Keep ANSI color codes for colorized results
-        rg_opts = "--column --line-number --no-heading --color=always --smart-case --max-columns=4096 -e",
+        rg_opts = "--column --line-number --no-heading --color=never --smart-case --max-columns=4096 -e",
         rg_glob = true,
         glob_flag = "--iglob",
         glob_separator = "%s%-%-",
@@ -177,7 +178,7 @@ fzf_lua.setup({
         git_icons = false,
         file_icons = true,
         color_icons = true,
-        rg_opts = "--column --line-number --no-heading --color=always --smart-case --max-columns=4096",
+        rg_opts = "--column --line-number --no-heading --color=never --smart-case --max-columns=4096",
         -- Keep ANSI color codes for colorized results
         exec_empty_query = false,
         actions = {

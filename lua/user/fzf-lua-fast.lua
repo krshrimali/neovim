@@ -24,6 +24,8 @@ fzf_lua.setup({
         ["--no-scrollbar"] = true,
         ["--no-separator"] = true,
         ["--layout"] = "reverse",
+        ["--bind"] = "esc:abort",
+        ["--ansi"] = false,
     },
     
     -- Minimal file picker
