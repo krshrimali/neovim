@@ -830,6 +830,28 @@ which_key.add {
     desc = "Toggle transparency",
   },
 
+  -- Virtual Environment
+  {
+    "<leader>vp",
+    "<cmd>lua require('user.virtualenv_sync').pick_virtualenv()<cr>",
+    desc = "Pick Virtual Environment",
+  },
+  {
+    "<leader>vi",
+    "<cmd>VirtualEnvInfo<cr>",
+    desc = "Virtual Environment Info",
+  },
+  {
+    "<leader>vs",
+    "<cmd>VirtualEnvSync<cr>",
+    desc = "Sync Virtual Environment",
+  },
+  {
+    "<leader>vm",
+    "<cmd>VirtualEnvToggleMonitoring<cr>",
+    desc = "Toggle VEnv Monitoring",
+  },
+
   -- Guard (not installed)
   -- {
   --   "<leader>gf",
