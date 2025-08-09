@@ -4,7 +4,7 @@ if not status_ok then return end
 which_key.add {
   {
     "<leader>b",
-    "<cmd>FzfLua buffers<cr>",
+    function() Snacks.picker.buffers() end,
     desc = "Buffers",
   },
   {
@@ -218,7 +218,7 @@ which_key.add {
   -- Find using Telescope
   {
     "<leader>fB",
-    "<cmd>FzfLua git_branches<cr>",
+    function() Snacks.picker.git_branches() end,
     desc = "Checkout branch",
   },
   -- Duplicate of <leader>b - removed
@@ -229,117 +229,132 @@ which_key.add {
   -- },
   {
     "<leader>fc",
-    "<cmd>FzfLua colorschemes<cr>",
+    function() Snacks.picker.colorschemes() end,
     desc = "Colorscheme",
   },
   {
     "<leader>ff",
-    "<cmd>FzfLua files<cr>",
+    function() Snacks.picker.files() end,
     desc = "Find files",
   },
   {
     "<leader>fg",
-    "<cmd>FzfLua git_files<cr>",
+    function() Snacks.picker.git_files() end,
     desc = "Git Files",
   },
   {
     "<leader>ftt",
-    "<cmd>FzfLua live_grep<cr>",
+    function() Snacks.picker.grep() end,
     desc = "Find Text",
   },
   {
     "<leader>fta",
-    "<cmd>FzfLua live_grep<cr>",
+    function() Snacks.picker.grep() end,
     desc = "Find text (live grep args)",
   },
   {
     "<leader>fts",
-    "<cmd>FzfLua grep_cword<cr>",
+    function() 
+      local word = vim.fn.expand("<cword>")
+      if word and word ~= "" then
+        Snacks.picker.grep({ search = word })
+      end
+    end,
     desc = "Live Grep Args with the word under cursor",
   },
   {
     "<leader>fss",
-    "<cmd>FzfLua grep_cword<cr>",
+    function() 
+      local word = vim.fn.expand("<cword>")
+      if word and word ~= "" then
+        Snacks.picker.grep({ search = word })
+      end
+    end,
     desc = "Find string in the workspace",
   },
   {
     "<leader>fsb",
-    "<cmd>FzfLua grep_curbuf<cr>",
+    function() Snacks.picker.lines() end,
     desc = "Grep only open files",
   },
   {
     "<leader>fTT",
-    "<cmd>FzfLua live_grep<cr>",
+    function() Snacks.picker.grep() end,
     desc = "Live Grep (with preview)",
   },
   {
     "<leader>fSS",
-    "<cmd>FzfLua grep_cword<cr>",
+    function() 
+      local word = vim.fn.expand("<cword>")
+      if word and word ~= "" then
+        Snacks.picker.grep({ search = word })
+      end
+    end,
     desc = "Grep String under cursor (with preview)",
   },
   {
     "<leader>fh",
-    "<cmd>FzfLua helptags<cr>",
+    function() Snacks.picker.help() end,
     desc = "Help",
   },
   {
     "<leader>fH",
-    "<cmd>FzfLua highlights<cr>",
+    function() Snacks.picker.highlights() end,
     desc = "Highlights",
   },
   {
     "<leader>fi",
-    "<cmd>FzfLua lsp_incoming_calls<cr>",
+    function() Snacks.picker.lsp_incoming_calls() end,
     desc = "Incoming calls",
   },
   {
     "<leader>fo",
-    "<cmd>FzfLua lsp_outgoing_calls<cr>",
+    function() Snacks.picker.lsp_outgoing_calls() end,
     desc = "Outgoing calls",
   },
   {
     "<leader>fI",
-    "<cmd>FzfLua lsp_implementations<cr>",
+    function() Snacks.picker.lsp_implementations() end,
     desc = "Implementations",
   },
   {
     "<leader>fl",
-    "<cmd>FzfLua resume<cr>",
+    function() Snacks.picker.resume() end,
     desc = "Last Search",
   },
   {
     "<leader>fM",
-    "<cmd>FzfLua manpages<cr>",
+    function() Snacks.picker.man() end,
     desc = "Man Pages",
   },
   {
     "<leader>fr",
-    "<cmd>FzfLua oldfiles<cr>",
+    function() Snacks.picker.recent() end,
     desc = "Recent Files",
   },
   {
     "<leader>fp",
-    "<cmd>FzfLua oldfiles<cr>",
+    function() Snacks.picker.recent() end,
     desc = "Frecency recent file",
   },
   {
     "<leader>fR",
-    "<cmd>FzfLua registers<cr>",
+    function() Snacks.picker.registers() end,
     desc = "Registers",
   },
   {
     "<leader>fk",
-    "<cmd>FzfLua keymaps<cr>",
+    function() Snacks.picker.keymaps() end,
     desc = "Keymaps",
   },
   {
     "<leader>fC",
-    "<cmd>FzfLua commands<cr>",
+    function() Snacks.picker.commands() end,
     desc = "Commands",
   },
   {
     "<leader>fF",
-    "<cmd>FzfLua files<cr>",
+    function() Snacks.picker.files() end,
     desc = "Find Files (with preview)",
   },
 
@@ -423,7 +438,7 @@ which_key.add {
   },
   {
     "<leader>go",
-    "<cmd>FzfLua git_status<cr>",
+    function() Snacks.picker.git_status() end,
     desc = "Open changed file",
   },
   -- Commented out duplicates - functionality available via other keymaps
@@ -575,7 +590,7 @@ which_key.add {
   },
   {
     "<leader>lQ",
-    "<cmd>FzfLua quickfix<cr>",
+    function() Snacks.picker.qflist() end,
     desc = "Quickfix",
   },
   -- Commented out to avoid conflict with COC.nvim
@@ -591,12 +606,12 @@ which_key.add {
   },
   {
     "<leader>ls",
-    "<cmd>FzfLua lsp_document_symbols<cr>",
+    function() Snacks.picker.lsp_symbols() end,
     desc = "Document Symbols",
   },
   {
     "<leader>lS",
-    "<cmd>FzfLua lsp_live_workspace_symbols<cr>",
+    function() Snacks.picker.lsp_workspace_symbols() end,
     desc = "Workspace Symbols",
   },
   {
@@ -751,7 +766,7 @@ which_key.add {
   -- },
   {
     "<leader>tgS",
-    "<cmd>FzfLua git_stash<cr>",
+    function() Snacks.picker.git_stash() end,
     desc = "Git Stash",
   },
   -- Duplicate of <leader>ff - removed
@@ -762,12 +777,12 @@ which_key.add {
   -- },
   {
     "<leader>tC",
-    "<cmd>FzfLua command_history<cr>",
+    function() Snacks.picker.command_history() end,
     desc = "Command History",
   },
   {
     "<leader>tj",
-    "<cmd>FzfLua jumps<cr>",
+    function() Snacks.picker.jumps() end,
     desc = "Jumplist",
   },
   -- Duplicate of <leader>fl - removed
@@ -783,12 +798,12 @@ which_key.add {
   -- },
   {
     "<leader>th",
-    "<cmd>FzfLua search_history<cr>",
+    function() Snacks.picker.search_history() end,
     desc = "Search History",
   },
   {
     "<leader>tb",
-    "<cmd>FzfLua builtin<cr>",
+    function() Snacks.picker.pick() end,
     desc = "Builtin",
   },
   -- Duplicate of <leader>b - removed
@@ -799,7 +814,7 @@ which_key.add {
   -- },
   {
     "<leader>tS",
-    "<cmd>FzfLua blines<cr>",
+    function() Snacks.picker.lines() end,
     desc = "Search Buffer",
   },
 
@@ -819,7 +834,7 @@ which_key.add {
   -- Project
   {
     "<leader>tp",
-    "<cmd>FzfLua files<cr>",
+    function() Snacks.picker.files() end,
     desc = "Switch project",
   },
 

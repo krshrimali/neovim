@@ -62,7 +62,6 @@ require("lazy").setup {
         "NeogitOrg/neogit",
         dependencies = {
             "nvim-lua/plenary.nvim",  -- required
-            "ibhagwan/fzf-lua",       -- optional
             "sindrets/diffview.nvim", -- optional
         },
         cmd = "Neogit",
@@ -96,24 +95,17 @@ require("lazy").setup {
         }
     },
 
-    -- Telescope and extensions - LAZY LOAD
+    -- Picker functionality now handled by Snacks picker
+    -- Basic keymaps are configured here for immediate availability
     {
-        "ibhagwan/fzf-lua",
-        dependencies = { "nvim-tree/nvim-web-devicons" },
-        cmd = "FzfLua",
+        "folke/snacks.nvim", -- Already configured above
         keys = {
-            { "<leader>ff", "<cmd>FzfLua files<cr>",     desc = "Find Files" },
-            { "<leader>fr", "<cmd>FzfLua oldfiles<cr>",  desc = "Recent Files" },
-            { "<leader>fg", "<cmd>FzfLua live_grep<cr>", desc = "Live Grep" },
-            { "<leader>fb", "<cmd>FzfLua buffers<cr>",   desc = "Buffers" },
-            { "<leader>fh", "<cmd>FzfLua helptags<cr>",  desc = "Help Tags" },
+            { "<leader>ff", function() Snacks.picker.files() end,     desc = "Find Files" },
+            { "<leader>fr", function() Snacks.picker.recent() end,    desc = "Recent Files" },
+            { "<leader>fg", function() Snacks.picker.grep() end,      desc = "Live Grep" },
+            { "<leader>fb", function() Snacks.picker.buffers() end,   desc = "Buffers" },
+            { "<leader>fh", function() Snacks.picker.help() end,      desc = "Help Tags" },
         },
-        config = function()
-            -- Use minimal config for testing slow file opening
-            -- require("user.fzf-lua-fast")
-            -- Use full config (default)
-            require("user.fzf-lua")
-        end,
     },
 
     -- THEMES - Keep minimal set, load immediately for UI consistency
@@ -483,9 +475,6 @@ require("lazy").setup {
     -- Context pilot - LAZY LOAD
     {
         "krshrimali/context-pilot.nvim",
-        dependencies = {
-            "ibhagwan/fzf-lua"
-        },
         cmd = "ContextPilot",
         config = function()
             require("contextpilot")
@@ -518,7 +507,7 @@ require("lazy").setup {
             explorer = { enabled = false },
             indent = { enabled = false },
             input = { enabled = false },
-            picker = { enabled = false },   -- Disable picker since we're using nvim-tree
+            picker = { enabled = true },    -- Enable picker to replace FzfLua
             notifier = { enabled = false }, -- Disable for faster startup
             quickfile = { enabled = true },
             scope = { enabled = false },
@@ -526,6 +515,11 @@ require("lazy").setup {
             statuscolumn = { enabled = false }, -- Disable for faster startup
             words = { enabled = false },
         },
+        config = function(_, opts)
+            require("snacks").setup(opts)
+            -- Load our custom picker configuration for compatibility
+            require("user.snacks-picker")
+        end,
     },
 
     -- Avante - LAZY LOAD
