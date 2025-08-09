@@ -47,6 +47,7 @@ fzf_lua.setup({
         },
         fzf = {
             ["ctrl-z"] = "abort",
+            ["esc"] = "abort",
             ["ctrl-u"] = "unix-line-discard",
             ["ctrl-f"] = "half-page-down",
             ["ctrl-b"] = "half-page-up",
@@ -60,14 +61,14 @@ fzf_lua.setup({
     
     -- FZF options for performance
     fzf_opts = {
-        ["--ansi"] = false, -- Disable ANSI since we're using --color=never in ripgrep
+        -- ["--ansi"] = true,
         ["--info"] = "hidden", -- Hide info for performance
         ["--height"] = "100%",
         ["--layout"] = "reverse",
         ["--border"] = "none",
-        ["--highlight-line"] = false, -- Disable for performance
+        ["--highlight-line"] = true, -- Disable for performance
         ["--no-scrollbar"] = true, -- Disable scrollbar
-        ["--no-separator"] = true, -- Disable separator
+        ["--no-separator"] = false, -- Disable separator
         ["--multi"] = true, -- Enable multi-select
         ["--bind"] = "ctrl-q:select-all+accept", -- Ctrl+Q selects all and accepts
     },
@@ -99,8 +100,8 @@ fzf_lua.setup({
         cmd = "fd --type f --hidden --follow --exclude .git",
         -- Fast find options optimized for speed
         find_opts = [[-type f -not -path '*/\.git/*']],
-        rg_opts = "--color=never --files --hidden --follow -g '!.git' --no-heading",
-        fd_opts = "--color=never --type f --hidden --follow --exclude .git --strip-cwd-prefix",
+        rg_opts = "--files --hidden --follow -g '!.git' --no-heading",
+        fd_opts = "--type f --hidden --follow --exclude .git --strip-cwd-prefix",
         -- Performance settings
         cwd_prompt = false, -- Disable for speed
         previewer = false, -- Disable previewer for instant opening
@@ -132,7 +133,7 @@ fzf_lua.setup({
             -- Strip ANSI color codes from the output
             return x:gsub("\27%[[0-9;]*m", "")
         end,
-        rg_opts = "--column --line-number --no-heading --color=never --smart-case --max-columns=4096 -e",
+        rg_opts = "--column --line-number --no-heading --smart-case --max-columns=4096 -e",
         rg_glob = true,
         glob_flag = "--iglob",
         glob_separator = "%s%-%-",
@@ -179,7 +180,7 @@ fzf_lua.setup({
         git_icons = false,
         file_icons = true,
         color_icons = true,
-        rg_opts = "--column --line-number --no-heading --color=never --smart-case --max-columns=4096",
+        rg_opts = "--column --line-number --no-heading --smart-case --max-columns=4096",
         -- Performance: disable some features for speed
         fn_transform = function(x)
             -- Strip ANSI color codes from the output
@@ -230,7 +231,7 @@ fzf_lua.setup({
         sort_lastused = true,
         show_unloaded = true,
         cwd_only = false,
-        previewer = false, -- Disable previewer for instant opening
+        previewer = true, -- Disable previewer for instant opening
         actions = {
             ["ctrl-q"] = function(selected, opts)
                 _G.fzf_send_to_qf_all(selected, opts)

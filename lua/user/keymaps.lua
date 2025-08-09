@@ -104,7 +104,7 @@ keymap("n", "<leader>d", '"_d', opts)
 keymap("x", "<leader>d", '"_d', opts)
 keymap("x", "<leader>p", '"_dP', opts)
 -- keymap("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>", opts)
-keymap("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>//gI<Left><Left><Left>", opts)
+-- keymap("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>//gI<Left><Left><Left>", opts)
 
 -- NOTE: the fact that tab and ctrl-i are the same is stupid
 keymap("n", "<leader>Q", "<cmd>bdelete!<CR>", opts)
