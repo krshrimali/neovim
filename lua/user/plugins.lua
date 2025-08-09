@@ -507,7 +507,14 @@ require("lazy").setup {
             explorer = { enabled = false },
             indent = { enabled = false },
             input = { enabled = false },
-            picker = { enabled = true },    -- Enable picker to replace FzfLua
+            picker = { 
+                enabled = true,    -- Enable picker to replace FzfLua
+                icons = false,     -- Disable icons for better performance
+            },
+            image = {
+                enabled = false,   -- Disable snacks.image completely
+                formats = {},      -- Clear formats to disable image previews
+            },
             notifier = { enabled = false }, -- Disable for faster startup
             quickfile = { enabled = true },
             scope = { enabled = false },
