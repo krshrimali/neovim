@@ -2,7 +2,6 @@
   // Diagnostic display settings
   "diagnostic.enable": true,
   "diagnostic.enableSign": false,
-  "diagnostic.enableHighlightText": true,
   "diagnostic.enableMessage": "always",
   
   // Virtual text settings for diagnostics
@@ -21,20 +20,13 @@
   
   // Suggestion settings
   "suggest.noselect": false,
-  "suggest.enablePreview": true,
   "suggest.maxCompleteItemCount": 50,
   "suggest.timeout": 5000,
   
   // Language server settings
   "languageserver": {},
   
-  // Completion settings
-  "completion.enable": true,
-  "completion.triggerAfterInsertEnter": false,
-  "completion.noselect": false,
-  "completion.preferCompleteThanJumpPlaceholder": true,
-  
-  // Signature help
+    // Signature help
   "signature.enable": true,
   "signature.target": "float",
   
@@ -44,24 +36,13 @@
   // Code lens
   "codeLens.enable": false,
   
-  // Outline
-  "outline.enable": true,
-  
-  // Snippets
-  "snippets.enable": true,
-  "snippets.priority": 90,
-  
-  // Extensions
-  "coc.preferences.extensionUpdateCheck": "daily",
-  "coc.preferences.formatOnSaveFiletypes": [],
-  
   // Python-specific settings
   "python.analysis.autoImportCompletions": true,
   "python.linting.enabled": true,
-  "pyright.disableLanguageServices": false,
   
   // Disable code lens for Python specifically
   "[python]": {
     "codeLens.enable": false
-  }
+  },
+  "snippets.ultisnips.pythonPrompt": false
 }
