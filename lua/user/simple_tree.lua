@@ -54,6 +54,20 @@ local function git_in_root(args)
   return output
 end
 
+-- Convert a path (absolute or relative) to repo-relative path
+local function get_repo_relative_path(path)
+  if not path or path == '' then return nil end
+  local git_root = git_in_root("rev-parse --show-toplevel")
+  if not git_root or git_root == '' then return nil end
+  local abs_path = is_absolute_path(path) and path or (current_root .. '/' .. path)
+  -- Normalize to forward slashes for URLs
+  abs_path = abs_path:gsub('\\', '/')
+  git_root = git_root:gsub('\\', '/')
+  -- Strip repo root prefix
+  local rel = abs_path:gsub("^" .. vim.fn.escape(git_root, "^$()%.[]*+-?" ) .. "/", "")
+  return rel
+end
+
 -- Cache for directory contents to speed up repeated access
 local dir_cache = {}
 
@@ -331,14 +345,12 @@ local function open_github_link(path)
     branch = ref:match('origin/(.+)$') or 'main'
   end
   
-  -- Get relative path from git root
-  local git_root = git_in_root("rev-parse --show-toplevel")
-  if not git_root or git_root == '' then
-    print("Error getting git root")
+  -- Repo-relative path
+  local relative_path = get_repo_relative_path(path)
+  if not relative_path or relative_path == '' then
+    print("Error getting repository-relative path")
     return
   end
-  
-  local relative_path = path:gsub("^" .. vim.fn.escape(git_root, "^$()%.[]*+-?" ) .. "/", "")
   local encoded_path = url_encode(relative_path)
   
   local github_url = https_url .. "/blob/" .. url_encode(branch) .. "/" .. encoded_path
@@ -807,14 +819,12 @@ local function show_context_menu()
           branch = ref:match('origin/(.+)$') or 'main'
         end
         
-        -- Get relative path from git root
-        local git_root = git_in_root("rev-parse --show-toplevel")
-        if not git_root or git_root == '' then
-          print("Error getting git root")
+        -- Repo-relative path
+        local relative_path = get_repo_relative_path(item.path)
+        if not relative_path or relative_path == '' then
+          print("Error getting repository-relative path")
           return
         end
-        
-        local relative_path = item.path:gsub("^" .. vim.fn.escape(git_root, "^$()%.[]*+-?" ) .. "/", "")
         local encoded_path = url_encode(relative_path)
         
         local github_url = https_url .. "/blob/" .. url_encode(branch) .. "/" .. encoded_path
