@@ -170,8 +170,8 @@ local function get_coc_line_diagnostics()
     --   print(string.format("Found diagnostic on lnum=%d (display: Line %d)", diag_line, diag_line + 1))
     -- end
     
-    -- Test: COC might actually use 1-based line numbers despite documentation
-    if diag_line ~= nil and diag_line == current_line_1based then
+    -- COC diagnostic lnum is 0-based; compare with 0-based cursor line
+    if diag_line ~= nil and diag_line == current_line_0based then
       table.insert(line_diagnostics, diagnostic)
     end
   end
@@ -195,7 +195,8 @@ local function format_diagnostic(diagnostic, show_line_info)
   local line_info = ""
   -- Test: COC diagnostics might use 'lnum' (1-based) and 'col' (0-based)
   if show_line_info and diagnostic.lnum ~= nil then
-    line_info = string.format("Line %d, Col %d: ", diagnostic.lnum, (diagnostic.col or 0) + 1)
+    -- lnum from COC is 0-based; display as 1-based
+    line_info = string.format("Line %d, Col %d: ", (diagnostic.lnum + 1), (diagnostic.col or 0) + 1)
   end
   
   local source_info = ""
@@ -395,8 +396,8 @@ local function show_diagnostic_buffer(diagnostics, title, show_line_info)
       local target_col = diagnostic.col or 0
       
       if target_line ~= nil then
-        -- COC lnum might be 1-based already, col is 0-based
-        vim.api.nvim_win_set_cursor(0, {target_line, target_col})
+        -- COC lnum is 0-based; win_set_cursor expects 1-based
+        vim.api.nvim_win_set_cursor(0, {target_line + 1, target_col})
         
         -- Center the line on screen
         vim.cmd("normal! zz")
@@ -405,7 +406,7 @@ local function show_diagnostic_buffer(diagnostics, title, show_line_info)
         vim.defer_fn(function()
           local ns_id = vim.api.nvim_create_namespace("diagnostic_jump_flash")
           -- Highlight uses 0-based line numbers
-          vim.api.nvim_buf_add_highlight(0, ns_id, "Search", target_line - 1, 0, -1)
+          vim.api.nvim_buf_add_highlight(0, ns_id, "Search", target_line, 0, -1)
           vim.defer_fn(function()
             vim.api.nvim_buf_clear_namespace(0, ns_id, 0, -1)
           end, 500)

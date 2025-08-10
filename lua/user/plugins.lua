@@ -438,7 +438,6 @@ require("lazy").setup {
             },
         },
     },
-
     {
         "github/copilot.vim",
         event = "InsertEnter"
