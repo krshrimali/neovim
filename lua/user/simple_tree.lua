@@ -42,6 +42,18 @@ local function is_absolute_path(path)
   return path:sub(1, 1) == '/'
 end
 
+-- Run a git command in the context of the current tree root
+local function git_in_root(args)
+  local root = current_root or vim.fn.getcwd()
+  local command = string.format("git -C %s %s 2>/dev/null", vim.fn.shellescape(root), args)
+  local output = vim.fn.system(command)
+  if vim.v.shell_error ~= 0 then return nil end
+  if not output then return nil end
+  output = output:gsub("%s+$", "")
+  if output == '' then return nil end
+  return output
+end
+
 -- Cache for directory contents to speed up repeated access
 local dir_cache = {}
 
@@ -255,14 +267,9 @@ local function get_relative_path(path)
 end
 
 local function get_git_remote_url()
-  local handle = io.popen("git remote get-url origin 2>/dev/null")
-  if not handle then return nil end
-  
-  local result = handle:read("*a")
-  handle:close()
-  
+  local result = git_in_root("remote get-url origin")
   if result and result ~= "" then
-    return (result:gsub("%s+", "")) -- trim whitespace
+    return result
   end
   return nil
 end
@@ -318,39 +325,15 @@ local function open_github_link(path)
   end
   
   -- Get current branch (fallbacks)
-  local branch = nil
-  local branch_handle = io.popen("git branch --show-current 2>/dev/null")
-  if branch_handle then
-    local branch_result = branch_handle:read("*a")
-    branch_handle:close()
-    if branch_result and branch_result:gsub("%s+", "") ~= '' then
-      branch = branch_result:gsub("%s+", "")
-    end
-  end
+  local branch = git_in_root("branch --show-current")
   if not branch or branch == '' then
-    -- Try to detect origin/HEAD
-    local head_handle = io.popen("git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null")
-    if head_handle then
-      local head_result = head_handle:read("*a") or ''
-      head_handle:close()
-      local ref = head_result:gsub("%s+", "")
-      branch = ref:match('origin/(.+)$') or 'main'
-    else
-      branch = 'main'
-    end
+    local ref = git_in_root("symbolic-ref --quiet --short refs/remotes/origin/HEAD") or ''
+    branch = ref:match('origin/(.+)$') or 'main'
   end
   
   -- Get relative path from git root
-  local git_root_handle = io.popen("git rev-parse --show-toplevel 2>/dev/null")
-  if not git_root_handle then
-    print("Error getting git root")
-    return
-  end
-  
-  local git_root = git_root_handle:read("*a") or ''
-  git_root_handle:close()
-  git_root = git_root:gsub("%s+", "")
-  if git_root == '' then
+  local git_root = git_in_root("rev-parse --show-toplevel")
+  if not git_root or git_root == '' then
     print("Error getting git root")
     return
   end
@@ -818,39 +801,15 @@ local function show_context_menu()
         end
         
         -- Get current branch (fallbacks)
-        local branch = nil
-        local branch_handle = io.popen("git branch --show-current 2>/dev/null")
-        if branch_handle then
-          local branch_result = branch_handle:read("*a")
-          branch_handle:close()
-          if branch_result and branch_result:gsub("%s+", "") ~= '' then
-            branch = branch_result:gsub("%s+", "")
-          end
-        end
+        local branch = git_in_root("branch --show-current")
         if not branch or branch == '' then
-          -- Try to detect origin/HEAD
-          local head_handle = io.popen("git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null")
-          if head_handle then
-            local head_result = head_handle:read("*a") or ''
-            head_handle:close()
-            local ref = head_result:gsub("%s+", "")
-            branch = ref:match('origin/(.+)$') or 'main'
-          else
-            branch = 'main'
-          end
+          local ref = git_in_root("symbolic-ref --quiet --short refs/remotes/origin/HEAD") or ''
+          branch = ref:match('origin/(.+)$') or 'main'
         end
         
         -- Get relative path from git root
-        local git_root_handle = io.popen("git rev-parse --show-toplevel 2>/dev/null")
-        if not git_root_handle then
-          print("Error getting git root")
-          return
-        end
-        
-        local git_root = git_root_handle:read("*a") or ''
-        git_root_handle:close()
-        git_root = git_root:gsub("%s+", "")
-        if git_root == '' then
+        local git_root = git_in_root("rev-parse --show-toplevel")
+        if not git_root or git_root == '' then
           print("Error getting git root")
           return
         end
