@@ -2,9 +2,9 @@
 -- Optimized for faster startup
 
 -- Some servers have issues with backup files, see #649
-vim.opt.backup = false
-vim.opt.writebackup = false
-
+-- vim.opt.backup = false
+-- vim.opt.writebackup = false
+--
 -- Having longer updatetime (default is 4000 ms = 4s) leads to noticeable
 -- delays and poor user experience
 vim.opt.updatetime = 300
@@ -30,7 +30,7 @@ keyset("i", "<S-TAB>", [[coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"]], opts)
 keyset("i", "<CR>", 'coc#pum#visible() ? coc#pum#confirm() : "<CR>"', {silent = true, noremap = true, expr = true})
 
 -- Use <c-j> to trigger snippets
-keyset("i", "<c-j>", "<Plug>(coc-snippets-expand-jump)")
+-- keyset("i", "<c-j>", "<Plug>(coc-snippets-expand-jump)")
 -- Use <c-space> to trigger completion
 keyset("i", "<c-space>", "coc#refresh()", {silent = true, expr = true})
 
