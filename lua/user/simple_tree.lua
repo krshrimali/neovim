@@ -19,7 +19,7 @@ local tree_data = {}
 -- Utility functions
 local function get_icon(is_dir, is_open)
   if is_dir then
-    return "> "
+    return (is_open and "v " or "> ")
   else
     return "  "
   end
@@ -154,6 +154,7 @@ local function render_tree()
   vim.api.nvim_buf_set_option(tree_buf, 'modifiable', true)
   vim.api.nvim_buf_set_lines(tree_buf, 0, -1, false, lines)
   vim.api.nvim_buf_set_option(tree_buf, 'modifiable', false)
+  vim.api.nvim_buf_set_option(tree_buf, 'filetype', 'simpletree')
 end
 
 local function get_item_at_cursor()
@@ -417,12 +418,16 @@ local function delete_item()
   
   local success = false
   if item.type == "directory" then
-    -- Use system command to remove directory
-    local result = os.execute("rm -rf '" .. item.path .. "'")
-    success = result == 0
+    -- Use Neovim API to remove directory recursively (fallback to system if needed)
+    if vim.fn.delete(item.path, 'rf') == 0 then
+      success = true
+    else
+      local result = os.execute("rm -rf '" .. item.path .. "'")
+      success = result == 0
+    end
   else
-    -- Remove file
-    success = os.remove(item.path) ~= nil
+    -- Remove file using Neovim API
+    success = (vim.fn.delete(item.path) == 0)
   end
   
   if success then
@@ -472,8 +477,11 @@ local function rename_item()
     end
   end
   
-  -- Perform the rename
-  local success = os.rename(item.path, new_path)
+  -- Perform the rename using Neovim API first, fallback to os.rename
+  local success = (vim.fn.rename(item.path, new_path) == 0)
+  if not success then
+    success = os.rename(item.path, new_path)
+  end
   
   if success then
     print("Renamed " .. item_type .. " '" .. current_name .. "' to '" .. new_name .. "'")
@@ -664,7 +672,7 @@ end
 local function open_telescope_in_directory()
   local fzf_ok, fzf = pcall(require, 'fzf-lua')
   if not fzf_ok then
-    print("FzfLua not available")
+    vim.notify("FzfLua not available", vim.log.levels.WARN)
     return
   end
   
@@ -675,6 +683,13 @@ local function open_telescope_in_directory()
       title = "Find Files in " .. vim.fn.fnamemodify(current_root, ":t"),
       height = 0.8,
       width = 0.8,
+    },
+    actions = {
+      ["enter"] = function(selected)
+        if selected and #selected > 0 then
+          open_file(selected[1], 'default', false)
+        end
+      end,
     },
   })
 end
@@ -959,9 +974,10 @@ function M.open(root_path)
   vim.api.nvim_win_set_option(tree_win, 'cursorline', true)
   
   -- Ensure mouse support is enabled globally for click functionality
-  if vim.o.mouse == '' then
-    vim.o.mouse = 'a'
-  end
+  -- Do not change global mouse setting here; rely on user's config
+  -- if vim.o.mouse == '' then
+  --   vim.o.mouse = 'a'
+  -- end
   
   -- Load tree data
   tree_data = scan_directory(current_root, 0)
@@ -1038,8 +1054,11 @@ function M.open(root_path)
   vim.keymap.set('n', '?', show_help, opts)
   
   -- Mouse support
-  vim.keymap.set('n', '<LeftMouse>', handle_enter, opts)  -- Left click opens file/toggles directory
-  vim.keymap.set('n', '<RightMouse>', show_context_menu, opts)  -- Right click shows context menu
+  -- Mouse mappings are enabled only if user has mouse enabled in their config
+  if vim.o.mouse ~= '' then
+    vim.keymap.set('n', '<LeftMouse>', handle_enter, opts)  -- Left click opens file/toggles directory
+    vim.keymap.set('n', '<RightMouse>', show_context_menu, opts)  -- Right click shows context menu
+  end
   
   -- Override common file opening commands to prevent buffer replacement
   vim.keymap.set('n', '<leader>ff', function()
