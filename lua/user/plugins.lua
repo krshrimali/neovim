@@ -440,7 +440,6 @@ require("lazy").setup {
             },
         },
     },
-    -- Copilot - LAZY LOAD
     {
         "github/copilot.vim",
         event = "InsertEnter"
@@ -569,10 +568,10 @@ require("lazy").setup {
             require("user.goto_preview_lsp").setup()
         end
     },
-    
+
     {
         "rmagatti/goto-preview",
-        dependencies = { 
+        dependencies = {
             "rmagatti/logger.nvim",
             "neovim/nvim-lspconfig"
         },
