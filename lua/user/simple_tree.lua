@@ -31,6 +31,17 @@ local function get_file_type(path)
   return stat.type
 end
 
+-- Detect absolute path (cross-platform)
+local function is_absolute_path(path)
+  if not path or path == '' then return false end
+  -- Windows: "C:\" or "C:/" or UNC paths "\\server\share"
+  if vim.fn.has('win32') == 1 or vim.fn.has('win64') == 1 then
+    return path:match('^%a:[/\\]') ~= nil or path:match('^[/\\][/\\]') ~= nil
+  end
+  -- POSIX
+  return path:sub(1, 1) == '/'
+end
+
 -- Cache for directory contents to speed up repeated access
 local dir_cache = {}
 
@@ -188,6 +199,11 @@ local function open_file(path, split_type, should_close_tree)
   split_type = split_type or 'default'
   should_close_tree = should_close_tree == nil and config.auto_close or should_close_tree
   
+  -- Resolve relative paths against the current tree root
+  if not is_absolute_path(path) then
+    path = current_root .. '/' .. path
+  end
+  
   local target_win = nil
   
   if split_type == 'default' then
@@ -246,7 +262,44 @@ local function get_git_remote_url()
   handle:close()
   
   if result and result ~= "" then
-    return result:gsub("%s+", "") -- trim whitespace
+    return (result:gsub("%s+", "")) -- trim whitespace
+  end
+  return nil
+end
+
+local function url_encode(str)
+  if not str then return '' end
+  -- Encode everything except unreserved and '/'
+  return (str:gsub("([^%w%-%._~/])", function(c)
+    return string.format("%%%02X", string.byte(c))
+  end))
+end
+
+local function normalize_remote_to_https(remote)
+  if not remote or remote == '' then return nil end
+  -- git@host:owner/repo(.git)
+  local host, path = remote:match('^git@([^:]+):(.+)$')
+  if host and path then
+    path = path:gsub('%.git$', '')
+    return 'https://' .. host .. '/' .. path
+  end
+  -- ssh://git@host/owner/repo(.git)
+  host, path = remote:match('^ssh://git@([^/]+)/(.+)$')
+  if host and path then
+    path = path:gsub('%.git$', '')
+    return 'https://' .. host .. '/' .. path
+  end
+  -- https://host/owner/repo(.git)
+  local scheme, rest = remote:match('^(https?)://(.+)$')
+  if scheme and rest then
+    rest = rest:gsub('%.git$', '')
+    return 'https://' .. rest
+  end
+  -- git://host/owner/repo(.git)
+  local git_host, git_path = remote:match('^git://([^/]+)/(.+)$')
+  if git_host and git_path then
+    git_path = git_path:gsub('%.git$', '')
+    return 'https://' .. git_host .. '/' .. git_path
   end
   return nil
 end
@@ -258,25 +311,32 @@ local function open_github_link(path)
     return
   end
   
-  -- Convert SSH to HTTPS if needed
-  if git_url:match("^git@") then
-    git_url = git_url:gsub("^git@([^:]+):", "https://%1/")
-    git_url = git_url:gsub("%.git$", "")
-  elseif git_url:match("^https://") then
-    git_url = git_url:gsub("%.git$", "")
-  else
-    print("Unsupported git URL format")
+  local https_url = normalize_remote_to_https(git_url)
+  if not https_url then
+    print("Unsupported git URL format: " .. git_url)
     return
   end
   
-  -- Get current branch
+  -- Get current branch (fallbacks)
+  local branch = nil
   local branch_handle = io.popen("git branch --show-current 2>/dev/null")
-  local branch = "main"
   if branch_handle then
     local branch_result = branch_handle:read("*a")
     branch_handle:close()
-    if branch_result and branch_result ~= "" then
+    if branch_result and branch_result:gsub("%s+", "") ~= '' then
       branch = branch_result:gsub("%s+", "")
+    end
+  end
+  if not branch or branch == '' then
+    -- Try to detect origin/HEAD
+    local head_handle = io.popen("git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null")
+    if head_handle then
+      local head_result = head_handle:read("*a") or ''
+      head_handle:close()
+      local ref = head_result:gsub("%s+", "")
+      branch = ref:match('origin/(.+)$') or 'main'
+    else
+      branch = 'main'
     end
   end
   
@@ -287,18 +347,18 @@ local function open_github_link(path)
     return
   end
   
-  local git_root = git_root_handle:read("*a")
+  local git_root = git_root_handle:read("*a") or ''
   git_root_handle:close()
-  
-  if not git_root or git_root == "" then
+  git_root = git_root:gsub("%s+", "")
+  if git_root == '' then
     print("Error getting git root")
     return
   end
   
-  git_root = git_root:gsub("%s+", "")
-  local relative_path = path:gsub("^" .. vim.fn.escape(git_root, "^$()%.[]*+-?") .. "/", "")
+  local relative_path = path:gsub("^" .. vim.fn.escape(git_root, "^$()%.[]*+-?" ) .. "/", "")
+  local encoded_path = url_encode(relative_path)
   
-  local github_url = git_url .. "/blob/" .. branch .. "/" .. relative_path
+  local github_url = https_url .. "/blob/" .. url_encode(branch) .. "/" .. encoded_path
   
   -- Open in browser
   local open_cmd = "xdg-open"
@@ -687,7 +747,11 @@ local function open_telescope_in_directory()
     actions = {
       ["enter"] = function(selected)
         if selected and #selected > 0 then
-          open_file(selected[1], 'default', false)
+          local sel = selected[1]
+          if not is_absolute_path(sel) then
+            sel = current_root .. '/' .. sel
+          end
+          open_file(sel, 'default', false)
         end
       end,
     },
@@ -747,25 +811,32 @@ local function show_context_menu()
           return
         end
         
-        -- Convert SSH to HTTPS if needed
-        if git_url:match("^git@") then
-          git_url = git_url:gsub("^git@([^:]+):", "https://%1/")
-          git_url = git_url:gsub("%.git$", "")
-        elseif git_url:match("^https://") then
-          git_url = git_url:gsub("%.git$", "")
-        else
-          print("Unsupported git URL format")
+        local https_url = normalize_remote_to_https(git_url)
+        if not https_url then
+          print("Unsupported git URL format: " .. git_url)
           return
         end
         
-        -- Get current branch
+        -- Get current branch (fallbacks)
+        local branch = nil
         local branch_handle = io.popen("git branch --show-current 2>/dev/null")
-        local branch = "main"
         if branch_handle then
           local branch_result = branch_handle:read("*a")
           branch_handle:close()
-          if branch_result and branch_result ~= "" then
+          if branch_result and branch_result:gsub("%s+", "") ~= '' then
             branch = branch_result:gsub("%s+", "")
+          end
+        end
+        if not branch or branch == '' then
+          -- Try to detect origin/HEAD
+          local head_handle = io.popen("git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null")
+          if head_handle then
+            local head_result = head_handle:read("*a") or ''
+            head_handle:close()
+            local ref = head_result:gsub("%s+", "")
+            branch = ref:match('origin/(.+)$') or 'main'
+          else
+            branch = 'main'
           end
         end
         
@@ -776,18 +847,18 @@ local function show_context_menu()
           return
         end
         
-        local git_root = git_root_handle:read("*a")
+        local git_root = git_root_handle:read("*a") or ''
         git_root_handle:close()
-        
-        if not git_root or git_root == "" then
+        git_root = git_root:gsub("%s+", "")
+        if git_root == '' then
           print("Error getting git root")
           return
         end
         
-        git_root = git_root:gsub("%s+", "")
-        local relative_path = item.path:gsub("^" .. vim.fn.escape(git_root, "^$()%.[]*+-?") .. "/", "")
+        local relative_path = item.path:gsub("^" .. vim.fn.escape(git_root, "^$()%.[]*+-?" ) .. "/", "")
+        local encoded_path = url_encode(relative_path)
         
-        local github_url = git_url .. "/blob/" .. branch .. "/" .. relative_path
+        local github_url = https_url .. "/blob/" .. url_encode(branch) .. "/" .. encoded_path
         copy_to_clipboard(github_url)
       end)
       
@@ -828,7 +899,7 @@ local function show_context_menu()
   table.insert(menu_items, "Toggle hidden files")
   table.insert(menu_actions, function() 
     config.show_hidden = not config.show_hidden
-    clear_cache()
+    clear_cache() -- Clear cache since hidden file setting changed
     M.refresh() 
   end)
   
