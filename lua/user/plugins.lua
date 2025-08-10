@@ -441,11 +441,10 @@ require("lazy").setup {
         },
     },
 
-    -- Copilot - LAZY LOAD
-    -- {
-    --     "github/copilot.vim",
-    --     event = "InsertEnter"
-    -- },
+    {
+        "github/copilot.vim",
+        event = "InsertEnter"
+    },
 
     -- Project management - LAZY LOAD
     {
@@ -561,25 +560,6 @@ require("lazy").setup {
             'nvim-treesitter/nvim-treesitter',
         }
     },
-    {
-        "TabbyML/vim-tabby",
-        lazy = false,
-        dependencies = {
-            "neovim/nvim-lspconfig",
-        },
-        config = function()
-            -- Keybinding to accept Tabby suggestion
-            vim.g.tabby_keybinding_accept = "<C-y>"
-            -- Set specific Node.js binary path
-            vim.g.tabby_node_binary = "/prod/tools/infra/nodejs/node20/node/bin/node"
-            vim.g.tabby_agent_start_command = { "npx", "tabby-agent", "--stdio" }
-            vim.g.tabby_inline_completion_trigger = "auto"
-        end,
-    },
-    {
-        "https://github.deshaw.com/genai/vim-ai",
-        tag = "v0.0.1"
-    },
     -- LSP Configuration for goto-preview
     {
         "neovim/nvim-lspconfig",
@@ -589,10 +569,10 @@ require("lazy").setup {
             require("user.goto_preview_lsp").setup()
         end
     },
-    
+
     {
         "rmagatti/goto-preview",
-        dependencies = { 
+        dependencies = {
             "rmagatti/logger.nvim",
             "neovim/nvim-lspconfig"
         },
