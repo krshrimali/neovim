@@ -119,7 +119,7 @@ keymap("n", "<leader>Q", "<cmd>bdelete!<CR>", opts)
 -- keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
 -- keymap("n", "gi", "<cmd>lua vim.lsp.buf.incoming_calls()<CR>", opts)
 -- keymap("n", "go", "<cmd>lua vim.lsp.buf.outgoing_calls()<CR>", opts)
-keymap("n", "<C-p>", "<cmd>FzfLua files<cr>", opts)
+keymap("n", "<C-p>", function() Snacks.picker.files() end, opts)
 -- keymap("n", "<C-s>", "<cmd>lua vim.lsp.buf.document_symbol()<cr>", opts) -- Conflicts with COC
 keymap("n", "<C-z>", "<cmd>ZenMode<cr>", opts)
 
@@ -203,22 +203,16 @@ _G.find_files = function()
     local current_path = vim.fn.expand "%:p:h"
     local relative_path = vim.fn.fnamemodify(current_path, ":~:.")
 
-    require("fzf-lua").files {
+    Snacks.picker.files {
         cwd = relative_path,
-        winopts = {
-            preview = { hidden = true },
-        },
     }
 end
 _G.live_grep = function()
     local current_path = vim.fn.expand "%:p:h"
     local relative_path = vim.fn.fnamemodify(current_path, ":~:.")
 
-    require("fzf-lua").live_grep {
+    Snacks.picker.grep {
         cwd = relative_path,
-        winopts = {
-            preview = { hidden = true },
-        },
     }
 end
 
@@ -231,7 +225,7 @@ vim.api.nvim_set_keymap("n", "<Leader><leader>g", ":lua live_grep()<CR>", { nore
 -- vim.api.nvim_set_keymap("n", "<leader>zm", '[[:lua require("ufo").openAllFolds()<CR>]]', opts)
 -- vim.api.nvim_set_keymap("n", "<leader>zr", '[[:lua require("ufo").closeAllFolds()<CR>]]', opts)
 
-vim.api.nvim_set_keymap("n", "<leader><leader>s", ":FzfLua command_history<CR>", opts)
+vim.api.nvim_set_keymap("n", "<leader><leader>s", function() Snacks.picker.command_history() end, opts)
 -- vim.keymap.set("n", "zR", require("ufo").openAllFolds)
 -- vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
 -- vim.keymap.set("n", "zr", require("ufo").openFoldsExceptKinds)
@@ -270,24 +264,16 @@ vim.keymap.set(
   { desc = "Git Browse (copy)" }
 )
 
--- nnoremap <leader>fb <cmd>FzfLua files cwd=/prod/tools/base/<cr>
--- nnoremap <leader>gb <cmd>FzfLua live_grep cwd=/prod/tools/base/<cr>
+-- nnoremap <leader>fb <cmd>Snacks.picker.files cwd=/prod/tools/base/<cr>
+-- nnoremap <leader>gb <cmd>Snacks.picker.grep cwd=/prod/tools/base/<cr>
 vim.keymap.set('n', '<leader>fb', function()
-  require('fzf-lua').files {
+  Snacks.picker.files {
     cwd = '/prod/tools/base/',
-    winopts = {
-      height = 0.6,
-      width = 0.8,
-    },
   }
 end, { desc = 'Find files in base' })
 vim.keymap.set('n', '<leader>gb', function()
-  require('fzf-lua').live_grep {
+  Snacks.picker.grep {
     cwd = '/prod/tools/base/',
-    winopts = {
-      height = 0.6,
-      width = 0.8,
-    },
   }
 end, { desc = 'Live grep in base' })
 

@@ -27,21 +27,7 @@ function M.setup()
   hl("TelescopeMatching", { fg = colors.yellow, bold = true })
   hl("TelescopePromptPrefix", { fg = colors.blue })
   
-  -- FZF-Lua
-  hl("FzfLuaNormal", { fg = colors.fg, bg = colors.bg_popup })
-  hl("FzfLuaBorder", { fg = colors.border, bg = colors.bg_popup })
-  hl("FzfLuaTitle", { fg = colors.bg, bg = colors.blue, bold = true })
-  hl("FzfLuaPreviewTitle", { fg = colors.bg, bg = colors.green, bold = true })
-  hl("FzfLuaCursor", { fg = colors.bg, bg = colors.fg })
-  hl("FzfLuaCursorLine", { bg = colors.selection })
-  hl("FzfLuaCursorLineNr", { fg = colors.line_number_current, bold = true })
-  hl("FzfLuaSearch", { fg = colors.yellow, bold = true })
-  hl("FzfLuaScrollBorderEmpty", { fg = colors.border })
-  hl("FzfLuaScrollBorderFull", { fg = colors.blue })
-  hl("FzfLuaScrollFloatEmpty", { fg = colors.border })
-  hl("FzfLuaScrollFloatFull", { fg = colors.blue })
-  hl("FzfLuaHelpNormal", { fg = colors.fg, bg = colors.bg_popup })
-  hl("FzfLuaHelpBorder", { fg = colors.border, bg = colors.bg_popup })
+  -- Snacks picker uses default highlighting, no custom themes needed
   
   -- NvimTree
   hl("NvimTreeNormal", { fg = colors.fg, bg = colors.bg_alt })
