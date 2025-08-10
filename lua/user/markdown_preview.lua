@@ -33,7 +33,7 @@ function M.setup()
     
     require("glow").setup({
         glow_path = glow_path,
-        install_path = "~/.local/bin", -- fallback installation path
+        install_path = vim.fn.expand("~/.local/bin"), -- fallback installation path
         border = "shadow", -- floating window border
         style = "dark", -- filled automatically with your current editor background
         pager = false,

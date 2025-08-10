@@ -47,9 +47,18 @@ local function configure_terminal_buffer(buf)
   return success
 end
 
+-- Provide global access for tests
+_G.configure_terminal_buffer = configure_terminal_buffer
+_G.disable_treesitter_for_terminal = disable_treesitter_for_terminal
+
 -- Terminal configuration
+local function get_default_shell()
+  -- Prefer Neovim's configured shell, then environment, finally bash
+  return vim.o.shell or os.getenv("SHELL") or "bash"
+end
+
 local config = {
-  shell = "fish", -- Default shell
+  shell = get_default_shell(), -- Default to system shell
   size = {
     float = { width = 0.8, height = 0.8 },
     vertical = { width = 0.5, height = 0.9 },
@@ -68,11 +77,18 @@ local function enable_vi_mode(job_id, shell)
   
   -- Wait a moment for the terminal to be ready
   vim.defer_fn(function()
-    if shell and shell:match("zsh") then
+    local sh = shell or ""
+    if type(sh) == "string" then sh = sh:lower() end
+
+    if sh:match("zsh") then
       vim.fn.chansend(job_id, "bindkey -v\n")
-    else
-      -- Default to fish vi mode
+    elseif sh:match("fish") then
       vim.fn.chansend(job_id, "fish_vi_key_bindings\n")
+    elseif sh:match("bash") or sh:match("sh") then
+      vim.fn.chansend(job_id, "set -o vi\n")
+    else
+      -- Sensible default for most POSIX shells
+      vim.fn.chansend(job_id, "set -o vi\n")
     end
   end, 100)
 end
