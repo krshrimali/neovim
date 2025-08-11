@@ -512,13 +512,24 @@ require("lazy").setup {
             -- or leave it empty to use the default settings
             -- refer to the configuration section below
             bigfile = { enabled = true },
+            gitbrowse = {
+                what = "permalink",
+                url_patterns = {
+                    ["github%.deshaw%.com"] = {
+                        branch = "/tree/{branch}",
+                        file = "/blob/{branch}/{file}#L{line_start}-L{line_end}",
+                        permalink = "/blob/{commit}/{file}#L{line_start}-L{line_end}",
+                        commit = "/commit/{commit}",
+                    },
+                },
+            },
             dashboard = { enabled = false }, -- Completely disable dashboard
             explorer = { enabled = false },
             indent = { enabled = false },
             input = { enabled = false },
             picker = { enabled = false },   -- Disable picker since we're using nvim-tree
             notifier = { enabled = false }, -- Disable for faster startup
-            quickfile = { enabled = true },
+            quickfile = { enabled = false },
             scope = { enabled = false },
             scroll = { enabled = false },
             statuscolumn = { enabled = false }, -- Disable for faster startup

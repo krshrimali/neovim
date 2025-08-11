@@ -259,36 +259,35 @@ vim.keymap.set("n", "<leader>lgg", "<cmd>lua require('goto-preview').goto_previe
 vim.keymap.set("n", "<leader>lgw", "<cmd>lua require('goto-preview').close_all_win()<CR>", { noremap = true })
 -- vim.keymap.set("n", "<leader>gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>", { noremap = true })
 vim.keymap.set(
-  { "n", "x" },
-  "<leader>gy",
-  function()
-    Snacks.gitbrowse({
-      open = function(url) vim.fn.setreg("+", url) end,
-      notify = false
-    })
-  end,
-  { desc = "Git Browse (copy)" }
+    { "n", "x" },
+    "<leader>gy",
+    function()
+        Snacks.gitbrowse({
+            open = function(url) vim.fn.setreg("+", url) end,
+        })
+    end,
+    { desc = "Git Browse (copy)" }
 )
 
 -- nnoremap <leader>fb <cmd>FzfLua files cwd=/prod/tools/base/<cr>
 -- nnoremap <leader>gb <cmd>FzfLua live_grep cwd=/prod/tools/base/<cr>
 vim.keymap.set('n', '<leader>fb', function()
-  require('fzf-lua').files {
-    cwd = '/prod/tools/base/',
-    winopts = {
-      height = 0.6,
-      width = 0.8,
-    },
-  }
+    require('fzf-lua').files {
+        cwd = '/prod/tools/base/',
+        winopts = {
+            height = 0.6,
+            width = 0.8,
+        },
+    }
 end, { desc = 'Find files in base' })
 vim.keymap.set('n', '<leader>gb', function()
-  require('fzf-lua').live_grep {
-    cwd = '/prod/tools/base/',
-    winopts = {
-      height = 0.6,
-      width = 0.8,
-    },
-  }
+    require('fzf-lua').live_grep {
+        cwd = '/prod/tools/base/',
+        winopts = {
+            height = 0.6,
+            width = 0.8,
+        },
+    }
 end, { desc = 'Live grep in base' })
 
 -- Diagnostic Display Plugin Keymaps
