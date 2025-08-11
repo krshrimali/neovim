@@ -201,10 +201,9 @@ vim.g.copilot_no_tab_map = true
 -- Helper functions to fetch the current scope and set `search_dirs`
 _G.find_files = function()
     local current_path = vim.fn.expand "%:p:h"
-    local relative_path = vim.fn.fnamemodify(current_path, ":~:.")
 
     require("fzf-lua").files {
-        cwd = relative_path,
+        cwd = current_path,
         winopts = {
             preview = { hidden = true },
         },
@@ -212,18 +211,41 @@ _G.find_files = function()
 end
 _G.live_grep = function()
     local current_path = vim.fn.expand "%:p:h"
-    local relative_path = vim.fn.fnamemodify(current_path, ":~:.")
 
     require("fzf-lua").live_grep {
-        cwd = relative_path,
+        cwd = current_path,
         winopts = {
             preview = { hidden = true },
         },
     }
 end
 
+_G.find_files_in_subdir = function()
+    -- Prompt user for subdirectory
+    vim.ui.input({ prompt = "Search in subdirectory: ", default = "" }, function(subdir)
+        if subdir and subdir ~= "" then
+            -- Get current file directory as base
+            local current_path = vim.fn.expand "%:p:h"
+            local search_path = current_path .. "/" .. subdir
+            
+            -- Check if directory exists
+            if vim.fn.isdirectory(search_path) == 1 then
+                require("fzf-lua").live_grep {
+                    cwd = search_path,
+                    winopts = {
+                        preview = { hidden = true },
+                    },
+                }
+            else
+                vim.notify("Directory does not exist: " .. search_path, vim.log.levels.ERROR)
+            end
+        end
+    end)
+end
+
 vim.api.nvim_set_keymap("n", "<Leader><leader>f", ":lua find_files()<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<Leader><leader>g", ":lua live_grep()<CR>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<Leader><leader>t", ":lua find_files_in_subdir()<CR>", { noremap = true })
 
 -- vim.api.nvim_set_keymap("n", "<Leader><leader>F", "<cmd>Telescope dir find_files<CR>", { noremap = true })
 -- vim.api.nvim_set_keymap("n", "<Leader><leader>t", "<cmd>Telescope dir live_grep<CR>", { noremap = true })

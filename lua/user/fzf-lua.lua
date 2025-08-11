@@ -82,12 +82,7 @@ fzf_lua.setup({
     -- Actions optimized for speed
     actions = {
         files = {
-            ["enter"] = function(selected, opts)
-                -- Fast file opening without additional processing
-                if #selected > 0 then
-                    vim.cmd("edit " .. vim.fn.fnameescape(selected[1]))
-                end
-            end,
+            ["enter"] = "file_edit",
             ["ctrl-q"] = function(selected, opts)
                 _G.fzf_send_to_qf_all(selected, opts)
             end,
