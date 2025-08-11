@@ -75,9 +75,8 @@ local function show_virtual_lines(bufnr)
   -- Group diagnostics by line
   local diagnostics_by_line = {}
   for _, diagnostic in ipairs(diagnostics) do
-    local line = diagnostic.lnum or 0
-    -- COC uses 1-based line numbers, convert to 0-based for extmarks
-    local line_0based = line > 0 and line - 1 or line
+    -- COC diagnostic lnum is 0-based; extmarks also expect 0-based
+    local line_0based = (diagnostic.lnum or 0)
     
     if not diagnostics_by_line[line_0based] then
       diagnostics_by_line[line_0based] = {}

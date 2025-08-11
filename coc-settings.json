@@ -44,5 +44,6 @@
   "[python]": {
     "codeLens.enable": false
   },
-  "snippets.ultisnips.pythonPrompt": false
+  "snippets.ultisnips.pythonPrompt": false,
+  "inlayHint.enable": false
 }
