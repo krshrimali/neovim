@@ -1,4 +1,4 @@
-M = {}
+local M = {}
 local status_ok, lualine = pcall(require, "lualine")
 if not status_ok then
     return
@@ -245,24 +245,26 @@ local lanuage_server = {
             end
         end
 
-        -- add formatter
-        local s = require "null-ls.sources"
-        local available_sources = s.get_available(buf_ft)
-        local registered = {}
-        for _, source in ipairs(available_sources) do
-            for method in pairs(source.methods) do
-                registered[method] = registered[method] or {}
-                table.insert(registered[method], source.name)
+        -- add formatter and linter from null-ls if available
+        local ok_sources, s = pcall(require, "null-ls.sources")
+        if ok_sources then
+            local available_sources = s.get_available(buf_ft)
+            local registered = {}
+            for _, source in ipairs(available_sources) do
+                for method in pairs(source.methods) do
+                    registered[method] = registered[method] or {}
+                    table.insert(registered[method], source.name)
+                end
             end
-        end
 
-        local formatter = registered["NULL_LS_FORMATTING"]
-        local linter = registered["NULL_LS_DIAGNOSTICS"]
-        if formatter ~= nil then
-            vim.list_extend(client_names, formatter)
-        end
-        if linter ~= nil then
-            vim.list_extend(client_names, linter)
+            local formatter = registered["NULL_LS_FORMATTING"]
+            local linter = registered["NULL_LS_DIAGNOSTICS"]
+            if formatter ~= nil then
+                vim.list_extend(client_names, formatter)
+            end
+            if linter ~= nil then
+                vim.list_extend(client_names, linter)
+            end
         end
 
         -- join client names with commas
