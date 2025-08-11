@@ -264,7 +264,7 @@ vim.keymap.set(
   function()
     Snacks.gitbrowse({
       open = function(url) vim.fn.setreg("+", url) end,
-      notify = false
+      notify = true
     })
   end,
   { desc = "Git Browse (copy)" }
