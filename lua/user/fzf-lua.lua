@@ -79,20 +79,20 @@ fzf_lua.setup({
     -- 
     --
     --
-    -- Actions optimized for speed
-    actions = {
-        files = {
-            ["enter"] = function(selected, opts)
-                -- Fast file opening without additional processing
-                if #selected > 0 then
-                    vim.cmd("edit " .. vim.fn.fnameescape(selected[1]))
-                end
-            end,
-            ["ctrl-q"] = function(selected, opts)
-                _G.fzf_send_to_qf_all(selected, opts)
-            end,
-        },
-    },
+    -- -- Actions optimized for speed
+    -- actions = {
+    --     files = {
+    --         ["enter"] = function(selected, opts)
+    --             -- Fast file opening without additional processing
+    --             if #selected > 0 then
+    --                 vim.cmd("edit " .. vim.fn.fnameescape(selected[1]))
+    --             end
+    --         end,
+    --         ["ctrl-q"] = function(selected, opts)
+    --             _G.fzf_send_to_qf_all(selected, opts)
+    --         end,
+    --     },
+    -- },
 
     files = {
         multiprocess = true,
@@ -203,50 +203,50 @@ fzf_lua.setup({
     live_grep = {
         -- prompt = "LiveGrep> ",
         multiprocess = true,
-        git_icons = false,
-        file_icons = false,
-        color_icons = false,
-        rg_opts = "--column --line-number --no-heading --smart-case --max-columns=4096",
-        -- Performance: disable some features for speed
-        fn_transform = function(x)
-            -- Strip ANSI color codes from the output
-            return x:gsub("\27%[[0-9;]*m", "")
-        end,
+        -- git_icons = false,
+        -- file_icons = false,
+        -- color_icons = false,
+        -- rg_opts = "--column --line-number --no-heading --smart-case --max-columns=4096",
+        -- -- Performance: disable some features for speed
+        -- fn_transform = function(x)
+        --     -- Strip ANSI color codes from the output
+        --     return x:gsub("\27%[[0-9;]*m", "")
+        -- end,
         exec_empty_query = false,
-        -- actions = {
-        --     ["enter"] = function(selected, opts)
-        --         -- Parse the grep result and open the file at the correct line and column
-        --         if #selected > 0 then
-        --             local line = selected[1]
-        --             -- Strip ANSI color codes first
-        --             local clean_line = line:gsub("\27%[[0-9;]*m", "")
-        --             
-        --             -- Parse grep result format: filename:line:col:text
-        --             local filename, lnum, col, text = clean_line:match("([^:]+):(%d+):(%d+):(.*)")
-        --             if filename and lnum and col then
-        --                 -- Open the file and jump to the line and column
-        --                 vim.cmd("edit " .. vim.fn.fnameescape(filename))
-        --                 vim.api.nvim_win_set_cursor(0, {tonumber(lnum), tonumber(col) - 1})
-        --             else
-        --                 -- Fallback: try to parse as just filename:line
-        --                 local fname, line_num = clean_line:match("([^:]+):(%d+):")
-        --                 if fname and line_num then
-        --                     vim.cmd("edit " .. vim.fn.fnameescape(fname))
-        --                     vim.api.nvim_win_set_cursor(0, {tonumber(line_num), 0})
-        --                 else
-        --                     -- Last fallback: treat as filename only
-        --                     local file_path = clean_line:match("^%s*(.-)%s*$") -- trim whitespace
-        --                     if file_path and file_path ~= "" then
-        --                         vim.cmd("edit " .. vim.fn.fnameescape(file_path))
-        --                     end
-        --                 end
-        --             end
-        --         end
-        --     end,
-        --     ["ctrl-q"] = function(selected, opts)
-        --         _G.fzf_send_to_qf_all(selected, opts)
-        --     end,
-        -- },
+        actions = {
+            ["enter"] = function(selected, opts)
+                -- Parse the grep result and open the file at the correct line and column
+                if #selected > 0 then
+                    local line = selected[1]
+                    -- Strip ANSI color codes first
+                    local clean_line = line:gsub("\27%[[0-9;]*m", "")
+                    
+                    -- Parse grep result format: filename:line:col:text
+                    local filename, lnum, col, text = clean_line:match("([^:]+):(%d+):(%d+):(.*)")
+                    if filename and lnum and col then
+                        -- Open the file and jump to the line and column
+                        vim.cmd("edit " .. vim.fn.fnameescape(filename))
+                        vim.api.nvim_win_set_cursor(0, {tonumber(lnum), tonumber(col) - 1})
+                    else
+                        -- Fallback: try to parse as just filename:line
+                        local fname, line_num = clean_line:match("([^:]+):(%d+):")
+                        if fname and line_num then
+                            vim.cmd("edit " .. vim.fn.fnameescape(fname))
+                            vim.api.nvim_win_set_cursor(0, {tonumber(line_num), 0})
+                        else
+                            -- Last fallback: treat as filename only
+                            local file_path = clean_line:match("^%s*(.-)%s*$") -- trim whitespace
+                            if file_path and file_path ~= "" then
+                                vim.cmd("edit " .. vim.fn.fnameescape(file_path))
+                            end
+                        end
+                    end
+                end
+            end,
+            ["ctrl-q"] = function(selected, opts)
+                _G.fzf_send_to_qf_all(selected, opts)
+            end,
+        },
     },
     
     -- Buffer optimizations  
