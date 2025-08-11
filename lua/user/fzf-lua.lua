@@ -34,6 +34,10 @@ fzf_lua.setup({
     --         delay = 0, -- No delay
     --     },
     -- },
+
+    winopts = {
+        border = "rounded",
+    },
     
     -- Keymaps
     keymap = {
@@ -92,19 +96,23 @@ fzf_lua.setup({
 
     files = {
         multiprocess = true,
-        git_icons = false, -- Disable for max performance
-        file_icons = false, -- Disable for max performance  
-        color_icons = false, -- Disable for max performance
-        cmd = "fd --type f --hidden --follow --exclude .git",
-        -- Fast find options optimized for speed
-        find_opts = [[-type f -not -path '*/\.git/*']],
-        rg_opts = "--files --hidden --follow -g '!.git' --no-heading",
-        fd_opts = "--type f --hidden --follow --exclude .git --strip-cwd-prefix",
-        -- Performance settings
-        cwd_prompt = false, -- Disable for speed
-        previewer = false, -- Disable previewer for instant opening
-        -- Disable path transformations for speed
-        path_shorten = false,
+        previewer = true,
+        git_icons = false,
+        file_icons = false,
+        color_icons = false
+        -- git_icons = false, -- Disable for max performance
+        -- file_icons = false, -- Disable for max performance  
+        -- color_icons = false, -- Disable for max performance
+        -- cmd = "fd --type f --hidden --follow --exclude .git",
+        -- -- Fast find options optimized for speed
+        -- find_opts = [[-type f -not -path '*/\.git/*']],
+        -- rg_opts = "--files --hidden --follow -g '!.git' --no-heading",
+        -- fd_opts = "--type f --hidden --follow --exclude .git --strip-cwd-prefix",
+        -- -- Performance settings
+        -- cwd_prompt = false, -- Disable for speed
+        -- previewer = false, -- Disable previewer for instant opening
+        -- -- Disable path transformations for speed
+        -- path_shorten = false,
     },
 
     -- -- File picker optimizations
@@ -196,8 +204,8 @@ fzf_lua.setup({
         -- prompt = "LiveGrep> ",
         multiprocess = true,
         git_icons = false,
-        file_icons = true,
-        color_icons = true,
+        file_icons = false,
+        color_icons = false,
         rg_opts = "--column --line-number --no-heading --smart-case --max-columns=4096",
         -- Performance: disable some features for speed
         fn_transform = function(x)
@@ -205,40 +213,40 @@ fzf_lua.setup({
             return x:gsub("\27%[[0-9;]*m", "")
         end,
         exec_empty_query = false,
-        actions = {
-            ["enter"] = function(selected, opts)
-                -- Parse the grep result and open the file at the correct line and column
-                if #selected > 0 then
-                    local line = selected[1]
-                    -- Strip ANSI color codes first
-                    local clean_line = line:gsub("\27%[[0-9;]*m", "")
-                    
-                    -- Parse grep result format: filename:line:col:text
-                    local filename, lnum, col, text = clean_line:match("([^:]+):(%d+):(%d+):(.*)")
-                    if filename and lnum and col then
-                        -- Open the file and jump to the line and column
-                        vim.cmd("edit " .. vim.fn.fnameescape(filename))
-                        vim.api.nvim_win_set_cursor(0, {tonumber(lnum), tonumber(col) - 1})
-                    else
-                        -- Fallback: try to parse as just filename:line
-                        local fname, line_num = clean_line:match("([^:]+):(%d+):")
-                        if fname and line_num then
-                            vim.cmd("edit " .. vim.fn.fnameescape(fname))
-                            vim.api.nvim_win_set_cursor(0, {tonumber(line_num), 0})
-                        else
-                            -- Last fallback: treat as filename only
-                            local file_path = clean_line:match("^%s*(.-)%s*$") -- trim whitespace
-                            if file_path and file_path ~= "" then
-                                vim.cmd("edit " .. vim.fn.fnameescape(file_path))
-                            end
-                        end
-                    end
-                end
-            end,
-            ["ctrl-q"] = function(selected, opts)
-                _G.fzf_send_to_qf_all(selected, opts)
-            end,
-        },
+        -- actions = {
+        --     ["enter"] = function(selected, opts)
+        --         -- Parse the grep result and open the file at the correct line and column
+        --         if #selected > 0 then
+        --             local line = selected[1]
+        --             -- Strip ANSI color codes first
+        --             local clean_line = line:gsub("\27%[[0-9;]*m", "")
+        --             
+        --             -- Parse grep result format: filename:line:col:text
+        --             local filename, lnum, col, text = clean_line:match("([^:]+):(%d+):(%d+):(.*)")
+        --             if filename and lnum and col then
+        --                 -- Open the file and jump to the line and column
+        --                 vim.cmd("edit " .. vim.fn.fnameescape(filename))
+        --                 vim.api.nvim_win_set_cursor(0, {tonumber(lnum), tonumber(col) - 1})
+        --             else
+        --                 -- Fallback: try to parse as just filename:line
+        --                 local fname, line_num = clean_line:match("([^:]+):(%d+):")
+        --                 if fname and line_num then
+        --                     vim.cmd("edit " .. vim.fn.fnameescape(fname))
+        --                     vim.api.nvim_win_set_cursor(0, {tonumber(line_num), 0})
+        --                 else
+        --                     -- Last fallback: treat as filename only
+        --                     local file_path = clean_line:match("^%s*(.-)%s*$") -- trim whitespace
+        --                     if file_path and file_path ~= "" then
+        --                         vim.cmd("edit " .. vim.fn.fnameescape(file_path))
+        --                     end
+        --                 end
+        --             end
+        --         end
+        --     end,
+        --     ["ctrl-q"] = function(selected, opts)
+        --         _G.fzf_send_to_qf_all(selected, opts)
+        --     end,
+        -- },
     },
     
     -- Buffer optimizations  
