@@ -337,12 +337,12 @@ which_key.add {
     "<cmd>FzfLua commands<cr>",
     desc = "Commands",
   },
-  {
+    {
     "<leader>fF",
-    "<cmd>FzfLua files<cr>",
+    "<cmd>lua require('fzf-lua').files({ previewer = 'builtin', winopts = { preview = { default = true, hidden = false } } })<cr>",
     desc = "Find Files (with preview)",
   },
-
+ 
   -- Diagnostics
   {
     "<leader>dl",
