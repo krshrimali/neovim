@@ -8,6 +8,7 @@ require "user.options"
 -- require "user.lualine" -- Now loaded in plugin config
 -- require "user.notify" -- Now loaded in plugin config  
 -- require "user.dressing" -- Now loaded in plugin config
+require "user.breadcrumbs" -- register toggle commands early
 
 -- Defer loading of heavy components
 vim.defer_fn(function()

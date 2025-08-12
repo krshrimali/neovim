@@ -355,7 +355,7 @@ require("lazy").setup {
     -- Winbar - LAZY LOAD
     {
         "fgheng/winbar.nvim",
-        event = "BufReadPost",
+        cond = false, -- Disabled: using lualine winbar + custom breadcrumbs
     },
 
     -- Frecency functionality replaced with fzf-lua oldfiles
