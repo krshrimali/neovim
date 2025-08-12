@@ -1,65 +1,95 @@
-require "user.plugins"
-require "user.keymaps"
-require "user.autocommands"
-require "user.colorscheme"
-require "user.options"
+-- Neovim Configuration with Clipboard Integration
+-- Place this file at ~/.config/nvim/init.lua
 
--- Load UI components immediately for consistent experience
--- require "user.lualine" -- Now loaded in plugin config
--- require "user.notify" -- Now loaded in plugin config  
--- require "user.dressing" -- Now loaded in plugin config
+-- Basic settings
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
 
--- Defer loading of heavy components
-vim.defer_fn(function()
-      -- Load native terminal configuration (includes lazygit)
-    require "user.terminal"
-end, 100)
+-- Clipboard configuration with automatic detection
+local function setup_clipboard()
+  -- Check if we're in WSL
+  if vim.fn.has('wsl') == 1 then
+    vim.g.clipboard = {
+      name = 'WslClipboard',
+      copy = {
+        ['+'] = 'clip.exe',
+        ['*'] = 'clip.exe',
+      },
+      paste = {
+        ['+'] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+        ['*'] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+      },
+      cache_enabled = 0,
+    }
+    print("WSL clipboard configured")
+  -- Check for macOS
+  elseif vim.fn.has('mac') == 1 then
+    vim.opt.clipboard = 'unnamedplus'
+    print("macOS clipboard configured")
+  -- Check for Linux clipboard utilities
+  elseif vim.fn.executable('xclip') == 1 then
+    vim.opt.clipboard = 'unnamedplus'
+    print("Linux clipboard configured with xclip")
+  elseif vim.fn.executable('xsel') == 1 then
+    vim.opt.clipboard = 'unnamedplus'
+    print("Linux clipboard configured with xsel")
+  elseif vim.fn.executable('wl-copy') == 1 then
+    vim.opt.clipboard = 'unnamedplus'
+    print("Wayland clipboard configured")
+  else
+    print("Warning: No clipboard provider found!")
+    print("Install xclip, xsel, or wl-clipboard-tools")
+    print("You can still use '+y and '+p for manual clipboard operations")
+  end
+end
 
--- Load these only when plugins are loaded (handled by lazy loading now)
--- telescope replaced with fzf-lua
--- require "user.treesitter" -- Now lazy loaded
--- require "user.comment" -- Now lazy loaded
--- require "user.gitsigns" -- Now lazy loaded
--- require "user.nvim-tree" -- Replaced with custom simple_tree.lua
--- require "user.toggleterm" -- Now lazy loaded
--- require "user.whichkey" -- Now lazy loaded
--- require "user.numb" -- Now lazy loaded
--- require "user.colorizer" -- Still needed immediately for syntax highlighting
--- require "user.spectre" -- Now lazy loaded
--- require "user.todo-comments" -- Now lazy loaded
--- require "user.git-blame" -- Now lazy loaded
--- require "user.registers" -- Now lazy loaded
--- require "user.functions" -- Keep for immediate functions
--- require "user.illuminate" -- Now lazy loaded
--- require "user.cybu" -- Now lazy loaded
--- require "user.bqf" -- Now lazy loaded
--- require "user.surround" -- Still needed for immediate text operations
--- require "user.nvim_transparent" -- Keep for immediate UI
--- require "user.coc" -- Now lazy loaded with defer
+-- Set up clipboard
+setup_clipboard()
 
--- Keep essential immediate configurations
-require "user.colorizer"
-require "user.functions" 
-require "user.surround"
-require "user.nvim_transparent"
-require "user.diagnostics_display"
-require "user.buffer_navigation"
+-- Key mappings for manual clipboard operations (fallback)
+vim.keymap.set('v', '<leader>y', '"+y', { desc = 'Copy to system clipboard' })
+vim.keymap.set('n', '<leader>p', '"+p', { desc = 'Paste from system clipboard' })
+vim.keymap.set('n', '<leader>P', '"+P', { desc = 'Paste before cursor from system clipboard' })
 
--- Setup COC virtual lines
-require("user.coc_virtual_lines").setup()
+-- Function to check clipboard status
+local function check_clipboard()
+  print("Clipboard status:")
+  print("has('clipboard'): " .. vim.fn.has('clipboard'))
+  print("Current clipboard setting: " .. vim.inspect(vim.opt.clipboard:get()))
+  
+  -- Check available providers
+  local providers = {
+    'xclip', 'xsel', 'wl-copy', 'pbcopy', 'clip.exe'
+  }
+  
+  print("Available clipboard utilities:")
+  for _, provider in ipairs(providers) do
+    if vim.fn.executable(provider) == 1 then
+      print("  ✓ " .. provider)
+    else
+      print("  ✗ " .. provider)
+    end
+  end
+end
 
--- fzf-lua is now loaded via lazy.nvim
+-- Command to check clipboard status
+vim.api.nvim_create_user_command('CheckClipboard', check_clipboard, {})
 
--- Setup buffer browser (lazy loaded on keymap)
-vim.keymap.set("n", "<leader>bb", function()
-  require("user.buffer_browser").open_buffer_browser()
-end, { desc = "Buffer Browser", silent = true })
+-- Auto-command to show clipboard status on startup
+vim.api.nvim_create_autocmd('VimEnter', {
+  callback = function()
+    -- Small delay to let everything load
+    vim.defer_fn(function()
+      if vim.opt.clipboard:get()[1] then
+        print("✓ System clipboard integration enabled")
+      else
+        print("⚠ System clipboard not configured - use :CheckClipboard for details")
+      end
+    end, 100)
+  end,
+})
 
-vim.keymap.set("n", "<leader>bs", function()
-  require("user.buffer_browser").toggle_sidebar()
-end, { desc = "Buffer Sidebar", silent = true })
-
--- These are now handled by plugin lazy loading
--- require("goto-preview").setup {} -- Now configured via goto_preview_lsp.lua
--- require("neogit").setup {} -- Now lazy loaded  
--- telescope extensions replaced with fzf-lua
+print("Neovim configuration loaded!")
