@@ -588,5 +588,39 @@ require("lazy").setup {
         },
         event = { "BufReadPre", "BufNewFile" },
         config = false, -- Configuration handled in goto_preview_lsp.lua
-    }
+    },
+
+    {
+        "linux-cultist/venv-selector.nvim",
+        dependencies = {
+            "neovim/nvim-lspconfig",
+            "mfussenegger/nvim-dap", "mfussenegger/nvim-dap-python", --optional
+            { "nvim-telescope/telescope.nvim", branch = "0.1.x", dependencies = { "nvim-lua/plenary.nvim" } },
+        },
+        lazy = false,
+        branch = "regexp", -- This is the regexp branch, use this for the new version
+        keys = {
+            { ",v", "<cmd>VenvSelect<cr>" },
+        },
+        opts = {
+            -- Your settings go here
+            search = {
+                my_vens = {
+                    command = "fd python$ ~/.virtualenv/"
+                }
+            }
+        },
+    },
+    {
+        "TabbyML/vim-tabby",
+        lazy = false,
+        dependencies = {
+            "neovim/nvim-lspconfig",
+        },
+        init = function()
+            vim.g.tabby_agent_start_command = { "npx", "tabby-agent", "--stdio" }
+            vim.g.tabby_inline_completion_trigger = "auto"
+        end,
+    },
+
 }
