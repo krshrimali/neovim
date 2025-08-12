@@ -4,15 +4,22 @@ if not status_ok then
     return
 end
 
-local lualine_scheme = "auto"
--- local lualine_scheme = "onedarker_alt"
+-- Breadcrumbs configuration
+local breadcrumbs_config = {
+    enabled_top = true,
+    enabled_bottom = false,
+    cache_timeout = 100, -- ms
+    debounce_timeout = 50, -- ms
+}
 
-local status_theme_ok, theme = pcall(require, "lualine.themes." .. lualine_scheme)
-if not status_theme_ok then
-    return
-end
-
--- local navic = require("nvim-navic")
+-- Breadcrumbs cache and debounce state
+local breadcrumbs_cache = {
+    last_update = 0,
+    last_result = '',
+    last_bufnr = -1,
+    last_cursor_line = -1,
+    debounce_timer = nil,
+}
 
 -- check if value in table
 local function contains(t, value)
@@ -303,6 +310,236 @@ local location = {
     padding = 0,
 }
 
+-- Create optimized breadcrumbs function with caching and debouncing
+local function get_breadcrumbs()
+    local current_time = vim.loop.hrtime() / 1000000 -- Convert to milliseconds
+    local bufnr = vim.api.nvim_get_current_buf()
+    local cursor_line = vim.api.nvim_win_get_cursor(0)[1]
+    
+    -- Check if we can use cached result
+    if breadcrumbs_cache.last_bufnr == bufnr and
+       breadcrumbs_cache.last_cursor_line == cursor_line and
+       (current_time - breadcrumbs_cache.last_update) < breadcrumbs_config.cache_timeout then
+        return breadcrumbs_cache.last_result
+    end
+    
+    -- Clear existing debounce timer
+    if breadcrumbs_cache.debounce_timer then
+        vim.loop.timer_stop(breadcrumbs_cache.debounce_timer)
+        vim.loop.timer_close(breadcrumbs_cache.debounce_timer)
+        breadcrumbs_cache.debounce_timer = nil
+    end
+    
+    -- Use cached result during debounce period
+    if (current_time - breadcrumbs_cache.last_update) < breadcrumbs_config.debounce_timeout then
+        return breadcrumbs_cache.last_result
+    end
+    
+    local function update_breadcrumbs()
+        local ok, ts_utils = pcall(require, 'nvim-treesitter.ts_utils')
+        if not ok then 
+            breadcrumbs_cache.last_result = ''
+            return breadcrumbs_cache.last_result
+        end
+        
+        local node = ts_utils.get_node_at_cursor()
+        if not node then 
+            breadcrumbs_cache.last_result = ''
+            return breadcrumbs_cache.last_result
+        end
+        
+        local current_node_type = node:type()
+        
+        -- Define node types for different languages
+        local class_types = {
+            'class_declaration', 'class_definition', 'impl_item', 'struct_item',
+            'interface_declaration', 'trait_item', 'enum_item', 'type_item'
+        }
+        
+        local function_types = {
+            'function_item', 'function_definition', 'function_declaration',
+            'method_definition', 'method_declaration', 'arrow_function'
+        }
+        
+        -- Walk up the tree to collect hierarchy
+        local current = node:parent()
+        local class_name = nil
+        local function_name = nil
+        
+        while current do
+            local type = current:type()
+            
+            -- Look for class/struct/impl
+            if not class_name then
+                for _, class_type in ipairs(class_types) do
+                    if type == class_type then
+                        local name_node = current:field('name')[1] or 
+                                         current:field('type')[1] or
+                                         current:field('identifier')[1]
+                        if name_node then
+                            class_name = vim.treesitter.get_node_text(name_node, 0)
+                            break
+                        end
+                    end
+                end
+            end
+            
+            -- Look for function/method
+            if not function_name then
+                for _, func_type in ipairs(function_types) do
+                    if type == func_type then
+                        local name_node = current:field('name')[1] or 
+                                         current:field('identifier')[1]
+                        if name_node then
+                            function_name = vim.treesitter.get_node_text(name_node, 0)
+                            break
+                        end
+                    end
+                end
+            end
+            
+            current = current:parent()
+        end
+        
+        -- Build breadcrumb string
+        local parts = {}
+        if class_name then
+            table.insert(parts, class_name)
+        end
+        if function_name then
+            table.insert(parts, function_name)
+        end
+        -- Always show current node type (useful for debugging and context)
+        table.insert(parts, current_node_type)
+        
+        local result = ''
+        if #parts > 0 then
+            result = ' → ' .. table.concat(parts, ' → ')
+        end
+        
+        -- Update cache
+        breadcrumbs_cache.last_result = result
+        breadcrumbs_cache.last_update = current_time
+        breadcrumbs_cache.last_bufnr = bufnr
+        breadcrumbs_cache.last_cursor_line = cursor_line
+        
+        return result
+    end
+    
+    -- Set up debounce timer
+    breadcrumbs_cache.debounce_timer = vim.loop.new_timer()
+    breadcrumbs_cache.debounce_timer:start(breadcrumbs_config.debounce_timeout, 0, vim.schedule_wrap(function()
+        update_breadcrumbs()
+        vim.cmd('redrawstatus')
+    end))
+    
+    -- Return cached result or compute immediately if cache is stale
+    if breadcrumbs_cache.last_result == '' or 
+       breadcrumbs_cache.last_bufnr ~= bufnr then
+        return update_breadcrumbs()
+    end
+    
+    return breadcrumbs_cache.last_result
+end
+
+-- Breadcrumbs component factory
+local function create_breadcrumbs_component()
+    return {
+        function()
+            return get_breadcrumbs()
+        end,
+        cond = function() 
+            return vim.bo.filetype ~= 'help' and 
+                   vim.bo.filetype ~= 'alpha' and 
+                   vim.bo.filetype ~= '' and
+                   vim.bo.filetype ~= 'NvimTree' and
+                   vim.bo.filetype ~= 'terminal'
+        end
+    }
+end
+
+-- Toggle functions for breadcrumbs
+local function toggle_breadcrumbs_top()
+    breadcrumbs_config.enabled_top = not breadcrumbs_config.enabled_top
+    -- Clear cache to force refresh
+    breadcrumbs_cache.last_update = 0
+    breadcrumbs_cache.last_result = ''
+    
+    -- Update lualine configuration
+    local config = require('lualine').get_config()
+    if breadcrumbs_config.enabled_top then
+        config.winbar.lualine_c = { 
+            {
+                'filename',
+                path = 1,  -- Show relative path
+            },
+            create_breadcrumbs_component()
+        }
+    else
+        config.winbar.lualine_c = { 
+            {
+                'filename',
+                path = 1,  -- Show relative path
+            }
+        }
+    end
+    
+    require('lualine').setup(config)
+    print("Breadcrumbs top: " .. (breadcrumbs_config.enabled_top and "enabled" or "disabled"))
+end
+
+local function toggle_breadcrumbs_bottom()
+    breadcrumbs_config.enabled_bottom = not breadcrumbs_config.enabled_bottom
+    -- Clear cache to force refresh
+    breadcrumbs_cache.last_update = 0
+    breadcrumbs_cache.last_result = ''
+    
+    -- Update lualine configuration
+    local config = require('lualine').get_config()
+    if breadcrumbs_config.enabled_bottom then
+        config.sections.lualine_c = { 
+            {
+                'filename',
+                path = 3,  -- Show absolute path
+            },
+            create_breadcrumbs_component()
+        }
+    else
+        config.sections.lualine_c = { 
+            {
+                'filename',
+                path = 3,  -- Show absolute path
+            }
+        }
+    end
+    
+    require('lualine').setup(config)
+    print("Breadcrumbs bottom: " .. (breadcrumbs_config.enabled_bottom and "enabled" or "disabled"))
+end
+
+-- Create user commands
+vim.api.nvim_create_user_command('BreadcrumbsToggleTop', toggle_breadcrumbs_top, {})
+vim.api.nvim_create_user_command('BreadcrumbsToggleBottom', toggle_breadcrumbs_bottom, {})
+vim.api.nvim_create_user_command('BreadcrumbsToggleBoth', function()
+    toggle_breadcrumbs_top()
+    toggle_breadcrumbs_bottom()
+end, {})
+
+-- Expose functions for external use
+M.toggle_breadcrumbs_top = toggle_breadcrumbs_top
+M.toggle_breadcrumbs_bottom = toggle_breadcrumbs_bottom
+M.breadcrumbs_config = breadcrumbs_config
+
+local lualine_scheme = "auto"
+-- local lualine_scheme = "onedarker_alt"
+
+local status_theme_ok, theme = pcall(require, "lualine.themes." .. lualine_scheme)
+if not status_theme_ok then
+    return
+end
+
+-- local navic = require("nvim-navic")
+
 -- Create custom theme for Cursor Dark
 local function create_cursor_dark_theme()
     local cursor_colors = require("user.themes.init").get_colors()
@@ -369,7 +606,9 @@ lualine.setup {
             {
                 'filename',
                 path = 3,  -- Show absolute path
-            }
+            },
+            -- Bottom breadcrumbs (initially disabled)
+            breadcrumbs_config.enabled_bottom and create_breadcrumbs_component() or nil
         },
         -- lualine_x = { diff, spaces, "encoding", filetype },
         -- lualine_x = { diff, lanuage_server, spaces, filetype },
@@ -404,90 +643,8 @@ lualine.setup {
                 'filename',
                 path = 1,  -- Show relative path
             },
-            {
-                function()
-                    -- Hierarchical breadcrumb: class → function → current_node
-                    local ok, ts_utils = pcall(require, 'nvim-treesitter.ts_utils')
-                    if not ok then return '' end
-                    
-                    local node = ts_utils.get_node_at_cursor()
-                    if not node then return '' end
-                    
-                    local breadcrumbs = {}
-                    local current_node_type = node:type()
-                    
-                    -- Define node types for different languages
-                    local class_types = {
-                        'class_declaration', 'class_definition', 'impl_item', 'struct_item',
-                        'interface_declaration', 'trait_item', 'enum_item', 'type_item'
-                    }
-                    
-                    local function_types = {
-                        'function_item', 'function_definition', 'function_declaration',
-                        'method_definition', 'method_declaration', 'arrow_function'
-                    }
-                    
-                    -- Walk up the tree to collect hierarchy
-                    local current = node:parent()
-                    local class_name = nil
-                    local function_name = nil
-                    
-                    while current do
-                        local type = current:type()
-                        
-                        -- Look for class/struct/impl
-                        if not class_name then
-                            for _, class_type in ipairs(class_types) do
-                                if type == class_type then
-                                    local name_node = current:field('name')[1] or 
-                                                     current:field('type')[1] or
-                                                     current:field('identifier')[1]
-                                    if name_node then
-                                        class_name = vim.treesitter.get_node_text(name_node, 0)
-                                        break
-                                    end
-                                end
-                            end
-                        end
-                        
-                        -- Look for function/method
-                        if not function_name then
-                            for _, func_type in ipairs(function_types) do
-                                if type == func_type then
-                                    local name_node = current:field('name')[1] or 
-                                                     current:field('identifier')[1]
-                                    if name_node then
-                                        function_name = vim.treesitter.get_node_text(name_node, 0)
-                                        break
-                                    end
-                                end
-                            end
-                        end
-                        
-                        current = current:parent()
-                    end
-                    
-                    -- Build breadcrumb string
-                    local parts = {}
-                    if class_name then
-                        table.insert(parts, class_name)
-                    end
-                    if function_name then
-                        table.insert(parts, function_name)
-                    end
-                    -- Always show current node type (useful for debugging and context)
-                    table.insert(parts, current_node_type)
-                    
-                    if #parts > 0 then
-                        return ' → ' .. table.concat(parts, ' → ')
-                    end
-                    
-                    return ''
-                end,
-                cond = function() 
-                    return vim.bo.filetype ~= 'help' and vim.bo.filetype ~= 'alpha' and vim.bo.filetype ~= ''
-                end
-            }
+            -- Top breadcrumbs (initially enabled)
+            breadcrumbs_config.enabled_top and create_breadcrumbs_component() or nil
         },
         lualine_x = {},
         lualine_y = {},
@@ -512,3 +669,5 @@ lualine.setup {
     tabline = {},
     extensions = {},
 }
+
+return M
