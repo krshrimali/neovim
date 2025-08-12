@@ -3,6 +3,9 @@
 
 local M = {}
 
+-- Explicitly set the path to code-minimap binary
+vim.g.minimap_exec_path = '/usr/local/cargo/bin/code-minimap'
+
 -- Minimap configuration
 vim.g.minimap_width = 10
 vim.g.minimap_auto_start = 0  -- Don't start automatically
@@ -115,10 +118,56 @@ vim.api.nvim_create_autocmd({ "BufWritePost", "TextChanged", "TextChangedI" }, {
   end,
 })
 
+-- Function to verify code-minimap is available
+function M.verify_binary()
+  local binary_path = vim.g.minimap_exec_path or 'code-minimap'
+  local handle = io.popen('which ' .. binary_path .. ' 2>/dev/null')
+  local result = handle:read("*a")
+  handle:close()
+  
+  if result and result:match("%S") then
+    vim.notify("✓ code-minimap found at: " .. result:gsub("\n", ""), vim.log.levels.INFO)
+    return true
+  else
+    vim.notify("✗ code-minimap not found. Please run: cargo install --locked code-minimap", vim.log.levels.WARN)
+    return false
+  end
+end
+
 -- Setup function
 function M.setup()
-  -- Additional setup can go here if needed
+  -- Verify binary is available
+  M.verify_binary()
+  
   vim.notify("Minimap configuration loaded", vim.log.levels.INFO)
 end
+
+-- Create a command to test minimap functionality
+vim.api.nvim_create_user_command('MinimapTest', function()
+  print("Testing minimap setup...")
+  print("PATH: " .. (vim.env.PATH or ""))
+  print("minimap_exec_path: " .. (vim.g.minimap_exec_path or "not set"))
+  
+  -- Test if we can find code-minimap
+  local result = vim.fn.system("which code-minimap 2>/dev/null")
+  if result and result:match("%S") then
+    print("✓ code-minimap found at: " .. result:gsub("\n", ""))
+    
+    -- Test version
+    local version = vim.fn.system("code-minimap --version 2>/dev/null")
+    if version and version:match("%S") then
+      print("✓ Version: " .. version:gsub("\n", ""))
+    end
+  else
+    print("✗ code-minimap not found in PATH")
+    print("Trying explicit path...")
+    local explicit_result = vim.fn.system("/usr/local/cargo/bin/code-minimap --version 2>/dev/null")
+    if explicit_result and explicit_result:match("%S") then
+      print("✓ Found at explicit path: " .. explicit_result:gsub("\n", ""))
+    else
+      print("✗ Not found at explicit path either")
+    end
+  end
+end, {})
 
 return M
