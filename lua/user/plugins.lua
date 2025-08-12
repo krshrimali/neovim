@@ -623,4 +623,18 @@ require("lazy").setup {
         end,
     },
 
+    -- Minimap - VSCode-like minimap functionality - LAZY LOAD
+    {
+        "wfxr/minimap.vim",
+        cmd = { "Minimap", "MinimapClose", "MinimapToggle", "MinimapRefresh", "MinimapUpdateHighlight" },
+        keys = {
+            { "<leader>mm", "<cmd>MinimapToggle<cr>", desc = "Toggle Minimap" },
+            { "<leader>mr", "<cmd>MinimapRefresh<cr>", desc = "Refresh Minimap" },
+        },
+        build = "cargo install --locked code-minimap",
+        config = function()
+            require("user.minimap")
+        end,
+    },
+
 }
