@@ -48,6 +48,12 @@ require "user.buffer_navigation"
 -- Setup COC virtual lines
 require("user.coc_virtual_lines").setup()
 
+-- Setup virtualenv synchronization
+require("user.virtualenv_sync").setup({
+  debug = false,
+  poll_interval = 2000
+})
+
 -- fzf-lua is now loaded via lazy.nvim
 
 -- Setup buffer browser (lazy loaded on keymap)

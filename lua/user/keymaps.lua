@@ -300,4 +300,10 @@ keymap("n", "<leader>dt", "<cmd>lua require('user.diagnostics_display').test_lin
 keymap("n", "<leader>gg", "<cmd>lua require('user.terminal').lazygit_float()<cr>", opts)
 keymap("n", "<leader>gt", "<cmd>lua require('user.terminal').lazygit_tab()<cr>", opts)
 
+-- Virtual Environment keymaps
+keymap("n", "<leader>vp", "<cmd>lua require('user.virtualenv_sync').pick_virtualenv()<cr>", opts)
+keymap("n", "<leader>vi", "<cmd>VirtualEnvInfo<cr>", opts)
+keymap("n", "<leader>vs", "<cmd>VirtualEnvSync<cr>", opts)
+keymap("n", "<leader>vm", "<cmd>VirtualEnvToggleMonitoring<cr>", opts)
+
 return M
