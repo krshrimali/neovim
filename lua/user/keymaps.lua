@@ -300,4 +300,11 @@ keymap("n", "<leader>dt", "<cmd>lua require('user.diagnostics_display').test_lin
 keymap("n", "<leader>gg", "<cmd>lua require('user.terminal').lazygit_float()<cr>", opts)
 keymap("n", "<leader>gt", "<cmd>lua require('user.terminal').lazygit_tab()<cr>", opts)
 
+-- Minimap keymaps (VSCode-like minimap)
+keymap("n", "<leader>mm", "<cmd>lua require('user.minimap').smart_toggle()<cr>", opts)
+keymap("n", "<leader>mr", "<cmd>MinimapRefresh<cr>", opts)
+keymap("n", "<leader>mc", "<cmd>MinimapClose<cr>", opts)
+-- Alternative keybinding similar to VSCode's Ctrl+Shift+M (using Ctrl+M since Shift is hard to detect)
+keymap("n", "<C-m>", "<cmd>lua require('user.minimap').smart_toggle()<cr>", opts)
+
 return M
