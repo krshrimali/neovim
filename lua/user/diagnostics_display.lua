@@ -76,7 +76,14 @@ local function debug_coc_diagnostics()
     print("First diagnostic structure:")
     print(vim.inspect(diagnostics[1]))
     
-    local cursor_pos = vim.api.nvim_win_get_cursor(0)
+    -- Check if current window is valid before getting cursor position
+    local current_win = vim.api.nvim_get_current_win()
+    if not vim.api.nvim_win_is_valid(current_win) then
+      print("Current window is not valid")
+      return {}
+    end
+    
+    local cursor_pos = vim.api.nvim_win_get_cursor(current_win)
     local current_line_1based = cursor_pos[1]
     local current_line_0based = cursor_pos[1] - 1
     print("Current cursor position (1-based):", current_line_1based)
@@ -151,7 +158,13 @@ local function get_coc_line_diagnostics()
     return {}
   end
   
-  local cursor_pos = vim.api.nvim_win_get_cursor(0)
+  -- Check if current window is valid before getting cursor position
+  local current_win = vim.api.nvim_get_current_win()
+  if not vim.api.nvim_win_is_valid(current_win) then
+    return {}
+  end
+  
+  local cursor_pos = vim.api.nvim_win_get_cursor(current_win)
   local current_line_1based = cursor_pos[1]
   local current_line_0based = cursor_pos[1] - 1
   
@@ -383,6 +396,11 @@ local function show_diagnostic_buffer(diagnostics, title, show_line_info)
   
   -- Helper function to navigate to diagnostic
   local function navigate_to_diagnostic()
+    -- Check if window is still valid
+    if not vim.api.nvim_win_is_valid(win) then
+      return
+    end
+    
     local cursor_line = vim.api.nvim_win_get_cursor(win)[1]
     local diagnostic = diagnostic_map[cursor_line]
     
@@ -463,7 +481,14 @@ function M.test_line_numbers()
     return
   end
   
-  local cursor_pos = vim.api.nvim_win_get_cursor(0)
+  -- Check if current window is valid before getting cursor position
+  local current_win = vim.api.nvim_get_current_win()
+  if not vim.api.nvim_win_is_valid(current_win) then
+    print("Current window is not valid")
+    return
+  end
+  
+  local cursor_pos = vim.api.nvim_win_get_cursor(current_win)
   local current_line_1based = cursor_pos[1]
   local current_line_0based = cursor_pos[1] - 1
   
