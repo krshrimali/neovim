@@ -750,6 +750,12 @@ local function show_context_menu()
     vim.api.nvim_buf_set_lines(menu_buf, 0, -1, false, menu_items)
     vim.api.nvim_buf_set_option(menu_buf, 'modifiable', false)
     vim.api.nvim_buf_set_option(menu_buf, 'buftype', 'nofile')
+    
+    -- Validate tree window before getting cursor
+    if not tree_win or not vim.api.nvim_win_is_valid(tree_win) then
+        return
+    end
+    
     local cursor = vim.api.nvim_win_get_cursor(tree_win)
     local width = 25
     local height = #menu_items
@@ -785,6 +791,7 @@ local function show_context_menu()
         end
     end
     local function execute_action()
+        if not vim.api.nvim_win_is_valid(menu_win) then return end
         local menu_cursor = vim.api.nvim_win_get_cursor(menu_win)
         local selected_idx = menu_cursor[1]
         local action = menu_actions[selected_idx]
@@ -792,6 +799,7 @@ local function show_context_menu()
         if action then action() end
     end
     local function move_to_next_valid_item(direction)
+        if not vim.api.nvim_win_is_valid(menu_win) then return end
         local menu_cursor = vim.api.nvim_win_get_cursor(menu_win)
         local current_idx = menu_cursor[1]
         local next_idx = current_idx
