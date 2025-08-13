@@ -33,10 +33,6 @@ local function configure_terminal_buffer(buf)
   local success = true
   
   success = success and pcall(function()
-    vim.api.nvim_buf_set_option(buf, "buftype", "terminal")
-  end)
-  
-  success = success and pcall(function()
     vim.api.nvim_buf_set_option(buf, "modifiable", true)
   end)
   
