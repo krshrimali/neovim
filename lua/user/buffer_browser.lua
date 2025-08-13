@@ -99,6 +99,7 @@ M.open_buffer_browser = function()
   
   -- Select buffer with Enter
   vim.keymap.set("n", "<CR>", function()
+    if not vim.api.nvim_win_is_valid(win) then return end
     local line = vim.api.nvim_win_get_cursor(win)[1]
     if line > 2 and line <= #buffers + 2 then
       local buffer = buffers[line - 2]
@@ -109,6 +110,7 @@ M.open_buffer_browser = function()
   
   -- Delete buffer with 'd'
   vim.keymap.set("n", "d", function()
+    if not vim.api.nvim_win_is_valid(win) then return end
     local line = vim.api.nvim_win_get_cursor(win)[1]
     if line > 2 and line <= #buffers + 2 then
       local buffer = buffers[line - 2]
@@ -121,6 +123,7 @@ M.open_buffer_browser = function()
   
   -- Split horizontally with 's'
   vim.keymap.set("n", "s", function()
+    if not vim.api.nvim_win_is_valid(win) then return end
     local line = vim.api.nvim_win_get_cursor(win)[1]
     if line > 2 and line <= #buffers + 2 then
       local buffer = buffers[line - 2]
@@ -132,6 +135,7 @@ M.open_buffer_browser = function()
   
   -- Split vertically with 'v'
   vim.keymap.set("n", "v", function()
+    if not vim.api.nvim_win_is_valid(win) then return end
     local line = vim.api.nvim_win_get_cursor(win)[1]
     if line > 2 and line <= #buffers + 2 then
       local buffer = buffers[line - 2]
@@ -292,6 +296,7 @@ M.toggle_sidebar = function()
   
   -- Select buffer with Enter
   vim.keymap.set("n", "<CR>", function()
+    if not vim.api.nvim_win_is_valid(win) then return end
     local line = vim.api.nvim_win_get_cursor(win)[1]
     if line > 5 and line <= #M._sidebar_state.buffers + 5 then
       local buffer = M._sidebar_state.buffers[line - 5]
@@ -305,6 +310,7 @@ M.toggle_sidebar = function()
   
   -- Delete buffer with 'd'
   vim.keymap.set("n", "d", function()
+    if not vim.api.nvim_win_is_valid(win) then return end
     local line = vim.api.nvim_win_get_cursor(win)[1]
     if line > 5 and line <= #M._sidebar_state.buffers + 5 then
       local buffer = M._sidebar_state.buffers[line - 5]
