@@ -65,6 +65,12 @@ local function show_virtual_lines(bufnr)
   end
   
   bufnr = bufnr or vim.api.nvim_get_current_buf()
+  
+  -- Check if buffer is valid
+  if not vim.api.nvim_buf_is_valid(bufnr) then
+    return
+  end
+  
   clear_virtual_lines(bufnr)
   
   local diagnostics = get_coc_diagnostics()
@@ -86,7 +92,13 @@ local function show_virtual_lines(bufnr)
   
   -- If current_line_only is enabled, filter to current line
   if config.current_line_only then
-    local cursor_line = vim.api.nvim_win_get_cursor(0)[1] - 1
+    -- Check if current window is valid before getting cursor position
+    local current_win = vim.api.nvim_get_current_win()
+    if not vim.api.nvim_win_is_valid(current_win) then
+      return
+    end
+    
+    local cursor_line = vim.api.nvim_win_get_cursor(current_win)[1] - 1
     local temp = {}
     if diagnostics_by_line[cursor_line] then
       temp[cursor_line] = diagnostics_by_line[cursor_line]

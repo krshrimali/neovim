@@ -420,7 +420,13 @@ lualine.setup {
                         node = ts_utils.get_node_at_cursor()
                     else
                         -- Use newer API if available
-                        local cursor = vim.api.nvim_win_get_cursor(0)
+                        -- Check if current window is valid before getting cursor position
+                        local current_win = vim.api.nvim_get_current_win()
+                        if not vim.api.nvim_win_is_valid(current_win) then
+                            return ''
+                        end
+                        
+                        local cursor = vim.api.nvim_win_get_cursor(current_win)
                         local row, col = cursor[1] - 1, cursor[2]
                         local ok_parser, parser = pcall(vim.treesitter.get_parser, 0)
                         if not ok_parser or not parser then return '' end
