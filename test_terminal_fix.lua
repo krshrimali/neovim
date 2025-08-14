@@ -1,6 +1,8 @@
 -- Test script to verify terminal fix
 -- This script tests the horizontal terminal creation to ensure no treesitter errors
 
+require("user.terminal")
+
 print("Testing horizontal terminal creation...")
 
 -- Simulate the terminal creation process
@@ -8,16 +10,18 @@ local function test_horizontal_terminal()
   -- Create a split
   vim.cmd("split")
   
-  -- Get the buffer
-  local buf = vim.api.nvim_get_current_buf()
+  -- Create a scratch buffer and set it in the split (matches implementation)
+  local buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_set_current_buf(buf)
   
-  -- Set buffer options (like in our fix)
-  vim.api.nvim_buf_set_option(buf, "buftype", "terminal")
-  vim.api.nvim_buf_set_option(buf, "modifiable", true)
-  vim.api.nvim_buf_set_option(buf, "swapfile", false)
+  -- Configure buffer safely using helper
+  local ok = configure_terminal_buffer(buf)
+  if not ok then
+    error("configure_terminal_buffer failed")
+  end
   
-  -- Disable syntax highlighting
-  vim.api.nvim_buf_set_option(buf, "syntax", "")
+  -- Disable treesitter/syntax safely using helper
+  disable_treesitter_for_terminal(buf)
   
   print("Buffer configured as terminal type")
   print("Treesitter highlighting disabled")

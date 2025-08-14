@@ -1,4 +1,5 @@
 -- Test script to verify terminal safety functions
+require("user.terminal")
 print("Testing terminal safety functions...")
 
 -- Test the configure_terminal_buffer function
