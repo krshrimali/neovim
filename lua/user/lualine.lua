@@ -114,7 +114,7 @@ local filetype = {
 local branch = {
     "branch",
     icons_enabled = false,
-    icon = " " .. "%*",
+    icon = " G: " .. "%*",
     -- color = "Constant",
     -- colored = false,
     padding = 1,
@@ -137,6 +137,14 @@ local progress = {
     end,
     -- color = "SLProgress",
     padding = 0,
+}
+
+local name = {
+    "name",
+    fmt = function(str)
+        return hl_str(" " .. "Kush" .. " ")
+    end,
+    padding = 0
 }
 
 -- local current_signature = {
@@ -365,6 +373,20 @@ lualine.setup {
         --     return
         --         require('lspsaga.symbol.winbar').get_bar() ~= nil
         -- end } },
+        -- lualine_a = {},
+        -- lualine_b = {},
+        lualine_a = {
+            -- Show current time in IST:
+            {
+                function()
+                    -- Show AM and PM along with date:
+                    return "IIWII | KRS | " .. os.date("IND: %Y%m%d %H:%M:%S %p")
+                end,
+                padding = 1,
+                sep = ' | ',
+            },
+        },
+        lualine_b = { branch },
         lualine_c = {
             {
                 'filename',
@@ -689,17 +711,7 @@ lualine.setup {
         -- lualine_x = { lanuage_server, spaces, filetype },
         -- lualine_x = { lanuage_server, spaces, filetype },
         -- lualine_x = { lanuage_server, spaces },
-        lualine_x = { language_server },
-        lualine_y = {
-            -- Show current time in IST:
-            {
-                function()
-                    -- Show AM and PM along with date:
-                    return os.date("IND: %d%m%Y %H:%M:%S %p")
-                end,
-                padding = 1,
-                sep = ' | ',
-            },
+        lualine_x = {
             -- And show current time in NYC:
             {
                 function()
@@ -750,25 +762,15 @@ lualine.setup {
                             nyc_offset = UTC_OFFSET_NYC_DST
                         end
 
-                        local nyc_time = os.date("%Y%m%d %H:%M %p", utc_now + nyc_offset)
+                        local nyc_time = os.date("NYC: %Y%m%d %H:%M %p", utc_now + nyc_offset)
                         return nyc_time
                     end
                     return get_nyc_time()
                 end,
                 padding = 1,
             },
-            -- "buffers",
-            -- show_filename_only = true,
-            -- show_modified_status = true,
-
-            -- mode = 0,
-            -- max_length = vim.o.columns * 2 / 3,
-
-            -- buffer_color = {
-            --   active = "lualine_x_normal",
-            --   inactive = "lualine_x_inactive",
-            -- },
         },
+        lualine_y = { lanuage_server },
         -- {
         --   "filename",
         --   file_status = true,
