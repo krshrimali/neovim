@@ -274,7 +274,7 @@ local lanuage_server = {
         local language_servers = ""
         local client_names_str_len = #client_names_str
         if client_names_str_len ~= 0 then
-            language_servers = hl_str "" .. hl_str(client_names_str) .. hl_str ""
+            language_servers = hl_str ">" .. hl_str(client_names_str) .. hl_str "<"
         end
         if copilot_active then
             language_servers = language_servers .. " " .. "C" .. "%*"
@@ -560,9 +560,9 @@ lualine.setup {
                                 -- Match patterns like "local var_name =" or "var_name ="
                                 local var_name = full_text:match('local%s+([%w_]+)%s*=') or
                                     full_text:match('^%s*([%w_]+)%s*=') or
-                                    full_text:match('([%w_]+)%s*:') or             -- Python/JS object patterns
-                                    full_text:match('([%w_]+)%s*%[') or            -- Array/table patterns
-                                    full_text:match('([%w_]+)%s*%(')               -- Function call patterns
+                                    full_text:match('([%w_]+)%s*:') or  -- Python/JS object patterns
+                                    full_text:match('([%w_]+)%s*%[') or -- Array/table patterns
+                                    full_text:match('([%w_]+)%s*%(')    -- Function call patterns
 
                                 if var_name and var_name ~= '' then
                                     return var_name
@@ -688,8 +688,75 @@ lualine.setup {
         -- lualine_x = { diff, lanuage_server, spaces, filetype },
         -- lualine_x = { lanuage_server, spaces, filetype },
         -- lualine_x = { lanuage_server, spaces, filetype },
-        lualine_x = { lanuage_server, spaces },
+        -- lualine_x = { lanuage_server, spaces },
+        lualine_x = { language_server },
         lualine_y = {
+            -- Show current time in IST:
+            {
+                function()
+                    -- Show AM and PM along with date:
+                    return os.date("IND: %d%m%Y %H:%M:%S %p")
+                end,
+                padding = 1,
+                sep = ' | ',
+            },
+            -- And show current time in NYC:
+            {
+                function()
+                    -- Function to get the time difference between local time and UTC in seconds
+                    local function get_local_utc_offset()
+                        local now = os.time()
+                        local local_time = os.date("*t", now)
+                        local utc_time = os.date("!*t", now)
+                        local offset = os.difftime(os.time(local_time), os.time(utc_time))
+                        return offset
+                    end
+
+                    -- Function to get current NYC time as a string
+                    local function get_nyc_time()
+                        local UTC_OFFSET_NYC_STANDARD = -5 * 3600 -- UTC-5 in seconds
+                        local UTC_OFFSET_NYC_DST = -4 * 3600      -- UTC-4 in seconds during daylight saving
+
+                        -- Get current UTC time
+                        local utc_now = os.time(os.date("!*t"))
+
+                        -- Very basic DST check:
+                        -- DST in NYC starts second Sunday in March and ends first Sunday in November
+                        local date_table = os.date("*t", utc_now - UTC_OFFSET_NYC_STANDARD)
+                        local year = date_table.year
+
+                        -- Calculate second Sunday in March
+                        local function second_sunday_of_march(y)
+                            local d = os.time { year = y, month = 3, day = 1, hour = 0 }
+                            local w = os.date("*t", d).wday
+                            local offset = (7 - w + 1) + 7 -- days until second Sunday
+                            return d + offset * 24 * 3600
+                        end
+
+                        -- Calculate first Sunday in November
+                        local function first_sunday_of_november(y)
+                            local d = os.time { year = y, month = 11, day = 1, hour = 0 }
+                            local w = os.date("*t", d).wday
+                            local offset = (7 - w + 1) -- days until first Sunday
+                            return d + offset * 24 * 3600
+                        end
+
+                        local second_sunday_march = second_sunday_of_march(year)
+                        local first_sunday_november = first_sunday_of_november(year)
+
+                        -- Decide if DST is in effect for NYC
+                        local nyc_offset = UTC_OFFSET_NYC_STANDARD
+                        if utc_now >= second_sunday_march and utc_now < first_sunday_november then
+                            nyc_offset = UTC_OFFSET_NYC_DST
+                        end
+
+                        local nyc_time = os.date("%Y%m%d %H:%M %p", utc_now + nyc_offset)
+                        return nyc_time
+                    end
+                    return get_nyc_time()
+                end,
+                padding = 1,
+            },
             -- "buffers",
             -- show_filename_only = true,
             -- show_modified_status = true,
