@@ -496,19 +496,36 @@ lualine.setup {
                         return '' 
                     end
                     
-                    -- Define node types for different languages
+                    -- Define node types for different languages (comprehensive and language-agnostic)
                     local structural_types = {
-                        -- Classes and similar
+                        -- Classes and similar structures
                         'class_declaration', 'class_definition', 'impl_item', 'struct_item',
                         'interface_declaration', 'trait_item', 'enum_item', 'type_item',
                         'class_body', 'impl_block', 'namespace_definition', 'module_definition',
+                        'object_definition', 'type_declaration', 'type_definition',
+                        
                         -- Functions and methods
                         'function_item', 'function_definition', 'function_declaration',
                         'method_definition', 'method_declaration', 'arrow_function',
-                        'function_expression', 'method_item',
+                        'function_expression', 'method_item', 'lambda', 'closure',
+                        'anonymous_function', 'function_call', 'call_expression',
+                        
+                        -- Variable assignments and declarations
+                        'variable_declaration', 'variable_declarator', 'local_variable_declaration',
+                        'assignment_statement', 'assignment_expression', 'local_declaration',
+                        'let_declaration', 'const_declaration', 'var_declaration',
+                        'field_declaration', 'property_declaration', 'attribute_statement',
+                        'assignment', 'local_assignment', 'global_assignment',
+                        
                         -- Control structures that create scope
                         'if_statement', 'for_statement', 'while_statement', 'try_statement',
-                        'with_statement', 'match_expression', 'block_expression'
+                        'with_statement', 'match_expression', 'block_expression',
+                        'for_in_statement', 'for_numeric_statement', 'repeat_statement',
+                        'switch_statement', 'case_statement', 'conditional_expression',
+                        
+                        -- Language-specific constructs
+                        'table_constructor', 'dictionary', 'list_comprehension',
+                        'generator_expression', 'decorator', 'annotation'
                     }
                     
                     -- Helper function to safely get node text
@@ -531,7 +548,10 @@ lualine.setup {
                         if not current then return nil end
                         
                         -- Try different field names based on language
-                        local field_names = {'name', 'identifier', 'type', 'field_identifier', 'function_name'}
+                        local field_names = {
+                            'name', 'identifier', 'type', 'field_identifier', 'function_name',
+                            'variable', 'left', 'target', 'id', 'key', 'property', 'field'
+                        }
                         
                         for _, field_name in ipairs(field_names) do
                             local ok_field, field_nodes = pcall(current.field, current, field_name)
@@ -544,7 +564,9 @@ lualine.setup {
                         local ok_iter, iter = pcall(current.iter_children, current)
                         if ok_iter then
                             for child in iter do
-                                if child:type() == 'identifier' or child:type() == 'name' then
+                                local child_type = child:type()
+                                if child_type == 'identifier' or child_type == 'name' or 
+                                   child_type == 'field_identifier' or child_type == 'property_identifier' then
                                     return child
                                 end
                             end
@@ -555,11 +577,52 @@ lualine.setup {
                     
                     -- Helper function to get a meaningful name from node
                     local function get_meaningful_name(current_node, node_type)
+                        -- First try to get the direct name
                         local name_node = find_name_node(current_node)
                         if name_node then
                             local name = get_node_name(name_node)
                             if name and name ~= '' then
                                 return name
+                            end
+                        end
+                        
+                        -- Handle variable assignments and declarations
+                        if node_type:match('assignment') or node_type:match('declaration') or node_type:match('local_') then
+                            -- Try to extract variable name from assignment patterns
+                            local full_text = get_node_name(current_node)
+                            if full_text then
+                                -- Match patterns like "local var_name =" or "var_name ="
+                                local var_name = full_text:match('local%s+([%w_]+)%s*=') or 
+                                               full_text:match('^%s*([%w_]+)%s*=') or
+                                               full_text:match('([%w_]+)%s*:') or  -- Python/JS object patterns
+                                               full_text:match('([%w_]+)%s*%[') or  -- Array/table patterns
+                                               full_text:match('([%w_]+)%s*%(')     -- Function call patterns
+                                
+                                if var_name and var_name ~= '' then
+                                    return var_name
+                                end
+                            end
+                            
+                            -- Fallback: try to find the first identifier child
+                            local ok_iter, iter = pcall(current_node.iter_children, current_node)
+                            if ok_iter then
+                                for child in iter do
+                                    if child:type() == 'identifier' then
+                                        local child_name = get_node_name(child)
+                                        if child_name and child_name ~= '' then
+                                            return child_name
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                        
+                        -- Handle table constructors and similar structures
+                        if node_type:match('table_') or node_type:match('dictionary') or node_type:match('object_') then
+                            -- Look for the parent assignment to get the variable name
+                            local parent = current_node:parent()
+                            if parent and (parent:type():match('assignment') or parent:type():match('declaration')) then
+                                return get_meaningful_name(parent, parent:type())
                             end
                         end
                         
@@ -575,6 +638,21 @@ lualine.setup {
                             end
                         end
                         
+                        -- For function calls and expressions, try to get the function name
+                        if node_type:match('call') or node_type:match('expression') then
+                            local ok_iter, iter = pcall(current_node.iter_children, current_node)
+                            if ok_iter then
+                                for child in iter do
+                                    if child:type() == 'identifier' or child:type() == 'field_expression' then
+                                        local child_name = get_node_name(child)
+                                        if child_name and child_name ~= '' and not child_name:match('^[%s%p]*$') then
+                                            return child_name
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                        
                         return nil
                     end
                     
@@ -583,6 +661,7 @@ lualine.setup {
                     local breadcrumbs = {}
                     local depth = 0
                     local max_depth = 30  -- Prevent infinite loops
+                    local seen_names = {}  -- Prevent duplicate names
                     
                     while current and depth < max_depth do
                         local node_type = current:type()
@@ -592,9 +671,17 @@ lualine.setup {
                         for _, struct_type in ipairs(structural_types) do
                             if node_type == struct_type then
                                 local meaningful_name = get_meaningful_name(current, node_type)
-                                if meaningful_name then
-                                    -- Insert at the beginning to maintain hierarchy order
-                                    table.insert(breadcrumbs, 1, meaningful_name)
+                                if meaningful_name and not seen_names[meaningful_name] then
+                                    -- Filter out noise and very short/generic names
+                                    if #meaningful_name > 1 and 
+                                       not meaningful_name:match('^[%s%p]*$') and
+                                       not meaningful_name:match('^[%d]+$') and
+                                       meaningful_name ~= 'end' and meaningful_name ~= 'do' then
+                                        
+                                        seen_names[meaningful_name] = true
+                                        -- Insert at the beginning to maintain hierarchy order
+                                        table.insert(breadcrumbs, 1, meaningful_name)
+                                    end
                                     break  -- Only process this node once
                                 end
                             end
