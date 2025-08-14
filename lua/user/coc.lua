@@ -1,10 +1,10 @@
 -- COC.nvim configuration
--- Based on the official documentation and examples
+-- Optimized for faster startup
 
 -- Some servers have issues with backup files, see #649
-vim.opt.backup = false
-vim.opt.writebackup = false
-
+-- vim.opt.backup = false
+-- vim.opt.writebackup = false
+--
 -- Having longer updatetime (default is 4000 ms = 4s) leads to noticeable
 -- delays and poor user experience
 vim.opt.updatetime = 300
@@ -22,37 +22,19 @@ function _G.check_back_space()
 end
 
 -- Use Tab for trigger completion with characters ahead and navigate
--- NOTE: There's always complete item selected by default, you may want to enable
--- no select by `"suggest.noselect": true` in your configuration file
--- NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
--- other plugin before putting this into your config
 local opts = {silent = true, noremap = true, expr = true, replace_keycodes = false}
 keyset("i", "<TAB>", 'coc#pum#visible() ? coc#pum#next(1) : v:lua.check_back_space() ? "<TAB>" : coc#refresh()', opts)
 keyset("i", "<S-TAB>", [[coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"]], opts)
 
--- Debug function to check coc popup status
-local function debug_enter()
-  local pum_visible = vim.fn['coc#pum#visible']()
-  print("PUM visible: " .. pum_visible)
-  if pum_visible == 1 then
-    print("Confirming completion...")
-    return vim.fn['coc#pum#confirm']()
-  else
-    print("No completion, normal Enter")
-    return vim.api.nvim_replace_termcodes('<CR>', true, true, true)
-  end
-end
-
--- Make <CR> to accept selected completion item - with debug
-keyset("i", "<CR>", debug_enter, {silent = false, noremap = true, expr = true})
+-- Simplified Enter mapping for better performance
+keyset("i", "<CR>", 'coc#pum#visible() ? coc#pum#confirm() : "<CR>"', {silent = true, noremap = true, expr = true})
 
 -- Use <c-j> to trigger snippets
-keyset("i", "<c-j>", "<Plug>(coc-snippets-expand-jump)")
+-- keyset("i", "<c-j>", "<Plug>(coc-snippets-expand-jump)")
 -- Use <c-space> to trigger completion
 keyset("i", "<c-space>", "coc#refresh()", {silent = true, expr = true})
 
 -- Use `[g` and `]g` to navigate diagnostics
--- Use `:CocDiagnostics` to get all diagnostics of current buffer in location list
 keyset("n", "[g", "<Plug>(coc-diagnostic-prev)", {silent = true})
 keyset("n", "]g", "<Plug>(coc-diagnostic-next)", {silent = true})
 
@@ -62,26 +44,8 @@ keyset("n", "gy", "<Plug>(coc-type-definition)", {silent = true})
 keyset("n", "gi", "<Plug>(coc-implementation)", {silent = true})
 keyset("n", "gr", "<Plug>(coc-references)", {silent = true})
 
--- Use K to show documentation in preview window
--- Double K to focus on hover popup
-local last_k_time = 0
-local k_timeout = 500000000 -- nanoseconds (500ms)
-
+-- Simplified documentation function
 function _G.show_docs()
-    local current_time = vim.loop.hrtime()
-    local time_diff = current_time - last_k_time
-    
-    if last_k_time ~= 0 and time_diff < k_timeout then
-        -- Double K pressed, try to focus hover popup
-        if vim.fn['coc#float#has_float']() == 1 then
-            vim.fn['coc#float#jump']()
-        end
-        last_k_time = 0 -- Reset to prevent triple K
-        return
-    end
-    
-    last_k_time = current_time
-    
     local cw = vim.fn.expand('<cword>')
     if vim.fn.index({'vim', 'help'}, vim.bo.filetype) >= 0 then
         vim.api.nvim_command('h ' .. cw)
@@ -93,13 +57,32 @@ function _G.show_docs()
 end
 keyset("n", "K", '<CMD>lua _G.show_docs()<CR>', {silent = true})
 
--- Highlight the symbol and its references when holding the cursor
-vim.api.nvim_create_augroup("CocGroup", {})
-vim.api.nvim_create_autocmd("CursorHold", {
-    group = "CocGroup",
-    command = "silent call CocActionAsync('highlight')",
-    desc = "Highlight symbol under cursor on CursorHold"
-})
+-- Defer heavy autocmds to avoid startup delay
+vim.defer_fn(function()
+    -- Highlight the symbol and its references when holding the cursor
+    vim.api.nvim_create_augroup("CocGroup", {})
+    vim.api.nvim_create_autocmd("CursorHold", {
+        group = "CocGroup",
+        command = "silent call CocActionAsync('highlight')",
+        desc = "Highlight symbol under cursor on CursorHold"
+    })
+
+    -- Setup formatexpr specified filetype(s)
+    vim.api.nvim_create_autocmd("FileType", {
+        group = "CocGroup",
+        pattern = "typescript,json",
+        command = "setl formatexpr=CocAction('formatSelected')",
+        desc = "Setup formatexpr specified filetype(s)."
+    })
+
+    -- Update signature help on jump placeholder
+    vim.api.nvim_create_autocmd("User", {
+        group = "CocGroup",
+        pattern = "CocJumpPlaceholder",
+        command = "call CocActionAsync('showSignatureHelp')",
+        desc = "Update signature help on jump placeholder"
+    })
+end, 500)
 
 -- Symbol renaming
 keyset("n", "<leader>rn", "<Plug>(coc-rename)", {silent = true})
@@ -111,33 +94,14 @@ keyset("n", "<leader>lf", "<Plug>(coc-format-selected)", {silent = true})
 -- Format entire buffer
 keyset("n", "<leader>lf", ":Format<CR>", {silent = true})
 
--- Setup formatexpr specified filetype(s)
-vim.api.nvim_create_autocmd("FileType", {
-    group = "CocGroup",
-    pattern = "typescript,json",
-    command = "setl formatexpr=CocAction('formatSelected')",
-    desc = "Setup formatexpr specified filetype(s)."
-})
-
--- Update signature help on jump placeholder
-vim.api.nvim_create_autocmd("User", {
-    group = "CocGroup",
-    pattern = "CocJumpPlaceholder",
-    command = "call CocActionAsync('showSignatureHelp')",
-    desc = "Update signature help on jump placeholder"
-})
-
 -- Apply codeAction to the selected region
--- Example: `<leader>aap` for current paragraph
 local opts = {silent = true, nowait = true}
 keyset("x", "<leader>a", "<Plug>(coc-codeaction-selected)", opts)
 keyset("n", "<leader>a", "<Plug>(coc-codeaction-selected)", opts)
 
 -- Remap keys for apply code actions at the cursor position
 keyset("n", "<leader>ac", "<Plug>(coc-codeaction-cursor)", opts)
--- Remap keys for apply source code actions for current file
 keyset("n", "<leader>as", "<Plug>(coc-codeaction-source)", opts)
--- Apply the most preferred quickfix action on the current line
 keyset("n", "<leader>qf", "<Plug>(coc-fix-current)", opts)
 
 -- Remap keys for apply refactor code actions
@@ -149,7 +113,6 @@ keyset("n", "<leader>r", "<Plug>(coc-codeaction-refactor-selected)", { silent = 
 keyset("n", "<leader>cl", "<Plug>(coc-codelens-action)", opts)
 
 -- Map function and class text objects
--- NOTE: Requires 'textDocument.documentSymbol' support from the language server
 keyset("x", "if", "<Plug>(coc-funcobj-i)", opts)
 keyset("o", "if", "<Plug>(coc-funcobj-i)", opts)
 keyset("x", "af", "<Plug>(coc-funcobj-a)", opts)
@@ -169,7 +132,6 @@ keyset("v", "<C-f>", 'coc#float#has_scroll() ? coc#float#scroll(1) : "<C-f>"', o
 keyset("v", "<C-b>", 'coc#float#has_scroll() ? coc#float#scroll(0) : "<C-b>"', opts)
 
 -- Use CTRL-S for selections ranges
--- Requires 'textDocument/selectionRange' support of language server
 keyset("n", "<C-s>", "<Plug>(coc-range-select)", {silent = true})
 keyset("x", "<C-s>", "<Plug>(coc-range-select)", {silent = true})
 
@@ -183,7 +145,6 @@ vim.api.nvim_create_user_command("Fold", "call CocAction('fold', <f-args>)", {na
 vim.api.nvim_create_user_command("OR", "call CocActionAsync('runCommand', 'editor.action.organizeImport')", {})
 
 -- Mappings for CoCList
--- code actions and coc stuff
 local opts = {silent = true, nowait = true}
 -- Show all diagnostics
 keyset("n", "<space>a", ":<C-u>CocList diagnostics<cr>", opts)
@@ -205,94 +166,63 @@ keyset("n", "<space>p", ":<C-u>CocListResume<cr>", opts)
 -- Show diagnostics for current line
 keyset("n", "<leader>ld", "<cmd>call CocActionAsync('diagnosticInfo')<cr>", {silent = true})
 
--- Debug commands
-vim.api.nvim_create_user_command("CocDebug", function()
-  print("Coc status: " .. (vim.fn.exists(':CocInfo') == 2 and "loaded" or "not loaded"))
-  print("Coc services: " .. vim.inspect(vim.fn.CocAction('services')))
-end, {})
-
-keyset("n", "<leader>lD", "<cmd>CocDebug<cr>", {silent = false})
-
--- Toggle virtual text and virtual lines
--- keyset("n", "<leader>lev", function()
---   -- Get current config via CocAction
---   local current = vim.fn.CocAction('getConfig', 'diagnostic.virtualText')
---   local new_value = not current
---   vim.fn['coc#config']('diagnostic.virtualText', new_value)
---   vim.fn['coc#config']('diagnostic.virtualTextCurrentLineOnly', false)
---   vim.notify('Virtual text: ' .. (new_value and 'enabled' or 'disabled'))
--- end, {silent = true})
---
--- keyset("n", "<leader>leV", function()
---   local current = vim.fn.CocAction('getConfig', 'diagnostic.virtualTextAlign') or 'after'
---   local new_align = current == 'below' and 'after' or 'below'
---   vim.fn['coc#config']('diagnostic.virtualText', true)
---   vim.fn['coc#config']('diagnostic.virtualTextAlign', new_align)
---   vim.notify('Virtual lines: ' .. (new_align == 'below' and 'enabled' or 'disabled'))
--- end, {silent = true})
-
--- Disable diagnostic signs (icons in sign column)
-vim.fn['coc#config']('diagnostic.enableSign', false)
+-- Disable diagnostic signs (icons in sign column) for better performance
+vim.defer_fn(function()
+    vim.fn['coc#config']('diagnostic.enableSign', false)
+end, 100)
 
 -- Configure completion item kinds without nerd font icons
-vim.fn['coc#config']('suggest.completionItemKindLabels', {
-  method = 'Method',
-  ['function'] = 'Function', 
-  constructor = 'Constructor',
-  field = 'Field',
-  variable = 'Variable',
-  class = 'Class',
-  interface = 'Interface',
-  module = 'Module',
-  property = 'Property',
-  unit = 'Unit',
-  value = 'Value',
-  enum = 'Enum',
-  keyword = 'Keyword',
-  snippet = 'Snippet',
-  color = 'Color',
-  file = 'File',
-  reference = 'Reference',
-  folder = 'Folder',
-  enumMember = 'EnumMember',
-  constant = 'Constant',
-  struct = 'Struct',
-  event = 'Event',
-  operator = 'Operator',
-  typeParameter = 'TypeParameter',
-  text = 'Text'
-})
+vim.defer_fn(function()
+    vim.fn['coc#config']('suggest.completionItemKindLabels', {
+        method = 'Method',
+        ['function'] = 'Function', 
+        constructor = 'Constructor',
+        field = 'Field',
+        variable = 'Variable',
+        class = 'Class',
+        interface = 'Interface',
+        module = 'Module',
+        property = 'Property',
+        unit = 'Unit',
+        value = 'Value',
+        enum = 'Enum',
+        keyword = 'Keyword',
+        snippet = 'Snippet',
+        color = 'Color',
+        file = 'File',
+        reference = 'Reference',
+        folder = 'Folder',
+        enumMember = 'EnumMember',
+        constant = 'Constant',
+        struct = 'Struct',
+        event = 'Event',
+        operator = 'Operator',
+        typeParameter = 'TypeParameter',
+        text = 'Text'
+    })
+end, 200)
 
--- Install extensions on first startup
-local coc_extensions = {
-    'coc-json',
-    'coc-tsserver',
-    'coc-pyright', 
-    'coc-rust-analyzer',
-    'coc-lua',
-    'coc-snippets'
-}
+-- Install extensions using the dedicated helper
+require("user.coc_install").install_extensions()
 
-vim.api.nvim_create_autocmd("VimEnter", {
-    callback = function()
-        -- Wait for coc.nvim to be ready before checking extensions
-        vim.defer_fn(function()
-            if vim.fn.exists(':CocInstall') == 2 then
-                -- Check which extensions are missing
-                local missing_extensions = {}
-                for _, ext in ipairs(coc_extensions) do
-                    local ext_path = vim.fn.expand('~/.config/coc/extensions/node_modules/' .. ext)
-                    if vim.fn.isdirectory(ext_path) == 0 then
-                        table.insert(missing_extensions, ext)
-                    end
-                end
-                
-                -- Only install missing extensions
-                if #missing_extensions > 0 then
-                    vim.cmd('silent! wall')
-                    vim.cmd('CocInstall -sync ' .. table.concat(missing_extensions, ' '))
-                end
-            end
-        end, 2000)
-    end
-})
+-- Create user commands for manual extension management
+vim.api.nvim_create_user_command("CocInstallMissing", function()
+    require("user.coc_install").install_missing()
+end, { desc = "Install missing COC extensions" })
+
+vim.api.nvim_create_user_command("CocExtensionStatus", function()
+    require("user.coc_install").check_status()
+end, { desc = "Check COC extension installation status" })
+
+-- Debug commands
+vim.api.nvim_create_user_command("CocDebug", function()
+    require("user.coc_debug").check_coc_status()
+end, { desc = "Debug COC completion issues" })
+
+vim.api.nvim_create_user_command("CocFixCompletion", function()
+    require("user.coc_debug").fix_completion()
+end, { desc = "Attempt to fix COC completion" })
+
+vim.api.nvim_create_user_command("CocTestCompletion", function()
+    require("user.coc_debug").test_completion()
+end, { desc = "Show completion testing instructions" })

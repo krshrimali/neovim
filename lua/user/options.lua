@@ -18,7 +18,7 @@ local options = {
     splitright = true,                       -- force all vertical splits to go to the right of current window
     swapfile = false,                        -- creates a swapfile
     termguicolors = true,                    -- set term gui colors (most terminals support this)
-    timeoutlen = 1000,                       -- time to wait for a mapped sequence to complete (in milliseconds)
+    timeoutlen = 300,                        -- time to wait for a mapped sequence to complete (in milliseconds) - reduced for faster response
     undofile = true,                         -- enable persistent undo
     updatetime = 100,                        -- faster completion (4000ms default)
     writebackup = false,                     -- if a file is being edited by another program (or was written to file while editing with another program), it is not allowed to be edited
@@ -78,7 +78,7 @@ vim.g.use_nerd_fonts = false
 vim.o.foldcolumn = "1" -- '0' is not bad
 vim.o.foldlevel = 99   -- Using ufo provider need a large value, feel free to decrease the value
 vim.o.foldlevelstart = 99
-vim.o.foldenable = true
+vim.o.foldenable = false
 vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
 
 vim.api.nvim_command "highlight VertSplit guifg=fg guibg=bg"
@@ -86,5 +86,5 @@ vim.api.nvim_exec([[
     autocmd FileType c,cpp setlocal shiftwidth=4 tabstop=4 expandtab
 ]], false)
 
-vim.g.tabby_inline_completion_keybinding_accept = "<C-l>"
+vim.g.tabby_inline_completion_keybinding_accept = "<M-y>" -- Disabled to avoid conflict with other keybindings
 vim.opt.foldenable = false

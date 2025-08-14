@@ -17,102 +17,276 @@ vim.g.maplocalleader = ","
 -- Install your plugins here
 require("lazy").setup {
 
-    -- COC.nvim for LSP and completion
-    { 'neoclide/coc.nvim',               branch = 'release' },
+    -- COC.nvim for LSP and completion - LAZY LOAD
+    {
+        'neoclide/coc.nvim',
+        branch = 'release',
+        event = { "BufReadPre", "BufNewFile" }, -- Only load when opening files
+        config = function()
+            -- Defer CoC extension installation to avoid startup delay
+            vim.defer_fn(function()
+                require("user.coc")
+            end, 1000)
+        end
+    },
 
-    -- "ray-x/lsp_signature.nvim",
+    -- Highlight words under cursor - LAZY LOAD
+    {
+        "RRethy/vim-illuminate",
+        event = { "BufReadPost", "BufNewFile" },
+        config = function()
+            require("user.illuminate")
+        end
+    },
 
-    -- Highlight words under cursor
-    "RRethy/vim-illuminate",
+    -- Treesitter - LAZY LOAD
+    {
+        "nvim-treesitter/nvim-treesitter",
+        build = ":TSUpdate",
+        event = { "BufReadPost", "BufNewFile" },
+        config = function()
+            require("user.treesitter")
+        end
+    },
 
-    -- Check if vim.lsp provides this now...
-    -- "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+    -- For commenting (uses Treesitter to comment properly) - LAZY LOAD
+    -- {
+    --     "JoosepAlviste/nvim-ts-context-commentstring",
+    --     dependencies = "nvim-treesitter/nvim-treesitter",
+    --     lazy = false,
+    --     event = { "BufReadPost", "BufNewFile" }
+    -- },
 
-    { "nvim-treesitter/nvim-treesitter",          build = ":TSUpdate" },
-    -- For commenting (uses Treesitter to comment properly)
-    "JoosepAlviste/nvim-ts-context-commentstring",
-
+    -- Git integration - LAZY LOAD
     {
         "NeogitOrg/neogit",
         dependencies = {
-            "nvim-lua/plenary.nvim",         -- required
-            "nvim-telescope/telescope.nvim", -- optional
-            "sindrets/diffview.nvim",        -- optional
+            "nvim-lua/plenary.nvim",  -- required
+            "ibhagwan/fzf-lua",       -- optional
+            "sindrets/diffview.nvim", -- optional
         },
+        cmd = "Neogit",
+        keys = { "<leader>gg" },
         config = true,
     },
-    "xiyaowong/transparent.nvim",
-    "rmagatti/goto-preview",
 
-    "chrisgrieser/nvim-spider",
-    { "nvim-telescope/telescope-fzf-native.nvim", build = 'make' },
+    -- Transparency - LOAD IMMEDIATELY (UI)
+    "xiyaowong/transparent.nvim",
+
+    -- Goto preview - LAZY LOAD
+    -- {
+    --     "rmagatti/goto-preview",
+    --     dependencies = { "rmagatti/logger.nvim" },
+    --     keys = {
+    --         { "gpd", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>" },
+    --         { "gpi", "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>" },
+    --         { "gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>" },
+    --         { "gP",  "<cmd>lua require('goto-preview').close_all_win()<CR>" },
+    --     },
+    --     config = true,
+    -- },
+
+    -- Spider movement - LAZY LOAD
     {
-        "nvim-telescope/telescope.nvim",
-        dependencies = {
-            { "nvim-telescope/telescope-live-grep-args.nvim" },
+        "chrisgrieser/nvim-spider",
+        keys = {
+            { "w", "<cmd>lua require('spider').motion('w')<CR>", mode = { "n", "o", "x" } },
+            { "e", "<cmd>lua require('spider').motion('e')<CR>", mode = { "n", "o", "x" } },
+            { "b", "<cmd>lua require('spider').motion('b')<CR>", mode = { "n", "o", "x" } },
+        }
+    },
+
+    -- Telescope and extensions - LAZY LOAD
+    {
+        "ibhagwan/fzf-lua",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        cmd = "FzfLua",
+        keys = {
+            { "<leader>ff", "<cmd>FzfLua files<cr>",     desc = "Find Files" },
+            { "<leader>fr", "<cmd>FzfLua oldfiles<cr>",  desc = "Recent Files" },
+            { "<leader>fg", "<cmd>FzfLua live_grep<cr>", desc = "Live Grep" },
+            { "<leader>fb", "<cmd>FzfLua buffers<cr>",   desc = "Buffers" },
+            { "<leader>fh", "<cmd>FzfLua helptags<cr>",  desc = "Help Tags" },
         },
         config = function()
-            require("telescope").load_extension "live_grep_args"
-            -- require("telescope").load_extension("noice")
+            -- Use minimal config for testing slow file opening
+            -- require("user.fzf-lua-fast")
+            -- Use full config (default)
+            require("user.fzf-lua")
         end,
     },
-    { "decaycs/decay.nvim",                  as = "decay" },
+
+    -- THEMES - Keep minimal set, load immediately for UI consistency
+    { "decaycs/decay.nvim", name = "decay" },
     "lunarvim/darkplus.nvim",
     "folke/tokyonight.nvim",
     {
         "uloco/bluloco.nvim",
         dependencies = { "rktjmp/lush.nvim" },
     },
-    "rcarriga/nvim-notify",
-    "stevearc/dressing.nvim",
-    "ghillb/cybu.nvim",
 
-    -- Registers
-    "tversteeg/registers.nvim",
-
-    -- "kyazdani42/nvim-web-devicons", -- Disabled to avoid nerd fonts
-
-    "akinsho/bufferline.nvim",
-    "nvim-lualine/lualine.nvim",
-
-    -- Indent
-    -- { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
-
+    -- Notifications - LOAD IMMEDIATELY (UI)
     {
-        "nvim-tree/nvim-tree.lua",
-        version = "*",
-        lazy = false,
-        -- dependencies = {
-        --     "nvim-tree/nvim-web-devicons", -- Disabled to avoid nerd fonts
-        -- },
+        "rcarriga/nvim-notify",
+        config = function()
+            require("user.notify")
+        end
     },
 
-    -- Comment
-    "numToStr/Comment.nvim",
-    "folke/todo-comments.nvim",
+    -- Dressing - LOAD IMMEDIATELY (UI)
+    {
+        "stevearc/dressing.nvim",
+        config = function()
+            require("user.dressing")
+        end
+    },
 
-    -- Terminal
-    "akinsho/toggleterm.nvim",
+    -- Buffer navigation - LAZY LOAD
+    {
+        "ghillb/cybu.nvim",
+        branch = "main", -- timely updates
+        event = { "BufReadPost", "BufNewFile" },
+        config = function()
+            require("user.cybu")
+        end
+    },
 
-    "nvim-pack/nvim-spectre",
-    "kevinhwang91/nvim-bqf",
+    -- Registers - LAZY LOAD
+    {
+        "tversteeg/registers.nvim",
+        keys = { "\"", "<C-r>" },
+        config = function()
+            require("user.registers")
+        end
+    },
 
-    "lewis6991/gitsigns.nvim",
-    "folke/which-key.nvim",
 
-    -- THEMES
-    "krshrimali/vim-moonfly-colors", -- personalized, this one is very dark :D
-    "navarasu/onedark.nvim",
-    "ellisonleao/gruvbox.nvim",
-    "sainnhe/gruvbox-material",
-    "Shadorain/shadotheme",
-    "nyoom-engineering/oxocarbon.nvim",
-    "projekt0n/github-nvim-theme",
 
-    -- Peek numbers
-    "nacro90/numb.nvim",
+    -- Bufferline - LAZY LOAD
+    {
+        "akinsho/bufferline.nvim",
+        event = "VeryLazy",
+        -- config handled in separate file
+    },
 
-    "jonarrien/telescope-cmdline.nvim",
+    -- Lualine - LOAD IMMEDIATELY (UI)
+    {
+        "nvim-lualine/lualine.nvim",
+        config = function()
+            require("user.lualine")
+        end
+    },
+
+    -- File explorer - Custom simple tree (replaced nvim-tree)
+    -- Using custom simple_tree.lua instead
+
+    -- Comment - LAZY LOAD
+    {
+        "numToStr/Comment.nvim",
+        config = function()
+            require("Comment").setup()
+        end
+        -- keys = {
+        --     { "gc", mode = { "n", "v" } },
+        --     { "gb", mode = { "n", "v" } },
+        -- },
+        -- lazy = false,
+        -- config = function()
+        --     require("user.comment")
+        -- end
+    },
+
+    -- Todo comments - LAZY LOAD
+    {
+        "folke/todo-comments.nvim",
+        event = { "BufReadPost", "BufNewFile" },
+        config = function()
+            require("user.todo-comments")
+        end
+    },
+
+    -- Terminal functionality is now handled by native Neovim terminal
+    -- Configuration in lua/user/terminal.lua
+
+    -- Search and replace - LAZY LOAD
+    {
+        "nvim-pack/nvim-spectre",
+        cmd = "Spectre",
+        keys = { "<leader>S" },
+        config = function()
+            require("user.spectre")
+        end
+    },
+
+    -- Better quickfix - LAZY LOAD
+    {
+        "kevinhwang91/nvim-bqf",
+        ft = "qf",
+        config = function()
+            require("user.bqf")
+        end
+    },
+
+    -- Git signs - LAZY LOAD
+    {
+        "lewis6991/gitsigns.nvim",
+        event = { "BufReadPre", "BufNewFile" },
+        config = function()
+            require("user.gitsigns")
+        end
+    },
+
+    -- Which key - LAZY LOAD
+    {
+        "folke/which-key.nvim",
+        event = "VeryLazy",
+        config = function()
+            require("user.whichkey")
+        end
+    },
+
+    -- THEMES - Move less used themes to lazy load
+    {
+        "krshrimali/vim-moonfly-colors",
+        lazy = true
+    },
+    {
+        "navarasu/onedark.nvim",
+        lazy = true
+    },
+    {
+        "ellisonleao/gruvbox.nvim",
+        lazy = true
+    },
+    {
+        "sainnhe/gruvbox-material",
+        lazy = true
+    },
+    {
+        "Shadorain/shadotheme",
+        lazy = true
+    },
+    {
+        "nyoom-engineering/oxocarbon.nvim",
+        lazy = true
+    },
+    {
+        "projekt0n/github-nvim-theme",
+        lazy = true
+    },
+
+    -- Peek numbers - LAZY LOAD
+    {
+        "nacro90/numb.nvim",
+        event = { "BufReadPost", "BufNewFile" },
+        config = function()
+            require("user.numb")
+        end
+    },
+
+    -- Command line replaced with native fzf-lua functionality
+
+    -- Outline - LAZY LOAD (already configured correctly)
     {
         "hedyhli/outline.nvim",
         lazy = true,
@@ -169,21 +343,24 @@ require("lazy").setup {
             }
         },
     },
+
+    -- Python type stubs - DISABLED
     {
         "microsoft/python-type-stubs",
         cond = false,
     },
-    {
-        "nvim-telescope/telescope-file-browser.nvim",
-        dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
-    },
+
+    -- File browser functionality available through fzf-lua files command
+
+    -- Winbar - LAZY LOAD
     {
         "fgheng/winbar.nvim",
+        event = "BufReadPost",
     },
-    {
-        "nvim-telescope/telescope-frecency.nvim",
-        config = function() require("telescope").load_extension "frecency" end,
-    },
+
+    -- Frecency functionality replaced with fzf-lua oldfiles
+
+    -- Trouble - LAZY LOAD (already configured correctly)
     {
         "folke/trouble.nvim",
         opts = {
@@ -263,10 +440,15 @@ require("lazy").setup {
             },
         },
     },
-    -- { "SmiteshP/nvim-navic" },
-    { "github/copilot.vim" },
+    {
+        "github/copilot.vim",
+        event = "InsertEnter"
+    },
+
+    -- Project management - LAZY LOAD
     {
         "ahmedkhalf/project.nvim",
+        event = "VeryLazy",
         config = function()
             require("project_nvim").setup({
                 detection_methods = { "lsp", "pattern" },
@@ -278,10 +460,14 @@ require("lazy").setup {
                 scope_chdir = 'global',
                 datapath = vim.fn.stdpath("data"),
             })
+            -- projects extension removed - using fzf-lua for file navigation
         end,
     },
+
+    -- Custom utilities - LAZY LOAD
     {
         "krshrimali/nvim-utils",
+        event = "VeryLazy",
         config = function()
             require("tgkrsutil").setup({
                 enable_test_runner = true,
@@ -290,32 +476,32 @@ require("lazy").setup {
                 end,
             })
         end,
-        event = "VeryLazy",
     },
+
+    -- Context pilot - LAZY LOAD
     {
         "krshrimali/context-pilot.nvim",
         dependencies = {
-            "nvim-telescope/telescope.nvim",
-            "nvim-telescope/telescope-fzy-native.nvim"
+            "ibhagwan/fzf-lua"
         },
+        cmd = "ContextPilot",
         config = function()
             require("contextpilot")
         end
     },
-    {
-        "rmagatti/goto-preview",
-        dependencies = { "rmagatti/logger.nvim" },
-        event = "BufEnter",
-        config = true, -- necessary
-    },
+
+    -- Git blame - LAZY LOAD
     {
         "f-person/git-blame.nvim",
-        event = "VeryLazy",
+        cmd = { "GitBlameToggle", "GitBlameEnable" },
+        keys = { "<leader>gb" },
         opts = {
             enabled = false,
             virtual_text_column = 1
         },
     },
+
+    -- Snacks - LOAD IMMEDIATELY (UI and core functionality)
     {
         "folke/snacks.nvim",
         priority = 1000,
@@ -326,41 +512,6 @@ require("lazy").setup {
             -- or leave it empty to use the default settings
             -- refer to the configuration section below
             bigfile = { enabled = true },
-            dashboard = {
-                enabled = true,
-                preset = {
-                    header = [[
-████████  ██████  ██   ██ ██████  ███████
-   ██    ██       ██  ██  ██   ██ ██
-   ██    ██   ███ █████   ██████  ███████
-   ██    ██    ██ ██  ██  ██   ██      ██
-   ██     ██████  ██   ██ ██   ██ ███████
-
-   Welcome to Kushashwa's Home! <3
-        Jai Hind!
-]],
-                    keys = {
-                        { icon = "f", key = "f", desc = "Find File",       action = ":lua Snacks.dashboard.pick('files')" },
-                        { icon = "n", key = "n", desc = "New File",        action = ":ene | startinsert" },
-                        { icon = "g", key = "g", desc = "Find Text",       action = ":lua Snacks.dashboard.pick('live_grep')" },
-                        { icon = "r", key = "r", desc = "Recent Files",    action = ":lua Snacks.dashboard.pick('oldfiles')" },
-                        { icon = "c", key = "c", desc = "Config",          action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
-                        { icon = "s", key = "s", desc = "Restore Session", section = "session" },
-                        { icon = "l", key = "l", desc = "Lazy",            action = ":Lazy" },
-                        { icon = "q", key = "q", desc = "Quit",            action = ":qa" },
-                    },
-                }
-            },
-            explorer = { enabled = false },
-            indent = { enabled = false },
-            input = { enabled = false },
-            picker = { enabled = true },
-            notifier = { enabled = true },
-            quickfile = { enabled = true },
-            scope = { enabled = false },
-            scroll = { enabled = false },
-            statuscolumn = { enabled = true },
-            words = { enabled = false },
             gitbrowse = {
                 what = "permalink",
                 url_patterns = {
@@ -371,149 +522,39 @@ require("lazy").setup {
                         commit = "/commit/{commit}",
                     },
                 },
-            }
+            },
+            dashboard = { enabled = false }, -- Completely disable dashboard
+            explorer = { enabled = false },
+            indent = { enabled = false },
+            input = { enabled = false },
+            picker = { enabled = false },   -- Disable picker since we're using nvim-tree
+            notifier = { enabled = false }, -- Disable for faster startup
+            quickfile = { enabled = false },
+            scope = { enabled = false },
+            scroll = { enabled = false },
+            statuscolumn = { enabled = false }, -- Disable for faster startup
+            words = { enabled = false },
         },
-        keys = {
-            { "<leader>gY", function() Snacks.gitbrowse() end, desc = "Git Browse", mode = { "n", "v" } },
-        }
     },
-    -- {
-    --     'windwp/nvim-autopairs',
-    --     event = "InsertEnter",
-    --     config = true
-    -- },
+
+    -- Avante - LAZY LOAD
+
+    -- Markdown Preview - LAZY LOAD
     {
-        "krshrimali/nvim-utils.nvim",
+        "ellisonleao/glow.nvim",
+        ft = "markdown",
+        cmd = "Glow",
         config = function()
-            require("tgkrsutil").setup({
-                enable_test_runner = true,
-                test_runner = function(file, func)
-                    return string.format("pytest %s -k %s", file, func)
-                end,
-            })
+            local markdown_preview = require("user.markdown_preview")
+            markdown_preview.setup()
+            markdown_preview.setup_keymaps()
         end,
-        event = "VeryLazy",
     },
-    -- {
-    --     "olimorris/codecompanion.nvim",
-    --     dependencies = {
-    --         { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
-    --         { "nvim-lua/plenary.nvim" },
-    --         -- Test with blink.cmp (delete if not required)
-    --         -- {
-    --         --     "saghen/blink.cmp",
-    --         --     lazy = false,
-    --         --     version = "*",
-    --         --     opts = {
-    --         --         keymap = {
-    --         --             preset = "enter",
-    --         --             ["<S-Tab>"] = { "select_prev", "fallback" },
-    --         --             ["<Tab>"] = { "select_next", "fallback" },
-    --         --         },
-    --         --         cmdline = { sources = { "cmdline" } },
-    --         --         sources = {
-    --         --             default = { "lsp", "path", "buffer", "codecompanion" },
-    --         --         },
-    --         --     },
-    --         -- },
-    --         -- Test with nvim-cmp
-    --         -- { "hrsh7th/nvim-cmp" },
-    --     },
-    --     opts = {
-    --         --Refer to: https://github.com/olimorris/codecompanion.nvim/blob/main/lua/codecompanion/config.lua
-    --         strategies = {
-    --             --NOTE: Change the adapter as required
-    --             chat = { adapter = "copilot" },
-    --             inline = { adapter = "copilot" },
-    --         },
-    --         opts = {
-    --             log_level = "DEBUG",
-    --         },
-    --     },
-    -- },
-    -- {
-    --     "yetone/avante.nvim",
-    --     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
-    --     -- ⚠️ must add this setting! ! !
-    --     build = function()
-    --         -- conditionally use the correct build system for the current OS
-    --         if vim.fn.has("win32") == 1 then
-    --             return "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
-    --         else
-    --             return "make"
-    --         end
-    --     end,
-    --     event = "VeryLazy",
-    --     version = false, -- Never set this value to "*"! Never!
-    --     ---@module 'avante'
-    --     ---@type avante.Config
-    --     opts = {
-    --         -- add any opts here
-    --         -- for example
-    --         provider = "copilot",
-    --         providers = {
-    --             claude = {
-    --                 endpoint = "https://api.anthropic.com",
-    --                 model = "claude-sonnet-4-20250514",
-    --                 timeout = 30000, -- Timeout in milliseconds
-    --                 extra_request_body = {
-    --                     temperature = 0.75,
-    --                     max_tokens = 20480,
-    --                 },
-    --             },
-    --             moonshot = {
-    --                 endpoint = "https://api.moonshot.ai/v1",
-    --                 model = "kimi-k2-0711-preview",
-    --                 timeout = 30000, -- Timeout in milliseconds
-    --                 extra_request_body = {
-    --                     temperature = 0.75,
-    --                     max_tokens = 32768,
-    --                 },
-    --             },
-    --         },
-    --     },
-    --     dependencies = {
-    --         "nvim-lua/plenary.nvim",
-    --         "MunifTanjim/nui.nvim",
-    --         --- The below dependencies are optional,
-    --         "echasnovski/mini.pick",         -- for file_selector provider mini.pick
-    --         "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
-    --         "hrsh7th/nvim-cmp",              -- autocompletion for avante commands and mentions
-    --         "ibhagwan/fzf-lua",              -- for file_selector provider fzf
-    --         "stevearc/dressing.nvim",        -- for input provider dressing
-    --         "folke/snacks.nvim",             -- for input provider snacks
-    --         -- "nvim-tree/nvim-web-devicons",   -- or echasnovski/mini.icons
-    --         "github/copilot.vim",
-    --         -- "zbirenbaum/copilot.lua",        -- for providers='copilot'
-    --         {
-    --             -- support for image pasting
-    --             "HakonHarnes/img-clip.nvim",
-    --             event = "VeryLazy",
-    --             opts = {
-    --                 -- recommended settings
-    --                 default = {
-    --                     embed_image_as_base64 = false,
-    --                     prompt_for_file_name = false,
-    --                     drag_and_drop = {
-    --                         insert_mode = true,
-    --                     },
-    --                     -- required for Windows users
-    --                     use_absolute_path = true,
-    --                 },
-    --             },
-    --         },
-    --         {
-    --             -- Make sure to set this up properly if you have lazy=true
-    --             'MeanderingProgrammer/render-markdown.nvim',
-    --             opts = {
-    --                 file_types = { "markdown", "Avante" },
-    --             },
-    --             ft = { "markdown", "Avante" },
-    --         },
-    --     },
-    -- },
+
+    -- LSP Saga - LAZY LOAD
     {
         'nvimdev/lspsaga.nvim',
+        event = { "BufReadPost", "BufNewFile" },
         config = function()
             require('lspsaga').setup({
                 ui = {
@@ -526,7 +567,87 @@ require("lazy").setup {
             })
         end,
         dependencies = {
-            'nvim-treesitter/nvim-treesitter', -- optional
+            'nvim-treesitter/nvim-treesitter',
         }
-    }
+    },
+    -- LSP Configuration for goto-preview
+    {
+        "neovim/nvim-lspconfig",
+        event = { "BufReadPre", "BufNewFile" },
+        config = function()
+            -- Minimal LSP setup only for goto-preview
+            require("user.goto_preview_lsp").setup()
+        end
+    },
+
+    {
+        "rmagatti/goto-preview",
+        dependencies = {
+            "rmagatti/logger.nvim",
+            "neovim/nvim-lspconfig"
+        },
+        event = { "BufReadPre", "BufNewFile" },
+        config = false, -- Configuration handled in goto_preview_lsp.lua
+    },
+
+    {
+        "linux-cultist/venv-selector.nvim",
+        dependencies = {
+            "neovim/nvim-lspconfig",
+            "mfussenegger/nvim-dap", "mfussenegger/nvim-dap-python", --optional
+            { "nvim-telescope/telescope.nvim", branch = "0.1.x", dependencies = { "nvim-lua/plenary.nvim" } },
+        },
+        lazy = false,
+        branch = "regexp", -- This is the regexp branch, use this for the new version
+        keys = {
+            { ",v", "<cmd>VenvSelect<cr>" },
+        },
+        opts = {
+            -- Your settings go here
+            search = {
+                my_vens = {
+                    command = "fd python$ ~/.virtualenv/"
+                }
+            }
+        },
+    },
+    {
+        "TabbyML/vim-tabby",
+        lazy = false,
+        dependencies = {
+            "neovim/nvim-lspconfig",
+        },
+        init = function()
+            vim.g.tabby_agent_start_command = { "npx", "tabby-agent", "--stdio" }
+            vim.g.tabby_inline_completion_trigger = "auto"
+        end,
+    },
+
+    -- Minimap - VSCode-like minimap functionality - LAZY LOAD
+    {
+        "wfxr/minimap.vim",
+        cmd = { "Minimap", "MinimapClose", "MinimapToggle", "MinimapRefresh", "MinimapUpdateHighlight" },
+        keys = {
+            { "<leader>mm", "<cmd>MinimapToggle<cr>", desc = "Toggle Minimap" },
+            { "<leader>mr", "<cmd>MinimapRefresh<cr>", desc = "Refresh Minimap" },
+        },
+        build = function()
+            -- Ensure cargo environment is sourced and install code-minimap
+            local install_cmd = "source /usr/local/cargo/env 2>/dev/null || true; cargo install --locked code-minimap"
+            vim.fn.system(install_cmd)
+        end,
+        init = function()
+            -- Set the path to code-minimap binary early
+            vim.g.minimap_exec_path = '/usr/local/cargo/bin/code-minimap'
+            -- Also add to PATH if not already there
+            local current_path = vim.env.PATH or ""
+            if not current_path:find("/usr/local/cargo/bin") then
+                vim.env.PATH = "/usr/local/cargo/bin:" .. current_path
+            end
+        end,
+        config = function()
+            require("user.minimap")
+        end,
+    },
+
 }

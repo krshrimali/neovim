@@ -7,7 +7,7 @@
 --   command_mode = "c",
 
 -- Shorten function name
-M = {}
+local M = {}
 local opts = { noremap = true, silent = true }
 
 local keymap = vim.api.nvim_set_keymap
@@ -23,6 +23,33 @@ keymap("n", "glb", "<cmd>Gitsigns blame_line<cr>", opts)
 -- keymap("n", "<m-j>", "<C-w>j", opts)
 -- keymap("n", "<m-k>", "<C-w>k", opts)
 -- keymap("n", "<m-l>", "<C-w>l", opts)
+
+-- Enhanced buffer navigation with Alt+H/J/K/L (works with all buffers including SimpleTree)
+keymap("n", "<A-h>", "<cmd>lua require('user.buffer_navigation').navigate_left()<cr>", opts)
+keymap("n", "<A-j>", "<cmd>lua require('user.buffer_navigation').navigate_down()<cr>", opts)
+keymap("n", "<A-k>", "<cmd>lua require('user.buffer_navigation').navigate_up()<cr>", opts)
+keymap("n", "<A-l>", "<cmd>lua require('user.buffer_navigation').navigate_right()<cr>", opts)
+
+-- Alt navigation also works in insert and terminal modes
+keymap("i", "<A-h>", "<Esc><cmd>lua require('user.buffer_navigation').navigate_left()<cr>", opts)
+keymap("i", "<A-j>", "<Esc><cmd>lua require('user.buffer_navigation').navigate_down()<cr>", opts)
+keymap("i", "<A-k>", "<Esc><cmd>lua require('user.buffer_navigation').navigate_up()<cr>", opts)
+keymap("i", "<A-l>", "<Esc><cmd>lua require('user.buffer_navigation').navigate_right()<cr>", opts)
+
+keymap("t", "<A-h>", "<C-\\><C-n><cmd>lua require('user.buffer_navigation').navigate_left()<cr>", opts)
+keymap("t", "<A-j>", "<C-\\><C-n><cmd>lua require('user.buffer_navigation').navigate_down()<cr>", opts)
+keymap("t", "<A-k>", "<C-\\><C-n><cmd>lua require('user.buffer_navigation').navigate_up()<cr>", opts)
+keymap("t", "<A-l>", "<C-\\><C-n><cmd>lua require('user.buffer_navigation').navigate_right()<cr>", opts)
+
+-- Alternative keybindings using Meta key (in case Alt doesn't work in some terminals)
+-- Uncomment these if Alt keys don't work in your terminal:
+-- keymap("n", "<M-h>", "<cmd>lua require('user.buffer_navigation').navigate_left()<cr>", opts)
+-- keymap("n", "<M-j>", "<cmd>lua require('user.buffer_navigation').navigate_down()<cr>", opts)
+-- keymap("n", "<M-k>", "<cmd>lua require('user.buffer_navigation').navigate_up()<cr>", opts)
+-- keymap("n", "<M-l>", "<cmd>lua require('user.buffer_navigation').navigate_right()<cr>", opts)
+
+-- Debug window layout (useful for troubleshooting navigation)
+keymap("n", "<leader>wd", "<cmd>lua require('user.buffer_navigation').debug_windows()<cr>", opts)
 
 keymap("n", "+", "<C-a>", opts)
 keymap("n", "-", "<C-x>", opts)
@@ -76,24 +103,24 @@ keymap("v", "U", ":m '<-2<CR>gv=gv", opts)
 keymap("n", "<leader>d", '"_d', opts)
 keymap("x", "<leader>d", '"_d', opts)
 keymap("x", "<leader>p", '"_dP', opts)
-
-keymap("x", "<leader>p", '"_dP', opts)
 -- keymap("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>", opts)
-keymap("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>//gI<Left><Left><Left>", opts)
+-- keymap("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>//gI<Left><Left><Left>", opts)
 
 -- NOTE: the fact that tab and ctrl-i are the same is stupid
 keymap("n", "<leader>Q", "<cmd>bdelete!<CR>", opts)
-keymap("n", "<F11>", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
-keymap("n", "<F12>", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-keymap("n", "gR", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+-- Commented out vim.lsp keymaps to avoid conflicts with COC.nvim
+-- These are handled by COC configuration in lua/user/coc.lua
+-- keymap("n", "<F11>", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+-- keymap("n", "<F12>", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
+-- keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
+-- keymap("n", "gR", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
 
 -- keymap("n", "gI", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
+-- keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
 -- keymap("n", "gi", "<cmd>lua vim.lsp.buf.incoming_calls()<CR>", opts)
-keymap("n", "go", "<cmd>lua vim.lsp.buf.outgoing_calls()<CR>", opts)
-keymap("n", "<C-p>", "<cmd>Telescope projects<cr>", opts)
-keymap("n", "<C-s>", "<cmd>lua vim.lsp.buf.document_symbol()<cr>", opts)
+-- keymap("n", "go", "<cmd>lua vim.lsp.buf.outgoing_calls()<CR>", opts)
+keymap("n", "<C-p>", "<cmd>FzfLua files<cr>", opts)
+-- keymap("n", "<C-s>", "<cmd>lua vim.lsp.buf.document_symbol()<cr>", opts) -- Conflicts with COC
 keymap("n", "<C-z>", "<cmd>ZenMode<cr>", opts)
 
 -- keymap("n", "-", ":lua require'lir.float'.toggle()<cr>", opts)
@@ -140,11 +167,7 @@ vim.cmd [[
   endfunction
 ]]
 
--- nvim-spider
-vim.keymap.set({ "n", "o", "x" }, "w", function() require("spider").motion "w" end, { desc = "Spider-w" })
-vim.keymap.set({ "n", "o", "x" }, "e", function() require("spider").motion "e" end, { desc = "Spider-e" })
-vim.keymap.set({ "n", "o", "x" }, "b", function() require("spider").motion "b" end, { desc = "Spider-b" })
-vim.keymap.set({ "n", "o", "x" }, "ge", function() require("spider").motion "ge" end, { desc = "Spider-ge" })
+-- nvim-spider keymaps are now handled by the plugin's lazy loading configuration in plugins.lua
 
 keymap("n", "<m-q>", ":call QuickFixToggle()<cr>", opts)
 
@@ -167,7 +190,7 @@ keymap("n", "<m-q>", ":call QuickFixToggle()<cr>", opts)
 -- ]]
 
 -- vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', {noremap = true})
-vim.api.nvim_set_keymap("i", "<C-l>", 'copilot#Accept("<CR>")', { expr = true, silent = true })
+-- vim.api.nvim_set_keymap("i", "<C-y>", 'copilot#Accept("<CR>")', { expr = true, silent = true })
 -- vim.keymap.set('v', '<leader>lf', vim.lsp.buf.format, bufopts)
 
 -- vim.api.nvim_set_keymap("n", ":", "<cmd>FineCmdline<CR>", { noremap = true })
@@ -180,16 +203,22 @@ _G.find_files = function()
     local current_path = vim.fn.expand "%:p:h"
     local relative_path = vim.fn.fnamemodify(current_path, ":~:.")
 
-    require("telescope.builtin").find_files {
-        search_dirs = { relative_path },
+    require("fzf-lua").files {
+        cwd = relative_path,
+        winopts = {
+            preview = { hidden = true },
+        },
     }
 end
 _G.live_grep = function()
     local current_path = vim.fn.expand "%:p:h"
     local relative_path = vim.fn.fnamemodify(current_path, ":~:.")
 
-    require("telescope.builtin").live_grep {
-        search_dirs = { relative_path },
+    require("fzf-lua").live_grep {
+        cwd = relative_path,
+        winopts = {
+            preview = { hidden = true },
+        },
     }
 end
 
@@ -202,7 +231,7 @@ vim.api.nvim_set_keymap("n", "<Leader><leader>g", ":lua live_grep()<CR>", { nore
 -- vim.api.nvim_set_keymap("n", "<leader>zm", '[[:lua require("ufo").openAllFolds()<CR>]]', opts)
 -- vim.api.nvim_set_keymap("n", "<leader>zr", '[[:lua require("ufo").closeAllFolds()<CR>]]', opts)
 
-vim.api.nvim_set_keymap("n", "<leader><leader>s", ":silent Telescope cmdline<CR>", opts)
+vim.api.nvim_set_keymap("n", "<leader><leader>s", ":FzfLua command_history<CR>", opts)
 -- vim.keymap.set("n", "zR", require("ufo").openAllFolds)
 -- vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
 -- vim.keymap.set("n", "zr", require("ufo").openFoldsExceptKinds)
@@ -214,31 +243,68 @@ vim.api.nvim_set_keymap("n", "<leader><leader>s", ":silent Telescope cmdline<CR>
 --   end
 -- end)
 -- Keymaps for goto-preview
-vim.keymap.set("n", "<leader>gpd", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>", { noremap = true })
+vim.keymap.set("n", "<leader>lgg", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>", { noremap = true })
+-- vim.keymap.set(
+--   "n",
+--   "<leader>lgi",
+--   "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>",
+--   { noremap = true }
+-- )
+-- vim.keymap.set(
+--   "n",
+--   "<leader>lgd",
+--   "<cmd>lua require('goto-preview').goto_preview_declaration()<CR>",
+--   { noremap = true }
+-- )
+vim.keymap.set("n", "<leader>lgw", "<cmd>lua require('goto-preview').close_all_win()<CR>", { noremap = true })
+-- vim.keymap.set("n", "<leader>gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>", { noremap = true })
 vim.keymap.set(
-  "n",
-  "<leader>gpi",
-  "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>",
-  { noremap = true }
+    { "n", "x" },
+    "<leader>gy",
+    function()
+        Snacks.gitbrowse({
+            open = function(url) vim.fn.setreg("+", url) end,
+        })
+    end,
+    { desc = "Git Browse (copy)" }
 )
-vim.keymap.set(
-  "n",
-  "<leader>gpD",
-  "<cmd>lua require('goto-preview').goto_preview_declaration()<CR>",
-  { noremap = true }
-)
-vim.keymap.set("n", "<leader>gP", "<cmd>lua require('goto-preview').close_all_win()<CR>", { noremap = true })
-vim.keymap.set("n", "<leader>gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>", { noremap = true })
-vim.keymap.set(
-  { "n", "x" },
-  "<leader>gy",
-  function()
-    Snacks.gitbrowse({
-      open = function(url) vim.fn.setreg("+", url) end,
-      notify = false
-    })
-  end,
-  { desc = "Git Browse (copy)" }
-)
+
+-- nnoremap <leader>fb <cmd>FzfLua files cwd=/prod/tools/base/<cr>
+-- nnoremap <leader>gb <cmd>FzfLua live_grep cwd=/prod/tools/base/<cr>
+vim.keymap.set('n', '<leader>fb', function()
+    require('fzf-lua').files {
+        cwd = '/prod/tools/base/',
+        winopts = {
+            height = 0.6,
+            width = 0.8,
+        },
+    }
+end, { desc = 'Find files in base' })
+vim.keymap.set('n', '<leader>gb', function()
+    require('fzf-lua').live_grep {
+        cwd = '/prod/tools/base/',
+        winopts = {
+            height = 0.6,
+            width = 0.8,
+        },
+    }
+end, { desc = 'Live grep in base' })
+
+-- Diagnostic Display Plugin Keymaps
+keymap("n", "<leader>dl", "<cmd>lua require('user.diagnostics_display').show_current_line_diagnostics()<cr>", opts)
+keymap("n", "<leader>df", "<cmd>lua require('user.diagnostics_display').show_current_file_diagnostics()<cr>", opts)
+keymap("n", "<leader>dd", "<cmd>lua require('user.diagnostics_display').debug()<cr>", opts)
+keymap("n", "<leader>dt", "<cmd>lua require('user.diagnostics_display').test_line_numbers()<cr>", opts)
+
+-- Lazygit keymaps
+keymap("n", "<leader>gg", "<cmd>lua require('user.terminal').lazygit_float()<cr>", opts)
+keymap("n", "<leader>gt", "<cmd>lua require('user.terminal').lazygit_tab()<cr>", opts)
+
+-- Minimap keymaps (VSCode-like minimap)
+keymap("n", "<leader>mm", "<cmd>lua require('user.minimap').smart_toggle()<cr>", opts)
+keymap("n", "<leader>mr", "<cmd>MinimapRefresh<cr>", opts)
+keymap("n", "<leader>mc", "<cmd>MinimapClose<cr>", opts)
+-- Alternative keybinding similar to VSCode's Ctrl+Shift+M (using Ctrl+M since Shift is hard to detect)
+keymap("n", "<C-m>", "<cmd>lua require('user.minimap').smart_toggle()<cr>", opts)
 
 return M

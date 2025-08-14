@@ -1,4 +1,4 @@
-M = {}
+local M = {}
 local status_ok, lualine = pcall(require, "lualine")
 if not status_ok then
     return
@@ -71,7 +71,7 @@ local filetype = {
             "lir",
             "Outline",
             "spectre_panel",
-            "toggleterm",
+            "terminal",
             "DressingSelect",
             "",
             "nil",
@@ -94,9 +94,9 @@ local filetype = {
             return toggle_num
         end
 
-        if str == "toggleterm" then
-            -- 
-            local term = " " .. "%*" .. get_term_num() .. "%*"
+        if str == "terminal" then
+            -- 
+            local term = " " .. "%*" .. "TERM" .. "%*"
 
             return return_val(term)
         end
@@ -143,7 +143,7 @@ local progress = {
 --   function()
 --     local buf_ft = vim.bo.filetype
 
---     if buf_ft == "toggleterm" or buf_ft == "TelescopePrompt" then
+--     if buf_ft == "terminal" or buf_ft == "TelescopePrompt" then
 --       return ""
 --     end
 --     -- if not pcall(require, "lsp_signature") then
@@ -179,6 +179,7 @@ local spaces = {
             "lir",
             "Outline",
             "spectre_panel",
+            "terminal",
             "DressingSelect",
             "",
         }
@@ -214,7 +215,7 @@ local lanuage_server = {
             "lir",
             "Outline",
             "spectre_panel",
-            "toggleterm",
+            "terminal",
             "DressingSelect",
             "TelescopePrompt",
             "lspinfo",
@@ -244,24 +245,26 @@ local lanuage_server = {
             end
         end
 
-        -- add formatter
-        local s = require "null-ls.sources"
-        local available_sources = s.get_available(buf_ft)
-        local registered = {}
-        for _, source in ipairs(available_sources) do
-            for method in pairs(source.methods) do
-                registered[method] = registered[method] or {}
-                table.insert(registered[method], source.name)
+        -- add formatter and linter from null-ls if available
+        local ok_sources, s = pcall(require, "null-ls.sources")
+        if ok_sources then
+            local available_sources = s.get_available(buf_ft)
+            local registered = {}
+            for _, source in ipairs(available_sources) do
+                for method in pairs(source.methods) do
+                    registered[method] = registered[method] or {}
+                    table.insert(registered[method], source.name)
+                end
             end
-        end
 
-        local formatter = registered["NULL_LS_FORMATTING"]
-        local linter = registered["NULL_LS_DIAGNOSTICS"]
-        if formatter ~= nil then
-            vim.list_extend(client_names, formatter)
-        end
-        if linter ~= nil then
-            vim.list_extend(client_names, linter)
+            local formatter = registered["NULL_LS_FORMATTING"]
+            local linter = registered["NULL_LS_DIAGNOSTICS"]
+            if formatter ~= nil then
+                vim.list_extend(client_names, formatter)
+            end
+            if linter ~= nil then
+                vim.list_extend(client_names, linter)
+            end
         end
 
         -- join client names with commas
@@ -300,15 +303,48 @@ local location = {
     padding = 0,
 }
 
-local custom_auto_theme = require 'lualine.themes.auto'
-custom_auto_theme.normal.c.bg = NONE
+-- Create custom theme for Cursor Dark
+local function create_cursor_dark_theme()
+    local cursor_colors = require("user.themes.init").get_colors()
+    
+    return {
+        normal = {
+            a = { fg = cursor_colors.bg, bg = cursor_colors.blue, gui = 'bold' },
+            b = { fg = cursor_colors.fg_light, bg = cursor_colors.bg_light },
+            c = { fg = cursor_colors.fg, bg = cursor_colors.bg },
+        },
+        insert = {
+            a = { fg = cursor_colors.bg, bg = cursor_colors.green, gui = 'bold' },
+        },
+        visual = {
+            a = { fg = cursor_colors.bg, bg = cursor_colors.purple, gui = 'bold' },
+        },
+        replace = {
+            a = { fg = cursor_colors.bg, bg = cursor_colors.red, gui = 'bold' },
+        },
+        command = {
+            a = { fg = cursor_colors.bg, bg = cursor_colors.yellow, gui = 'bold' },
+        },
+        terminal = {
+            a = { fg = cursor_colors.bg, bg = cursor_colors.cyan, gui = 'bold' },
+        },
+        inactive = {
+            a = { fg = cursor_colors.fg_dark, bg = cursor_colors.bg_alt },
+            b = { fg = cursor_colors.fg_dark, bg = cursor_colors.bg_alt },
+            c = { fg = cursor_colors.fg_dark, bg = cursor_colors.bg_alt },
+        },
+    }
+end
+
+local cursor_theme = create_cursor_dark_theme()
 
 lualine.setup {
     options = {
         globalstatus = true,
         icons_enabled = false,
-        theme = custom_auto_theme,
-        -- theme = theme,
+        theme = cursor_theme,
+        -- Alternative themes (commented out):
+        -- theme = auto,
         -- theme = "shado",
         -- theme = "catppuccin",
         -- theme = "darkplus",
@@ -329,7 +365,12 @@ lualine.setup {
         --     return
         --         require('lspsaga.symbol.winbar').get_bar() ~= nil
         -- end } },
-        lualine_c = { 'filename' },
+        lualine_c = { 
+            {
+                'filename',
+                path = 3,  -- Show absolute path
+            }
+        },
         -- lualine_x = { diff, spaces, "encoding", filetype },
         -- lualine_x = { diff, lanuage_server, spaces, filetype },
         -- lualine_x = { lanuage_server, spaces, filetype },
@@ -365,45 +406,110 @@ lualine.setup {
             },
             {
                 function()
-                    -- Hierarchical breadcrumb: class → function → current_node
+                    -- Safe treesitter breadcrumb navigation
                     local ok, ts_utils = pcall(require, 'nvim-treesitter.ts_utils')
-                    if not ok then return '' end
+                    if not ok then 
+                        -- Fallback: try the newer API
+                        local ts_ok = pcall(require, 'nvim-treesitter')
+                        if not ts_ok then return '' end
+                    end
                     
-                    local node = ts_utils.get_node_at_cursor()
+                    -- Get current node safely
+                    local node
+                    if ts_utils and ts_utils.get_node_at_cursor then
+                        node = ts_utils.get_node_at_cursor()
+                    else
+                        -- Use newer API if available
+                        -- Check if current window is valid before getting cursor position
+                        local current_win = vim.api.nvim_get_current_win()
+                        if not vim.api.nvim_win_is_valid(current_win) then
+                            return ''
+                        end
+                        
+                        local cursor = vim.api.nvim_win_get_cursor(current_win)
+                        local row, col = cursor[1] - 1, cursor[2]
+                        local ok_parser, parser = pcall(vim.treesitter.get_parser, 0)
+                        if not ok_parser or not parser then return '' end
+                        
+                        local tree = parser:parse()[1]
+                        if not tree then return '' end
+                        
+                        node = tree:root():descendant_for_range(row, col, row, col)
+                    end
+                    
                     if not node then return '' end
-                    
-                    local breadcrumbs = {}
-                    local current_node_type = node:type()
                     
                     -- Define node types for different languages
                     local class_types = {
                         'class_declaration', 'class_definition', 'impl_item', 'struct_item',
-                        'interface_declaration', 'trait_item', 'enum_item', 'type_item'
+                        'interface_declaration', 'trait_item', 'enum_item', 'type_item',
+                        'class_body', 'impl_block'
                     }
                     
                     local function_types = {
                         'function_item', 'function_definition', 'function_declaration',
-                        'method_definition', 'method_declaration', 'arrow_function'
+                        'method_definition', 'method_declaration', 'arrow_function',
+                        'function_expression', 'method_item'
                     }
                     
+                    -- Helper function to safely get node text
+                    local function get_node_name(node_obj)
+                        local ok_text, text = pcall(vim.treesitter.get_node_text, node_obj, 0)
+                        if ok_text and text then
+                            -- Clean up the text (remove newlines, trim)
+                            text = text:gsub('\n', ' '):match('^%s*(.-)%s*$')
+                            -- Limit length to prevent winbar overflow
+                            if #text > 30 then
+                                text = text:sub(1, 27) .. '...'
+                            end
+                            return text
+                        end
+                        return nil
+                    end
+                    
+                    -- Helper function to find name node safely
+                    local function find_name_node(current)
+                        if not current then return nil end
+                        
+                        -- Try different field names based on language
+                        local field_names = {'name', 'identifier', 'type', 'field_identifier'}
+                        
+                        for _, field_name in ipairs(field_names) do
+                            local ok_field, field_nodes = pcall(current.field, current, field_name)
+                            if ok_field and field_nodes and field_nodes[1] then
+                                return field_nodes[1]
+                            end
+                        end
+                        
+                        -- Fallback: try to find identifier in children
+                        for child in current:iter_children() do
+                            if child:type() == 'identifier' then
+                                return child
+                            end
+                        end
+                        
+                        return nil
+                    end
+                    
                     -- Walk up the tree to collect hierarchy
-                    local current = node:parent()
+                    local current = node
                     local class_name = nil
                     local function_name = nil
+                    local depth = 0
+                    local max_depth = 20  -- Prevent infinite loops
                     
-                    while current do
+                    while current and depth < max_depth do
                         local type = current:type()
+                        depth = depth + 1
                         
                         -- Look for class/struct/impl
                         if not class_name then
                             for _, class_type in ipairs(class_types) do
                                 if type == class_type then
-                                    local name_node = current:field('name')[1] or 
-                                                     current:field('type')[1] or
-                                                     current:field('identifier')[1]
+                                    local name_node = find_name_node(current)
                                     if name_node then
-                                        class_name = vim.treesitter.get_node_text(name_node, 0)
-                                        break
+                                        class_name = get_node_name(name_node)
+                                        if class_name then break end
                                     end
                                 end
                             end
@@ -413,14 +519,18 @@ lualine.setup {
                         if not function_name then
                             for _, func_type in ipairs(function_types) do
                                 if type == func_type then
-                                    local name_node = current:field('name')[1] or 
-                                                     current:field('identifier')[1]
+                                    local name_node = find_name_node(current)
                                     if name_node then
-                                        function_name = vim.treesitter.get_node_text(name_node, 0)
-                                        break
+                                        function_name = get_node_name(name_node)
+                                        if function_name then break end
                                     end
                                 end
                             end
+                        end
+                        
+                        -- Break early if we found both
+                        if class_name and function_name then
+                            break
                         end
                         
                         current = current:parent()
@@ -428,14 +538,12 @@ lualine.setup {
                     
                     -- Build breadcrumb string
                     local parts = {}
-                    if class_name then
+                    if class_name and class_name ~= '' then
                         table.insert(parts, class_name)
                     end
-                    if function_name then
+                    if function_name and function_name ~= '' then
                         table.insert(parts, function_name)
                     end
-                    -- Always show current node type (useful for debugging and context)
-                    table.insert(parts, current_node_type)
                     
                     if #parts > 0 then
                         return ' → ' .. table.concat(parts, ' → ')
@@ -444,7 +552,20 @@ lualine.setup {
                     return ''
                 end,
                 cond = function() 
-                    return vim.bo.filetype ~= 'help' and vim.bo.filetype ~= 'alpha' and vim.bo.filetype ~= ''
+                    local ft = vim.bo.filetype
+                    -- Enable for programming languages only
+                    local supported_types = {
+                        'lua', 'python', 'javascript', 'typescript', 'rust', 'go', 
+                        'c', 'cpp', 'java', 'php', 'ruby', 'html', 'css'
+                    }
+                    
+                    for _, supported_ft in ipairs(supported_types) do
+                        if ft == supported_ft then
+                            return true
+                        end
+                    end
+                    
+                    return false
                 end
             }
         },
@@ -455,7 +576,13 @@ lualine.setup {
     inactive_winbar = {
         lualine_a = {},
         lualine_b = {},
-        lualine_c = { 'filename' },
+        lualine_c = { 
+            {
+                'filename',
+                path = 1,  -- Show relative path for inactive windows
+                color = { fg = '#666666' }  -- Dimmed color for inactive
+            }
+        },
         lualine_x = {},
         lualine_y = {},
         lualine_z = {}
