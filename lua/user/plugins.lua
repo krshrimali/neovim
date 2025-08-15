@@ -21,28 +21,24 @@ require("lazy").setup {
     {
         "neovim/nvim-lspconfig",
         event = { "BufReadPre", "BufNewFile" },
-        dependencies = {
-            "williamboman/mason.nvim",
-            "williamboman/mason-lspconfig.nvim",
-        },
         config = function()
             require("user.lsp")
         end
     },
 
     -- Mason for managing LSP servers
-    {
-        "williamboman/mason.nvim",
-        cmd = "Mason",
-        build = ":MasonUpdate",
-        config = function()
-            require("mason").setup({
-                ui = {
-                    border = "rounded",
-                },
-            })
-        end
-    },
+    -- {
+    --     "williamboman/mason.nvim",
+    --     cmd = "Mason",
+    --     build = ":MasonUpdate",
+    --     config = function()
+    --         require("mason").setup({
+    --             ui = {
+    --                 border = "rounded",
+    --             },
+    --         })
+    --     end
+    -- },
 
     -- Fast completion with blink.cmp
     {
@@ -99,17 +95,18 @@ require("lazy").setup {
     "xiyaowong/transparent.nvim",
 
     -- Goto preview - LAZY LOAD
-    -- {
-    --     "rmagatti/goto-preview",
-    --     dependencies = { "rmagatti/logger.nvim" },
-    --     keys = {
-    --         { "gpd", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>" },
-    --         { "gpi", "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>" },
-    --         { "gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>" },
-    --         { "gP",  "<cmd>lua require('goto-preview').close_all_win()<CR>" },
-    --     },
-    --     config = true,
-    -- },
+    {
+        "rmagatti/goto-preview",
+        dependencies = { "rmagatti/logger.nvim" },
+        keys = {
+            { "<leader>lgg ", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>" },
+            { "gpd",          "<cmd>lua require('goto-preview').goto_preview_definition()<CR>" },
+            { "gpi",          "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>" },
+            { "gpr",          "<cmd>lua require('goto-preview').goto_preview_references()<CR>" },
+            { "gP",           "<cmd>lua require('goto-preview').close_all_win()<CR>" },
+        },
+        config = true,
+    },
 
     -- Spider movement - LAZY LOAD
     {
@@ -577,24 +574,24 @@ require("lazy").setup {
     },
 
     -- LSP Saga - LAZY LOAD
-    {
-        'nvimdev/lspsaga.nvim',
-        event = { "BufReadPost", "BufNewFile" },
-        config = function()
-            require('lspsaga').setup({
-                ui = {
-                    devicon = false,
-                    foldericon = false,
-                    expand = '>',
-                    collapse = '<',
-                    use_nerd = false
-                }
-            })
-        end,
-        dependencies = {
-            'nvim-treesitter/nvim-treesitter',
-        }
-    },
+    -- {
+    --     'nvimdev/lspsaga.nvim',
+    --     event = { "BufReadPost", "BufNewFile" },
+    --     config = function()
+    --         require('lspsaga').setup({
+    --             ui = {
+    --                 devicon = false,
+    --                 foldericon = false,
+    --                 expand = '>',
+    --                 collapse = '<',
+    --                 use_nerd = false
+    --             }
+    --         })
+    --     end,
+    --     dependencies = {
+    --         'nvim-treesitter/nvim-treesitter',
+    --     }
+    -- },
     -- LSP Configuration for goto-preview
     {
         "rmagatti/goto-preview",
@@ -607,7 +604,7 @@ require("lazy").setup {
             require("goto-preview").setup({
                 width = 120,
                 height = 25,
-                border = {"↖", "─" ,"┐", "│", "┘", "─", "└", "│"},
+                border = { "↖", "─", "┐", "│", "┘", "─", "└", "│" },
                 default_mappings = false,
                 debug = false,
                 opacity = nil,
@@ -683,17 +680,17 @@ require("lazy").setup {
         end,
     },
 
-    {
-        "ray-x/lsp_signature.nvim",
-        config = function()
-            require("lsp_signature").setup({
-                bind = true,
-                handler_opts = {
-                    border = "rounded",
-                }
-            })
-        end,
-    },
+    -- {
+    --     "ray-x/lsp_signature.nvim",
+    --     config = function()
+    --         require("lsp_signature").setup({
+    --             bind = true,
+    --             handler_opts = {
+    --                 border = "rounded",
+    --             }
+    --         })
+    --     end,
+    -- },
     {
         'windwp/nvim-autopairs',
         event = "InsertEnter",
