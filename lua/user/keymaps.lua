@@ -288,6 +288,11 @@ keymap("n", "<leader>dl", "<cmd>lua require('user.diagnostics_display').show_lin
 keymap("n", "<leader>df", "<cmd>lua require('user.diagnostics_display').show_file_diagnostics()<cr>", opts)
 keymap("n", "<leader>dw", "<cmd>lua require('user.diagnostics_display').show_workspace_diagnostics()<cr>", opts)
 
+-- Virtual lines and text toggle keymaps
+keymap("n", "<leader>dvl", "<cmd>lua require('user.diagnostics_display').toggle_virtual_lines()<cr>", opts)
+keymap("n", "<leader>dvc", "<cmd>lua require('user.diagnostics_display').toggle_virtual_lines_current_line_only()<cr>", opts)
+keymap("n", "<leader>dvt", "<cmd>lua require('user.diagnostics_display').toggle_virtual_text()<cr>", opts)
+
 -- Lazygit keymaps
 keymap("n", "<leader>gg", "<cmd>lua require('user.terminal').lazygit_float()<cr>", opts)
 keymap("n", "<leader>gt", "<cmd>lua require('user.terminal').lazygit_tab()<cr>", opts)
