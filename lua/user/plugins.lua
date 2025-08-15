@@ -44,6 +44,17 @@ require("lazy").setup {
         end
     },
 
+    -- Fast completion with blink.cmp
+    {
+        'saghen/blink.cmp',
+        lazy = false, -- lazy loading handled internally
+        dependencies = 'rafamadriz/friendly-snippets',
+        version = 'v0.*',
+        config = function()
+            require("user.blink-cmp")
+        end
+    },
+
     -- Highlight words under cursor - LAZY LOAD
     {
         "RRethy/vim-illuminate",
@@ -586,22 +597,30 @@ require("lazy").setup {
     },
     -- LSP Configuration for goto-preview
     {
-        "neovim/nvim-lspconfig",
-        event = { "BufReadPre", "BufNewFile" },
-        config = function()
-            -- Minimal LSP setup only for goto-preview
-            require("user.goto_preview_lsp").setup()
-        end
-    },
-
-    {
         "rmagatti/goto-preview",
         dependencies = {
             "rmagatti/logger.nvim",
             "neovim/nvim-lspconfig"
         },
         event = { "BufReadPre", "BufNewFile" },
-        config = false, -- Configuration handled in goto_preview_lsp.lua
+        config = function()
+            require("goto-preview").setup({
+                width = 120,
+                height = 25,
+                border = {"↖", "─" ,"┐", "│", "┘", "─", "└", "│"},
+                default_mappings = false,
+                debug = false,
+                opacity = nil,
+                resizing_mappings = false,
+                post_open_hook = nil,
+                focus_on_open = true,
+                dismiss_on_move = false,
+                force_close = true,
+                bufhidden = "wipe",
+                stack_floating_preview_windows = true,
+                preview_window_title = { enable = true, position = "left" },
+            })
+        end
     },
 
     {

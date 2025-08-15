@@ -16,17 +16,27 @@ mason_lspconfig.setup({
     automatic_installation = true,
 })
 
--- LSP keymaps and autocompletion setup
+-- Ensure servers are setup when installed by Mason
+mason_lspconfig.setup_handlers({
+    -- Default handler for all servers
+    function(server_name)
+        lspconfig[server_name].setup({
+            on_attach = on_attach,
+            capabilities = capabilities,
+        })
+    end,
+    
+    -- Custom handlers for specific servers (defined below)
+    ["pyright"] = function() end, -- Handled separately
+    ["ruff"] = function() end,    -- Handled separately  
+    ["rust_analyzer"] = function() end, -- Handled separately
+    ["lua_ls"] = function() end,  -- Handled separately
+    ["clangd"] = function() end,  -- Handled separately
+})
+
+-- LSP keymaps setup (completion handled by blink.cmp)
 local on_attach = function(client, bufnr)
     local opts = { noremap = true, silent = true, buffer = bufnr }
-    
-    -- Enable completion triggered by <c-x><c-o>
-    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-    
-    -- Enable fast native completion
-    if client.supports_method('textDocument/completion') then
-        vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
-    end
     
     -- Keybindings
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
@@ -54,8 +64,9 @@ local on_attach = function(client, bufnr)
     vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, opts)
 end
 
--- Common LSP capabilities
+-- Common LSP capabilities (enhanced for blink.cmp)
 local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)
 
 -- Diagnostic configuration
 vim.diagnostic.config({
@@ -198,43 +209,4 @@ vim.api.nvim_create_autocmd("CursorHold", {
     end
 })
 
--- Configure completion behavior
-vim.api.nvim_create_autocmd('LspAttach', {
-    callback = function(args)
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
-        if client and client.supports_method('textDocument/completion') then
-            -- Enable completion with optimized settings
-            vim.lsp.completion.enable(true, client.id, args.buf, {
-                autotrigger = true,
-                convert = function(item)
-                    -- Optimize completion items for performance
-                    return item
-                end
-            })
-        end
-    end,
-})
-
--- Completion keymaps
-vim.keymap.set('i', '<C-Space>', '<C-x><C-o>', { silent = true, desc = 'LSP completion' })
-vim.keymap.set('i', '<Tab>', function()
-    if vim.fn.pumvisible() == 1 then
-        return '<C-n>'
-    else
-        return '<Tab>'
-    end
-end, { expr = true, silent = true })
-vim.keymap.set('i', '<S-Tab>', function()
-    if vim.fn.pumvisible() == 1 then
-        return '<C-p>'
-    else
-        return '<S-Tab>'
-    end
-end, { expr = true, silent = true })
-vim.keymap.set('i', '<CR>', function()
-    if vim.fn.pumvisible() == 1 then
-        return '<C-y>'
-    else
-        return '<CR>'
-    end
-end, { expr = true, silent = true })
+-- Completion is handled by blink.cmp
