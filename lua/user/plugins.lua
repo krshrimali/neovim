@@ -17,16 +17,30 @@ vim.g.maplocalleader = ","
 -- Install your plugins here
 require("lazy").setup {
 
-    -- COC.nvim for LSP and completion - LAZY LOAD
+    -- Native LSP configuration
     {
-        'neoclide/coc.nvim',
-        branch = 'release',
-        event = { "BufReadPre", "BufNewFile" }, -- Only load when opening files
+        "neovim/nvim-lspconfig",
+        event = { "BufReadPre", "BufNewFile" },
+        dependencies = {
+            "williamboman/mason.nvim",
+            "williamboman/mason-lspconfig.nvim",
+        },
         config = function()
-            -- Defer CoC extension installation to avoid startup delay
-            vim.defer_fn(function()
-                require("user.coc")
-            end, 1000)
+            require("user.lsp")
+        end
+    },
+
+    -- Mason for managing LSP servers
+    {
+        "williamboman/mason.nvim",
+        cmd = "Mason",
+        build = ":MasonUpdate",
+        config = function()
+            require("mason").setup({
+                ui = {
+                    border = "rounded",
+                },
+            })
         end
     },
 

@@ -35,7 +35,7 @@ end, 100)
 -- require "user.bqf" -- Now lazy loaded
 -- require "user.surround" -- Still needed for immediate text operations
 -- require "user.nvim_transparent" -- Keep for immediate UI
--- require "user.coc" -- Now lazy loaded with defer
+-- COC removed - using native vim.lsp
 
 -- Keep essential immediate configurations
 require "user.colorizer"
@@ -45,8 +45,7 @@ require "user.nvim_transparent"
 require "user.diagnostics_display"
 require "user.buffer_navigation"
 
--- Setup COC virtual lines
-require("user.coc_virtual_lines").setup()
+-- COC virtual lines removed - using native diagnostics
 
 -- fzf-lua is now loaded via lazy.nvim
 
