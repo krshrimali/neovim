@@ -628,7 +628,7 @@ require("lazy").setup {
         "wfxr/minimap.vim",
         cmd = { "Minimap", "MinimapClose", "MinimapToggle", "MinimapRefresh", "MinimapUpdateHighlight" },
         keys = {
-            { "<leader>mm", "<cmd>MinimapToggle<cr>", desc = "Toggle Minimap" },
+            { "<leader>mm", "<cmd>MinimapToggle<cr>",  desc = "Toggle Minimap" },
             { "<leader>mr", "<cmd>MinimapRefresh<cr>", desc = "Refresh Minimap" },
         },
         build = function()
@@ -660,6 +660,13 @@ require("lazy").setup {
                 }
             })
         end,
+    },
+    {
+        'windwp/nvim-autopairs',
+        event = "InsertEnter",
+        config = true
+        -- use opts = {} for passing setup options
+        -- this is equivalent to setup({}) function
     }
 
 }
