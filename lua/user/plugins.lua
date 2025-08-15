@@ -17,16 +17,41 @@ vim.g.maplocalleader = ","
 -- Install your plugins here
 require("lazy").setup {
 
-    -- COC.nvim for LSP and completion - LAZY LOAD
+    -- Native LSP configuration
     {
-        'neoclide/coc.nvim',
-        branch = 'release',
-        event = { "BufReadPre", "BufNewFile" }, -- Only load when opening files
+        "neovim/nvim-lspconfig",
+        event = { "BufReadPre", "BufNewFile" },
+        dependencies = {
+            "williamboman/mason.nvim",
+            "williamboman/mason-lspconfig.nvim",
+        },
         config = function()
-            -- Defer CoC extension installation to avoid startup delay
-            vim.defer_fn(function()
-                require("user.coc")
-            end, 1000)
+            require("user.lsp")
+        end
+    },
+
+    -- Mason for managing LSP servers
+    {
+        "williamboman/mason.nvim",
+        cmd = "Mason",
+        build = ":MasonUpdate",
+        config = function()
+            require("mason").setup({
+                ui = {
+                    border = "rounded",
+                },
+            })
+        end
+    },
+
+    -- Fast completion with blink.cmp
+    {
+        'saghen/blink.cmp',
+        lazy = false, -- lazy loading handled internally
+        dependencies = 'rafamadriz/friendly-snippets',
+        version = 'v0.*',
+        config = function()
+            require("user.blink-cmp")
         end
     },
 
@@ -572,22 +597,30 @@ require("lazy").setup {
     },
     -- LSP Configuration for goto-preview
     {
-        "neovim/nvim-lspconfig",
-        event = { "BufReadPre", "BufNewFile" },
-        config = function()
-            -- Minimal LSP setup only for goto-preview
-            require("user.goto_preview_lsp").setup()
-        end
-    },
-
-    {
         "rmagatti/goto-preview",
         dependencies = {
             "rmagatti/logger.nvim",
             "neovim/nvim-lspconfig"
         },
         event = { "BufReadPre", "BufNewFile" },
-        config = false, -- Configuration handled in goto_preview_lsp.lua
+        config = function()
+            require("goto-preview").setup({
+                width = 120,
+                height = 25,
+                border = {"↖", "─" ,"┐", "│", "┘", "─", "└", "│"},
+                default_mappings = false,
+                debug = false,
+                opacity = nil,
+                resizing_mappings = false,
+                post_open_hook = nil,
+                focus_on_open = true,
+                dismiss_on_move = false,
+                force_close = true,
+                bufhidden = "wipe",
+                stack_floating_preview_windows = true,
+                preview_window_title = { enable = true, position = "left" },
+            })
+        end
     },
 
     {
