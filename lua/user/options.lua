@@ -30,10 +30,10 @@ local options = {
     laststatus = 3,
     showcmd = true,
     ruler = false,
-    relativenumber = false, -- set relative numbered lines
-    numberwidth = 4,        -- set number column width to 2 {default 4}
-    signcolumn = "yes",     -- always show the sign column, otherwise it would shift the text each time
-    wrap = true,            -- display lines as one long line
+    relativenumber = false,    -- set relative numbered lines
+    numberwidth = 4,           -- set number column width to 2 {default 4}
+    signcolumn = "yes",        -- always show the sign column, otherwise it would shift the text each time
+    wrap = true,               -- display lines as one long line
     sidescrolloff = 8,
     guifont = "monospace:h17", -- the font used in graphical neovim applications
     title = true,
@@ -72,7 +72,7 @@ vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1e222a" })
 vim.opt.whichwrap:append "<>[]hl"
 
-vim.g.transparent_enabled = false
+vim.g.transparent_enabled = true
 vim.g.use_nerd_fonts = false
 
 vim.o.foldcolumn = "1" -- '0' is not bad
