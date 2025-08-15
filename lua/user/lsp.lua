@@ -40,7 +40,10 @@ local on_attach = function(client, bufnr)
     
     -- Keybindings
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+    -- Use goto-preview for definition to avoid quickfix
+    vim.keymap.set('n', 'gd', function()
+        require('goto-preview').goto_preview_definition()
+    end, opts)
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
     vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
     vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
@@ -51,6 +54,7 @@ local on_attach = function(client, bufnr)
     end, opts)
     vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, opts)
     vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+    -- Disable code action icons in insert mode by only enabling in normal and visual modes
     vim.keymap.set({ 'n', 'v' }, '<leader>ca', vim.lsp.buf.code_action, opts)
     vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
     vim.keymap.set('n', '<leader>f', function()
@@ -89,6 +93,11 @@ for type, icon in pairs(signs) do
     local hl = "DiagnosticSign" .. type
     vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
+
+-- Disable code action signs/icons that might appear in insert mode
+-- This prevents lightbulb icons from showing up
+vim.fn.sign_define("LightBulbSign", { text = "", texthl = "", numhl = "" })
+vim.fn.sign_define("CodeActionSign", { text = "", texthl = "", numhl = "" })
 
 -- Python: Pyright for LSP features, Ruff for formatting/diagnostics
 lspconfig.pyright.setup({
