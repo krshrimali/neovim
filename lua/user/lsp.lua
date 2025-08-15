@@ -1,43 +1,19 @@
 -- Native LSP configuration
 -- Optimized for performance with fast completion
+-- Pyright for navigation/definitions, Ruff for diagnostics/linting
 
 local lspconfig = require('lspconfig')
-local mason_lspconfig = require('mason-lspconfig')
+-- local mason_lspconfig = require('mason-lspconfig')
 
--- Setup Mason to automatically install LSP servers
-mason_lspconfig.setup({
-    ensure_installed = {
-        "pyright",
-        "ruff",
-        "rust_analyzer", 
-        "lua_ls",
-        "clangd",
-    },
-    automatic_installation = true,
-})
-
--- Ensure servers are setup when installed by Mason
-mason_lspconfig.setup_handlers({
-    -- Default handler for all servers
-    function(server_name)
-        lspconfig[server_name].setup({
-            on_attach = on_attach,
-            capabilities = capabilities,
-        })
-    end,
-    
-    -- Custom handlers for specific servers (defined below)
-    ["pyright"] = function() end, -- Handled separately
-    ["ruff"] = function() end,    -- Handled separately  
-    ["rust_analyzer"] = function() end, -- Handled separately
-    ["lua_ls"] = function() end,  -- Handled separately
-    ["clangd"] = function() end,  -- Handled separately
-})
+-- Prevent duplicate LSP server instances
+-- Common LSP capabilities (enhanced for blink.cmp)
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)
 
 -- LSP keymaps setup (completion handled by blink.cmp)
 local on_attach = function(client, bufnr)
     local opts = { noremap = true, silent = true, buffer = bufnr }
-    
+
     -- Keybindings
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
@@ -54,9 +30,35 @@ local on_attach = function(client, bufnr)
     vim.keymap.set({ 'n', 'v' }, '<leader>ca', vim.lsp.buf.code_action, opts)
     vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
     vim.keymap.set('n', '<leader>f', function()
-        vim.lsp.buf.format({ async = true })
+        -- Add error handling for formatting
+        local success, err = pcall(vim.lsp.buf.format, { async = true })
+        if not success then
+            vim.notify("Formatting failed: " .. tostring(err), vim.log.levels.ERROR)
+        end
     end, opts)
-    
+    vim.keymap.set({ 'n', 'v' }, '<leader>lf', function()
+        local mode = vim.api.nvim_get_mode().mode
+        local success, err
+
+        if mode == 'v' or mode == 'V' or mode == '\22' then -- Visual modes
+            -- Format selection
+            success, err = pcall(vim.lsp.buf.format, {
+                async = true,
+                range = {
+                    start = vim.api.nvim_buf_get_mark(0, '<'),
+                    ['end'] = vim.api.nvim_buf_get_mark(0, '>')
+                }
+            })
+        else
+            -- Format entire file
+            success, err = pcall(vim.lsp.buf.format, { async = true })
+        end
+
+        if not success then
+            vim.notify("Formatting failed: " .. tostring(err), vim.log.levels.ERROR)
+        end
+    end, opts)
+
     -- Diagnostic navigation
     vim.keymap.set('n', '[g', vim.diagnostic.goto_prev, opts)
     vim.keymap.set('n', ']g', vim.diagnostic.goto_next, opts)
@@ -64,11 +66,7 @@ local on_attach = function(client, bufnr)
     vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, opts)
 end
 
--- Common LSP capabilities (enhanced for blink.cmp)
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)
-
--- Diagnostic configuration
+-- -- Diagnostic configuration
 vim.diagnostic.config({
     virtual_text = false, -- Disable inline virtual text for performance
     signs = true,
@@ -90,31 +88,34 @@ for type, icon in pairs(signs) do
     vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
 
--- Python: Pyright for LSP features, Ruff for formatting/diagnostics
+-- Python: Pyright for LSP features (navigation, completion, hover)
 lspconfig.pyright.setup({
     on_attach = on_attach,
     capabilities = capabilities,
     settings = {
         python = {
             analysis = {
-                -- Optimize for large workspaces
+                -- Keep type checking for navigation but diagnostics will be filtered
                 autoSearchPaths = true,
                 useLibraryCodeForTypes = true,
                 diagnosticMode = "openFilesOnly", -- Only analyze open files for performance
-                typeCheckingMode = "basic", -- Use basic type checking for speed
+                typeCheckingMode = "basic",       -- Use basic type checking for speed
             },
         },
     },
 })
 
--- Ruff for Python linting and formatting
+-- Ruff for Python linting, formatting, and diagnostics
 lspconfig.ruff.setup({
     on_attach = function(client, bufnr)
         -- Disable hover in favor of Pyright
         client.server_capabilities.hoverProvider = false
+        -- Disable completion in favor of Pyright
+        client.server_capabilities.completionProvider = false
         on_attach(client, bufnr)
     end,
     capabilities = capabilities,
+    single_file_support = true,
     init_options = {
         settings = {
             -- Configure ruff for fast operation
@@ -190,23 +191,37 @@ lspconfig.clangd.setup({
 vim.api.nvim_create_autocmd('BufWritePre', {
     pattern = { '*.py', '*.rs', '*.lua', '*.c', '*.cpp', '*.h', '*.hpp' },
     callback = function()
-        vim.lsp.buf.format({ timeout_ms = 1000 })
+        -- Add error handling and timeout
+        local success, err = pcall(function()
+            vim.lsp.buf.format({
+                timeout_ms = 1000,
+                async = false -- Make it synchronous for save operations
+            })
+        end)
+        if not success then
+            vim.notify("Auto-format failed: " .. tostring(err), vim.log.levels.WARN)
+        end
     end,
 })
 
--- Show line diagnostics automatically in hover window
-vim.api.nvim_create_autocmd("CursorHold", {
-    callback = function()
-        local opts = {
-            focusable = false,
-            close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
-            border = 'rounded',
-            source = 'always',
-            prefix = ' ',
-            scope = 'cursor',
-        }
-        vim.diagnostic.open_float(nil, opts)
-    end
-})
-
+-- Show line diagnostics on cursor hold (less aggressive)
+-- vim.api.nvim_create_autocmd("CursorHold", {
+--     callback = function()
+--         -- Only show diagnostics if there are any on the current line
+--         local line_diagnostics = vim.diagnostic.get(0, { lnum = vim.fn.line('.') - 1 })
+--
+--         if #line_diagnostics > 0 then
+--             local opts = {
+--                 focusable = false,
+--                 close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+--                 border = 'rounded',
+--                 source = 'always',
+--                 prefix = ' ',
+--                 scope = 'cursor',
+--             }
+--             vim.diagnostic.open_float(nil, opts)
+--         end
+--     end
+-- })
+--
 -- Completion is handled by blink.cmp
