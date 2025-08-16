@@ -11,7 +11,7 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)
 
 -- LSP keymaps setup (completion handled by blink.cmp)
-local on_attach = function(client, bufnr)
+local on_attach = function(_, bufnr)
     local opts = { noremap = true, silent = true, buffer = bufnr }
 
     -- Keybindings
@@ -60,10 +60,10 @@ local on_attach = function(client, bufnr)
     end, opts)
 
     -- Diagnostic navigation
-    vim.keymap.set('n', '[g', vim.diagnostic.goto_prev, opts)
-    vim.keymap.set('n', ']g', vim.diagnostic.goto_next, opts)
-    vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, opts)
-    vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, opts)
+    vim.keymap.set('n', '[g', function() vim.diagnostic.jump({ count = -1, float = true }) end, opts)
+    vim.keymap.set('n', ']g', function() vim.diagnostic.jump({ count = 1, float = true }) end, opts)
+    vim.keymap.set('n', '<leader>De', vim.diagnostic.open_float, opts)
+    vim.keymap.set('n', '<leader>Q', vim.diagnostic.setloclist, opts)
 end
 
 -- -- Diagnostic configuration
@@ -75,7 +75,6 @@ vim.diagnostic.config({
     severity_sort = true,
     float = {
         border = "rounded",
-        source = "always",
         header = "",
         prefix = "",
     },
@@ -184,22 +183,23 @@ lspconfig.clangd.setup({
     },
 })
 
+-- NOTE: Disabled auto-format for now.
 -- Auto-format on save for supported languages
-vim.api.nvim_create_autocmd('BufWritePre', {
-    pattern = { '*.py', '*.rs', '*.lua', '*.c', '*.cpp', '*.h', '*.hpp' },
-    callback = function()
-        -- Add error handling and timeout
-        local success, err = pcall(function()
-            vim.lsp.buf.format({
-                timeout_ms = 1000,
-                async = false -- Make it synchronous for save operations
-            })
-        end)
-        if not success then
-            vim.notify("Auto-format failed: " .. tostring(err), vim.log.levels.WARN)
-        end
-    end,
-})
+-- vim.api.nvim_create_autocmd('BufWritePre', {
+--     pattern = { '*.py', '*.rs', '*.lua', '*.c', '*.cpp', '*.h', '*.hpp' },
+--     callback = function()
+--         -- Add error handling and timeout
+--         local success, err = pcall(function()
+--             vim.lsp.buf.format({
+--                 timeout_ms = 1000,
+--                 async = false -- Make it synchronous for save operations
+--             })
+--         end)
+--         if not success then
+--             vim.notify("Auto-format failed: " .. tostring(err), vim.log.levels.WARN)
+--         end
+--     end,
+-- })
 
 -- Show line diagnostics on cursor hold (less aggressive)
 -- vim.api.nvim_create_autocmd("CursorHold", {
