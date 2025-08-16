@@ -30,9 +30,7 @@ function M.toggle_diagnostics()
   end
 end
 
-function M.isempty(s)
-  return s == nil or s == ""
-end
+function M.isempty(s) return s == nil or s == "" end
 
 function M.smart_quit()
   local bufnr = vim.api.nvim_get_current_buf()
@@ -41,9 +39,7 @@ function M.smart_quit()
     vim.ui.input({
       prompt = "You have unsaved changes. Quit anyway? (y/n) ",
     }, function(input)
-      if input == "y" then
-        vim.cmd "q!"
-      end
+      if input == "y" then vim.cmd "q!" end
     end)
   else
     vim.cmd "q!"

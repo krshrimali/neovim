@@ -3,5 +3,5 @@
 -- Can be loaded with :colorscheme hexxa-dark
 
 -- Load and setup the theme
-local hexxa_theme = require("user.themes.hexxa-dark-init")
+local hexxa_theme = require "user.themes.hexxa-dark-init"
 hexxa_theme.setup()

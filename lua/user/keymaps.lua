@@ -121,16 +121,16 @@ keymap("n", "<C-z>", "<cmd>ZenMode<cr>", opts)
 -- vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
 M.show_documentation = function()
-    local filetype = vim.bo.filetype
-    if vim.tbl_contains({ "vim", "help" }, filetype) then
-        vim.cmd("h " .. vim.fn.expand "<cword>")
-    elseif vim.tbl_contains({ "man" }, filetype) then
-        vim.cmd("Man " .. vim.fn.expand "<cword>")
-    elseif vim.fn.expand "%:t" == "Cargo.toml" then
-        require("crates").show_popup()
-    else
-        vim.lsp.buf.hover()
-    end
+  local filetype = vim.bo.filetype
+  if vim.tbl_contains({ "vim", "help" }, filetype) then
+    vim.cmd("h " .. vim.fn.expand "<cword>")
+  elseif vim.tbl_contains({ "man" }, filetype) then
+    vim.cmd("Man " .. vim.fn.expand "<cword>")
+  elseif vim.fn.expand "%:t" == "Cargo.toml" then
+    require("crates").show_popup()
+  else
+    vim.lsp.buf.hover()
+  end
 end
 
 vim.api.nvim_set_keymap("n", "K", ":lua require('user.keymaps').show_documentation()<CR>", opts)
@@ -190,29 +190,28 @@ keymap("n", "<m-q>", ":call QuickFixToggle()<cr>", opts)
 
 vim.g.copilot_no_tab_map = true
 
-
 -- Helper functions to fetch the current scope and set `search_dirs`
 _G.find_files = function()
-    local current_path = vim.fn.expand "%:p:h"
-    local relative_path = vim.fn.fnamemodify(current_path, ":~:.")
+  local current_path = vim.fn.expand "%:p:h"
+  local relative_path = vim.fn.fnamemodify(current_path, ":~:.")
 
-    require("fzf-lua").files {
-        cwd = relative_path,
-        winopts = {
-            preview = { hidden = true },
-        },
-    }
+  require("fzf-lua").files {
+    cwd = relative_path,
+    winopts = {
+      preview = { hidden = true },
+    },
+  }
 end
 _G.live_grep = function()
-    local current_path = vim.fn.expand "%:p:h"
-    local relative_path = vim.fn.fnamemodify(current_path, ":~:.")
+  local current_path = vim.fn.expand "%:p:h"
+  local relative_path = vim.fn.fnamemodify(current_path, ":~:.")
 
-    require("fzf-lua").live_grep {
-        cwd = relative_path,
-        winopts = {
-            preview = { hidden = true },
-        },
-    }
+  require("fzf-lua").live_grep {
+    cwd = relative_path,
+    winopts = {
+      preview = { hidden = true },
+    },
+  }
 end
 
 vim.api.nvim_set_keymap("n", "<Leader><leader>f", ":lua find_files()<CR>", { noremap = true })
@@ -251,37 +250,42 @@ vim.keymap.set("n", "<leader>lgg", "<cmd>lua require('goto-preview').goto_previe
 -- )
 vim.keymap.set("n", "<leader>lgw", "<cmd>lua require('goto-preview').close_all_win()<CR>", { noremap = true })
 -- vim.keymap.set("n", "<leader>gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>", { noremap = true })
-vim.keymap.set(
-    { "n", "x" },
-    "<leader>gy",
-    function()
-        Snacks.gitbrowse({
-            open = function(url) vim.fn.setreg("+", url) end,
-        })
-    end,
-    { desc = "Git Browse (copy)" }
-)
+vim.keymap.set({ "n", "x" }, "<leader>gy", function()
+  Snacks.gitbrowse {
+    open = function(url) vim.fn.setreg("+", url) end,
+  }
+end, { desc = "Git Browse (copy)" })
 
 -- nnoremap <leader>fb <cmd>FzfLua files cwd=/prod/tools/base/<cr>
 -- nnoremap <leader>gb <cmd>FzfLua live_grep cwd=/prod/tools/base/<cr>
-vim.keymap.set('n', '<leader>fb', function()
-    require('fzf-lua').files {
-        cwd = '/prod/tools/base/',
-        winopts = {
-            height = 0.6,
-            width = 0.8,
-        },
+vim.keymap.set(
+  "n",
+  "<leader>fb",
+  function()
+    require("fzf-lua").files {
+      cwd = "/prod/tools/base/",
+      winopts = {
+        height = 0.6,
+        width = 0.8,
+      },
     }
-end, { desc = 'Find files in base' })
-vim.keymap.set('n', '<leader>gb', function()
-    require('fzf-lua').live_grep {
-        cwd = '/prod/tools/base/',
-        winopts = {
-            height = 0.6,
-            width = 0.8,
-        },
+  end,
+  { desc = "Find files in base" }
+)
+vim.keymap.set(
+  "n",
+  "<leader>gb",
+  function()
+    require("fzf-lua").live_grep {
+      cwd = "/prod/tools/base/",
+      winopts = {
+        height = 0.6,
+        width = 0.8,
+      },
     }
-end, { desc = 'Live grep in base' })
+  end,
+  { desc = "Live grep in base" }
+)
 
 -- Diagnostic Display Plugin Keymaps (Native LSP)
 keymap("n", "<leader>dl", "<cmd>lua require('user.diagnostics_display').show_line_diagnostics()<cr>", opts)
@@ -303,12 +307,12 @@ keymap("n", "<leader>mc", "<cmd>MinimapClose<cr>", opts)
 --     vim.cmd('normal! zz')
 -- end, { desc = 'Scroll down half page and center' })
 --
-vim.keymap.set('n', '<C-f>', function()
-    vim.cmd('normal! ' .. vim.o.scroll .. 'j')
-    vim.cmd('normal! zz')
-end, { desc = 'Scroll down and center' })
-vim.keymap.set('n', '<C-d>', function()
-    vim.cmd('normal! ' .. vim.o.scroll .. 'j')
-    vim.cmd('normal! zz')
+vim.keymap.set("n", "<C-f>", function()
+  vim.cmd("normal! " .. vim.o.scroll .. "j")
+  vim.cmd "normal! zz"
+end, { desc = "Scroll down and center" })
+vim.keymap.set("n", "<C-d>", function()
+  vim.cmd("normal! " .. vim.o.scroll .. "j")
+  vim.cmd "normal! zz"
 end, { desc = "Scroll down and center", noremap = true, silent = true, remap = false })
 return M

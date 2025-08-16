@@ -18,7 +18,6 @@
 --   return
 -- end
 
-
 -- Alternative: You can also load other themes by uncommenting below
 -- local colorscheme = "darkplus"
 -- local colorscheme = "moonfly"

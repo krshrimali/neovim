@@ -26,7 +26,7 @@ function M.setup()
   hl("TelescopeMultiSelection", { fg = colors.purple })
   hl("TelescopeMatching", { fg = colors.yellow, bold = true })
   hl("TelescopePromptPrefix", { fg = colors.blue })
-  
+
   -- FZF-Lua
   hl("FzfLuaNormal", { fg = colors.fg, bg = colors.bg_popup })
   hl("FzfLuaBorder", { fg = colors.border, bg = colors.bg_popup })
@@ -42,7 +42,7 @@ function M.setup()
   hl("FzfLuaScrollFloatFull", { fg = colors.blue })
   hl("FzfLuaHelpNormal", { fg = colors.fg, bg = colors.bg_popup })
   hl("FzfLuaHelpBorder", { fg = colors.border, bg = colors.bg_popup })
-  
+
   -- NvimTree
   hl("NvimTreeNormal", { fg = colors.fg, bg = colors.bg_alt })
   hl("NvimTreeNormalNC", { fg = colors.fg, bg = colors.bg_alt })
@@ -69,7 +69,7 @@ function M.setup()
   hl("NvimTreeBookmark", { fg = colors.pink })
   hl("NvimTreeLiveFilterPrefix", { fg = colors.yellow, bold = true })
   hl("NvimTreeLiveFilterValue", { fg = colors.yellow, bold = true })
-  
+
   -- Lualine
   hl("lualine_a_normal", { fg = colors.bg, bg = colors.blue, bold = true })
   hl("lualine_a_insert", { fg = colors.bg, bg = colors.green, bold = true })
@@ -89,7 +89,7 @@ function M.setup()
   hl("lualine_c_replace", { fg = colors.fg, bg = colors.bg })
   hl("lualine_c_command", { fg = colors.fg, bg = colors.bg })
   hl("lualine_c_terminal", { fg = colors.fg, bg = colors.bg })
-  
+
   -- Bufferline
   hl("BufferLineBackground", { fg = colors.fg_dark, bg = colors.bg_alt })
   hl("BufferLineBuffer", { fg = colors.fg_dark, bg = colors.bg_alt })
@@ -110,7 +110,7 @@ function M.setup()
   hl("BufferLineTab", { fg = colors.fg_dark, bg = colors.bg_alt })
   hl("BufferLineTabSelected", { fg = colors.fg_light, bg = colors.bg })
   hl("BufferLineTabClose", { fg = colors.red, bg = colors.bg_alt })
-  
+
   -- GitSigns
   hl("GitSignsAdd", { fg = colors.git_add })
   hl("GitSignsChange", { fg = colors.git_change })
@@ -122,7 +122,7 @@ function M.setup()
   hl("GitSignsChangeLn", { bg = colors.diff_change })
   hl("GitSignsDeleteLn", { bg = colors.diff_delete })
   hl("GitSignsCurrentLineBlame", { fg = colors.fg_dark, italic = true })
-  
+
   -- Neogit
   hl("NeogitBranch", { fg = colors.purple })
   hl("NeogitRemote", { fg = colors.orange })
@@ -138,7 +138,7 @@ function M.setup()
   hl("NeogitRebaseDone", { fg = colors.green })
   hl("NeogitTagName", { fg = colors.yellow })
   hl("NeogitTagDistance", { fg = colors.cyan })
-  
+
   -- Diffview
   hl("DiffviewPrimary", { fg = colors.blue })
   hl("DiffviewSecondary", { fg = colors.purple })
@@ -157,7 +157,7 @@ function M.setup()
   hl("DiffviewHash", { fg = colors.yellow })
   hl("DiffviewTimeAgo", { fg = colors.cyan })
   hl("DiffviewCommitAuthor", { fg = colors.orange })
-  
+
   -- Which-key
   hl("WhichKey", { fg = colors.blue })
   hl("WhichKeyGroup", { fg = colors.purple })
@@ -167,7 +167,7 @@ function M.setup()
   hl("WhichKeyFloat", { bg = colors.bg_popup })
   hl("WhichKeyBorder", { fg = colors.border, bg = colors.bg_popup })
   hl("WhichKeyValue", { fg = colors.cyan })
-  
+
   -- Notify
   hl("NotifyERRORBorder", { fg = colors.error })
   hl("NotifyWARNBorder", { fg = colors.warning })
@@ -189,7 +189,7 @@ function M.setup()
   hl("NotifyINFOBody", { fg = colors.fg, bg = colors.bg_popup })
   hl("NotifyDEBUGBody", { fg = colors.fg, bg = colors.bg_popup })
   hl("NotifyTRACEBody", { fg = colors.fg, bg = colors.bg_popup })
-  
+
   -- Trouble
   hl("TroubleText", { fg = colors.fg })
   hl("TroubleCount", { fg = colors.purple, bg = colors.bg_dark })
@@ -207,7 +207,7 @@ function M.setup()
   hl("TroubleFile", { fg = colors.blue })
   hl("TroubleSource", { fg = colors.fg_dark })
   hl("TroubleCode", { fg = colors.fg_dark })
-  
+
   -- LSP Saga
   hl("LspSagaBorderTitle", { fg = colors.cyan })
   hl("LspSagaHoverBorder", { fg = colors.blue })
@@ -223,12 +223,12 @@ function M.setup()
   hl("DefinitionIcon", { fg = colors.blue })
   hl("ReferencesIcon", { fg = colors.blue })
   hl("TargetWord", { fg = colors.cyan })
-  
+
   -- Outline
   hl("OutlineGuides", { fg = colors.fg_dark })
   hl("OutlineFoldMarker", { fg = colors.blue })
   hl("OutlineDetails", { fg = colors.fg_dark })
-  
+
   -- Comment.nvim (todo-comments)
   hl("TodoBgFIX", { fg = colors.bg, bg = colors.error, bold = true })
   hl("TodoBgHACK", { fg = colors.bg, bg = colors.warning, bold = true })
@@ -251,24 +251,24 @@ function M.setup()
   hl("TodoSignTEST", { fg = colors.cyan })
   hl("TodoSignTODO", { fg = colors.yellow })
   hl("TodoSignWARN", { fg = colors.warning })
-  
+
   -- Illuminate
   hl("IlluminatedWordText", { bg = colors.cursor_line })
   hl("IlluminatedWordRead", { bg = colors.cursor_line })
   hl("IlluminatedWordWrite", { bg = colors.cursor_line })
-  
+
   -- Indent Blankline
   hl("IndentBlanklineChar", { fg = colors.border })
   hl("IndentBlanklineContextChar", { fg = colors.purple })
   hl("IndentBlanklineContextStart", { underline = true })
   hl("IndentBlanklineSpaceChar", { fg = colors.border })
   hl("IndentBlanklineSpaceCharBlankline", { fg = colors.border })
-  
+
   -- Modern indent-blankline.nvim (v3+)
   hl("IblIndent", { fg = colors.border })
   hl("IblWhitespace", { fg = colors.border })
   hl("IblScope", { fg = colors.purple })
-  
+
   -- Spectre
   hl("SpectreSearch", { fg = colors.yellow, bg = colors.search })
   hl("SpectreReplace", { fg = colors.green, bg = colors.search })
@@ -276,33 +276,33 @@ function M.setup()
   hl("SpectreBorder", { fg = colors.border })
   hl("SpectreDir", { fg = colors.purple })
   hl("SpectreHeader", { fg = colors.blue, bold = true })
-  
+
   -- Cybu (buffer switcher)
   hl("CybuFocus", { fg = colors.yellow })
   hl("CybuAdjacent", { fg = colors.fg_dark })
   hl("CybuBackground", { fg = colors.fg_dark })
   hl("CybuBorder", { fg = colors.border })
-  
+
   -- Registers
   hl("RegistersNormal", { fg = colors.fg, bg = colors.bg_popup })
   hl("RegistersBorder", { fg = colors.border, bg = colors.bg_popup })
   hl("RegistersPreview", { fg = colors.fg_dark })
-  
+
   -- Goto Preview
   hl("GotoPreviewBorder", { fg = colors.border, bg = colors.bg_popup })
-  
+
   -- Git Blame
   hl("GitBlameVirtualText", { fg = colors.fg_dark, italic = true })
-  
+
   -- Toggleterm
   hl("ToggleTerm1Normal", { bg = colors.bg })
   hl("ToggleTerm1NormalFloat", { bg = colors.bg_popup })
   hl("ToggleTerm1FloatBorder", { fg = colors.border, bg = colors.bg_popup })
-  
+
   -- Winbar
   hl("WinBar", { fg = colors.fg, bg = colors.bg })
   hl("WinBarNC", { fg = colors.fg_dark, bg = colors.bg })
-  
+
   -- Render Markdown
   hl("RenderMarkdownH1", { fg = colors.blue, bold = true })
   hl("RenderMarkdownH2", { fg = colors.cyan, bold = true })
@@ -321,7 +321,7 @@ function M.setup()
   hl("RenderMarkdownWarn", { fg = colors.warning })
   hl("RenderMarkdownError", { fg = colors.error })
   hl("RenderMarkdownQuote", { fg = colors.green, italic = true })
-  
+
   -- Snacks.nvim
   hl("SnacksNotifierInfo", { fg = colors.info })
   hl("SnacksNotifierWarn", { fg = colors.warning })
@@ -332,7 +332,7 @@ function M.setup()
   hl("SnacksNotifierBorder", { fg = colors.border })
   hl("SnacksNotifierFooter", { fg = colors.fg_dark })
   hl("SnacksNotifierIcon", { fg = colors.blue })
-  
+
   -- Avante.nvim
   hl("AvanteTitle", { fg = colors.blue, bold = true })
   hl("AvanteReversedTitle", { fg = colors.bg, bg = colors.blue, bold = true })
@@ -343,12 +343,12 @@ function M.setup()
   hl("AvanteConflictCurrent", { fg = colors.git_add })
   hl("AvanteConflictIncoming", { fg = colors.git_change })
   hl("AvanteConflictAncestor", { fg = colors.purple })
-  
+
   -- Context Pilot
   hl("ContextPilotNormal", { fg = colors.fg, bg = colors.bg_popup })
   hl("ContextPilotBorder", { fg = colors.border, bg = colors.bg_popup })
   hl("ContextPilotTitle", { fg = colors.blue, bold = true })
-  
+
   -- BQF (Better Quickfix)
   hl("BqfPreviewBorder", { fg = colors.border })
   hl("BqfPreviewTitle", { fg = colors.blue, bold = true })
@@ -358,16 +358,16 @@ function M.setup()
   hl("BqfPreviewCursorLine", { bg = colors.cursor_line })
   hl("BqfPreviewRange", { bg = colors.selection })
   hl("BqfSign", { fg = colors.blue })
-  
+
   -- Numb (peek lines)
   hl("NumbToggle", { fg = colors.purple, bold = true })
-  
+
   -- Spider (word motion)
   -- No specific highlights needed, uses default cursor
-  
+
   -- Project.nvim
   -- Uses telescope highlights
-  
+
   -- Mini.pick
   hl("MiniPickBorder", { fg = colors.border, bg = colors.bg_popup })
   hl("MiniPickBorderBusy", { fg = colors.yellow, bg = colors.bg_popup })
@@ -382,7 +382,7 @@ function M.setup()
   hl("MiniPickPreviewLine", { bg = colors.cursor_line })
   hl("MiniPickPreviewRegion", { bg = colors.selection })
   hl("MiniPickPrompt", { fg = colors.blue, bg = colors.bg_popup })
-  
+
   -- COC.nvim specific highlights
   hl("CocSearch", { fg = colors.yellow, bg = colors.search })
   hl("CocMenuSel", { bg = colors.selection })
@@ -412,16 +412,16 @@ function M.setup()
   hl("CocSemOperator", { fg = colors.purple })
   hl("CocSemNamespace", { fg = colors.blue, italic = true })
   hl("CocSemVariable", { fg = colors.fg })
-  
+
   -- Dressing.nvim
   hl("DressingBorder", { fg = colors.border, bg = colors.bg_popup })
   hl("DressingTitle", { fg = colors.blue, bold = true })
   hl("DressingSelectIdx", { fg = colors.purple })
   hl("DressingSelectText", { fg = colors.fg })
-  
+
   -- Colorizer
   -- Uses dynamic colors, no specific theme needed
-  
+
   -- Mason
   hl("MasonHeader", { fg = colors.bg, bg = colors.blue, bold = true })
   hl("MasonHeaderSecondary", { fg = colors.bg, bg = colors.purple, bold = true })
@@ -436,7 +436,7 @@ function M.setup()
   hl("MasonMutedBlockBold", { fg = colors.fg_dark, bg = colors.bg_dark, bold = true })
   hl("MasonError", { fg = colors.error })
   hl("MasonWarning", { fg = colors.warning })
-  
+
   -- Additional modern plugin support
   -- Lazy.nvim
   hl("LazyProgressTodo", { fg = colors.fg_dark })
@@ -469,14 +469,14 @@ function M.setup()
   hl("LazyTaskError", { fg = colors.error })
   hl("LazyDir", { fg = colors.blue })
   hl("LazyUrl", { fg = colors.blue, underline = true })
-  
+
   -- Dashboard/Alpha
   hl("AlphaShortcut", { fg = colors.blue })
   hl("AlphaHeader", { fg = colors.purple })
   hl("AlphaHeaderLabel", { fg = colors.cyan })
   hl("AlphaFooter", { fg = colors.green, italic = true })
   hl("AlphaButtons", { fg = colors.fg })
-  
+
   -- Noice.nvim
   hl("NoiceCompletionItemKindDefault", { fg = colors.fg })
   hl("NoiceCompletionItemMenu", { fg = colors.fg_dark })

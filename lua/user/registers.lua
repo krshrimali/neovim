@@ -1,11 +1,11 @@
-local registers = require("registers")
+local registers = require "registers"
 
-registers.setup({
+registers.setup {
   hide_only_whitespace = true,
   show_empty = true,
   trim_whitespace = true,
   window = {
-    border = "rounded"
+    border = "rounded",
   },
   registers_delay = 0,
   registers_register_key_sleep = 0,
@@ -18,7 +18,7 @@ registers.setup({
   registers_normal_mode = 1,
   registers_visual_mode = 1,
   registers_insert_mode = 1,
-})
+}
 
 -- vim.g.registers_return_symbol = "\n" --'⏎' by default
 -- vim.g.registers_tab_symbol = "\t" --'·' by default

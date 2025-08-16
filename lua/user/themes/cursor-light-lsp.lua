@@ -19,31 +19,31 @@ function M.setup()
   hl("DiagnosticInfo", { fg = colors.info })
   hl("DiagnosticHint", { fg = colors.hint })
   hl("DiagnosticOk", { fg = colors.green })
-  
+
   hl("DiagnosticVirtualTextError", { fg = colors.error, italic = true })
   hl("DiagnosticVirtualTextWarn", { fg = colors.warning, italic = true })
   hl("DiagnosticVirtualTextInfo", { fg = colors.info, italic = true })
   hl("DiagnosticVirtualTextHint", { fg = colors.hint, italic = true })
   hl("DiagnosticVirtualTextOk", { fg = colors.green, italic = true })
-  
+
   hl("DiagnosticUnderlineError", { undercurl = true, sp = colors.error })
   hl("DiagnosticUnderlineWarn", { undercurl = true, sp = colors.warning })
   hl("DiagnosticUnderlineInfo", { undercurl = true, sp = colors.info })
   hl("DiagnosticUnderlineHint", { undercurl = true, sp = colors.hint })
   hl("DiagnosticUnderlineOk", { undercurl = true, sp = colors.green })
-  
+
   hl("DiagnosticFloatingError", { fg = colors.error })
   hl("DiagnosticFloatingWarn", { fg = colors.warning })
   hl("DiagnosticFloatingInfo", { fg = colors.info })
   hl("DiagnosticFloatingHint", { fg = colors.hint })
   hl("DiagnosticFloatingOk", { fg = colors.green })
-  
+
   hl("DiagnosticSignError", { fg = colors.error })
   hl("DiagnosticSignWarn", { fg = colors.warning })
   hl("DiagnosticSignInfo", { fg = colors.info })
   hl("DiagnosticSignHint", { fg = colors.hint })
   hl("DiagnosticSignOk", { fg = colors.green })
-  
+
   -- LSP Semantic tokens
   hl("@lsp.type.class", { fg = colors.blue, bold = true })
   hl("@lsp.type.decorator", { fg = colors.pink })
@@ -60,7 +60,7 @@ function M.setup()
   hl("@lsp.type.type", { fg = colors.blue })
   hl("@lsp.type.typeParameter", { fg = colors.blue, italic = true })
   hl("@lsp.type.variable", { fg = colors.fg })
-  
+
   hl("@lsp.mod.declaration", { bold = true })
   hl("@lsp.mod.definition", { bold = true })
   hl("@lsp.mod.readonly", { italic = true })
@@ -71,48 +71,48 @@ function M.setup()
   hl("@lsp.mod.modification", { underline = true })
   hl("@lsp.mod.documentation", { italic = true })
   hl("@lsp.mod.defaultLibrary", { italic = true })
-  
+
   -- LSP References
   hl("LspReferenceText", { bg = colors.cursor_line })
   hl("LspReferenceRead", { bg = colors.cursor_line })
   hl("LspReferenceWrite", { bg = colors.cursor_line, underline = true })
-  
+
   -- LSP Code Lens
   hl("LspCodeLens", { fg = colors.fg_dark, italic = true })
   hl("LspCodeLensSeparator", { fg = colors.fg_dark, italic = true })
-  
+
   -- LSP Signature Help
   hl("LspSignatureActiveParameter", { fg = colors.yellow, bold = true })
-  
+
   -- LSP Inlay Hints
   hl("LspInlayHint", { fg = colors.fg_dark, italic = true })
-  
+
   -- CoC.nvim specific highlights
   hl("CocErrorSign", { fg = colors.error })
   hl("CocWarningSign", { fg = colors.warning })
   hl("CocInfoSign", { fg = colors.info })
   hl("CocHintSign", { fg = colors.hint })
-  
+
   hl("CocErrorFloat", { fg = colors.error, bg = colors.bg_popup })
   hl("CocWarningFloat", { fg = colors.warning, bg = colors.bg_popup })
   hl("CocInfoFloat", { fg = colors.info, bg = colors.bg_popup })
   hl("CocHintFloat", { fg = colors.hint, bg = colors.bg_popup })
-  
+
   hl("CocErrorVirtualText", { fg = colors.error, italic = true })
   hl("CocWarningVirtualText", { fg = colors.warning, italic = true })
   hl("CocInfoVirtualText", { fg = colors.info, italic = true })
   hl("CocHintVirtualText", { fg = colors.hint, italic = true })
-  
+
   hl("CocErrorLine", { bg = colors.diff_delete })
   hl("CocWarningLine", { bg = colors.diff_change })
   hl("CocInfoLine", { bg = colors.diff_add })
   hl("CocHintLine", { bg = colors.diff_add })
-  
+
   hl("CocErrorHighlight", { undercurl = true, sp = colors.error })
   hl("CocWarningHighlight", { undercurl = true, sp = colors.warning })
   hl("CocInfoHighlight", { undercurl = true, sp = colors.info })
   hl("CocHintHighlight", { undercurl = true, sp = colors.hint })
-  
+
   -- CoC List (FZF-style interface)
   hl("CocListMode", { fg = colors.bg, bg = colors.blue, bold = true })
   hl("CocListPath", { fg = colors.cyan })
@@ -134,7 +134,7 @@ function M.setup()
   hl("CocListBgCyan", { bg = colors.selection })
   hl("CocListBgWhite", { bg = colors.bg_light })
   hl("CocListBgBlack", { bg = colors.bg_dark })
-  
+
   -- CoC Completion menu
   hl("CocPumMenu", { fg = colors.fg, bg = colors.bg_popup })
   hl("CocPumShortcut", { fg = colors.purple })
@@ -143,28 +143,28 @@ function M.setup()
   hl("CocPumFloating", { fg = colors.fg, bg = colors.bg_popup })
   hl("CocPumSearch", { fg = colors.yellow, bg = colors.search })
   hl("CocPumVirtualText", { fg = colors.fg_dark, italic = true })
-  
+
   -- CoC Floating windows
   hl("CocFloating", { fg = colors.fg, bg = colors.bg_popup })
   hl("CocFloatingBorder", { fg = colors.border, bg = colors.bg_popup })
   hl("CocFloatingDividingLine", { fg = colors.border })
-  
+
   -- CoC Hover
   hl("CocHoverRange", { bg = colors.selection })
-  
+
   -- CoC Cursors (multiple cursors)
   hl("CocCursorRange", { bg = colors.selection })
   hl("CocHighlightText", { bg = colors.cursor_line })
   hl("CocHighlightRead", { bg = colors.cursor_line })
   hl("CocHighlightWrite", { bg = colors.cursor_line, underline = true })
-  
+
   -- CoC Git integration
   hl("CocGitAddedSign", { fg = colors.git_add })
   hl("CocGitChangeRemovedSign", { fg = colors.git_delete })
   hl("CocGitChangedSign", { fg = colors.git_change })
   hl("CocGitRemovedSign", { fg = colors.git_delete })
   hl("CocGitTopRemovedSign", { fg = colors.git_delete })
-  
+
   -- CoC Semantic highlighting
   hl("CocSemClass", { fg = colors.blue, bold = true })
   hl("CocSemEnum", { fg = colors.blue, bold = true })
@@ -190,7 +190,7 @@ function M.setup()
   hl("CocSemVariable", { fg = colors.fg })
   hl("CocSemDecorator", { fg = colors.pink })
   hl("CocSemLabel", { fg = colors.purple })
-  
+
   -- CoC Semantic modifiers
   hl("CocSemDeclaration", { bold = true })
   hl("CocSemDefinition", { bold = true })
@@ -202,16 +202,16 @@ function M.setup()
   hl("CocSemModification", { underline = true })
   hl("CocSemDocumentation", { italic = true })
   hl("CocSemDefaultLibrary", { italic = true })
-  
+
   -- CoC Snippets
   hl("CocSnippetVisual", { bg = colors.selection })
-  
+
   -- CoC Tree view
   hl("CocTreeTitle", { fg = colors.blue, bold = true })
   hl("CocTreeDescription", { fg = colors.fg_dark })
   hl("CocTreeOpenClose", { fg = colors.purple })
   hl("CocTreeSelected", { bg = colors.selection })
-  
+
   -- CoC Symbols outline
   hl("CocSymbolDefault", { fg = colors.fg })
   hl("CocSymbolFile", { fg = colors.blue })
@@ -240,13 +240,13 @@ function M.setup()
   hl("CocSymbolEvent", { fg = colors.yellow })
   hl("CocSymbolOperator", { fg = colors.purple })
   hl("CocSymbolTypeParameter", { fg = colors.blue, italic = true })
-  
+
   -- CoC Extensions specific
   hl("CocExplorerNormalFloat", { fg = colors.fg, bg = colors.bg_popup })
   hl("CocExplorerNormalFloatBorder", { fg = colors.border, bg = colors.bg_popup })
   hl("CocExplorerSelectUI", { bg = colors.selection })
   hl("CocExplorerSelect", { bg = colors.selection })
-  
+
   -- CoC Marketplace
   hl("CocMarketplaceTitle", { fg = colors.blue, bold = true })
   hl("CocMarketplaceDescription", { fg = colors.fg })
@@ -255,62 +255,62 @@ function M.setup()
   hl("CocMarketplaceVersion", { fg = colors.yellow })
   hl("CocMarketplaceInstalled", { fg = colors.green })
   hl("CocMarketplaceDisabled", { fg = colors.fg_dark })
-  
+
   -- CoC Yank
   hl("CocYankHighlight", { bg = colors.selection })
-  
+
   -- CoC Cursors
   hl("CocCursorTransparent", { fg = colors.fg, bg = colors.bg })
-  
+
   -- CoC Search
   hl("CocSearch", { fg = colors.yellow, bg = colors.search })
   hl("CocMenuSel", { bg = colors.selection })
   hl("CocSelectedText", { bg = colors.selection })
-  
+
   -- CoC Code actions
   hl("CocCodeLens", { fg = colors.fg_dark, italic = true })
   hl("CocUnusedHighlight", { fg = colors.fg_dark, strikethrough = true })
   hl("CocInlayHint", { fg = colors.fg_dark, italic = true })
-  
+
   -- CoC References
   hl("CocReferencesFile", { fg = colors.blue })
   hl("CocReferencesLine", { fg = colors.fg })
   hl("CocReferencesLineNumber", { fg = colors.line_number })
-  
+
   -- CoC Refactor
   hl("CocRefactorRange", { bg = colors.selection })
-  
+
   -- CoC Diagnostics in location list
   hl("CocDiagnosticError", { fg = colors.error })
   hl("CocDiagnosticWarning", { fg = colors.warning })
   hl("CocDiagnosticInfo", { fg = colors.info })
   hl("CocDiagnosticHint", { fg = colors.hint })
-  
+
   -- CoC Extensions - Language specific
   -- TypeScript/JavaScript
   hl("CocTsServerError", { fg = colors.error })
   hl("CocTsServerWarning", { fg = colors.warning })
   hl("CocTsServerInfo", { fg = colors.info })
   hl("CocTsServerHint", { fg = colors.hint })
-  
+
   -- Python
   hl("CocPylspError", { fg = colors.error })
   hl("CocPylspWarning", { fg = colors.warning })
   hl("CocPylspInfo", { fg = colors.info })
   hl("CocPylspHint", { fg = colors.hint })
-  
+
   -- Rust
   hl("CocRustAnalyzerError", { fg = colors.error })
   hl("CocRustAnalyzerWarning", { fg = colors.warning })
   hl("CocRustAnalyzerInfo", { fg = colors.info })
   hl("CocRustAnalyzerHint", { fg = colors.hint })
-  
+
   -- Go
   hl("CocGoplsError", { fg = colors.error })
   hl("CocGoplsWarning", { fg = colors.warning })
   hl("CocGoplsInfo", { fg = colors.info })
   hl("CocGoplsHint", { fg = colors.hint })
-  
+
   -- Additional LSP-related highlights for better integration
   hl("LspFloatWinNormal", { fg = colors.fg, bg = colors.bg_popup })
   hl("LspFloatWinBorder", { fg = colors.border, bg = colors.bg_popup })
@@ -323,7 +323,7 @@ function M.setup()
   hl("LspSagaSignatureHelpBorder", { fg = colors.red })
   hl("LspSagaHoverBorder", { fg = colors.blue })
   hl("LspSagaBorderTitle", { fg = colors.cyan })
-  
+
   -- Navic (breadcrumbs)
   hl("NavicIconsFile", { fg = colors.blue })
   hl("NavicIconsModule", { fg = colors.blue, italic = true })
@@ -353,7 +353,7 @@ function M.setup()
   hl("NavicIconsTypeParameter", { fg = colors.blue, italic = true })
   hl("NavicText", { fg = colors.fg })
   hl("NavicSeparator", { fg = colors.fg_dark })
-  
+
   -- Aerial (symbols outline)
   hl("AerialLine", { bg = colors.cursor_line })
   hl("AerialLineNC", { bg = colors.cursor_line })

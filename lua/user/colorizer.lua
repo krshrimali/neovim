@@ -1,9 +1,7 @@
 local status_ok, colorizer = pcall(require, "colorizer")
-if not status_ok then
-  return
-end
+if not status_ok then return end
 
-colorizer.setup({
+colorizer.setup {
   filetypes = { "*" },
   RGB = true, -- #RGB hex codes
   RRGGBB = true, -- #RRGGBB hex codes
@@ -15,4 +13,4 @@ colorizer.setup({
   css_fn = false, -- Enable all CSS *functions*: rgb_fn, hsl_fn
   -- Available modes: foreground, background, virtualtext
   mode = "background", -- Set the display mode.)
-})
+}

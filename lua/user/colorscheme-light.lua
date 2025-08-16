@@ -3,7 +3,7 @@
 -- Switch to this theme by requiring this file instead of the dark theme
 
 -- Load the Cursor Light theme
-local cursor_light_theme = require("user.themes.cursor-light-init")
+local cursor_light_theme = require "user.themes.cursor-light-init"
 
 -- Setup the theme
 local status_ok, _ = pcall(cursor_light_theme.setup, {
@@ -13,8 +13,8 @@ local status_ok, _ = pcall(cursor_light_theme.setup, {
 })
 
 if not status_ok then
-  vim.notify("Failed to load Cursor Light theme, falling back to default")
-  vim.cmd("colorscheme default")
+  vim.notify "Failed to load Cursor Light theme, falling back to default"
+  vim.cmd "colorscheme default"
   return
 end
 

@@ -3,5 +3,5 @@
 -- Can be loaded with :colorscheme cursor-dark
 
 -- Load the theme
-local cursor_theme = require("user.themes.init")
+local cursor_theme = require "user.themes.init"
 cursor_theme.setup()

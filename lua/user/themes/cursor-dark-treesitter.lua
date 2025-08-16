@@ -24,19 +24,19 @@ function M.setup()
   hl("@comment.note", { fg = colors.info })
   hl("@comment.todo", { fg = colors.bg, bg = colors.yellow, bold = true })
   hl("@comment.warning", { fg = colors.warning })
-  
+
   hl("@constant", { fg = colors.cyan })
   hl("@constant.builtin", { fg = colors.blue })
   hl("@constant.macro", { fg = colors.purple })
-  
+
   hl("@constructor", { fg = colors.blue })
   hl("@diff.delta", { fg = colors.git_change })
   hl("@diff.minus", { fg = colors.git_delete })
   hl("@diff.plus", { fg = colors.git_add })
-  
+
   hl("@error", { fg = colors.error })
   hl("@exception", { fg = colors.purple })
-  
+
   hl("@field", { fg = colors.cyan })
   hl("@float", { fg = colors.cyan })
   hl("@function", { fg = colors.yellow })
@@ -45,7 +45,7 @@ function M.setup()
   hl("@function.macro", { fg = colors.purple })
   hl("@function.method", { fg = colors.yellow })
   hl("@function.method.call", { fg = colors.yellow })
-  
+
   hl("@include", { fg = colors.purple })
   hl("@keyword", { fg = colors.blue })
   hl("@keyword.conditional", { fg = colors.purple })
@@ -59,7 +59,7 @@ function M.setup()
   hl("@keyword.repeat", { fg = colors.purple })
   hl("@keyword.return", { fg = colors.purple })
   hl("@keyword.storage", { fg = colors.blue })
-  
+
   hl("@label", { fg = colors.purple })
   hl("@markup.emphasis", { italic = true })
   hl("@markup.environment", { fg = colors.purple })
@@ -84,7 +84,7 @@ function M.setup()
   hl("@markup.strikethrough", { strikethrough = true })
   hl("@markup.strong", { bold = true })
   hl("@markup.underline", { underline = true })
-  
+
   hl("@method", { fg = colors.yellow })
   hl("@method.call", { fg = colors.yellow })
   hl("@module", { fg = colors.blue })
@@ -92,7 +92,7 @@ function M.setup()
   hl("@none", {})
   hl("@number", { fg = colors.cyan })
   hl("@number.float", { fg = colors.cyan })
-  
+
   hl("@operator", { fg = colors.fg })
   hl("@parameter", { fg = colors.fg })
   hl("@parameter.reference", { fg = colors.fg })
@@ -100,7 +100,7 @@ function M.setup()
   hl("@punctuation.bracket", { fg = colors.fg })
   hl("@punctuation.delimiter", { fg = colors.fg })
   hl("@punctuation.special", { fg = colors.purple })
-  
+
   hl("@string", { fg = colors.orange })
   hl("@string.documentation", { fg = colors.green })
   hl("@string.escape", { fg = colors.cyan })
@@ -109,7 +109,7 @@ function M.setup()
   hl("@string.special.path", { fg = colors.orange })
   hl("@string.special.symbol", { fg = colors.cyan })
   hl("@string.special.url", { fg = colors.blue, underline = true })
-  
+
   hl("@tag", { fg = colors.blue })
   hl("@tag.attribute", { fg = colors.cyan })
   hl("@tag.delimiter", { fg = colors.fg })
@@ -131,30 +131,30 @@ function M.setup()
   hl("@text.underline", { underline = true })
   hl("@text.uri", { fg = colors.blue, underline = true })
   hl("@text.warning", { fg = colors.warning })
-  
+
   hl("@type", { fg = colors.blue })
   hl("@type.builtin", { fg = colors.blue })
   hl("@type.definition", { fg = colors.blue })
   hl("@type.qualifier", { fg = colors.blue })
-  
+
   hl("@variable", { fg = colors.fg })
   hl("@variable.builtin", { fg = colors.blue })
   hl("@variable.member", { fg = colors.cyan })
   hl("@variable.parameter", { fg = colors.fg })
-  
+
   -- Language-specific highlights
-  
+
   -- HTML
   hl("@tag.html", { fg = colors.blue })
   hl("@tag.attribute.html", { fg = colors.cyan })
   hl("@tag.delimiter.html", { fg = colors.fg })
-  
+
   -- CSS
   hl("@property.css", { fg = colors.cyan })
   hl("@type.css", { fg = colors.blue })
   hl("@string.css", { fg = colors.orange })
   hl("@number.css", { fg = colors.cyan })
-  
+
   -- JavaScript/TypeScript
   hl("@constructor.javascript", { fg = colors.yellow })
   hl("@constructor.typescript", { fg = colors.yellow })
@@ -162,17 +162,17 @@ function M.setup()
   hl("@keyword.export.typescript", { fg = colors.purple })
   hl("@keyword.import.javascript", { fg = colors.purple })
   hl("@keyword.import.typescript", { fg = colors.purple })
-  
+
   -- JSON
   hl("@label.json", { fg = colors.cyan })
   hl("@string.json", { fg = colors.orange })
   hl("@number.json", { fg = colors.cyan })
   hl("@boolean.json", { fg = colors.blue })
-  
+
   -- YAML
   hl("@field.yaml", { fg = colors.cyan })
   hl("@string.yaml", { fg = colors.orange })
-  
+
   -- Markdown
   hl("@markup.heading.1.markdown", { fg = colors.blue, bold = true })
   hl("@markup.heading.2.markdown", { fg = colors.cyan, bold = true })
@@ -185,65 +185,65 @@ function M.setup()
   hl("@markup.link.url.markdown", { fg = colors.blue, underline = true })
   hl("@markup.raw.block.markdown", { fg = colors.orange })
   hl("@markup.raw.markdown", { fg = colors.orange })
-  
+
   -- Lua
   hl("@constructor.lua", { fg = colors.yellow })
   hl("@keyword.function.lua", { fg = colors.blue })
   hl("@keyword.operator.lua", { fg = colors.purple })
-  
+
   -- Python
   hl("@constructor.python", { fg = colors.yellow })
   hl("@keyword.import.python", { fg = colors.purple })
   hl("@exception.python", { fg = colors.purple })
-  
+
   -- Rust
   hl("@type.rust", { fg = colors.blue })
   hl("@keyword.storage.rust", { fg = colors.blue })
   hl("@keyword.unsafe.rust", { fg = colors.red })
-  
+
   -- Go
   hl("@type.go", { fg = colors.blue })
   hl("@keyword.package.go", { fg = colors.purple })
   hl("@keyword.import.go", { fg = colors.purple })
-  
+
   -- C/C++
   hl("@type.c", { fg = colors.blue })
   hl("@type.cpp", { fg = colors.blue })
   hl("@keyword.storage.c", { fg = colors.blue })
   hl("@keyword.storage.cpp", { fg = colors.blue })
-  
+
   -- Java
   hl("@type.java", { fg = colors.blue })
   hl("@keyword.import.java", { fg = colors.purple })
   hl("@keyword.package.java", { fg = colors.purple })
-  
+
   -- PHP
   hl("@type.php", { fg = colors.blue })
   hl("@keyword.import.php", { fg = colors.purple })
   hl("@variable.php", { fg = colors.fg })
-  
+
   -- Ruby
   hl("@symbol.ruby", { fg = colors.cyan })
   hl("@keyword.import.ruby", { fg = colors.purple })
-  
+
   -- Shell/Bash
   hl("@function.builtin.bash", { fg = colors.yellow })
   hl("@variable.bash", { fg = colors.fg })
   hl("@string.bash", { fg = colors.orange })
-  
+
   -- SQL
   hl("@keyword.sql", { fg = colors.blue })
   hl("@type.sql", { fg = colors.blue })
   hl("@function.sql", { fg = colors.yellow })
-  
+
   -- Docker
   hl("@keyword.dockerfile", { fg = colors.blue })
   hl("@string.dockerfile", { fg = colors.orange })
-  
+
   -- Git
   hl("@keyword.gitcommit", { fg = colors.blue })
   hl("@string.gitcommit", { fg = colors.orange })
-  
+
   -- Config files
   hl("@property.toml", { fg = colors.cyan })
   hl("@string.toml", { fg = colors.orange })

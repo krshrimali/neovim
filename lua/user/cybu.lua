@@ -1,7 +1,5 @@
 local ok, cybu = pcall(require, "cybu")
-if not ok then
-  return
-end
+if not ok then return end
 cybu.setup {
   position = {
     relative_to = "win", -- win, editor, cursor
@@ -43,7 +41,7 @@ cybu.setup {
         },
       },
       show_on_autocmd = false,
-    }
+    },
   },
 }
 -- vim.keymap.set("n", "<up>", "<Plug>(CybuPrev)")
