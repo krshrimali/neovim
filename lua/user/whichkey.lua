@@ -18,12 +18,12 @@ which_key.add {
         desc = "Buffer Sidebar",
     },
     {
-        "<leader>se",
+        "<leader>e",
         "<cmd>lua require('user.simple_tree').open_current_dir()<cr>",
         desc = "Explorer (Current Dir)",
     },
     {
-        "<leader>sE",
+        "<leader>E",
         "<cmd>lua require('user.simple_tree').open_workspace()<cr>",
         desc = "Explorer (Workspace)",
     },
