@@ -5,12 +5,10 @@ local M = {}
 
 function M.setup()
   local colors = require("user.themes.hexxa-dark").colors
-  
+
   -- Helper function to set highlights
-  local function hl(group, opts)
-    vim.api.nvim_set_hl(0, group, opts)
-  end
-  
+  local function hl(group, opts) vim.api.nvim_set_hl(0, group, opts) end
+
   -- Treesitter syntax groups
   -- Comments
   hl("@comment", { fg = colors.comment, italic = true })
@@ -19,12 +17,12 @@ function M.setup()
   hl("@comment.warning", { fg = colors.warning, italic = true })
   hl("@comment.todo", { fg = colors.orange, bold = true, italic = true })
   hl("@comment.note", { fg = colors.info, italic = true })
-  
+
   -- Constants
   hl("@constant", { fg = colors.blue })
   hl("@constant.builtin", { fg = colors.blue })
   hl("@constant.macro", { fg = colors.pink })
-  
+
   -- Strings
   hl("@string", { fg = colors.green })
   hl("@string.documentation", { fg = colors.green, italic = true })
@@ -33,18 +31,18 @@ function M.setup()
   hl("@string.special", { fg = colors.orange })
   hl("@string.special.symbol", { fg = colors.blue })
   hl("@string.special.url", { fg = colors.cyan, underline = true })
-  
+
   -- Characters
   hl("@character", { fg = colors.green })
   hl("@character.special", { fg = colors.orange })
-  
+
   -- Numbers
   hl("@number", { fg = colors.blue })
   hl("@number.float", { fg = colors.blue })
-  
+
   -- Booleans
   hl("@boolean", { fg = colors.blue })
-  
+
   -- Functions
   hl("@function", { fg = colors.lime })
   hl("@function.builtin", { fg = colors.lime })
@@ -52,25 +50,25 @@ function M.setup()
   hl("@function.macro", { fg = colors.pink })
   hl("@function.method", { fg = colors.lime })
   hl("@function.method.call", { fg = colors.lime })
-  
+
   -- Constructors
   hl("@constructor", { fg = colors.cyan })
-  
+
   -- Parameters
   hl("@parameter", { fg = colors.pink, italic = true })
   hl("@parameter.builtin", { fg = colors.pink, italic = true })
   hl("@parameter.reference", { fg = colors.pink })
-  
+
   -- Variables
   hl("@variable", { fg = colors.fg_alt })
   hl("@variable.builtin", { fg = colors.blue })
   hl("@variable.parameter", { fg = colors.pink, italic = true })
   hl("@variable.member", { fg = colors.fg_alt })
-  
+
   -- Properties
   hl("@property", { fg = colors.fg_alt })
   hl("@field", { fg = colors.fg_alt })
-  
+
   -- Keywords
   hl("@keyword", { fg = colors.orange })
   hl("@keyword.function", { fg = colors.pink })
@@ -86,44 +84,44 @@ function M.setup()
   hl("@keyword.storage", { fg = colors.pink })
   hl("@keyword.directive", { fg = colors.pink })
   hl("@keyword.directive.define", { fg = colors.pink })
-  
+
   -- Operators
   hl("@operator", { fg = colors.orange })
-  
+
   -- Punctuation
   hl("@punctuation.delimiter", { fg = colors.fg_alt })
   hl("@punctuation.bracket", { fg = colors.fg_alt })
   hl("@punctuation.special", { fg = colors.orange })
-  
+
   -- Types
   hl("@type", { fg = colors.cyan })
   hl("@type.builtin", { fg = colors.cyan })
   hl("@type.definition", { fg = colors.cyan })
   hl("@type.qualifier", { fg = colors.pink })
-  
+
   -- Attributes
   hl("@attribute", { fg = colors.pink })
   hl("@attribute.builtin", { fg = colors.pink })
-  
+
   -- Labels
   hl("@label", { fg = colors.pink })
-  
+
   -- Namespaces
   hl("@namespace", { fg = colors.cyan })
   hl("@module", { fg = colors.cyan })
   hl("@module.builtin", { fg = colors.cyan })
-  
+
   -- Include/Preproc
   hl("@preproc", { fg = colors.pink })
   hl("@include", { fg = colors.pink })
   hl("@define", { fg = colors.pink })
   hl("@macro", { fg = colors.pink })
-  
+
   -- Tags (HTML/XML)
   hl("@tag", { fg = colors.pink })
   hl("@tag.attribute", { fg = colors.lime })
   hl("@tag.delimiter", { fg = colors.fg_alt })
-  
+
   -- Markup (Markdown)
   hl("@markup.strong", { fg = colors.fg, bold = true })
   hl("@markup.italic", { fg = colors.fg, italic = true })
@@ -147,14 +145,14 @@ function M.setup()
   hl("@markup.list", { fg = colors.pink })
   hl("@markup.list.checked", { fg = colors.green })
   hl("@markup.list.unchecked", { fg = colors.orange })
-  
+
   -- Diff
   hl("@diff.plus", { fg = colors.git_add })
   hl("@diff.minus", { fg = colors.git_delete })
   hl("@diff.delta", { fg = colors.git_change })
-  
+
   -- Language-specific highlights
-  
+
   -- JavaScript/TypeScript
   hl("@variable.builtin.javascript", { fg = colors.blue })
   hl("@variable.builtin.typescript", { fg = colors.blue })
@@ -164,7 +162,7 @@ function M.setup()
   hl("@keyword.import.typescript", { fg = colors.pink })
   hl("@constructor.javascript", { fg = colors.cyan })
   hl("@constructor.typescript", { fg = colors.cyan })
-  
+
   -- JSX/TSX
   hl("@tag.jsx", { fg = colors.pink })
   hl("@tag.tsx", { fg = colors.pink })
@@ -172,69 +170,69 @@ function M.setup()
   hl("@tag.attribute.tsx", { fg = colors.lime })
   hl("@tag.delimiter.jsx", { fg = colors.fg_alt })
   hl("@tag.delimiter.tsx", { fg = colors.fg_alt })
-  
+
   -- Python
   hl("@variable.builtin.python", { fg = colors.blue })
   hl("@function.builtin.python", { fg = colors.lime })
   hl("@keyword.function.python", { fg = colors.pink })
   hl("@keyword.import.python", { fg = colors.pink })
-  
+
   -- Lua
   hl("@variable.builtin.lua", { fg = colors.blue })
   hl("@function.builtin.lua", { fg = colors.lime })
   hl("@keyword.function.lua", { fg = colors.pink })
-  
+
   -- CSS
   hl("@property.css", { fg = colors.cyan })
   hl("@type.css", { fg = colors.orange })
   hl("@string.css", { fg = colors.green })
   hl("@number.css", { fg = colors.blue })
   hl("@function.css", { fg = colors.lime })
-  
+
   -- JSON
   hl("@property.json", { fg = colors.cyan })
   hl("@string.json", { fg = colors.green })
   hl("@number.json", { fg = colors.blue })
   hl("@boolean.json", { fg = colors.blue })
-  
+
   -- YAML
   hl("@property.yaml", { fg = colors.cyan })
   hl("@string.yaml", { fg = colors.green })
   hl("@number.yaml", { fg = colors.blue })
   hl("@boolean.yaml", { fg = colors.blue })
-  
+
   -- TOML
   hl("@property.toml", { fg = colors.cyan })
   hl("@string.toml", { fg = colors.green })
   hl("@number.toml", { fg = colors.blue })
   hl("@boolean.toml", { fg = colors.blue })
-  
+
   -- Git
   hl("@keyword.gitcommit", { fg = colors.pink })
   hl("@string.gitcommit", { fg = colors.green })
-  
+
   -- SQL
   hl("@keyword.sql", { fg = colors.pink })
   hl("@function.sql", { fg = colors.lime })
   hl("@type.sql", { fg = colors.cyan })
-  
+
   -- Bash/Shell
   hl("@variable.bash", { fg = colors.fg_alt })
   hl("@variable.builtin.bash", { fg = colors.blue })
   hl("@function.bash", { fg = colors.lime })
   hl("@keyword.bash", { fg = colors.pink })
-  
+
   -- Vim
   hl("@variable.vim", { fg = colors.fg_alt })
   hl("@function.vim", { fg = colors.lime })
   hl("@keyword.vim", { fg = colors.pink })
-  
+
   -- Error/Warning/Info/Hint (for diagnostics integration)
   hl("@error", { fg = colors.error })
   hl("@warning", { fg = colors.warning })
   hl("@info", { fg = colors.info })
   hl("@hint", { fg = colors.hint })
-  
+
   -- Semantic tokens (LSP)
   hl("@lsp.type.class", { fg = colors.cyan })
   hl("@lsp.type.decorator", { fg = colors.pink })

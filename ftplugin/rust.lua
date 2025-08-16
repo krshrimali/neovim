@@ -1,7 +1,5 @@
 local status_ok, which_key = pcall(require, "which-key")
-if not status_ok then
-  return
-end
+if not status_ok then return end
 
 local opts = {
   mode = "n", -- NORMAL mode
@@ -45,9 +43,7 @@ local opts = {
 
 local notify_filter = vim.notify
 vim.notify = function(msg, ...)
-  if msg:match "message with no corresponding" then
-    return
-  end
+  if msg:match "message with no corresponding" then return end
 
   notify_filter(msg, ...)
 end
