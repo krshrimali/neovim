@@ -605,44 +605,28 @@ require("lazy").setup {
       },
     },
   },
-  {
-    "TabbyML/vim-tabby",
-    lazy = false,
-    dependencies = {
-      "neovim/nvim-lspconfig",
-    },
-    init = function()
-      vim.g.tabby_agent_start_command = { "npx", "tabby-agent", "--stdio" }
-      vim.g.tabby_inline_completion_trigger = "auto"
-    end,
-  },
-
   -- Minimap - VSCode-like minimap functionality - LAZY LOAD
-  -- {
-  --     "wfxr/minimap.vim",
-  --     cmd = { "Minimap", "MinimapClose", "MinimapToggle", "MinimapRefresh", "MinimapUpdateHighlight" },
-  --     keys = {
-  --         { "<leader>mm", "<cmd>MinimapToggle<cr>",  desc = "Toggle Minimap" },
-  --         { "<leader>mr", "<cmd>MinimapRefresh<cr>", desc = "Refresh Minimap" },
-  --     },
-  --     build = function()
-  --         -- Ensure cargo environment is sourced and install code-minimap
-  --         local install_cmd = "source /usr/local/cargo/env 2>/dev/null || true; cargo install --locked code-minimap"
-  --         vim.fn.system(install_cmd)
-  --     end,
-  --     init = function()
-  --         -- Set the path to code-minimap binary early
-  --         vim.g.minimap_exec_path = '/usr/local/cargo/bin/code-minimap'
-  --         -- Also add to PATH if not already there
-  --         local current_path = vim.env.PATH or ""
-  --         if not current_path:find("/usr/local/cargo/bin") then
-  --             vim.env.PATH = "/usr/local/cargo/bin:" .. current_path
-  --         end
-  --     end,
-  --     config = function()
-  --         require("user.minimap")
-  --     end,
-  -- },
+  {
+    "wfxr/minimap.vim",
+    cmd = { "Minimap", "MinimapClose", "MinimapToggle", "MinimapRefresh", "MinimapUpdateHighlight" },
+    keys = {
+      { "<leader>mm", "<cmd>MinimapToggle<cr>", desc = "Toggle Minimap" },
+      { "<leader>mr", "<cmd>MinimapRefresh<cr>", desc = "Refresh Minimap" },
+    },
+    build = function()
+      -- Ensure cargo environment is sourced and install code-minimap
+      local install_cmd = "source /usr/local/cargo/env 2>/dev/null || true; cargo install --locked code-minimap"
+      vim.fn.system(install_cmd)
+    end,
+    init = function()
+      -- Set the path to code-minimap binary early
+      vim.g.minimap_exec_path = "/usr/local/cargo/bin/code-minimap"
+      -- Also add to PATH if not already there
+      local current_path = vim.env.PATH or ""
+      if not current_path:find "/usr/local/cargo/bin" then vim.env.PATH = "/usr/local/cargo/bin:" .. current_path end
+    end,
+    config = function() require "user.minimap" end,
+  },
 
   -- {
   --     "ray-x/lsp_signature.nvim",
