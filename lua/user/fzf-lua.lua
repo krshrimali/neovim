@@ -54,7 +54,7 @@ fzf_lua.setup({
             ["<F2>"] = "toggle-fullscreen",
             ["<F3>"] = "toggle-preview-wrap",
             ["<F4>"] = "toggle-preview",
-            ["<C-d>"] = "preview-page-down",
+            -- ["<C-d>"] = "preview-page-down", -- Removed to restore default Neovim scroll behavior
             ["<C-u>"] = "preview-page-up",
         },
         fzf = {
