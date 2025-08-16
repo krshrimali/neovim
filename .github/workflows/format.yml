@@ -1,0 +1,44 @@
+name: Auto Format Code
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Install StyLua
+      uses: JohnnyMorganz/stylua-action@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        version: latest
+        args: --check .
+        
+    - name: Check formatting
+      run: |
+        if ! stylua --check .; then
+          echo "Code is not formatted. Running formatter..."
+          stylua .
+          
+          # Check if there are any changes
+          if [ -n "$(git status --porcelain)" ]; then
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git add .
+            git commit -m "Auto-format code with StyLua"
+            git push
+          else
+            echo "No formatting changes needed."
+          fi
+        else
+          echo "Code is already properly formatted."
+        fi
