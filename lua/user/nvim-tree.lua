@@ -1,7 +1,5 @@
 local status_ok, nvim_tree = pcall(require, "nvim-tree")
-if not status_ok then
-  return
-end
+if not status_ok then return end
 
 local icons = require "user.icons"
 
@@ -101,9 +99,7 @@ end
 ---@diagnostic disable-next-line: unused-local
 local function notify_level(level)
   return function(msg)
-    vim.schedule(function()
-      vim.api.nvim_echo({ { msg, "WarningMsg" } }, false, {})
-    end)
+    vim.schedule(function() vim.api.nvim_echo({ { msg, "WarningMsg" } }, false, {}) end)
   end
 end
 
@@ -135,17 +131,17 @@ nvim_tree.setup {
       padding = " ",
       symlink_arrow = " -> ", -- Simple ASCII arrow
       show = {
-        file = false,        -- Disable file icons
-        folder = false,      -- Disable folder icons
+        file = false, -- Disable file icons
+        folder = false, -- Disable folder icons
         folder_arrow = true, -- Keep folder arrows for navigation
-        git = false,         -- Disable git icons
+        git = false, -- Disable git icons
       },
       glyphs = {
         default = "",
         symlink = "",
         folder = {
-          arrow_open = "v",    -- Simple ASCII arrow
-          arrow_closed = ">",  -- Simple ASCII arrow
+          arrow_open = "v", -- Simple ASCII arrow
+          arrow_closed = ">", -- Simple ASCII arrow
           default = "",
           open = "",
           empty = "",
@@ -196,7 +192,7 @@ nvim_tree.setup {
   -- },
   view = {
     -- width = 30,
-    width = {min = 30, max = 40},
+    width = { min = 30, max = 40 },
     -- height = 30,
     -- hide_root_folder = false,
     number = true,

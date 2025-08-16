@@ -11,8 +11,8 @@ require "user.options"
 
 -- Defer loading of heavy components
 vim.defer_fn(function()
-    -- Load native terminal configuration (includes lazygit)
-    require "user.terminal"
+  -- Load native terminal configuration (includes lazygit)
+  require "user.terminal"
 end, 100)
 
 -- Load these only when plugins are loaded (handled by lazy loading now)
@@ -48,18 +48,24 @@ require "user.buffer_navigation"
 -- fzf-lua is now loaded via lazy.nvim
 
 -- Setup buffer browser (lazy loaded on keymap)
-vim.keymap.set("n", "<leader>bb", function()
-    require("user.buffer_browser").open_buffer_browser()
-end, { desc = "Buffer Browser", silent = true })
+vim.keymap.set(
+  "n",
+  "<leader>bb",
+  function() require("user.buffer_browser").open_buffer_browser() end,
+  { desc = "Buffer Browser", silent = true }
+)
 
-vim.keymap.set("n", "<leader>bs", function()
-    require("user.buffer_browser").toggle_sidebar()
-end, { desc = "Buffer Sidebar", silent = true })
+vim.keymap.set(
+  "n",
+  "<leader>bs",
+  function() require("user.buffer_browser").toggle_sidebar() end,
+  { desc = "Buffer Sidebar", silent = true }
+)
 
 -- These are now handled by plugin lazy loading
 -- require("goto-preview").setup {} -- Now configured via goto_preview_lsp.lua
 -- require("neogit").setup {} -- Now lazy loaded
 -- telescope extensions replaced with fzf-lua
-vim.diagnostic.config({ virtual_lines = true })
+vim.diagnostic.config { virtual_lines = true }
 vim.fn.sign_define("LspCodeAction", { text = "", texthl = "", linehl = "", numhl = "" })
 vim.fn.sign_define("LspCodeActionAvailable", { text = "", texthl = "", linehl = "", numhl = "" })

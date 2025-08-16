@@ -1,7 +1,5 @@
 local status_ok, dressing = pcall(require, "dressing")
-if not status_ok then
-  return
-end
+if not status_ok then return end
 
 dressing.setup {
   input = {
@@ -52,18 +50,18 @@ dressing.setup {
     enabled = true,
 
     -- Priority list of preferred vim.select implementations
-            backend = { "fzf_lua", "builtin", "nui" },
+    backend = { "fzf_lua", "builtin", "nui" },
 
     -- Trim trailing `:` from prompt
     trim_prompt = true,
 
-          -- Options for fzf_lua selector
-      fzf_lua = {
-        winopts = {
-          height = 0.5,
-          width = 0.5,
-        },
+    -- Options for fzf_lua selector
+    fzf_lua = {
+      winopts = {
+        height = 0.5,
+        width = 0.5,
       },
+    },
 
     -- Options for nui Menu
     nui = {
