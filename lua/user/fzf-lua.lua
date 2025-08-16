@@ -7,12 +7,12 @@ end
 fzf_lua.setup({
     -- Use max-perf profile for absolute best performance
     "max-perf",
-    
+
     -- Global performance settings
-    global_resume = true, -- Enable global resume for faster subsequent calls
+    global_resume = true,       -- Enable global resume for faster subsequent calls
     global_resume_query = true, -- Resume with query
-    file_icon_padding = '', -- Remove padding for performance
-    
+    file_icon_padding = '',     -- Remove padding for performance
+
     -- Global options
     -- winopts = {
     --     height = 0.85,
@@ -38,15 +38,15 @@ fzf_lua.setup({
     winopts = {
         border = "rounded",
     },
-    
+
     -- Global fzf options that apply to ALL pickers
     fzf_opts = {
-        ["--multi"] = true, -- Enable multi-select for all pickers
+        ["--multi"] = true,                      -- Enable multi-select for all pickers
         ["--bind"] = "ctrl-q:select-all+accept", -- Ctrl+Q selects all and accepts for quickfix
         ["--layout"] = "reverse",
         ["--info"] = "inline",
     },
-    
+
     -- Keymaps
     keymap = {
         builtin = {
@@ -54,7 +54,7 @@ fzf_lua.setup({
             ["<F2>"] = "toggle-fullscreen",
             ["<F3>"] = "toggle-preview-wrap",
             ["<F4>"] = "toggle-preview",
-            ["<C-d>"] = "preview-page-down",
+            -- ["<C-d>"] = "preview-page-down",
             ["<C-u>"] = "preview-page-up",
         },
         fzf = {
@@ -84,7 +84,7 @@ fzf_lua.setup({
     --     ["--multi"] = true, -- Enable multi-select
     --     ["--bind"] = "ctrl-q:select-all+accept", -- Ctrl+Q selects all and accepts
     -- },
-    -- 
+    --
     --
     --
     -- -- Actions optimized for speed
@@ -112,7 +112,7 @@ fzf_lua.setup({
             ["ctrl-q"] = _G.fzf_send_to_quickfix,
         },
         -- git_icons = false, -- Disable for max performance
-        -- file_icons = false, -- Disable for max performance  
+        -- file_icons = false, -- Disable for max performance
         -- color_icons = false, -- Disable for max performance
         -- cmd = "fd --type f --hidden --follow --exclude .git",
         -- -- Fast find options optimized for speed
@@ -131,7 +131,7 @@ fzf_lua.setup({
     --     prompt = "Files> ",
     --     multiprocess = true,
     --     git_icons = false, -- Disable for max performance
-    --     file_icons = false, -- Disable for max performance  
+    --     file_icons = false, -- Disable for max performance
     --     color_icons = false, -- Disable for max performance
     --     cmd = "fd --type f --hidden --follow --exclude .git",
     --     -- Fast find options optimized for speed
@@ -144,7 +144,7 @@ fzf_lua.setup({
     --     -- Disable path transformations for speed
     --     path_shorten = false,
     -- },
-    -- 
+    --
     -- -- Oldfiles (recent files) optimizations
     -- oldfiles = {
     --     prompt = "Recent> ",
@@ -156,7 +156,7 @@ fzf_lua.setup({
     --     color_icons = false, -- Disable for performance
     --     previewer = false, -- Disable previewer for instant opening
     -- },
-    -- 
+    --
     -- -- Grep optimizations
     grep = {
         prompt = "Rg> ",
@@ -184,7 +184,7 @@ fzf_lua.setup({
     --                 local line = selected[1]
     --                 -- Strip ANSI color codes first
     --                 local clean_line = line:gsub("\27%[[0-9;]*m", "")
-    --                 
+    --
     --                 -- Parse grep result format: filename:line:col:text
     --                 local filename, lnum, col, text = clean_line:match("([^:]+):(%d+):(%d+):(.*)")
     --                 if filename and lnum and col then
@@ -212,7 +212,7 @@ fzf_lua.setup({
     --         end,
     --     },
     -- },
-    -- 
+    --
     -- -- Live grep optimizations
     live_grep = {
         -- prompt = "LiveGrep> ",
@@ -231,11 +231,11 @@ fzf_lua.setup({
             ["ctrl-q"] = _G.fzf_send_to_quickfix,
         },
     },
-    
-    -- Buffer optimizations  
+
+    -- Buffer optimizations
     buffers = {
         prompt = "Buffers> ",
-        file_icons = false, -- Disable for performance
+        file_icons = false,  -- Disable for performance
         color_icons = false, -- Disable for performance
         sort_lastused = true,
         show_unloaded = true,
@@ -245,12 +245,12 @@ fzf_lua.setup({
             ["ctrl-q"] = _G.fzf_send_to_quickfix,
         },
     },
-    
+
     -- Help tags
     helptags = {
         prompt = "Help> ",
     },
-    
+
     -- Git files
     git = {
         files = {
@@ -278,12 +278,14 @@ fzf_lua.setup({
         },
         commits = {
             prompt = "Commits> ",
-            cmd = "git log --color --pretty=format:'%C(yellow)%h%Creset %Cgreen(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'",
+            cmd =
+            "git log --color --pretty=format:'%C(yellow)%h%Creset %Cgreen(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'",
             preview = "git show --color {1}",
         },
         bcommits = {
             prompt = "BCommits> ",
-            cmd = "git log --color --pretty=format:'%C(yellow)%h%Creset %Cgreen(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
+            cmd =
+            "git log --color --pretty=format:'%C(yellow)%h%Creset %Cgreen(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
             preview = "git show --color {1} -- {file}",
         },
         branches = {
@@ -292,7 +294,7 @@ fzf_lua.setup({
             preview = "git log --graph --pretty=oneline --abbrev-commit --color {1}",
         },
     },
-    
+
     -- LSP settings
     lsp = {
         prompt_postfix = "> ",
@@ -327,7 +329,7 @@ fzf_lua.setup({
             },
         },
     },
-    
+
     -- Diagnostics
     diagnostics = {
         prompt = "Diagnostics> ",
@@ -339,56 +341,56 @@ fzf_lua.setup({
             ["ctrl-q"] = _G.fzf_send_to_quickfix,
         },
     },
-    
+
     -- Quickfix
     quickfix = {
         file_icons = true,
         git_icons = false,
     },
-    
+
     -- Colorschemes
     colorschemes = {
         prompt = "Colorschemes> ",
         live_preview = true,
         winopts = { height = 0.55, width = 0.30 },
     },
-    
+
     -- Keymaps
     keymaps = {
         prompt = "Keymaps> ",
         winopts = { preview = { layout = "vertical" } },
     },
-    
+
     -- Commands
     commands = {
         prompt = "Commands> ",
     },
-    
+
     -- Command history
     command_history = {
         prompt = "History> ",
     },
-    
+
     -- Search history
     search_history = {
         prompt = "Search> ",
     },
-    
+
     -- Marks
     marks = {
         prompt = "Marks> ",
     },
-    
+
     -- Registers
     registers = {
         prompt = "Registers> ",
     },
-    
+
     -- Autocmds
     autocmds = {
         prompt = "Autocmds> ",
     },
-    
+
     -- Highlights
     highlights = {
         prompt = "Highlights> ",
@@ -410,7 +412,7 @@ fzf_lua.setup({
     --                 local line = selected[1]
     --                 -- Strip ANSI color codes first
     --                 local clean_line = line:gsub("\27%[[0-9;]*m", "")
-    --                 
+    --
     --                 -- Parse grep result format: filename:line:col:text
     --                 local filename, lnum, col, text = clean_line:match("([^:]+):(%d+):(%d+):(.*)")
     --                 if filename and lnum and col then
@@ -438,8 +440,8 @@ fzf_lua.setup({
     --         end,
     --     },
     -- },
-    -- 
-    -- -- Buffer optimizations  
+    --
+    -- -- Buffer optimizations
     -- buffers = {
     --     prompt = "Buffers> ",
     --     file_icons = false, -- Disable for performance
@@ -454,12 +456,12 @@ fzf_lua.setup({
     --         end,
     --     },
     -- },
-    -- 
+    --
     -- -- Help tags
     -- helptags = {
     --     prompt = "Help> ",
     -- },
-    -- 
+    --
     -- -- Git files
     -- git = {
     --     files = {
@@ -495,7 +497,7 @@ fzf_lua.setup({
     --         preview = "git log --graph --pretty=oneline --abbrev-commit --color {1}",
     --     },
     -- },
-    -- 
+    --
     -- -- LSP settings
     -- lsp = {
     --     prompt_postfix = "> ",
@@ -512,7 +514,7 @@ fzf_lua.setup({
     --         async_or_timeout = 5000,
     --     },
     -- },
-    -- 
+    --
     -- -- Diagnostics
     -- diagnostics = {
     --     prompt = "Diagnostics> ",
@@ -526,56 +528,56 @@ fzf_lua.setup({
     --         end,
     --     },
     -- },
-    -- 
+    --
     -- -- Quickfix
     -- quickfix = {
     --     file_icons = true,
     --     git_icons = false,
     -- },
-    -- 
+    --
     -- -- Colorschemes
     -- colorschemes = {
     --     prompt = "Colorschemes> ",
     --     live_preview = true,
     --     winopts = { height = 0.55, width = 0.30 },
     -- },
-    -- 
+    --
     -- -- Keymaps
     -- keymaps = {
     --     prompt = "Keymaps> ",
     --     winopts = { preview = { layout = "vertical" } },
     -- },
-    -- 
+    --
     -- -- Commands
     -- commands = {
     --     prompt = "Commands> ",
     -- },
-    -- 
+    --
     -- -- Command history
     -- command_history = {
     --     prompt = "History> ",
     -- },
-    -- 
+    --
     -- -- Search history
     -- search_history = {
     --     prompt = "Search> ",
     -- },
-    -- 
+    --
     -- -- Marks
     -- marks = {
     --     prompt = "Marks> ",
     -- },
-    -- 
+    --
     -- -- Registers
     -- registers = {
     --     prompt = "Registers> ",
     -- },
-    -- 
+    --
     -- -- Autocmds
     -- autocmds = {
     --     prompt = "Autocmds> ",
     -- },
-    -- 
+    --
     -- -- Highlights
     -- highlights = {
     --     prompt = "Highlights> ",
@@ -591,32 +593,32 @@ local function send_to_quickfix(selected, opts)
         print("No items selected for quickfix")
         return
     end
-    
+
     local qf_list = {}
-    
+
     for _, line in ipairs(selected) do
         if line and line ~= "" then
             -- Strip ANSI color codes
             local clean_line = line:gsub("\27%[[0-9;]*m", "")
-            
+
             -- Try different parsing patterns
             local filename, lnum, col, text
-            
+
             -- Pattern 1: grep/ripgrep format (file:line:col:text)
             filename, lnum, col, text = clean_line:match("([^:]+):(%d+):(%d+):(.*)")
-            
+
             if not filename then
                 -- Pattern 2: simple format (file:line:text)
                 filename, lnum, text = clean_line:match("([^:]+):(%d+):(.*)")
                 col = 1
             end
-            
+
             if not filename then
                 -- Pattern 3: just filename
                 filename = clean_line:match("^%s*(.-)%s*$") -- trim whitespace
                 lnum, col, text = 1, 1, "File: " .. filename
             end
-            
+
             -- Add to quickfix list if we have a valid filename
             if filename and filename ~= "" then
                 table.insert(qf_list, {
@@ -628,7 +630,7 @@ local function send_to_quickfix(selected, opts)
             end
         end
     end
-    
+
     if #qf_list > 0 then
         -- Replace quickfix list and open it
         vim.fn.setqflist(qf_list, 'r')

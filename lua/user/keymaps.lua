@@ -297,6 +297,18 @@ keymap("n", "<leader>mm", "<cmd>lua require('user.minimap').smart_toggle()<cr>",
 keymap("n", "<leader>mr", "<cmd>MinimapRefresh<cr>", opts)
 keymap("n", "<leader>mc", "<cmd>MinimapClose<cr>", opts)
 -- Alternative keybinding similar to VSCode's Ctrl+Shift+M (using Ctrl+M since Shift is hard to detect)
-keymap("n", "<C-m>", "<cmd>lua require('user.minimap').smart_toggle()<cr>", opts)
-
+-- keymap("n", "<C-m>", "<cmd>lua require('user.minimap').smart_toggle()<cr>", opts)
+-- vim.keymap.set('n', '<C-f>', function()
+--     vim.cmd('normal! ' .. math.floor(vim.o.lines / 2) .. 'j')
+--     vim.cmd('normal! zz')
+-- end, { desc = 'Scroll down half page and center' })
+--
+vim.keymap.set('n', '<C-f>', function()
+    vim.cmd('normal! ' .. vim.o.scroll .. 'j')
+    vim.cmd('normal! zz')
+end, { desc = 'Scroll down and center' })
+vim.keymap.set('n', '<C-d>', function()
+    vim.cmd('normal! ' .. vim.o.scroll .. 'j')
+    vim.cmd('normal! zz')
+end, { desc = "Scroll down and center", noremap = true, silent = true, remap = false })
 return M
