@@ -502,11 +502,12 @@ require("lazy").setup {
 
     -- Context pilot - LAZY LOAD
     {
-        "krshrimali/context-pilot.nvim",
+        -- "krshrimali/context-pilot.nvim",
+        dir = "/home/krshrimali/Documents/context-pilot.nvim",
         dependencies = {
-            "ibhagwan/fzf-lua"
+            "nvim-telescope/telescope.nvim",
+            "nvim-telescope/telescope-fzy-native.nvim"
         },
-        cmd = "ContextPilot",
         config = function()
             require("contextpilot")
         end
@@ -654,31 +655,31 @@ require("lazy").setup {
     },
 
     -- Minimap - VSCode-like minimap functionality - LAZY LOAD
-    {
-        "wfxr/minimap.vim",
-        cmd = { "Minimap", "MinimapClose", "MinimapToggle", "MinimapRefresh", "MinimapUpdateHighlight" },
-        keys = {
-            { "<leader>mm", "<cmd>MinimapToggle<cr>",  desc = "Toggle Minimap" },
-            { "<leader>mr", "<cmd>MinimapRefresh<cr>", desc = "Refresh Minimap" },
-        },
-        build = function()
-            -- Ensure cargo environment is sourced and install code-minimap
-            local install_cmd = "source /usr/local/cargo/env 2>/dev/null || true; cargo install --locked code-minimap"
-            vim.fn.system(install_cmd)
-        end,
-        init = function()
-            -- Set the path to code-minimap binary early
-            vim.g.minimap_exec_path = '/usr/local/cargo/bin/code-minimap'
-            -- Also add to PATH if not already there
-            local current_path = vim.env.PATH or ""
-            if not current_path:find("/usr/local/cargo/bin") then
-                vim.env.PATH = "/usr/local/cargo/bin:" .. current_path
-            end
-        end,
-        config = function()
-            require("user.minimap")
-        end,
-    },
+    -- {
+    --     "wfxr/minimap.vim",
+    --     cmd = { "Minimap", "MinimapClose", "MinimapToggle", "MinimapRefresh", "MinimapUpdateHighlight" },
+    --     keys = {
+    --         { "<leader>mm", "<cmd>MinimapToggle<cr>",  desc = "Toggle Minimap" },
+    --         { "<leader>mr", "<cmd>MinimapRefresh<cr>", desc = "Refresh Minimap" },
+    --     },
+    --     build = function()
+    --         -- Ensure cargo environment is sourced and install code-minimap
+    --         local install_cmd = "source /usr/local/cargo/env 2>/dev/null || true; cargo install --locked code-minimap"
+    --         vim.fn.system(install_cmd)
+    --     end,
+    --     init = function()
+    --         -- Set the path to code-minimap binary early
+    --         vim.g.minimap_exec_path = '/usr/local/cargo/bin/code-minimap'
+    --         -- Also add to PATH if not already there
+    --         local current_path = vim.env.PATH or ""
+    --         if not current_path:find("/usr/local/cargo/bin") then
+    --             vim.env.PATH = "/usr/local/cargo/bin:" .. current_path
+    --         end
+    --     end,
+    --     config = function()
+    --         require("user.minimap")
+    --     end,
+    -- },
 
     -- {
     --     "ray-x/lsp_signature.nvim",
@@ -697,6 +698,10 @@ require("lazy").setup {
         config = true
         -- use opts = {} for passing setup options
         -- this is equivalent to setup({}) function
-    }
+    },
+    -- {
+    --     "karb94/neoscroll.nvim",
+    --     opts = {},
+    -- }
 
 }
