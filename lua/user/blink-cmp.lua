@@ -9,20 +9,20 @@ require("blink.cmp").setup {
   -- your own keymap.
   keymap = { preset = "enter" },
 
-  appearance = {
-    -- Sets the fallback highlight groups to nvim-cmp's highlight groups
-    -- Useful for when your theme doesn't support blink.cmp
-    -- will be removed in a future release
-    use_nvim_cmp_as_default = true,
-    -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-    -- Adjusts spacing to ensure icons are aligned
-    nerd_font_variant = "mono",
-  },
+  -- appearance = {
+  --   -- Sets the fallback highlight groups to nvim-cmp's highlight groups
+  --   -- Useful for when your theme doesn't support blink.cmp
+  --   -- will be removed in a future release
+  --   -- use_nvim_cmp_as_default = true,
+  --   -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+  --   -- Adjusts spacing to ensure icons are aligned
+  --   -- nerd_font_variant = "mono",
+  -- },
 
   -- default list of enabled providers defined so that you can extend it
   -- elsewhere in your config, without redefining it, due to `opts_extend`
   sources = {
-    default = { "lsp", "path", "snippets", "buffer" },
+    default = { "lsp", "path", "buffer" },
     -- optionally disable cmdline completions
     -- cmdline = {},
   },
@@ -34,7 +34,7 @@ require("blink.cmp").setup {
     -- 'prefix' will fuzzy match on the text before the cursor
     -- 'full' will fuzzy match on the text before and after the cursor
     -- example: 'foo_|_bar' will match 'foo_' for 'prefix' and 'foo__bar' for 'full'
-    keyword = { range = "full" },
+    -- keyword = { range = "full" },
 
     -- Disable auto brackets
     -- NOTE: some LSPs may add auto brackets themselves anyway
@@ -43,20 +43,20 @@ require("blink.cmp").setup {
     -- Insert completion item on selection, don't select by default
     -- list = { selection = 'preselect' },
 
-    menu = {
-      -- Don't automatically show the completion menu
-      auto_show = true,
-
-      -- nvim-cmp style menu
-      draw = {
-        treesitter = { "lsp" },
-        columns = {
-          { "kind_icon" },
-          { "label", "label_description", gap = 1 },
-          { "source_name" },
-        },
-      },
-    },
+    -- menu = {
+    --   -- Don't automatically show the completion menu
+    --   auto_show = true,
+    --
+    --   -- nvim-cmp style menu
+    --   draw = {
+    --     treesitter = { "lsp" },
+    --     columns = {
+    --       { "kind_icon" },
+    --       { "label", "label_description", gap = 1 },
+    --       { "source_name" },
+    --     },
+    --   },
+    -- },
 
     -- Show documentation when selecting a completion item
     documentation = {
@@ -67,6 +67,6 @@ require("blink.cmp").setup {
     },
 
     -- Display a preview of the selected item on the current line
-    ghost_text = { enabled = true },
+    -- ghost_text = { enabled = true },
   },
 }
