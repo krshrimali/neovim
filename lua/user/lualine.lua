@@ -8,8 +8,6 @@ local lualine_scheme = "auto"
 local status_theme_ok, theme = pcall(require, "lualine.themes." .. lualine_scheme)
 if not status_theme_ok then return end
 
--- local navic = require("nvim-navic")
-
 -- check if value in table
 local function contains(t, value)
   for _, v in pairs(t) do
@@ -125,32 +123,30 @@ local name = {
   padding = 0,
 }
 
--- local current_signature = {
---   function()
---     local buf_ft = vim.bo.filetype
+local current_signature = {
+  function()
+    local buf_ft = vim.bo.filetype
 
---     if buf_ft == "terminal" or buf_ft == "TelescopePrompt" then
---       return ""
---     end
---     -- if not pcall(require, "lsp_signature") then
---     --   return ""
---     -- end
+    if buf_ft == "terminal" or buf_ft == "TelescopePrompt" then return "" end
+    -- if not pcall(require, "lsp_signature") then
+    --   return ""
+    -- end
 
---     local sig = require("lsp_signature").status_line()
---     -- return sig.label .. " " .. sig.hint
+    local sig = require("lsp_signature").status_line()
+    -- return sig.label .. " " .. sig.hint
 
---     if not require("user.functions").isempty(sig.hint) then
---       -- return "%#SLSeparator#│ : " .. hint .. "%*"
---       -- return "%#SLSeparator#│ " .. hint .. "%*"
---       return sig.hint .. "%*"
---     end
+    if not require("user.functions").isempty(sig.hint) then
+      -- return "%#SLSeparator#│ : " .. hint .. "%*"
+      -- return "%#SLSeparator#│ " .. hint .. "%*"
+      return sig.hint .. "%*"
+    end
 
---     -- return "functions empty"
---     return ""
---   end,
---   cond = hide_in_width_100,
---   padding = 0,
--- }
+    -- return "functions empty"
+    return ""
+  end,
+  cond = hide_in_width_100,
+  padding = 0,
+}
 
 local spaces = {
   function()
@@ -787,6 +783,52 @@ lualine.setup {
     -- },
     lualine_z = { location, progress },
   },
-  tabline = {},
+  tabline = {
+    lualine_a = {
+      {
+        "tabs",
+        mode = 1, -- 0: shows tab_nr, 1: shows tab_name, 2: shows tab_nr + tab_name
+        max_length = vim.o.columns / 3, -- Maximum width of tabs component
+        fmt = function(name, context)
+          -- Show + if buffer is modified in tab
+          local buflist = vim.fn.tabpagebuflist(context.tabnr)
+          local winnr = vim.fn.tabpagewinnr(context.tabnr)
+          local bufnr = buflist[winnr]
+          local mod = vim.fn.getbufvar(bufnr, "&mod")
+
+          return name .. (mod == 1 and " +" or "")
+        end,
+      },
+    },
+    lualine_b = {},
+    lualine_c = {
+      -- Breadcrumbs using navic (requires nvim-navic plugin)
+      {
+        function()
+          local navic = require "nvim-navic"
+          if navic.is_available() then return navic.get_location() end
+          return ""
+        end,
+        cond = function()
+          local ok, navic = pcall(require, "nvim-navic")
+          return ok and navic.is_available()
+        end,
+      },
+    },
+    lualine_x = {},
+    lualine_y = {},
+    lualine_z = {
+      -- Alternative breadcrumbs using filename path
+      {
+        "filename",
+        path = 1, -- 0: Just filename, 1: Relative path, 2: Absolute path, 3: Absolute path with tilde
+        symbols = {
+          modified = " ●", -- Text to show when the file is modified
+          readonly = " ", -- Text to show when the file is non-modifiable or readonly
+          unnamed = "[No Name]", -- Text to show for unnamed buffers
+        },
+      },
+    },
+  },
   extensions = {},
 }

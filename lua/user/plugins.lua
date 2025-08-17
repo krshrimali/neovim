@@ -620,23 +620,26 @@ require("lazy").setup {
     config = function() require "user.minimap" end,
   },
 
-  -- {
-  --     "ray-x/lsp_signature.nvim",
-  --     config = function()
-  --         require("lsp_signature").setup({
-  --             bind = true,
-  --             handler_opts = {
-  --                 border = "rounded",
-  --             }
-  --         })
-  --     end,
-  -- },
+  {
+    "ray-x/lsp_signature.nvim",
+    config = function()
+      require("lsp_signature").setup {
+        bind = true,
+        handler_opts = {
+          border = "rounded",
+        },
+      }
+    end,
+  },
   {
     "windwp/nvim-autopairs",
     event = "InsertEnter",
     config = true,
     -- use opts = {} for passing setup options
     -- this is equivalent to setup({}) function
+  },
+  {
+    "SmiteshP/nvim-navic",
   },
   -- {
   --     "karb94/neoscroll.nvim",
