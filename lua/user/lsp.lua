@@ -9,9 +9,11 @@ local lspconfig = require "lspconfig"
 -- Common LSP capabilities (enhanced for blink.cmp)
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
+local navic = require "nvim-navic"
 
 -- LSP keymaps setup (completion handled by blink.cmp)
-local on_attach = function(_, bufnr)
+local on_attach = function(client, bufnr)
+  navic.attach(client, bufnr)
   local opts = { noremap = true, silent = true, buffer = bufnr }
 
   -- Keybindings
