@@ -627,18 +627,6 @@ require("lazy").setup {
     end,
     config = function() require "user.minimap" end,
   },
-
-  {
-    "ray-x/lsp_signature.nvim",
-    config = function()
-      require("lsp_signature").setup {
-        bind = true,
-        handler_opts = {
-          border = "rounded",
-        },
-      }
-    end,
-  },
   {
     "windwp/nvim-autopairs",
     event = "InsertEnter",
