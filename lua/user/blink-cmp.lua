@@ -28,7 +28,7 @@ require("blink.cmp").setup {
   },
 
   -- experimental signature help support
-  signature = { enabled = true },
+  -- signature = { enabled = true },
 
   completion = {
     -- 'prefix' will fuzzy match on the text before the cursor
