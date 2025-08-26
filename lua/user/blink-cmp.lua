@@ -32,7 +32,7 @@ require("blink.cmp").setup {
             },
             lsp = {
                 max_items = 5,
-                min_keyword_length = 1,
+                min_keyword_length = 2,
             }
         }
     },
@@ -48,7 +48,7 @@ require("blink.cmp").setup {
 
         -- Trigger completion after typing 2 characters
         trigger = {
-            prefetch_on_insert = true,
+            prefetch_on_insert = false,
             show_on_trigger_character = true,
             show_on_keyword = true,
             -- keyword_length = 2
@@ -92,8 +92,8 @@ require("blink.cmp").setup {
         -- Show documentation when selecting a completion item
         documentation = {
             auto_show = true,
-            auto_show_delay_ms = 200,
-            treesitter_highlighting = true,
+            auto_show_delay_ms = 500,
+            treesitter_highlighting = false,
             window = { border = "rounded" },
         },
 
