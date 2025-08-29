@@ -224,6 +224,11 @@ vim.api.nvim_set_keymap("n", "<Leader><leader>g", ":lua live_grep()<CR>", { nore
 -- vim.api.nvim_set_keymap("n", "<leader>zr", '[[:lua require("ufo").closeAllFolds()<CR>]]', opts)
 
 vim.api.nvim_set_keymap("n", "<leader><leader>s", ":FzfLua command_history<CR>", opts)
+
+-- FzfLua: Search visually selected text across project
+vim.api.nvim_set_keymap("v", "<leader>fs", ":FzfLua grep_visual<CR>", opts)
+-- FzfLua: Search current buffer lines
+vim.api.nvim_set_keymap("n", "<leader>fl", ":FzfLua blines<CR>", opts)
 -- vim.keymap.set("n", "zR", require("ufo").openAllFolds)
 -- vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
 -- vim.keymap.set("n", "zr", require("ufo").openFoldsExceptKinds)
