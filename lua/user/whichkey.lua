@@ -350,18 +350,23 @@ which_key.add {
   -- Diagnostics
   {
     "<leader>dl",
-    "<cmd>lua require('user.diagnostics_display').show_current_line_diagnostics()<cr>",
+    "<cmd>lua require('user.diagnostics_display').show_line_diagnostics()<cr>",
     desc = "Line Diagnostics",
   },
   {
     "<leader>df",
-    "<cmd>lua require('user.diagnostics_display').show_current_file_diagnostics()<cr>",
+    "<cmd>lua require('user.diagnostics_display').show_file_diagnostics()<cr>",
     desc = "File Diagnostics",
   },
   {
     "<leader>dd",
     "<cmd>lua require('user.diagnostics_display').debug()<cr>",
     desc = "Debug Diagnostics",
+  },
+  {
+    "<leader>dw",
+    "<cmd>lua require('user.diagnostics_display').show_workspace_diagnostics()<cr>",
+    desc = "Workspace Diagnostics",
   },
 
   -- Git
