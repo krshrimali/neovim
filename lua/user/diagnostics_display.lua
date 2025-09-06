@@ -245,11 +245,8 @@ function M.setup()
     },
   }
 
-  -- Keymaps
-  vim.keymap.set("n", "<leader>dl", M.show_line_diagnostics, { desc = "Show line diagnostics" })
-  vim.keymap.set("n", "<leader>df", M.show_file_diagnostics, { desc = "Show file diagnostics" })
-  vim.keymap.set("n", "<leader>dw", M.show_workspace_diagnostics, { desc = "Show workspace diagnostics" })
-
+  -- Keymaps are handled in keymaps.lua to avoid conflicts
+  
   -- Auto-show diagnostics on cursor hold
   vim.api.nvim_create_autocmd("CursorHold", {
     callback = function()

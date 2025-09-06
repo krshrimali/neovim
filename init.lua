@@ -42,7 +42,7 @@ require "user.colorizer"
 require "user.functions"
 require "user.surround"
 require "user.nvim_transparent"
-require "user.diagnostics_display"
+require("user.diagnostics_display").setup()
 require "user.buffer_navigation"
 
 -- fzf-lua is now loaded via lazy.nvim
@@ -66,6 +66,7 @@ vim.keymap.set(
 -- require("goto-preview").setup {} -- Now configured via goto_preview_lsp.lua
 -- require("neogit").setup {} -- Now lazy loaded
 -- telescope extensions replaced with fzf-lua
-vim.diagnostic.config { virtual_lines = true }
+-- Diagnostic config is now handled by lsp.lua and diagnostics_display.lua
+-- vim.diagnostic.config { virtual_lines = true }
 vim.fn.sign_define("LspCodeAction", { text = "", texthl = "", linehl = "", numhl = "" })
 vim.fn.sign_define("LspCodeActionAvailable", { text = "", texthl = "", linehl = "", numhl = "" })
