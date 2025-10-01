@@ -39,13 +39,13 @@ require("lazy").setup {
   -- },
 
   -- Fast completion with blink.cmp
-  {
-    "saghen/blink.cmp",
-    lazy = false, -- lazy loading handled internally
-    dependencies = "rafamadriz/friendly-snippets",
-    version = "v0.*",
-    config = function() require "user.blink-cmp" end,
-  },
+  -- {
+  --   "saghen/blink.cmp",
+  --   lazy = false, -- lazy loading handled internally
+  --   dependencies = "rafamadriz/friendly-snippets",
+  --   version = "v0.*",
+  --   config = function() require "user.blink-cmp" end,
+  -- },
 
   -- Highlight words under cursor - LAZY LOAD
   {
