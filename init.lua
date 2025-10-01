@@ -45,6 +45,12 @@ require "user.nvim_transparent"
 require("user.diagnostics_display").setup()
 require "user.buffer_navigation"
 
+-- Setup native vim completion
+local completion = require "user.completion"
+completion.setup()
+completion.setup_keymaps()
+completion.setup_autocmds()
+
 -- fzf-lua is now loaded via lazy.nvim
 
 -- Setup buffer browser (lazy loaded on keymap)
