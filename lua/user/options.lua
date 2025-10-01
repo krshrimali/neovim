@@ -89,3 +89,4 @@ vim.api.nvim_exec(
 
 vim.g.tabby_inline_completion_keybinding_accept = "<M-y>" -- Disabled to avoid conflict with other keybindings
 vim.opt.foldenable = false
+vim.g.vim_ai_async_chat = 1

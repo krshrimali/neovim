@@ -235,12 +235,6 @@ require("lazy").setup {
     config = function() require "user.gitsigns" end,
   },
 
-  -- Which key - LAZY LOAD
-  {
-    "folke/which-key.nvim",
-    event = "VeryLazy",
-    config = function() require "user.whichkey" end,
-  },
 
   -- THEMES - Move less used themes to lazy load
   {
@@ -347,10 +341,13 @@ require("lazy").setup {
 
   -- File browser functionality available through fzf-lua files command
 
-  -- Winbar - LAZY LOAD
+  -- Winbar - DISABLED (no filename/filepath display)
   {
     "fgheng/winbar.nvim",
     event = "BufReadPost",
+    config = function() 
+      require "user.winbar"
+    end,
   },
 
   -- Frecency functionality replaced with fzf-lua oldfiles
@@ -667,6 +664,11 @@ require("lazy").setup {
       { "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
     },
   },
+	{
+	"https://github.deshaw.com/genai/vim-ai",
+	branch = "async_vimai"
+	},
+
   -- {
   --     "karb94/neoscroll.nvim",
   --     opts = {},

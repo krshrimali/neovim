@@ -315,4 +315,165 @@ vim.keymap.set("n", "<C-d>", function()
   vim.cmd("normal! " .. vim.o.scroll .. "j")
   vim.cmd "normal! zz"
 end, { desc = "Scroll down and center", noremap = true, silent = true, remap = false })
+
+-- Keymaps transferred from whichkey.lua
+-- Buffer management
+keymap("n", "<leader>b", "<cmd>FzfLua buffers<cr>", opts)
+keymap("n", "<leader>bb", "<cmd>lua require('user.buffer_browser').open_buffer_browser()<cr>", opts)
+keymap("n", "<leader>bs", "<cmd>lua require('user.buffer_browser').toggle_sidebar()<cr>", opts)
+
+-- File Explorer
+keymap("n", "<leader>e", "<cmd>:NvimTreeToggle<cr>", opts)
+
+-- Basic operations
+keymap("n", "<leader>w", "<cmd>w<CR>", opts)
+keymap("n", "<leader>h", "<cmd>nohlsearch<CR>", opts)
+keymap("n", "<leader>q", "<cmd>lua require('user.functions').smart_quit()<CR>", opts)
+
+-- Options toggles
+keymap("n", "<leader>oc", "<cmd>lua vim.g.cmp_active=false<cr>", opts)
+keymap("n", "<leader>oC", "<cmd>lua vim.g.cmp_active=true<cr>", opts)
+keymap("n", "<leader>ow", '<cmd>lua require("user.functions").toggle_option("wrap")<cr>', opts)
+keymap("n", "<leader>or", '<cmd>lua require("user.functions").toggle_option("relativenumber")<cr>', opts)
+keymap("n", "<leader>ol", '<cmd>lua require("user.functions").toggle_option("cursorline")<cr>', opts)
+keymap("n", "<leader>os", '<cmd>lua require("user.functions").toggle_option("spell")<cr>', opts)
+keymap("n", "<leader>ot", '<cmd>lua require("user.functions").toggle_tabline()<cr>', opts)
+
+-- Window splits
+keymap("n", "<leader>ks", "<cmd>split<cr>", opts)
+keymap("n", "<leader>kv", "<cmd>vsplit<cr>", opts)
+
+-- Session management
+keymap("n", "<leader>Ss", "<cmd>SessionSave<cr>", opts)
+keymap("n", "<leader>Sr", "<cmd>SessionRestore<cr>", opts)
+keymap("n", "<leader>Sx", "<cmd>SessionDelete<cr>", opts)
+
+-- Find and Replace (Spectre)
+keymap("n", "<leader>rr", "<cmd>lua require('spectre').open()<cr>", opts)
+keymap("n", "<leader>rw", "<cmd>lua require('spectre').open_visual({select_word=true})<cr>", opts)
+keymap("n", "<leader>rf", "<cmd>lua require('spectre').open_file_search({select_word=true})<cr>", opts)
+keymap("n", "<leader>rb", "<cmd>lua require('spectre').open_file_search()<cr>", opts)
+
+-- Code Runner
+keymap("n", "<leader>Rb", ":TermExec cmd=./.buildme.sh<CR>", opts)
+keymap("n", "<leader>Rp", ':TermExec cmd="python %<CR>"', opts)
+
+-- Find using FzfLua
+keymap("n", "<leader>fB", "<cmd>FzfLua git_branches<cr>", opts)
+keymap("n", "<leader>fc", "<cmd>FzfLua colorschemes<cr>", opts)
+keymap("n", "<leader>ff", "<cmd>FzfLua files<cr>", opts)
+keymap("n", "<leader>fg", "<cmd>FzfLua git_files<cr>", opts)
+keymap("n", "<leader>ftt", "<cmd>FzfLua live_grep<cr>", opts)
+keymap("n", "<leader>fta", "<cmd>FzfLua live_grep<cr>", opts)
+keymap("n", "<leader>fts", "<cmd>FzfLua grep_cword<cr>", opts)
+keymap("n", "<leader>fss", "<cmd>FzfLua grep_cword<cr>", opts)
+keymap("n", "<leader>fsb", "<cmd>FzfLua grep_curbuf<cr>", opts)
+keymap("n", "<leader>fTT", "<cmd>FzfLua live_grep<cr>", opts)
+keymap("n", "<leader>fSS", "<cmd>FzfLua grep_cword<cr>", opts)
+keymap("n", "<leader>fh", "<cmd>FzfLua helptags<cr>", opts)
+keymap("n", "<leader>fH", "<cmd>FzfLua highlights<cr>", opts)
+keymap("n", "<leader>fi", "<cmd>FzfLua lsp_incoming_calls<cr>", opts)
+keymap("n", "<leader>fo", "<cmd>FzfLua lsp_outgoing_calls<cr>", opts)
+keymap("n", "<leader>fI", "<cmd>FzfLua lsp_implementations<cr>", opts)
+keymap("n", "<leader>fl", "<cmd>FzfLua resume<cr>", opts)
+keymap("n", "<leader>fM", "<cmd>FzfLua manpages<cr>", opts)
+keymap("n", "<leader>fr", "<cmd>FzfLua oldfiles<cr>", opts)
+keymap("n", "<leader>fp", "<cmd>FzfLua oldfiles<cr>", opts)
+keymap("n", "<leader>fR", "<cmd>FzfLua registers<cr>", opts)
+keymap("n", "<leader>fk", "<cmd>FzfLua keymaps<cr>", opts)
+keymap("n", "<leader>fC", "<cmd>FzfLua commands<cr>", opts)
+keymap("n", "<leader>fF", "<cmd>FzfLua files<cr>", opts)
+
+-- Diagnostics (additional - some already exist above)
+keymap("n", "<leader>dd", "<cmd>lua require('user.diagnostics_display').debug()<cr>", opts)
+
+-- Git operations
+keymap("n", "<leader>gj", "<cmd>lua require 'gitsigns'.next_hunk()<cr>", opts)
+keymap("n", "<leader>gk", "<cmd>lua require 'gitsigns'.prev_hunk()<cr>", opts)
+keymap("n", "<leader>gll", "<cmd>GitBlameToggle<cr>", opts)
+keymap("n", "<leader>glf", "<cmd>Git blame<cr>", opts)
+keymap("n", "<leader>glg", "<cmd>Gitsigns blame_line<cr>", opts)
+keymap("n", "<leader>gp", "<cmd>lua require 'gitsigns'.preview_hunk()<cr>", opts)
+keymap("n", "<leader>gr", "<cmd>lua require 'gitsigns'.reset_hunk()<cr>", opts)
+keymap("n", "<leader>gR", "<cmd>lua require 'gitsigns'.reset_buffer()<cr>", opts)
+keymap("n", "<leader>gs", "<cmd>lua require 'gitsigns'.stage_hunk()<cr>", opts)
+keymap("n", "<leader>gu", "<cmd>lua require 'gitsigns'.undo_stage_hunk()<cr>", opts)
+keymap("n", "<leader>go", "<cmd>FzfLua git_status<cr>", opts)
+keymap("n", "<leader>gd", "<cmd>Gitsigns diffthis HEAD<cr>", opts)
+
+-- GitBlame
+keymap("n", "<leader>Gl", "<cmd>GitBlameToggle<cr>", opts)
+keymap("n", "<leader>Gc", "<cmd>GitBlameCopySHA<cr>", opts)
+keymap("n", "<leader>Go", "<cmd>GitBlameOpenCommitURL<cr>", opts)
+
+-- LSP operations
+keymap("n", "<leader>lH", "<cmd>IlluminateToggle<cr>", opts)
+keymap("n", "<leader>lI", "<cmd>Mason<cr>", opts)
+keymap("n", "<leader>lj", "<cmd>lua vim.diagnostic.goto_next({buffer=0})<CR>", opts)
+keymap("n", "<leader>lk", "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>", opts)
+
+vim.keymap.set("n", "<leader>lev", function()
+  -- Toggle virtual lines diagnostic display
+  local current_config = vim.diagnostic.config()
+  local virtual_lines_enabled = current_config.virtual_lines or false
+  vim.diagnostic.config {
+    virtual_lines = not virtual_lines_enabled,
+  }
+  -- Provide user feedback
+  local status = not virtual_lines_enabled and "enabled" or "disabled"
+  vim.notify("Diagnostic virtual lines " .. status, vim.log.levels.INFO)
+end, opts)
+
+vim.keymap.set("n", "<leader>leV", function()
+  -- Toggle virtual text diagnostic display
+  local current_config = vim.diagnostic.config()
+  local virtual_text_enabled = current_config.virtual_text or false
+  vim.diagnostic.config {
+    virtual_text = not virtual_text_enabled,
+  }
+  -- Provide user feedback
+  local status = not virtual_text_enabled and "enabled" or "disabled"
+  vim.notify("Diagnostic virtual text " .. status, vim.log.levels.INFO)
+end, opts)
+
+keymap("n", "<leader>lo", "<cmd>Outline<cr>", opts)
+keymap("n", "<leader>lq", "<cmd>lua vim.diagnostic.setloclist()<cr>", opts)
+keymap("n", "<leader>lQ", "<cmd>FzfLua quickfix<cr>", opts)
+keymap("n", "<leader>lr", "<cmd>Trouble lsp_references<cr>", opts)
+keymap("n", "<leader>ls", "<cmd>FzfLua lsp_document_symbols<cr>", opts)
+keymap("n", "<leader>lS", "<cmd>FzfLua lsp_live_workspace_symbols<cr>", opts)
+keymap("n", "<leader>lgt", "<cmd>lua require('goto-preview').goto_preview_type_definition()<cr>", opts)
+keymap("n", "<leader>lgi", "<cmd>lua require('goto-preview').goto_preview_implementation()<cr>", opts)
+keymap("n", "<leader>lgr", "<cmd>lua require('goto-preview').goto_preview_references()<cr>", opts)
+keymap("n", "<leader>lgc", "<cmd>lua require('goto-preview').close_all_win()<cr>", opts)
+keymap("n", "<leader>lt", '<cmd>lua require("user.functions").toggle_diagnostics()<cr>', opts)
+keymap("n", "<leader>lu", "<cmd>LuaSnipUnlinkCurrent<cr>", opts)
+
+-- Terminal keymaps
+keymap("n", "<leader>T1", "<cmd>lua _FLOAT_TERM()<cr>", opts)
+keymap("n", "<leader>T2", "<cmd>lua _VERTICAL_TERM()<cr>", opts)
+keymap("n", "<leader>T3", "<cmd>lua _HORIZONTAL_TERM()<cr>", opts)
+keymap("n", "<leader>T4", "<cmd>lua _FLOAT_TERM()<cr>", opts)
+keymap("n", "<leader>Tn", "<cmd>lua _NODE_TOGGLE()<cr>", opts)
+keymap("n", "<leader>Tu", "<cmd>lua _NCDU_TOGGLE()<cr>", opts)
+keymap("n", "<leader>Tt", "<cmd>lua _HTOP_TOGGLE()<cr>", opts)
+keymap("n", "<leader>Tm", "<cmd>lua _MAKE_TOGGLE()<cr>", opts)
+keymap("n", "<leader>Tf", "<cmd>lua _FLOAT_TERM()<cr>", opts)
+keymap("n", "<leader>Th", "<cmd>lua _HORIZONTAL_TERM()<cr>", opts)
+keymap("n", "<leader>Tv", "<cmd>lua _VERTICAL_TERM()<cr>", opts)
+
+-- Telescope/FzfLua operations
+keymap("n", "<leader>tgS", "<cmd>FzfLua git_stash<cr>", opts)
+keymap("n", "<leader>tC", "<cmd>FzfLua command_history<cr>", opts)
+keymap("n", "<leader>tj", "<cmd>FzfLua jumps<cr>", opts)
+keymap("n", "<leader>th", "<cmd>FzfLua search_history<cr>", opts)
+keymap("n", "<leader>tb", "<cmd>FzfLua builtin<cr>", opts)
+keymap("n", "<leader>tS", "<cmd>FzfLua blines<cr>", opts)
+
+-- Project
+keymap("n", "<leader>tp", "<cmd>FzfLua files<cr>", opts)
+
+-- Transparent
+keymap("n", "<leader>xt", "<cmd>TransparentToggle<cr>", opts)
+
 return M
