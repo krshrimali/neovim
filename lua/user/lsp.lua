@@ -1,7 +1,9 @@
--- Native LSP configuration
--- Optimized for performance with fast completion
--- Pyright for navigation/definitions, Ruff for diagnostics/linting
+-- DISABLED: Native LSP configuration
+-- Now using coc.nvim for all LSP functionality
+-- This file is kept for reference but not loaded
 
+-- To re-enable native LSP, uncomment the following and disable coc.nvim in plugins.lua
+--[[
 local lspconfig = require "lspconfig"
 -- local mason_lspconfig = require('mason-lspconfig')
 
@@ -23,13 +25,16 @@ local navic = require "nvim-navic"
 
 -- LSP keymaps setup (completion handled by blink.cmp)
 local on_attach = function(client, bufnr)
-  navic.attach(client, bufnr)
+  -- Only attach navic to servers that support documentSymbol
+  if client.server_capabilities.documentSymbolProvider then
+    navic.attach(client, bufnr)
+  end
   local opts = { noremap = true, silent = true, buffer = bufnr }
 
   -- Keybindings
   vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
   vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-  vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+  vim.keymap.set("n", "K", function() require('user.keymaps').show_documentation() end, opts)
   vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
   vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
   vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, opts)
@@ -83,8 +88,31 @@ vim.diagnostic.config {
     border = "rounded",
     header = "",
     prefix = "",
+    focusable = true,
+    style = "minimal",
+    source = "always",
   },
 }
+
+-- Configure hover handler with better visibility
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+  vim.lsp.handlers.hover, {
+    border = "rounded",
+    title = " Documentation ",
+    max_width = 80,
+    max_height = 20,
+    focusable = true,
+  }
+)
+
+-- Configure signature help with border
+vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
+  vim.lsp.handlers.signature_help, {
+    border = "rounded",
+    title = " Signature Help ",
+    focusable = false,
+  }
+)
 
 -- Python: Pyright for LSP features (navigation, completion, hover)
 lspconfig.pyright.setup {
@@ -221,3 +249,6 @@ lspconfig.clangd.setup {
 -- })
 --
 -- Completion is handled by blink.cmp
+--]]
+
+-- This file is disabled. Using coc.nvim for all LSP functionality instead.

@@ -45,11 +45,12 @@ require "user.nvim_transparent"
 require("user.diagnostics_display").setup()
 require "user.buffer_navigation"
 
--- Setup native vim completion
-local completion = require "user.completion"
-completion.setup()
-completion.setup_keymaps()
-completion.setup_autocmds()
+-- Setup native vim completion (disabled when using coc.nvim)
+-- Uncomment these lines if you disable coc.nvim and want native completion
+-- local completion = require "user.completion"
+-- completion.setup()
+-- completion.setup_keymaps()
+-- completion.setup_autocmds()
 
 -- fzf-lua is now loaded via lazy.nvim
 
