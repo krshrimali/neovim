@@ -335,14 +335,14 @@ lualine.setup {
     -- lualine_b = {},
     lualine_a = {
       -- Show current time in IST:
-      {
-        function()
-          -- Show AM and PM along with date:
-          return "IIWII | KRS | " .. os.date "IND: %Y%m%d %H:%M:%S %p"
-        end,
-        padding = 1,
-        sep = " | ",
-      },
+      -- {
+      --   function()
+      --     -- Show AM and PM along with date:
+      --     return "IIWII | KRS | " .. os.date "IND: %Y%m%d %H:%M:%S %p"
+      --   end,
+      --   padding = 1,
+      --   sep = " | ",
+      -- },
     },
     lualine_b = { branch },
     lualine_c = {
