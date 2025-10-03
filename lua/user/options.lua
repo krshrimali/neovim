@@ -20,12 +20,12 @@ local options = {
   termguicolors = true, -- set term gui colors (most terminals support this)
   timeoutlen = 300, -- time to wait for a mapped sequence to complete (in milliseconds) - reduced for faster response
   undofile = true, -- enable persistent undo
-  updatetime = 100, -- faster completion (4000ms default)
+  updatetime = 250, -- balanced for LSP responsiveness (4000ms default)
   writebackup = false, -- if a file is being edited by another program (or was written to file while editing with another program), it is not allowed to be edited
   expandtab = true, -- convert tabs to spaces
   shiftwidth = 4, -- the number of spaces inserted for each indentation
   tabstop = 4, -- insert 2 spaces for a tab
-  cursorline = true, -- highlight the current line
+  cursorline = false, -- disable for better performance
   number = true, -- set numbered lines
   laststatus = 3,
   showcmd = true,
@@ -64,8 +64,8 @@ vim.filetype.add {
 vim.cmd [[autocmd TermOpen * setlocal signcolumn=no]]
 vim.cmd [[let g:python_recommended_style = 0]]
 
-vim.opt.foldmethod = "expr"
-vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
+vim.opt.foldmethod = "manual" -- Changed from expr for better performance
+-- vim.wo.foldexpr = "nvim_treesitter#foldexpr()" -- Disabled for performance
 
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1e222a" })
 vim.opt.whichwrap:append "<>[]hl"
@@ -77,6 +77,7 @@ vim.o.foldcolumn = "1" -- '0' is not bad
 vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
 vim.o.foldlevelstart = 99
 vim.o.foldenable = false
+vim.opt.lazyredraw = true -- Don't redraw while executing macros
 vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
 
 vim.api.nvim_command "highlight VertSplit guifg=fg guibg=bg"

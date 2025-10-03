@@ -55,7 +55,7 @@ vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
 })
 
 vim.api.nvim_create_autocmd({ "TextYankPost" }, {
-  callback = function() vim.highlight.on_yank { higroup = "Visual", timeout = 200 } end,
+  callback = function() vim.highlight.on_yank { higroup = "Visual", timeout = 100 } end, -- Reduced timeout
 })
 
 -- Custom commands for config editing and reloading
@@ -78,71 +78,75 @@ vim.api.nvim_create_user_command("ConfigReload", function()
   vim.notify("Configuration reloaded!", vim.log.levels.INFO)
 end, { desc = "Reload Neovim configuration" })
 
--- Improve float window visibility
-vim.api.nvim_create_autocmd("ColorScheme", {
-  pattern = "*",
-  callback = function()
-    -- Make float borders more visible with a distinct color
-    vim.api.nvim_set_hl(0, "FloatBorder", { 
-      fg = "#7aa2f7",  -- Bright blue border
-      bg = "NONE" 
-    })
-    
-    -- Make the float window background slightly different from editor
-    vim.api.nvim_set_hl(0, "NormalFloat", { 
-      bg = "#1a1b26",  -- Slightly darker/different background
-      fg = "#c0caf5"    -- Normal foreground
-    })
-    
-    -- Title for float windows
-    vim.api.nvim_set_hl(0, "FloatTitle", { 
-      fg = "#7aa2f7",   -- Blue title
-      bg = "#1a1b26",
-      bold = true 
-    })
-    
-    -- Footer for float windows  
-    vim.api.nvim_set_hl(0, "FloatFooter", { 
-      fg = "#565f89",   -- Dimmed footer
-      bg = "#1a1b26" 
-    })
-  end,
-})
+-- Defer float window visibility setup
+vim.defer_fn(function()
+  vim.api.nvim_create_autocmd("ColorScheme", {
+    pattern = "*",
+    callback = function()
+      -- Make float borders more visible with a distinct color
+      vim.api.nvim_set_hl(0, "FloatBorder", { 
+        fg = "#7aa2f7",  -- Bright blue border
+        bg = "NONE" 
+      })
+      
+      -- Make the float window background slightly different from editor
+      vim.api.nvim_set_hl(0, "NormalFloat", { 
+        bg = "#1a1b26",  -- Slightly darker/different background
+        fg = "#c0caf5"    -- Normal foreground
+      })
+      
+      -- Title for float windows
+      vim.api.nvim_set_hl(0, "FloatTitle", { 
+        fg = "#7aa2f7",   -- Blue title
+        bg = "#1a1b26",
+        bold = true 
+      })
+      
+      -- Footer for float windows  
+      vim.api.nvim_set_hl(0, "FloatFooter", { 
+        fg = "#565f89",   -- Dimmed footer
+        bg = "#1a1b26" 
+      })
+    end,
+  })
+end, 200)
 
--- Apply the highlights immediately
-vim.api.nvim_set_hl(0, "FloatBorder", { 
-  fg = "#7aa2f7",  -- Bright blue border
-  bg = "NONE" 
-})
+-- Defer highlight setup for better startup
+vim.defer_fn(function()
+  vim.api.nvim_set_hl(0, "FloatBorder", { 
+    fg = "#7aa2f7",  -- Bright blue border
+    bg = "NONE" 
+  })
 
-vim.api.nvim_set_hl(0, "NormalFloat", { 
-  bg = "#1a1b26",  -- Slightly darker/different background
-  fg = "#c0caf5"    -- Normal foreground
-})
+  vim.api.nvim_set_hl(0, "NormalFloat", { 
+    bg = "#1a1b26",  -- Slightly darker/different background
+    fg = "#c0caf5"    -- Normal foreground
+  })
 
-vim.api.nvim_set_hl(0, "FloatTitle", { 
-  fg = "#7aa2f7",   -- Blue title
-  bg = "#1a1b26",
-  bold = true 
-})
+  vim.api.nvim_set_hl(0, "FloatTitle", { 
+    fg = "#7aa2f7",   -- Blue title
+    bg = "#1a1b26",
+    bold = true 
+  })
 
-vim.api.nvim_set_hl(0, "FloatFooter", { 
-  fg = "#565f89",   -- Dimmed footer
-  bg = "#1a1b26" 
-})
+  vim.api.nvim_set_hl(0, "FloatFooter", { 
+    fg = "#565f89",   -- Dimmed footer
+    bg = "#1a1b26" 
+  })
 
--- CoC specific float window highlights
-vim.api.nvim_set_hl(0, "CocFloating", { 
-  bg = "#1f2335",  -- Dark background for CoC floats
-  fg = "#c0caf5"    -- Normal foreground
-})
+  -- CoC specific float window highlights
+  vim.api.nvim_set_hl(0, "CocFloating", { 
+    bg = "#1f2335",  -- Dark background for CoC floats
+    fg = "#c0caf5"    -- Normal foreground
+  })
 
-vim.api.nvim_set_hl(0, "CocFloatingBorder", { 
-  fg = "#bb9af7",   -- Purple border for CoC
-  bg = "#1f2335" 
-})
+  vim.api.nvim_set_hl(0, "CocFloatingBorder", { 
+    fg = "#bb9af7",   -- Purple border for CoC
+    bg = "#1f2335" 
+  })
 
-vim.api.nvim_set_hl(0, "CocErrorFloat", { fg = "#f7768e" })
-vim.api.nvim_set_hl(0, "CocWarningFloat", { fg = "#e0af68" })
-vim.api.nvim_set_hl(0, "CocInfoFloat", { fg = "#0db9d7" })
-vim.api.nvim_set_hl(0, "CocHintFloat", { fg = "#1abc9c" })
+  vim.api.nvim_set_hl(0, "CocErrorFloat", { fg = "#f7768e" })
+  vim.api.nvim_set_hl(0, "CocWarningFloat", { fg = "#e0af68" })
+  vim.api.nvim_set_hl(0, "CocInfoFloat", { fg = "#0db9d7" })
+  vim.api.nvim_set_hl(0, "CocHintFloat", { fg = "#1abc9c" })
+end, 200) -- Delay for better startup
