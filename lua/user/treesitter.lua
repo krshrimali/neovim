@@ -2,22 +2,22 @@ local status_ok, configs = pcall(require, "nvim-treesitter.configs")
 if not status_ok then return end
 
 configs.setup {
-  -- Only install essential parsers to reduce startup time
-  ensure_installed = { "c", "lua", "rust", "python", "go", "javascript", "typescript" }, -- Reduced from many parsers
+  -- Only install minimal parsers to reduce startup time
+  ensure_installed = { "lua", "python" }, -- Minimal set, others installed on demand
   sync_install = false, -- install languages synchronously (only applied to `ensure_installed`)
-  max_file_lines = 2000, -- Reduced from 3000 for better performance
+  -- max_file_lines = 3000, -- Removed to ensure no interference with LSP
   ignore_install = { "" }, -- List of parsers to ignore installing
 
   highlight = {
     enable = true, -- false will disable the whole extension
     disable = { "markdown", "css", "html" }, -- Disable for heavy file types
-    -- Disable for large files and terminal buffers
+    -- Disable only for VERY large files and terminal buffers
     disable = function(lang, buf)
       -- Disable for terminal buffers to prevent highlighting errors
       local buftype = vim.api.nvim_buf_get_option(buf, "buftype")
       if buftype == "terminal" then return true end
 
-      local max_filesize = 50 * 1024 -- Reduced from 100 KB for better performance
+      local max_filesize = 500 * 1024 -- 500KB limit - only disable for very large files
       local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
       if ok and stats and stats.size > max_filesize then return true end
     end,
@@ -30,7 +30,7 @@ configs.setup {
 
   indent = {
     enable = true,
-    disable = { "python", "css", "rust", "cpp", "yaml", "json" }, -- Expanded disable list
+    disable = { "python", "css", "rust", "cpp", "yaml", "json", "html", "javascript" }, -- More disabled for performance
   },
 
   -- Disable incremental selection to reduce startup time

@@ -21,7 +21,8 @@ require("lazy").setup {
     {
         "neoclide/coc.nvim",
         branch = "release",
-        event = { "BufReadPre", "BufNewFile" },
+        lazy = false, -- Never lazy load CoC to ensure LSP always works
+        priority = 1000, -- High priority to load first
         config = function() require "user.coc" end,
     },
 
@@ -94,8 +95,11 @@ require("lazy").setup {
         config = true,
     },
 
-    -- Transparency - LOAD IMMEDIATELY (UI)
-    "xiyaowong/transparent.nvim",
+    -- Transparency - LAZY LOAD
+    {
+        "xiyaowong/transparent.nvim",
+        event = "VeryLazy",
+    },
 
     -- Goto preview - LAZY LOAD
     {
@@ -150,15 +154,17 @@ require("lazy").setup {
         dependencies = { "rktjmp/lush.nvim" },
     },
 
-    -- Notifications - LOAD IMMEDIATELY (UI)
+    -- Notifications - LAZY LOAD
     {
         "rcarriga/nvim-notify",
+        event = "VeryLazy",
         config = function() require "user.notify" end,
     },
 
-    -- Dressing - LOAD IMMEDIATELY (UI)
+    -- Dressing - LAZY LOAD
     {
         "stevearc/dressing.nvim",
+        event = "VeryLazy",
         config = function() require "user.dressing" end,
     },
 
@@ -184,34 +190,31 @@ require("lazy").setup {
         -- config handled in separate file
     },
 
-    -- Lualine - LOAD IMMEDIATELY (UI)
+    -- Lualine - LAZY LOAD with priority
     {
         "nvim-lualine/lualine.nvim",
+        event = "VeryLazy",
+        priority = 900,
         config = function() require "user.lualine" end,
     },
 
-    -- File explorer - Custom simple tree (replaced nvim-tree)
-    -- Using custom simple_tree.lua instead
+    -- File explorer - LAZY LOAD
     {
         "nvim-tree/nvim-tree.lua",
         version = "*",
-        -- cmd = { "NvimTreeToggle", "NvimTreeOpen", "NvimTreeFocus" },
-        -- keys = { "<leader>e" },
+        cmd = { "NvimTreeToggle", "NvimTreeOpen", "NvimTreeFocus" },
+        keys = { "<leader>e" },
         config = function() require "user.nvim-tree" end,
     },
 
     -- Comment - LAZY LOAD
     {
         "numToStr/Comment.nvim",
+        keys = {
+            { "gc", mode = { "n", "v" } },
+            { "gb", mode = { "n", "v" } },
+        },
         config = function() require("Comment").setup() end,
-        -- keys = {
-        --     { "gc", mode = { "n", "v" } },
-        --     { "gb", mode = { "n", "v" } },
-        -- },
-        -- lazy = false,
-        -- config = function()
-        --     require("user.comment")
-        -- end
     },
 
     -- Todo comments - LAZY LOAD
@@ -445,6 +448,7 @@ require("lazy").setup {
     },
     {
         "github/copilot.vim",
+        cmd = "Copilot",
         event = "InsertEnter",
     },
 
@@ -511,7 +515,9 @@ require("lazy").setup {
             -- your configuration comes here
             -- or leave it empty to use the default settings
             -- refer to the configuration section below
-            bigfile = { enabled = true },
+            bigfile = { 
+                enabled = false, -- Disabled to ensure LSP always works
+            },
             gitbrowse = {
                 what = "permalink",
                 url_patterns = {
@@ -707,10 +713,6 @@ require("lazy").setup {
                 keep_terminal_focus = false, -- If true, moves focus back to terminal after diff opens
             },
         },
-    },
-    {
-        "https://github.deshaw.com/genai/vim-ai",
-        branch = "async_vimai"
     },
     {
         "rose-pine/neovim",

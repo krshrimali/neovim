@@ -78,7 +78,7 @@
     "borderhighlight": "CocFloatingBorder"
   },
   "suggest.autoTrigger": "always",
-  "suggest.timeout": 5000,
+  "suggest.timeout": 2000,
   "suggest.minTriggerInputLength": 1,
   "suggest.acceptSuggestionOnCommitCharacter": true,
   "python.linting.enabled": true,
@@ -91,9 +91,13 @@
   "python.analysis.autoSearchPaths": true,
   "python.analysis.diagnosticMode": "openFilesOnly",
   "python.analysis.useLibraryCodeForTypes": true,
+  "pyright.enable": true,
+  "pyright.disableOrganizeImports": false,
   "pyright.inlayHints.variableTypes": false,
   "pyright.inlayHints.functionReturnTypes": false,
   "pyright.inlayHints.parameterTypes": false,
+  "python.pythonPath": "python3",
+  "languageserver": {},
   "coc.preferences.formatOnSave": false,
   "coc.preferences.formatOnType": false,
   "coc.preferences.jumpCommand": "edit",
@@ -104,6 +108,7 @@
   "coc.preferences.snippetStatusText": "Ⓢ ",
   "coc.preferences.floatActions": true,
   "coc.preferences.currentFunctionSymbolAutoUpdate": false,
+  "coc.preferences.willSaveHandlerTimeout": 500,
   "coc.preferences.colorSupport": true,
   "workspace.ignoredFolders": [
     "$HOME",
@@ -121,7 +126,10 @@
   "pairs.enableCharacters": ["(", "[", "{", "'", "\"", "`"],
   "pairs.disableLanguages": ["markdown"],
   "highlight.colorNames": true,
-  "highlight.document.enable": true,
+  "highlight.document.enable": false,
   "highlight.colors.enable": true,
-  "semanticTokens.enable": true
+  "semanticTokens.enable": true,
+  "diagnostic.refreshOnInsertMode": false,
+  "suggest.maxCompleteItemCount": 20,
+  "suggest.localityBonus": true
 }

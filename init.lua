@@ -1,8 +1,8 @@
-require "user.plugins"
+require "user.options" -- Load options first
+require "user.plugins" -- Load plugins (including CoC with high priority)
 require "user.keymaps"
 require "user.autocommands"
 require "user.colorscheme"
-require "user.options"
 
 -- Load UI components immediately for consistent experience
 -- require "user.lualine" -- Now loaded in plugin config
@@ -13,7 +13,7 @@ require "user.options"
 vim.defer_fn(function()
   -- Load native terminal configuration (includes lazygit)
   require "user.terminal"
-end, 100)
+end, 500) -- Increased delay for better startup
 
 -- Load these only when plugins are loaded (handled by lazy loading now)
 -- telescope replaced with fzf-lua
@@ -37,13 +37,15 @@ end, 100)
 -- require "user.nvim_transparent" -- Keep for immediate UI
 -- COC removed - using native vim.lsp
 
--- Keep essential immediate configurations
-require "user.colorizer"
-require "user.functions"
-require "user.surround"
-require "user.nvim_transparent"
-require("user.diagnostics_display").setup()
-require "user.buffer_navigation"
+-- Defer non-essential configurations
+vim.defer_fn(function()
+  require "user.colorizer"
+  require "user.functions"
+  require "user.surround"
+  require "user.nvim_transparent"
+  require("user.diagnostics_display").setup()
+  require "user.buffer_navigation"
+end, 50) -- Small delay for better startup
 
 -- Setup native vim completion (disabled when using coc.nvim)
 -- Uncomment these lines if you disable coc.nvim and want native completion
@@ -75,5 +77,8 @@ vim.keymap.set(
 -- telescope extensions replaced with fzf-lua
 -- Diagnostic config is now handled by lsp.lua and diagnostics_display.lua
 -- vim.diagnostic.config { virtual_lines = true }
-vim.fn.sign_define("LspCodeAction", { text = "", texthl = "", linehl = "", numhl = "" })
-vim.fn.sign_define("LspCodeActionAvailable", { text = "", texthl = "", linehl = "", numhl = "" })
+-- Defer sign definitions
+vim.defer_fn(function()
+  vim.fn.sign_define("LspCodeAction", { text = "", texthl = "", linehl = "", numhl = "" })
+  vim.fn.sign_define("LspCodeActionAvailable", { text = "", texthl = "", linehl = "", numhl = "" })
+end, 100)
