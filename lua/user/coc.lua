@@ -1,45 +1,50 @@
 -- CoC.nvim configuration for fast LSP functionality
 -- Replaces native LSP for hover, completion, and other features
 
--- CoC extensions to install
+-- CoC extensions - balanced for performance and functionality
 vim.g.coc_global_extensions = {
   'coc-pyright',      -- Python
   'coc-json',         -- JSON
-  'coc-yaml',         -- YAML
-  'coc-toml',         -- TOML
   'coc-lua',          -- Lua
+  'coc-pairs',        -- Auto pairs
   'coc-tsserver',     -- TypeScript/JavaScript
   'coc-rust-analyzer', -- Rust
   'coc-go',           -- Go
-  'coc-clangd',       -- C/C++
-  'coc-sh',           -- Shell/Bash
-  'coc-vimlsp',       -- Vim script
-  'coc-html',         -- HTML
-  'coc-css',          -- CSS
-  'coc-prettier',     -- Prettier formatter
-  'coc-pairs',        -- Auto pairs
-  'coc-highlight',    -- Color highlighting
+  -- Optional extensions (uncomment as needed):
+  -- 'coc-yaml', 'coc-toml', 'coc-clangd', 'coc-sh', 'coc-vimlsp',
+  -- 'coc-html', 'coc-css', 'coc-prettier', 'coc-highlight'
 }
 
 -- CoC settings
 vim.g.coc_config_home = vim.fn.stdpath('config')
+vim.g.coc_start_at_startup = 1  -- Ensure CoC starts immediately
 
 -- Basic CoC configuration
 vim.opt.backup = false
 vim.opt.writebackup = false
-vim.opt.updatetime = 300
 vim.opt.signcolumn = "yes"
 
--- Highlight the symbol and its references when holding the cursor
-vim.api.nvim_create_augroup("CocGroup", {})
-vim.api.nvim_create_autocmd("CursorHold", {
-  group = "CocGroup",
-  pattern = "*",
+-- Ensure CoC has time to initialize
+vim.api.nvim_create_autocmd("VimEnter", {
   callback = function()
-    vim.fn.CocActionAsync('highlight')
+    vim.defer_fn(function()
+      -- Check CoC status after startup
+      vim.fn.CocActionAsync('ensureDocument')
+    end, 100)
   end,
-  desc = "Highlight symbol under cursor on CursorHold"
+  desc = "Ensure CoC is ready"
 })
+
+-- Highlight disabled for performance - uncomment if needed
+-- vim.api.nvim_create_augroup("CocGroup", {})
+-- vim.api.nvim_create_autocmd("CursorHold", {
+--   group = "CocGroup",
+--   pattern = "*",
+--   callback = function()
+--     vim.fn.CocActionAsync('highlight')
+--   end,
+--   desc = "Highlight symbol under cursor on CursorHold"
+-- })
 
 -- Setup keymaps for CoC
 local keyset = vim.keymap.set
@@ -230,6 +235,16 @@ keyset("n", "gl", '<CMD>lua _G.show_diagnostics()<CR>', {silent = true, desc = "
 
 -- Show all diagnostics in current buffer
 keyset("n", "<leader>dd", '<CMD>CocList diagnostics<CR>', {silent = true, desc = "Show all diagnostics"})
+
+-- CoC status and restart commands
+vim.api.nvim_create_user_command("CocStatus", function()
+  vim.cmd("CocInfo")
+end, { desc = "Show CoC status and info" })
+
+vim.api.nvim_create_user_command("CocRestart", function()
+  vim.cmd("CocRestart")
+  vim.notify("CoC restarted", vim.log.levels.INFO)
+end, { desc = "Restart CoC" })
 
 -- Additional convenience keymaps
 -- Close all float windows with <leader>q or Shift+Escape
