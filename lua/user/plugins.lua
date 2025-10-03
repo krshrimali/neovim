@@ -11,8 +11,9 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-vim.g.mapleader = ","
-vim.g.maplocalleader = ","
+-- Using space as leader for now [20251003]
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
 -- Install your plugins here
 require("lazy").setup {
