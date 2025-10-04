@@ -1,5 +1,4 @@
-local M = {}
-local status_ok, lualine = pcall(require, "lualine")
+local M = {} local status_ok, lualine = pcall(require, "lualine")
 if not status_ok then return end
 
 local lualine_scheme = "auto"
@@ -775,7 +774,7 @@ lualine.setup {
         padding = 1,
       },
     },
-    lualine_y = { lanuage_server },
+    -- lualine_y = { lanuage_server },
     -- {
     --   "filename",
     --   file_status = true,
