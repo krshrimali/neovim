@@ -5,11 +5,11 @@ function M.setup()
   -- Ensure we override any existing mappings after all plugins load
   vim.defer_fn(function()
     -- Remove any existing Enter mappings first
-    pcall(vim.keymap.del, 'i', '<CR>')
-    pcall(vim.keymap.del, 'i', '<C-y>')
-    
+    pcall(vim.keymap.del, "i", "<CR>")
+    pcall(vim.keymap.del, "i", "<C-y>")
+
     -- Use the vimscript version which works better with CoC
-    vim.cmd[[
+    vim.cmd [[
       " Make <CR> accept selected completion item and trigger auto-import
       inoremap <silent><expr> <CR> coc#pum#visible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
       
