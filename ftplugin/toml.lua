@@ -2,7 +2,7 @@ vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
   pattern = { "Cargo.toml" },
   callback = function()
     local opts = { noremap = true, silent = true, nowait = true }
-    
+
     -- Cargo/Crates keymaps
     vim.api.nvim_buf_set_keymap(0, "n", "<leader>Lt", "<cmd>lua require('crates').toggle()<CR>", opts)
     vim.api.nvim_buf_set_keymap(0, "n", "<leader>Lu", "<cmd>lua require('crates').update_crate()<CR>", opts)
