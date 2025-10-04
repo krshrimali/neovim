@@ -70,7 +70,7 @@ vim.opt.foldmethod = "manual" -- Changed from expr for better performance
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1e222a" })
 vim.opt.whichwrap:append "<>[]hl"
 
-vim.g.transparent_enabled = true
+vim.g.transparent_enabled = false
 vim.g.use_nerd_fonts = false
 
 vim.o.foldcolumn = "1" -- '0' is not bad
@@ -88,6 +88,4 @@ vim.api.nvim_exec(
   false
 )
 
-vim.g.tabby_inline_completion_keybinding_accept = "<M-y>" -- Disabled to avoid conflict with other keybindings
 vim.opt.foldenable = false
-vim.g.vim_ai_async_chat = 1
