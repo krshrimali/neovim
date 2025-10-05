@@ -92,7 +92,7 @@
   "suggest.snippetIndicator": "►",
   "suggest.detailMaxLength": 100,
   "suggest.detailField": "preview",
-  "suggest.autoTrigger": "always",
+  "suggest.autoTrigger": "none",
   "suggest.timeout": 2000,
   "suggest.minTriggerInputLength": 1,
   "python.linting.enabled": true,
