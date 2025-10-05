@@ -44,7 +44,28 @@ vim.cmd [[
 
 -- Use <c-j> to trigger snippets
 keyset("i", "<c-j>", "<Plug>(coc-snippets-expand-jump)")
--- Use <c-space> to trigger completion
+
+-- Completion toggle state (false = disabled by default)
+_G.coc_completion_enabled = false
+
+-- Function to toggle auto-completion
+_G.toggle_coc_completion = function()
+  _G.coc_completion_enabled = not _G.coc_completion_enabled
+  if _G.coc_completion_enabled then
+    -- Enable auto-completion
+    vim.fn.CocAction('updateConfig', 'suggest.autoTrigger', 'always')
+    vim.notify("Auto-completion enabled", vim.log.levels.INFO)
+  else
+    -- Disable auto-completion
+    vim.fn.CocAction('updateConfig', 'suggest.autoTrigger', 'none')
+    vim.notify("Auto-completion disabled", vim.log.levels.INFO)
+  end
+end
+
+-- Toggle completion with <leader>tc
+keyset("n", "<leader>tc", "<cmd>lua _G.toggle_coc_completion()<CR>", { silent = true, noremap = true })
+
+-- Manual completion trigger with Ctrl+Space (one-time trigger only)
 keyset("i", "<c-space>", "coc#refresh()", { silent = true, expr = true })
 
 -- Since Enter doesn't work, make C-y the primary accept key
