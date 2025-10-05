@@ -88,8 +88,7 @@ lualine.setup {
     always_divide_middle = true,
   },
   sections = {
-    lualine_a = {
-    },
+    lualine_a = {},
     lualine_b = { branch },
     lualine_c = {
       {
