@@ -53,11 +53,11 @@ _G.toggle_coc_completion = function()
   _G.coc_completion_enabled = not _G.coc_completion_enabled
   if _G.coc_completion_enabled then
     -- Enable auto-completion
-    vim.fn.CocAction('updateConfig', 'suggest.autoTrigger', 'always')
+    vim.fn.CocAction("updateConfig", "suggest.autoTrigger", "always")
     vim.notify("Auto-completion enabled", vim.log.levels.INFO)
   else
     -- Disable auto-completion
-    vim.fn.CocAction('updateConfig', 'suggest.autoTrigger', 'none')
+    vim.fn.CocAction("updateConfig", "suggest.autoTrigger", "none")
     vim.notify("Auto-completion disabled", vim.log.levels.INFO)
   end
 end
