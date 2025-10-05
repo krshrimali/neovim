@@ -399,6 +399,7 @@ keymap("n", "<leader>lk", "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>", o
 -- CoC Virtual Diagnostics (custom plugin)
 keymap("n", "<leader>ll", "<cmd>lua require('user.coc_virtual_diagnostics').toggle_virtual_lines()<cr>", opts)
 keymap("n", "<leader>lv", "<cmd>lua require('user.coc_virtual_diagnostics').toggle_virtual_text()<cr>", opts)
+keymap("n", "<leader>ld", "<cmd>lua require('user.coc_virtual_diagnostics').show_line_diagnostics()<cr>", opts)
 
 -- CoC Breadcrumbs (on-demand, floating window)
 keymap("n", "<leader>lb", "<cmd>lua require('user.coc_breadcrumbs').show()<cr>", opts)
