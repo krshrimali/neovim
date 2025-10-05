@@ -47,6 +47,7 @@ vim.defer_fn(function()
   require "user.buffer_navigation"
   -- Setup CoC virtual diagnostics (custom plugin)
   require("user.coc_virtual_diagnostics").setup()
+  -- CoC breadcrumbs is opt-in via <leader>lb keymap (no auto-setup for performance)
 end, 50) -- Small delay for better startup
 
 -- Setup native vim completion (disabled when using coc.nvim)
