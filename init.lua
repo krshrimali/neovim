@@ -45,6 +45,8 @@ vim.defer_fn(function()
   require "user.nvim_transparent"
   require("user.diagnostics_display").setup()
   require "user.buffer_navigation"
+  -- Setup CoC virtual diagnostics (custom plugin)
+  require("user.coc_virtual_diagnostics").setup()
 end, 50) -- Small delay for better startup
 
 -- Setup native vim completion (disabled when using coc.nvim)
