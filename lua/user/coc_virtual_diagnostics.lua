@@ -345,9 +345,7 @@ function M.show_line_diagnostics()
     end
 
     -- Add separator between diagnostics
-    if i < #line_diags then
-      table.insert(lines, "")
-    end
+    if i < #line_diags then table.insert(lines, "") end
   end
 
   -- Create a buffer for the floating window
@@ -405,9 +403,7 @@ function M.show_line_diagnostics()
     buffer = float_bufnr,
     once = true,
     callback = function()
-      if vim.api.nvim_win_is_valid(float_win) then
-        vim.api.nvim_win_close(float_win, true)
-      end
+      if vim.api.nvim_win_is_valid(float_win) then vim.api.nvim_win_close(float_win, true) end
     end,
   })
 end
