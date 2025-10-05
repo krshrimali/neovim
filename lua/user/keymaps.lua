@@ -311,7 +311,7 @@ keymap("n", "<leader>bb", "<cmd>lua require('user.buffer_browser').open_buffer_b
 keymap("n", "<leader>bs", "<cmd>lua require('user.buffer_browser').toggle_sidebar()<cr>", opts)
 
 -- File Explorer
-keymap("n", "<leader>e", "<cmd>:NvimTreeToggle<cr>", opts)
+keymap("n", "<leader><leader>e", "<cmd>:NvimTreeToggle<cr>", opts)
 
 -- Basic operations
 keymap("n", "<leader>w", "<cmd>w<CR>", opts)
@@ -396,29 +396,22 @@ keymap("n", "<leader>lI", "<cmd>Mason<cr>", opts)
 keymap("n", "<leader>lj", "<cmd>lua vim.diagnostic.goto_next({buffer=0})<CR>", opts)
 keymap("n", "<leader>lk", "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>", opts)
 
-vim.keymap.set("n", "<leader>lev", function()
-  -- Toggle virtual lines diagnostic display
-  local current_config = vim.diagnostic.config()
-  local virtual_lines_enabled = current_config.virtual_lines or false
-  vim.diagnostic.config {
-    virtual_lines = not virtual_lines_enabled,
-  }
-  -- Provide user feedback
-  local status = not virtual_lines_enabled and "enabled" or "disabled"
-  vim.notify("Diagnostic virtual lines " .. status, vim.log.levels.INFO)
-end, opts)
+-- CoC Virtual Diagnostics (custom plugin)
+keymap("n", "<leader>ll", "<cmd>lua require('user.coc_virtual_diagnostics').toggle_virtual_lines()<cr>", opts)
+keymap("n", "<leader>lv", "<cmd>lua require('user.coc_virtual_diagnostics').toggle_virtual_text()<cr>", opts)
 
-vim.keymap.set("n", "<leader>leV", function()
-  -- Toggle virtual text diagnostic display
-  local current_config = vim.diagnostic.config()
-  local virtual_text_enabled = current_config.virtual_text or false
-  vim.diagnostic.config {
-    virtual_text = not virtual_text_enabled,
-  }
-  -- Provide user feedback
-  local status = not virtual_text_enabled and "enabled" or "disabled"
-  vim.notify("Diagnostic virtual text " .. status, vim.log.levels.INFO)
-end, opts)
+-- CoC Format (selection if in visual mode, whole buffer otherwise)
+vim.keymap.set({ "n", "v" }, "<leader>lf", function()
+  local mode = vim.api.nvim_get_mode().mode
+  if mode == "v" or mode == "V" or mode == "\22" then
+    -- Visual mode - format selection
+    vim.cmd("normal! gv")
+    vim.fn.CocAction("formatSelected", vim.fn.visualmode())
+  else
+    -- Normal mode - format whole buffer
+    vim.fn.CocAction("format")
+  end
+end, { noremap = true, silent = true, desc = "Format with CoC" })
 
 keymap("n", "<leader>lo", "<cmd>Outline<cr>", opts)
 keymap("n", "<leader>lq", "<cmd>lua vim.diagnostic.setloclist()<cr>", opts)
