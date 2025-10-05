@@ -400,6 +400,9 @@ keymap("n", "<leader>lk", "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>", o
 keymap("n", "<leader>ll", "<cmd>lua require('user.coc_virtual_diagnostics').toggle_virtual_lines()<cr>", opts)
 keymap("n", "<leader>lv", "<cmd>lua require('user.coc_virtual_diagnostics').toggle_virtual_text()<cr>", opts)
 
+-- CoC Breadcrumbs (on-demand, floating window)
+keymap("n", "<leader>lb", "<cmd>lua require('user.coc_breadcrumbs').show()<cr>", opts)
+
 -- CoC Format (selection if in visual mode, whole buffer otherwise)
 vim.keymap.set({ "n", "v" }, "<leader>lf", function()
   local mode = vim.api.nvim_get_mode().mode
