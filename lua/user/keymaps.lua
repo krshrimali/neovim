@@ -408,11 +408,11 @@ vim.keymap.set({ "n", "v" }, "<leader>lf", function()
   local mode = vim.api.nvim_get_mode().mode
   if mode == "v" or mode == "V" or mode == "\22" then
     -- Visual mode - format selection
-    vim.cmd("normal! gv")
+    vim.cmd "normal! gv"
     vim.fn.CocAction("formatSelected", vim.fn.visualmode())
   else
     -- Normal mode - format whole buffer
-    vim.fn.CocAction("format")
+    vim.fn.CocAction "format"
   end
 end, { noremap = true, silent = true, desc = "Format with CoC" })
 

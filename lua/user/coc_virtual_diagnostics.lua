@@ -8,9 +8,9 @@ local M = {}
 local state = {
   virtual_lines_enabled = false,
   virtual_text_enabled = false,
-  namespace = vim.api.nvim_create_namespace("coc_virtual_diagnostics"),
-  virtual_lines_ns = vim.api.nvim_create_namespace("coc_virtual_lines"),
-  virtual_text_ns = vim.api.nvim_create_namespace("coc_virtual_text"),
+  namespace = vim.api.nvim_create_namespace "coc_virtual_diagnostics",
+  virtual_lines_ns = vim.api.nvim_create_namespace "coc_virtual_lines",
+  virtual_text_ns = vim.api.nvim_create_namespace "coc_virtual_text",
   cache = {}, -- Cache diagnostics per buffer
   timer = nil,
   debounce_ms = 100,
@@ -45,10 +45,10 @@ local function get_coc_diagnostics(bufnr)
   bufnr = bufnr or vim.api.nvim_get_current_buf()
 
   -- Check if CoC is ready
-  if vim.fn.exists("*CocAction") == 0 then return {} end
+  if vim.fn.exists "*CocAction" == 0 then return {} end
 
   -- Get diagnostics from CoC
-  local diagnostics = vim.fn.CocAction("diagnosticList")
+  local diagnostics = vim.fn.CocAction "diagnosticList"
   if type(diagnostics) ~= "table" then return {} end
 
   -- Filter diagnostics for the current buffer
@@ -261,9 +261,7 @@ function M.toggle_virtual_text()
 end
 
 -- Refresh diagnostics manually
-function M.refresh()
-  update_virtual_diagnostics()
-end
+function M.refresh() update_virtual_diagnostics() end
 
 -- Setup the plugin
 function M.setup(opts)

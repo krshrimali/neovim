@@ -52,12 +52,10 @@ local symbol_icons = {
 
 -- Check if CoC is available and ready
 local function is_coc_ready()
-  if vim.fn.exists("*CocAction") == 0 then return false end
+  if vim.fn.exists "*CocAction" == 0 then return false end
 
-  local ready = vim.fn.CocHasProvider and vim.fn.CocHasProvider("documentSymbol") == 1
-  if not ready then
-    ready = vim.fn.exists("*coc#rpc#ready") == 1 and vim.fn["coc#rpc#ready"]() == 1
-  end
+  local ready = vim.fn.CocHasProvider and vim.fn.CocHasProvider "documentSymbol" == 1
+  if not ready then ready = vim.fn.exists "*coc#rpc#ready" == 1 and vim.fn["coc#rpc#ready"]() == 1 end
 
   return ready
 end
@@ -444,7 +442,10 @@ function M.show()
   local highlights = {}
 
   -- Header
-  table.insert(lines, "╭─ Breadcrumbs ─────────────────────────────────────────╮")
+  table.insert(
+    lines,
+    "╭─ Breadcrumbs ─────────────────────────────────────────╮"
+  )
   table.insert(lines, "│                                                       │")
 
   -- File path (55 - 8 for "File: " = 47 chars for path)
@@ -510,7 +511,10 @@ function M.show()
 
   table.insert(lines, "│                                                       │")
   table.insert(lines, "│  Press <Enter> to jump, 'q' to close                  │")
-  table.insert(lines, "╰───────────────────────────────────────────────────────╯")
+  table.insert(
+    lines,
+    "╰───────────────────────────────────────────────────────╯"
+  )
 
   -- Create buffer
   local buf = vim.api.nvim_create_buf(false, true)
