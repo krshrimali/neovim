@@ -37,6 +37,7 @@ local options = {
   sidescrolloff = 8,
   guifont = "monospace:h17", -- the font used in graphical neovim applications
   title = true,
+  autoread = true, -- automatically reload files changed outside of vim
 }
 vim.opt.fillchars = vim.opt.fillchars + "eob: "
 vim.opt.fillchars:append {
@@ -89,3 +90,11 @@ vim.api.nvim_exec(
 )
 
 vim.opt.foldenable = false
+
+-- Auto-reload files when changed externally (especially from terminal)
+vim.api.nvim_create_autocmd({ "TermLeave", "FocusGained", "BufEnter", "CursorHold" }, {
+  pattern = "*",
+  callback = function()
+    vim.cmd("checktime")
+  end,
+})
