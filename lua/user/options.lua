@@ -94,7 +94,5 @@ vim.opt.foldenable = false
 -- Auto-reload files when changed externally (especially from terminal)
 vim.api.nvim_create_autocmd({ "TermLeave", "FocusGained", "BufEnter", "CursorHold" }, {
   pattern = "*",
-  callback = function()
-    vim.cmd("checktime")
-  end,
+  callback = function() vim.cmd "checktime" end,
 })
