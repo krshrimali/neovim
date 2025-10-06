@@ -1,5 +1,5 @@
 {
-  "suggest.noselect": false,
+  "suggest.noselect": true,
   "suggest.enablePreselect": true,
   "suggest.triggerCompletionWait": 50,
   "suggest.acceptSuggestionOnCommitCharacter": true,
@@ -9,9 +9,9 @@
   "suggest.disableKind": false,
   "suggest.labelMaxLength": 200,
   "suggest.snippetsSupport": true,
-  "suggest.defaultSortMethod": "alphabetical",
+  "suggest.defaultSortMethod": "none",
   "suggest.selection": "first",
-  "suggest.insertMode": "replace",
+  "suggest.insertMode": "insert",
   "suggest.showInlineGhostText": true,
   "suggest.inlinePreview": true,
   "suggest.triggerAfterInsertEnter": true,
