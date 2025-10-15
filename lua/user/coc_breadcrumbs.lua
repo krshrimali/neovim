@@ -572,14 +572,28 @@ function M.show()
   state.float_win = win
   state.float_buf = buf
 
-  -- Position cursor on first symbol line (if symbols exist)
+  -- Position cursor on current (last/innermost) symbol line (if symbols exist)
   if #symbols > 0 then
-    -- Find the first line that has a symbol (should be line 6 typically)
+    -- Find the last symbol (innermost/current symbol)
+    local last_symbol_line = nil
+    local last_symbol = symbols[#symbols]
+
     for line_idx, symbol_idx in pairs(state.symbol_line_map) do
-      if symbol_idx == 1 then
-        vim.api.nvim_win_set_cursor(win, { line_idx + 1, 0 }) -- +1 because Vim uses 1-indexed lines
+      if symbol_idx == #symbols then
+        last_symbol_line = line_idx
         break
       end
+    end
+
+    if last_symbol_line then
+      -- Calculate the column position of the symbol name in the display
+      local icon = symbol_icons[last_symbol.kind] or "•"
+      local indent = string.rep("  ", last_symbol.depth)
+      local arrow = #symbols > 1 and "↳ " or "  "
+      -- Column: "│  " (3 chars) + indent + arrow + icon + " " (space after icon)
+      local col = 3 + #indent + #arrow + #icon + 1
+
+      vim.api.nvim_win_set_cursor(win, { last_symbol_line + 1, col }) -- +1 because Vim uses 1-indexed lines
     end
   end
 
