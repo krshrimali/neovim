@@ -473,20 +473,18 @@ function M.show()
         -- Truncate with strcharpart (cpdisplay) to avoid splitting Unicode
         local len = 0
         local truncated = ""
-        for c in symbol_text:gmatch"." do
-            local w = display_width(c)
-            if len + w > 50 then break end
-            truncated = truncated..c
-            len = len + w
+        for c in symbol_text:gmatch "." do
+          local w = display_width(c)
+          if len + w > 50 then break end
+          truncated = truncated .. c
+          len = len + w
         end
         symbol_text = truncated .. "..."
       end
 
       -- Pad to 53 display columns (add spaces at right)
       local pad_len = 53 - display_width(symbol_text)
-      if pad_len > 0 then
-        symbol_text = symbol_text .. string.rep(" ", pad_len)
-      end
+      if pad_len > 0 then symbol_text = symbol_text .. string.rep(" ", pad_len) end
 
       local line_text = string.format("│  %s│", symbol_text)
       table.insert(lines, line_text)
