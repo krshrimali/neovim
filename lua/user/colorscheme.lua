@@ -30,3 +30,28 @@
 --   vim.notify("colorscheme " .. colorscheme .. " not found!")
 --   return
 -- end
+
+-- Enable transparency by clearing background colors
+-- This works with the transparent.nvim plugin and vim.g.transparent_enabled = true
+vim.api.nvim_create_autocmd("ColorScheme", {
+  pattern = "*",
+  callback = function()
+    local hl_groups = {
+      "Normal",
+      "NormalNC",
+      "NormalFloat",
+      "SignColumn",
+      "EndOfBuffer",
+      "LineNr",
+      "CursorLineNr",
+      "Folded",
+      "FoldColumn",
+    }
+    for _, group in ipairs(hl_groups) do
+      vim.api.nvim_set_hl(0, group, { bg = "NONE", ctermbg = "NONE" })
+    end
+  end,
+})
+
+-- Trigger the autocmd for the current colorscheme
+vim.cmd("doautocmd ColorScheme")
