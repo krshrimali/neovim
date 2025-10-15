@@ -68,10 +68,11 @@ vim.cmd [[let g:python_recommended_style = 0]]
 vim.opt.foldmethod = "manual" -- Changed from expr for better performance
 -- vim.wo.foldexpr = "nvim_treesitter#foldexpr()" -- Disabled for performance
 
-vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1e222a" })
+-- Transparent background for floating windows (set to NONE for transparency)
+vim.api.nvim_set_hl(0, "NormalFloat", { bg = "NONE" })
 vim.opt.whichwrap:append "<>[]hl"
 
-vim.g.transparent_enabled = false
+vim.g.transparent_enabled = true
 vim.g.use_nerd_fonts = false
 
 vim.o.foldcolumn = "1" -- '0' is not bad
