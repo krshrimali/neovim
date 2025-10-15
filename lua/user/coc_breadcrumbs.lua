@@ -460,17 +460,35 @@ function M.show()
     table.insert(lines, "│  Symbol Hierarchy:                                    │")
     table.insert(lines, "│                                                       │")
 
-    -- Add symbols (55 - 4 for padding = 51 chars for content)
+    local display_width = vim.fn.strdisplaywidth
+
     for i, symbol in ipairs(symbols) do
       local icon = symbol_icons[symbol.kind] or "•"
       local indent = string.rep("  ", symbol.depth)
       local arrow = i > 1 and "↳ " or "  "
-      local text = string.format("%s%s%s %s", indent, arrow, icon, symbol.name)
+      local symbol_text = string.format("%s%s%s %s", indent, arrow, icon, symbol.name)
 
-      -- Truncate if too long
-      if #text > 51 then text = text:sub(1, 48) .. "..." end
+      -- Truncate display width if too long (53 chars)
+      if display_width(symbol_text) > 53 then
+        -- Truncate with strcharpart (cpdisplay) to avoid splitting Unicode
+        local len = 0
+        local truncated = ""
+        for c in symbol_text:gmatch"." do
+            local w = display_width(c)
+            if len + w > 50 then break end
+            truncated = truncated..c
+            len = len + w
+        end
+        symbol_text = truncated .. "..."
+      end
 
-      local line_text = string.format("│  %-51s│", text)
+      -- Pad to 53 display columns (add spaces at right)
+      local pad_len = 53 - display_width(symbol_text)
+      if pad_len > 0 then
+        symbol_text = symbol_text .. string.rep(" ", pad_len)
+      end
+
+      local line_text = string.format("│  %s│", symbol_text)
       table.insert(lines, line_text)
 
       -- Map this line to symbol index for clickability
