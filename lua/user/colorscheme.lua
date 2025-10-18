@@ -54,4 +54,4 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 })
 
 -- Trigger the autocmd for the current colorscheme
-vim.cmd("doautocmd ColorScheme")
+vim.cmd "doautocmd ColorScheme"

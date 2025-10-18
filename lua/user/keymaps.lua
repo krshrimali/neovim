@@ -179,7 +179,7 @@ keymap("n", "<m-q>", ":call QuickFixToggle()<cr>", opts)
 vim.g.copilot_no_tab_map = true
 
 -- Copilot accept with Alt+Y
-vim.keymap.set('i', '<A-y>', 'copilot#Accept("<CR>")', { expr = true, silent = true, replace_keycodes = false })
+vim.keymap.set("i", "<A-y>", 'copilot#Accept("<CR>")', { expr = true, silent = true, replace_keycodes = false })
 
 -- Helper functions to fetch the current scope and set `search_dirs`
 _G.find_files = function()

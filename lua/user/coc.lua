@@ -100,9 +100,12 @@ function _G.show_docs()
             vim.api.nvim_set_current_win(winid)
             -- Set up q to close when in the float window
             local bufnr = vim.api.nvim_win_get_buf(winid)
-            vim.keymap.set("n", "q", function()
-              vim.api.nvim_win_close(winid, true)
-            end, { buffer = bufnr, silent = true, noremap = true, nowait = true })
+            vim.keymap.set(
+              "n",
+              "q",
+              function() vim.api.nvim_win_close(winid, true) end,
+              { buffer = bufnr, silent = true, noremap = true, nowait = true }
+            )
             return
           end
         end
