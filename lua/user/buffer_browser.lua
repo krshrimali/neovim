@@ -49,11 +49,11 @@ M.open_buffer_browser = function()
   table.insert(lines, string.rep("─", width - 2))
 
   for i, buffer in ipairs(buffers) do
-    local filename = vim.fn.fnamemodify(buffer.name, ":t")
-    local dir = vim.fn.fnamemodify(buffer.name, ":h:t")
+    -- Use absolute path (buffer.name already contains full path)
+    local filepath = vim.fn.fnamemodify(buffer.name, ":p")
     local indicator = buffer.bufnr == vim.api.nvim_get_current_buf() and "●" or " "
     local modified = vim.bo[buffer.bufnr].modified and "[+]" or "   "
-    local line = string.format("%s %d. %s%s (%s)", indicator, i, filename, modified, dir)
+    local line = string.format("%s %d. %s%s", indicator, i, filepath, modified)
     table.insert(lines, line)
   end
 
