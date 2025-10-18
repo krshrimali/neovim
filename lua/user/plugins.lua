@@ -650,7 +650,7 @@ require("lazy").setup {
     version = "*", -- Use for stability; omit to use `main` branch for the latest features
     event = "VeryLazy",
     config = function()
-      require("nvim-surround").setup({
+      require("nvim-surround").setup {
         keymaps = {
           insert = "<C-g>s",
           insert_line = "<C-g>S",
@@ -663,7 +663,7 @@ require("lazy").setup {
           delete = "ds",
           change = "cs",
         },
-      })
+      }
     end,
   },
   -- Auto-detect indentation (tabs vs spaces, indent width)
