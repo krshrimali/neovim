@@ -22,7 +22,7 @@ require("lazy").setup {
   {
     "neoclide/coc.nvim",
     branch = "release",
-    lazy = false, -- Never lazy load CoC to ensure LSP always works
+    lazy = false,    -- Never lazy load CoC to ensure LSP always works
     priority = 1000, -- High priority to load first
     config = function() require "user.coc" end,
   },
@@ -87,8 +87,8 @@ require("lazy").setup {
   {
     "NeogitOrg/neogit",
     dependencies = {
-      "nvim-lua/plenary.nvim", -- required
-      "ibhagwan/fzf-lua", -- optional
+      "nvim-lua/plenary.nvim",  -- required
+      "ibhagwan/fzf-lua",       -- optional
       "sindrets/diffview.nvim", -- optional
     },
     cmd = "Neogit",
@@ -108,10 +108,10 @@ require("lazy").setup {
     dependencies = { "rmagatti/logger.nvim" },
     keys = {
       { "<leader>lgg ", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>" },
-      { "gpd", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>" },
-      { "gpi", "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>" },
-      { "gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>" },
-      { "gP", "<cmd>lua require('goto-preview').close_all_win()<CR>" },
+      { "gpd",          "<cmd>lua require('goto-preview').goto_preview_definition()<CR>" },
+      { "gpi",          "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>" },
+      { "gpr",          "<cmd>lua require('goto-preview').goto_preview_references()<CR>" },
+      { "gP",           "<cmd>lua require('goto-preview').close_all_win()<CR>" },
     },
     config = true,
   },
@@ -132,11 +132,11 @@ require("lazy").setup {
     dependencies = { "nvim-tree/nvim-web-devicons" },
     cmd = "FzfLua",
     keys = {
-      { "<leader>ff", "<cmd>FzfLua files<cr>", desc = "Find Files" },
-      { "<leader>fr", "<cmd>FzfLua oldfiles<cr>", desc = "Recent Files" },
+      { "<leader>ff", "<cmd>FzfLua files<cr>",     desc = "Find Files" },
+      { "<leader>fr", "<cmd>FzfLua oldfiles<cr>",  desc = "Recent Files" },
       { "<leader>fg", "<cmd>FzfLua live_grep<cr>", desc = "Live Grep" },
-      { "<leader>fb", "<cmd>FzfLua buffers<cr>", desc = "Buffers" },
-      { "<leader>fh", "<cmd>FzfLua helptags<cr>", desc = "Help Tags" },
+      { "<leader>fb", "<cmd>FzfLua buffers<cr>",   desc = "Buffers" },
+      { "<leader>fh", "<cmd>FzfLua helptags<cr>",  desc = "Help Tags" },
     },
     config = function()
       -- Use minimal config for testing slow file opening
@@ -444,11 +444,6 @@ require("lazy").setup {
       },
     },
   },
-  {
-    "github/copilot.vim",
-    cmd = "Copilot",
-    event = "InsertEnter",
-  },
 
   -- Project management - LAZY LOAD
   {
@@ -531,7 +526,7 @@ require("lazy").setup {
       explorer = { enabled = false },
       indent = { enabled = false },
       input = { enabled = false },
-      picker = { enabled = false }, -- Disable picker since we're using nvim-tree
+      picker = { enabled = false },   -- Disable picker since we're using nvim-tree
       notifier = { enabled = false }, -- Disable for faster startup
       quickfile = { enabled = false },
       scope = { enabled = false },
@@ -628,7 +623,7 @@ require("lazy").setup {
     "wfxr/minimap.vim",
     cmd = { "Minimap", "MinimapClose", "MinimapToggle", "MinimapRefresh", "MinimapUpdateHighlight" },
     keys = {
-      { "<leader>mm", "<cmd>MinimapToggle<cr>", desc = "Toggle Minimap" },
+      { "<leader>mm", "<cmd>MinimapToggle<cr>",  desc = "Toggle Minimap" },
       { "<leader>mr", "<cmd>MinimapRefresh<cr>", desc = "Refresh Minimap" },
     },
     build = function()
@@ -686,19 +681,19 @@ require("lazy").setup {
     "coder/claudecode.nvim",
     dependencies = { "folke/snacks.nvim" },
     keys = {
-      { "<leader><cr>", "<cmd>ClaudeCode<cr>", desc = "Toggle Claude", mode = { "n", "t", "x" } },
-      { "<leader>am", "<cmd>ClaudeCodeSelectModel<cr>", desc = "Select Claude model" },
-      { "<leader>ab", "<cmd>ClaudeCodeAdd %<cr>", desc = "Add current buffer" },
-      { "<leader><cr>", "<cmd>ClaudeCodeSend<cr>", mode = "v", desc = "Send to Claude" },
+      { "<leader><cr>", "<cmd>ClaudeCode<cr>",            desc = "Toggle Claude",      mode = { "n", "t", "x" } },
+      { "<leader>am",   "<cmd>ClaudeCodeSelectModel<cr>", desc = "Select Claude model" },
+      { "<leader>ab",   "<cmd>ClaudeCodeAdd %<cr>",       desc = "Add current buffer" },
+      { "<leader><cr>", "<cmd>ClaudeCodeSend<cr>",        mode = "v",                  desc = "Send to Claude" },
       -- Diff management
-      { "<leader>aa", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
-      { "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
+      { "<leader>aa",   "<cmd>ClaudeCodeDiffAccept<cr>",  desc = "Accept diff" },
+      { "<leader>ad",   "<cmd>ClaudeCodeDiffDeny<cr>",    desc = "Deny diff" },
     },
     opts = {
       -- Server Configuration
       port_range = { min = 10000, max = 65535 },
       auto_start = true,
-      log_level = "info", -- "trace", "debug", "info", "warn", "error"
+      log_level = "info",      -- "trace", "debug", "info", "warn", "error"
       terminal_cmd = "claude", -- Custom terminal command (default: "claude")
       -- For local installations: "~/.claude/local/claude"
       -- For native binary: use output from 'which claude'
@@ -742,7 +737,57 @@ require("lazy").setup {
     name = "rose-pine",
     -- config = function() vim.cmd "colorscheme rose-pine" end,
   },
-
+  {
+    "pwntester/octo.nvim",
+    cmd = "Octo",
+    opts = {
+      -- or "fzf-lua" or "snacks" or "default"
+      picker = "telescope",
+      -- bare Octo command opens picker of commands
+      enable_builtin = true,
+    },
+    keys = {
+      {
+        "<leader>oi",
+        "<CMD>Octo issue list<CR>",
+        desc = "List GitHub Issues",
+      },
+      {
+        "<leader>op",
+        "<CMD>Octo pr list<CR>",
+        desc = "List GitHub PullRequests",
+      },
+      {
+        "<leader>od",
+        "<CMD>Octo discussion list<CR>",
+        desc = "List GitHub Discussions",
+      },
+      {
+        "<leader>on",
+        "<CMD>Octo notification list<CR>",
+        desc = "List GitHub Notifications",
+      },
+      {
+        "<leader>os",
+        function()
+          require("octo.utils").create_base_search_command { include_current_repo = true }
+        end,
+        desc = "Search GitHub",
+      },
+    },
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope.nvim",
+      -- OR "ibhagwan/fzf-lua",
+      -- OR "folke/snacks.nvim",
+      "nvim-tree/nvim-web-devicons",
+    },
+  },
+  {
+    "github/copilot.vim",
+    cmd = "Copilot",
+    event = "InsertEnter"
+  }
   -- {
   --     "karb94/neoscroll.nvim",
   --     opts = {},
