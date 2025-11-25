@@ -179,10 +179,10 @@ keymap("n", "<m-q>", ":call QuickFixToggle()<cr>", opts)
 -- Copilot keymaps
 -- Alt+Y to accept, M-] for next, M-[ for prev, C-] to dismiss
 vim.g.copilot_no_tab_map = true
-vim.keymap.set('i', '<A-y>', 'copilot#Accept("\\<CR>")', { expr = true, replace_keycodes = false, silent = true })
-vim.keymap.set('i', '<M-]>', '<Plug>(copilot-next)', { silent = true })
-vim.keymap.set('i', '<M-[>', '<Plug>(copilot-previous)', { silent = true })
-vim.keymap.set('i', '<C-]>', '<Plug>(copilot-dismiss)', { silent = true })
+vim.keymap.set("i", "<A-y>", 'copilot#Accept("\\<CR>")', { expr = true, replace_keycodes = false, silent = true })
+vim.keymap.set("i", "<M-]>", "<Plug>(copilot-next)", { silent = true })
+vim.keymap.set("i", "<M-[>", "<Plug>(copilot-previous)", { silent = true })
+vim.keymap.set("i", "<C-]>", "<Plug>(copilot-dismiss)", { silent = true })
 
 -- Helper functions to fetch the current scope and set `search_dirs`
 _G.find_files = function()
