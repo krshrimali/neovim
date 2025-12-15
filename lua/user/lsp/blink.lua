@@ -4,7 +4,7 @@
 local M = {}
 
 function M.setup()
-  require("blink.cmp").setup({
+  require("blink.cmp").setup {
     -- Keymap configuration (matching CoC keybindings)
     keymap = {
       preset = "default",
@@ -59,7 +59,7 @@ function M.setup()
         border = "rounded",
       },
     },
-  })
+  }
 end
 
 -- Toggle auto-completion (matching CoC's <leader>tc)
@@ -68,27 +68,27 @@ _G.blink_autocomplete_enabled = true
 function M.toggle_autocomplete()
   _G.blink_autocomplete_enabled = not _G.blink_autocomplete_enabled
 
-  local blink = require("blink.cmp")
+  local blink = require "blink.cmp"
 
   if _G.blink_autocomplete_enabled then
     -- Enable auto-trigger
-    blink.setup({
+    blink.setup {
       completion = {
         trigger = {
           show_on_insert_on_trigger_character = true,
         },
       },
-    })
+    }
     vim.notify("Auto-completion enabled", vim.log.levels.INFO)
   else
     -- Disable auto-trigger (manual only with C-Space)
-    blink.setup({
+    blink.setup {
       completion = {
         trigger = {
           show_on_insert_on_trigger_character = false,
         },
       },
-    })
+    }
     vim.notify("Auto-completion disabled (use C-Space to trigger)", vim.log.levels.INFO)
   end
 end

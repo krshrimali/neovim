@@ -21,7 +21,7 @@ function M.setup()
   end
 
   -- Configure diagnostic behavior (matching CoC)
-  vim.diagnostic.config({
+  vim.diagnostic.config {
     -- Virtual text disabled (using custom virtual diagnostics plugin instead)
     virtual_text = false,
 
@@ -47,10 +47,10 @@ function M.setup()
       max_width = 100,
       max_height = 25,
     },
-  })
+  }
 
   -- Catppuccin-style diagnostic highlights
-  vim.cmd([[
+  vim.cmd [[
     " Diagnostic signs (Catppuccin Mocha colors)
     highlight DiagnosticSignError guifg=#f38ba8 guibg=NONE gui=bold
     highlight DiagnosticSignWarn guifg=#fab387 guibg=NONE gui=bold
@@ -80,7 +80,7 @@ function M.setup()
     highlight LspVirtualLineWarn guifg=#fab387 gui=italic
     highlight LspVirtualLineInfo guifg=#89b4fa gui=italic
     highlight LspVirtualLineHint guifg=#94e2d5 gui=italic
-  ]])
+  ]]
 end
 
 return M
