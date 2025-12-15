@@ -121,13 +121,16 @@ end
 
 -- Server-specific configurations
 function M.setup()
-  local lspconfig = require("lspconfig")
   local capabilities = get_capabilities()
 
-  -- Python: basedpyright (type checking + navigation)
-  lspconfig.basedpyright.setup({
+  -- Configure common settings for all servers
+  vim.lsp.config("*", {
     capabilities = capabilities,
     on_attach = on_attach,
+  })
+
+  -- Python: basedpyright (type checking + navigation)
+  vim.lsp.config.basedpyright = {
     settings = {
       basedpyright = {
         analysis = {
@@ -140,11 +143,10 @@ function M.setup()
         disableOrganizeImports = true, -- Let Ruff handle this
       },
     },
-  })
+  }
 
   -- Python: Ruff (linting + formatting)
-  lspconfig.ruff.setup({
-    capabilities = capabilities,
+  vim.lsp.config.ruff = {
     on_attach = function(client, bufnr)
       -- Disable hover in favor of basedpyright
       client.server_capabilities.hoverProvider = false
@@ -155,12 +157,10 @@ function M.setup()
         args = { "--line-length=88" },
       },
     },
-  })
+  }
 
   -- TypeScript/JavaScript
-  lspconfig.ts_ls.setup({
-    capabilities = capabilities,
-    on_attach = on_attach,
+  vim.lsp.config.ts_ls = {
     settings = {
       typescript = {
         suggest = { autoImports = true },
@@ -175,12 +175,10 @@ function M.setup()
         suggest = { autoImports = true },
       },
     },
-  })
+  }
 
   -- Rust
-  lspconfig.rust_analyzer.setup({
-    capabilities = capabilities,
-    on_attach = on_attach,
+  vim.lsp.config.rust_analyzer = {
     settings = {
       ["rust-analyzer"] = {
         cargo = {
@@ -194,12 +192,10 @@ function M.setup()
         },
       },
     },
-  })
+  }
 
   -- C/C++
-  lspconfig.clangd.setup({
-    capabilities = capabilities,
-    on_attach = on_attach,
+  vim.lsp.config.clangd = {
     cmd = {
       "clangd",
       "--background-index",
@@ -209,12 +205,10 @@ function M.setup()
       "--function-arg-placeholders",
       "--fallback-style=llvm",
     },
-  })
+  }
 
   -- Go
-  lspconfig.gopls.setup({
-    capabilities = capabilities,
-    on_attach = on_attach,
+  vim.lsp.config.gopls = {
     settings = {
       gopls = {
         analyses = {
@@ -225,12 +219,10 @@ function M.setup()
         gofumpt = true,
       },
     },
-  })
+  }
 
   -- Lua (configured for Neovim development)
-  lspconfig.lua_ls.setup({
-    capabilities = capabilities,
-    on_attach = on_attach,
+  vim.lsp.config.lua_ls = {
     on_init = function(client)
       -- Setup neodev if available
       local neodev_ok, neodev = pcall(require, "neodev")
@@ -262,36 +254,26 @@ function M.setup()
         },
       },
     },
-  })
+  }
 
   -- Vim
-  lspconfig.vimls.setup({
-    capabilities = capabilities,
-    on_attach = on_attach,
-  })
+  vim.lsp.config.vimls = {}
 
   -- Markdown
-  lspconfig.marksman.setup({
-    capabilities = capabilities,
-    on_attach = on_attach,
-  })
+  vim.lsp.config.marksman = {}
 
   -- JSON
-  lspconfig.jsonls.setup({
-    capabilities = capabilities,
-    on_attach = on_attach,
+  vim.lsp.config.jsonls = {
     settings = {
       json = {
         schemas = require("schemastore").json.schemas(),
         validate = { enable = true },
       },
     },
-  })
+  }
 
   -- YAML
-  lspconfig.yamlls.setup({
-    capabilities = capabilities,
-    on_attach = on_attach,
+  vim.lsp.config.yamlls = {
     settings = {
       yaml = {
         schemas = {
@@ -301,30 +283,37 @@ function M.setup()
         },
       },
     },
-  })
+  }
 
   -- Shell (Bash)
-  lspconfig.bashls.setup({
-    capabilities = capabilities,
-    on_attach = on_attach,
-  })
+  vim.lsp.config.bashls = {}
 
   -- TOML
-  lspconfig.taplo.setup({
-    capabilities = capabilities,
-    on_attach = on_attach,
-  })
+  vim.lsp.config.taplo = {}
 
   -- CSS
-  lspconfig.cssls.setup({
-    capabilities = capabilities,
-    on_attach = on_attach,
-  })
+  vim.lsp.config.cssls = {}
 
   -- HTML
-  lspconfig.html.setup({
-    capabilities = capabilities,
-    on_attach = on_attach,
+  vim.lsp.config.html = {}
+
+  -- Enable all configured servers
+  vim.lsp.enable({
+    "basedpyright",
+    "ruff",
+    "ts_ls",
+    "rust_analyzer",
+    "clangd",
+    "gopls",
+    "lua_ls",
+    "vimls",
+    "marksman",
+    "jsonls",
+    "yamlls",
+    "bashls",
+    "taplo",
+    "cssls",
+    "html",
   })
 end
 
