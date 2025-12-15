@@ -1,5 +1,5 @@
 require "user.options" -- Load options first
-require "user.plugins" -- Load plugins (including CoC with high priority)
+require "user.plugins" -- Load plugins (native LSP with nvim-lspconfig)
 require "user.keymaps"
 require "user.autocommands"
 require "user.colorscheme"
@@ -35,7 +35,7 @@ end, 500) -- Increased delay for better startup
 -- require "user.bqf" -- Now lazy loaded
 -- require "user.surround" -- Still needed for immediate text operations
 -- require "user.nvim_transparent" -- Keep for immediate UI
--- COC removed - using native vim.lsp
+-- Native LSP configured in lua/user/lsp/init.lua (via plugins.lua)
 
 -- Defer non-essential configurations
 vim.defer_fn(function()
@@ -45,17 +45,11 @@ vim.defer_fn(function()
   require "user.nvim_transparent"
   require("user.diagnostics_display").setup()
   require "user.buffer_navigation"
-  -- Setup CoC virtual diagnostics (custom plugin)
-  require("user.coc_virtual_diagnostics").setup()
-  -- CoC breadcrumbs is opt-in via <leader>lb keymap (no auto-setup for performance)
+  -- Native LSP virtual diagnostics is loaded via lsp/init.lua
+  -- Outline/breadcrumbs available via <leader>lb keymap
 end, 50) -- Small delay for better startup
 
--- Setup native vim completion (disabled when using coc.nvim)
--- Uncomment these lines if you disable coc.nvim and want native completion
--- local completion = require "user.completion"
--- completion.setup()
--- completion.setup_keymaps()
--- completion.setup_autocmds()
+-- Native LSP completion handled by blink.cmp (configured in lua/user/lsp/blink.lua)
 
 -- fzf-lua is now loaded via lazy.nvim
 

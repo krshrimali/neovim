@@ -1,0 +1,331 @@
+-- LSP Server Configurations & Keymaps
+-- Configures all language servers and sets up LspAttach autocmd for keymaps
+
+local M = {}
+
+-- Get capabilities for completion
+local function get_capabilities()
+  local capabilities = vim.lsp.protocol.make_client_capabilities()
+
+  -- blink.cmp capabilities
+  local blink_ok, blink = pcall(require, "blink.cmp")
+  if blink_ok then
+    capabilities = blink.get_lsp_capabilities(capabilities)
+  end
+
+  -- Snippet support
+  capabilities.textDocument.completion.completionItem.snippetSupport = true
+  capabilities.textDocument.completion.completionItem.resolveSupport = {
+    properties = {
+      "documentation",
+      "detail",
+      "additionalTextEdits",
+    },
+  }
+
+  return capabilities
+end
+
+-- Setup keymaps on LSP attach (matching CoC keymaps)
+local function on_attach(client, bufnr)
+  local opts = { noremap = true, silent = true, buffer = bufnr }
+
+  -- Navigation (matching CoC keymaps)
+  vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+  vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, opts)
+  vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+  vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+
+  -- Hover documentation (matching CoC's K)
+  vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+
+  -- Diagnostics navigation (matching CoC's [g / ]g)
+  vim.keymap.set("n", "[g", function()
+    vim.diagnostic.jump({ count = -1, float = true })
+  end, opts)
+
+  vim.keymap.set("n", "]g", function()
+    vim.diagnostic.jump({ count = 1, float = true })
+  end, opts)
+
+  -- Rename (matching CoC's <leader>rn)
+  vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+
+  -- Format (matching CoC's <leader>f) - both normal and visual mode
+  vim.keymap.set("n", "<leader>f", function()
+    vim.lsp.buf.format({ async = true })
+  end, opts)
+
+  vim.keymap.set("v", "<leader>f", function()
+    local start_row, _ = unpack(vim.api.nvim_buf_get_mark(0, "<"))
+    local end_row, _ = unpack(vim.api.nvim_buf_get_mark(0, ">"))
+    vim.lsp.buf.format({
+      async = true,
+      range = {
+        ["start"] = { start_row, 0 },
+        ["end"] = { end_row, 0 },
+      },
+    })
+  end, opts)
+
+  -- Code actions (matching CoC's <leader>a, <leader>ac, <leader>as)
+  vim.keymap.set({ "n", "v" }, "<leader>a", vim.lsp.buf.code_action, opts)
+  vim.keymap.set("n", "<leader>ac", vim.lsp.buf.code_action, opts)
+  vim.keymap.set("n", "<leader>as", function()
+    vim.lsp.buf.code_action({
+      context = {
+        only = { "source" },
+        diagnostics = {},
+      },
+    })
+  end, opts)
+
+  -- Quickfix (matching CoC's <leader>qf)
+  vim.keymap.set("n", "<leader>qf", vim.lsp.buf.code_action, opts)
+
+  -- Signature help (matching CoC's <C-k> in insert mode)
+  vim.keymap.set("i", "<C-k>", vim.lsp.buf.signature_help, opts)
+
+  -- Codelens (matching CoC's <leader>cl)
+  if client.server_capabilities.codeLensProvider then
+    vim.keymap.set("n", "<leader>cl", vim.lsp.codelens.run, opts)
+  end
+
+  -- Attach nvim-navic for breadcrumbs if available
+  if client.server_capabilities.documentSymbolProvider then
+    local navic_ok, navic = pcall(require, "nvim-navic")
+    if navic_ok then
+      navic.attach(client, bufnr)
+    end
+  end
+
+  -- Highlight symbol under cursor (matching CoC behavior)
+  if client.server_capabilities.documentHighlightProvider then
+    vim.api.nvim_create_augroup("lsp_document_highlight", { clear = false })
+    vim.api.nvim_clear_autocmds({
+      buffer = bufnr,
+      group = "lsp_document_highlight",
+    })
+    vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+      group = "lsp_document_highlight",
+      buffer = bufnr,
+      callback = vim.lsp.buf.document_highlight,
+    })
+    vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+      group = "lsp_document_highlight",
+      buffer = bufnr,
+      callback = vim.lsp.buf.clear_references,
+    })
+  end
+end
+
+-- Server-specific configurations
+function M.setup()
+  local lspconfig = require("lspconfig")
+  local capabilities = get_capabilities()
+
+  -- Python: basedpyright (type checking + navigation)
+  lspconfig.basedpyright.setup({
+    capabilities = capabilities,
+    on_attach = on_attach,
+    settings = {
+      basedpyright = {
+        analysis = {
+          typeCheckingMode = "basic",
+          autoSearchPaths = true,
+          useLibraryCodeForTypes = true,
+          diagnosticMode = "openFilesOnly",
+          autoImportCompletions = true,
+        },
+        disableOrganizeImports = true, -- Let Ruff handle this
+      },
+    },
+  })
+
+  -- Python: Ruff (linting + formatting)
+  lspconfig.ruff.setup({
+    capabilities = capabilities,
+    on_attach = function(client, bufnr)
+      -- Disable hover in favor of basedpyright
+      client.server_capabilities.hoverProvider = false
+      on_attach(client, bufnr)
+    end,
+    init_options = {
+      settings = {
+        args = { "--line-length=88" },
+      },
+    },
+  })
+
+  -- TypeScript/JavaScript
+  lspconfig.ts_ls.setup({
+    capabilities = capabilities,
+    on_attach = on_attach,
+    settings = {
+      typescript = {
+        suggest = { autoImports = true },
+        inlayHints = {
+          includeInlayParameterNameHints = "none",
+          includeInlayFunctionParameterTypeHints = false,
+          includeInlayVariableTypeHints = false,
+          includeInlayPropertyDeclarationTypeHints = false,
+        },
+      },
+      javascript = {
+        suggest = { autoImports = true },
+      },
+    },
+  })
+
+  -- Rust
+  lspconfig.rust_analyzer.setup({
+    capabilities = capabilities,
+    on_attach = on_attach,
+    settings = {
+      ["rust-analyzer"] = {
+        cargo = {
+          allFeatures = true,
+        },
+        completion = {
+          autoimport = { enable = true },
+        },
+        checkOnSave = {
+          command = "clippy",
+        },
+      },
+    },
+  })
+
+  -- C/C++
+  lspconfig.clangd.setup({
+    capabilities = capabilities,
+    on_attach = on_attach,
+    cmd = {
+      "clangd",
+      "--background-index",
+      "--clang-tidy",
+      "--header-insertion=iwyu",
+      "--completion-style=detailed",
+      "--function-arg-placeholders",
+      "--fallback-style=llvm",
+    },
+  })
+
+  -- Go
+  lspconfig.gopls.setup({
+    capabilities = capabilities,
+    on_attach = on_attach,
+    settings = {
+      gopls = {
+        analyses = {
+          unusedparams = true,
+          shadow = true,
+        },
+        staticcheck = true,
+        gofumpt = true,
+      },
+    },
+  })
+
+  -- Lua (configured for Neovim development)
+  lspconfig.lua_ls.setup({
+    capabilities = capabilities,
+    on_attach = on_attach,
+    on_init = function(client)
+      -- Setup neodev if available
+      local neodev_ok, neodev = pcall(require, "neodev")
+      if neodev_ok then
+        neodev.setup({})
+      end
+    end,
+    settings = {
+      Lua = {
+        runtime = {
+          version = "LuaJIT",
+        },
+        diagnostics = {
+          globals = { "vim" },
+        },
+        workspace = {
+          library = vim.api.nvim_get_runtime_file("", true),
+          checkThirdParty = false,
+        },
+        telemetry = {
+          enable = false,
+        },
+        format = {
+          enable = true,
+          defaultConfig = {
+            indent_style = "space",
+            indent_size = "2",
+          },
+        },
+      },
+    },
+  })
+
+  -- Vim
+  lspconfig.vimls.setup({
+    capabilities = capabilities,
+    on_attach = on_attach,
+  })
+
+  -- Markdown
+  lspconfig.marksman.setup({
+    capabilities = capabilities,
+    on_attach = on_attach,
+  })
+
+  -- JSON
+  lspconfig.jsonls.setup({
+    capabilities = capabilities,
+    on_attach = on_attach,
+    settings = {
+      json = {
+        schemas = require("schemastore").json.schemas(),
+        validate = { enable = true },
+      },
+    },
+  })
+
+  -- YAML
+  lspconfig.yamlls.setup({
+    capabilities = capabilities,
+    on_attach = on_attach,
+    settings = {
+      yaml = {
+        schemas = {
+          kubernetes = "*.yaml",
+          ["http://json.schemastore.org/github-workflow"] = ".github/workflows/*",
+          ["http://json.schemastore.org/github-action"] = ".github/action.{yml,yaml}",
+        },
+      },
+    },
+  })
+
+  -- Shell (Bash)
+  lspconfig.bashls.setup({
+    capabilities = capabilities,
+    on_attach = on_attach,
+  })
+
+  -- TOML
+  lspconfig.taplo.setup({
+    capabilities = capabilities,
+    on_attach = on_attach,
+  })
+
+  -- CSS
+  lspconfig.cssls.setup({
+    capabilities = capabilities,
+    on_attach = on_attach,
+  })
+
+  -- HTML
+  lspconfig.html.setup({
+    capabilities = capabilities,
+    on_attach = on_attach,
+  })
+end
+
+return M

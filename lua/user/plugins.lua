@@ -18,47 +18,61 @@ vim.g.maplocalleader = " "
 -- Install your plugins here
 require("lazy").setup {
 
-  -- CoC for LSP functionality (fast and reliable)
-  {
-    "neoclide/coc.nvim",
-    branch = "release",
-    lazy = false, -- Never lazy load CoC to ensure LSP always works
-    priority = 1000, -- High priority to load first
-    config = function() require "user.coc" end,
-  },
-
-  -- Keep nvim-lspconfig for plugin compatibility but disable its LSP servers
+  -- Native LSP with nvim-lspconfig (migrated from CoC)
   {
     "neovim/nvim-lspconfig",
-    lazy = true, -- Don't load automatically
+    lazy = false,
+    event = { "BufReadPre", "BufNewFile" },
+    dependencies = {
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+      "saghen/blink.cmp",
+    },
     config = function()
-      -- Minimal config for plugin compatibility only
-      -- No servers are started here since coc.nvim handles LSP
+      require("user.lsp").setup()
     end,
   },
 
-  -- Mason for managing LSP servers
-  -- {
-  --     "williamboman/mason.nvim",
-  --     cmd = "Mason",
-  --     build = ":MasonUpdate",
-  --     config = function()
-  --         require("mason").setup({
-  --             ui = {
-  --                 border = "rounded",
-  --             },
-  --         })
-  --     end
-  -- },
+  -- Mason for LSP server management
+  {
+    "williamboman/mason.nvim",
+    cmd = "Mason",
+    build = ":MasonUpdate",
+    config = true,
+  },
+
+  -- Mason-LSPConfig bridge
+  {
+    "williamboman/mason-lspconfig.nvim",
+    lazy = false,
+    dependencies = { "williamboman/mason.nvim" },
+  },
 
   -- Fast completion with blink.cmp
-  -- {
-  --   "saghen/blink.cmp",
-  --   lazy = false, -- lazy loading handled internally
-  --   dependencies = "rafamadriz/friendly-snippets",
-  --   version = "v0.*",
-  --   config = function() require "user.blink-cmp" end,
-  -- },
+  {
+    "saghen/blink.cmp",
+    lazy = false,
+    dependencies = "rafamadriz/friendly-snippets",
+    version = "v0.*",
+  },
+
+  -- LSP progress notifications
+  {
+    "j-hui/fidget.nvim",
+    lazy = false,
+  },
+
+  -- Enhanced Lua LSP for Neovim development
+  {
+    "folke/neodev.nvim",
+    lazy = false,
+  },
+
+  -- JSON schemas for jsonls
+  {
+    "b0o/schemastore.nvim",
+    lazy = true,
+  },
 
   -- Highlight words under cursor - LAZY LOAD
   {
@@ -786,6 +800,35 @@ require("lazy").setup {
     cmd = "Copilot",
     event = "InsertEnter",
   },
+  {
+    'dmtrKovalenko/fff.nvim',
+    build = function()
+      -- this will download prebuild binary or try to use existing rustup toolchain to build from source
+      -- (if you are using lazy you can use gb for rebuilding a plugin if needed)
+      require("fff.download").download_or_build_binary()
+    end,
+    -- if you are using nixos
+    -- build = "nix run .#release",
+    opts = {              -- (optional)
+      debug = {
+        enabled = true,   -- we expect your collaboration at least during the beta
+        show_scores = true, -- to help us optimize the scoring system, feel free to share your scores!
+      },
+    },
+    -- No need to lazy-load with lazy.nvim.
+    -- This plugin initializes itself lazily.
+    lazy = false,
+    keys = {
+      {
+        "ff", -- try it if you didn't it is a banger keybinding for a picker
+        function() require('fff').find_files() end,
+        desc = 'FFFind files',
+      }
+    }
+  },
+  -- REMOVED: coc-import.nvim (was CoC-dependent)
+  -- Import path functionality now handled by native LSP
+  -- Use gd (go to definition) to navigate to imports
   -- {
   --     "karb94/neoscroll.nvim",
   --     opts = {},
