@@ -402,26 +402,20 @@ keymap("n", "<leader>lI", "<cmd>Mason<cr>", opts)
 keymap("n", "<leader>lj", "<cmd>lua vim.diagnostic.goto_next({buffer=0})<CR>", opts)
 keymap("n", "<leader>lk", "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>", opts)
 
--- CoC Virtual Diagnostics (custom plugin)
-keymap("n", "<leader>ll", "<cmd>lua require('user.coc_virtual_diagnostics').toggle_virtual_lines()<cr>", opts)
-keymap("n", "<leader>lv", "<cmd>lua require('user.coc_virtual_diagnostics').toggle_virtual_text()<cr>", opts)
-keymap("n", "<leader>ld", "<cmd>lua require('user.coc_virtual_diagnostics').show_line_diagnostics()<cr>", opts)
+-- Native LSP Virtual Diagnostics (custom plugin - ported from CoC)
+keymap("n", "<leader>ll", "<cmd>lua require('user.lsp.virtual_diagnostics').toggle_virtual_lines()<cr>", opts)
+keymap("n", "<leader>lv", "<cmd>lua require('user.lsp.virtual_diagnostics').toggle_virtual_text()<cr>", opts)
+keymap("n", "<leader>ld", "<cmd>lua require('user.lsp.virtual_diagnostics').show_line_diagnostics()<cr>", opts)
 
--- CoC Breadcrumbs (on-demand, floating window)
-keymap("n", "<leader>lb", "<cmd>lua require('user.coc_breadcrumbs').show()<cr>", opts)
+-- Breadcrumbs/Outline (replaces CoC breadcrumbs)
+keymap("n", "<leader>lb", "<cmd>Outline<cr>", opts)
 
--- CoC Format (selection if in visual mode, whole buffer otherwise)
+-- Native LSP Format (handled by LSP servers, configured in lsp/servers.lua with <leader>f)
+-- Note: <leader>f is the primary format keymap (set in lsp/servers.lua on_attach)
+-- <leader>lf is kept as an alias for consistency with other <leader>l* LSP keymaps
 vim.keymap.set({ "n", "v" }, "<leader>lf", function()
-  local mode = vim.api.nvim_get_mode().mode
-  if mode == "v" or mode == "V" or mode == "\22" then
-    -- Visual mode - format selection
-    vim.cmd "normal! gv"
-    vim.fn.CocAction("formatSelected", vim.fn.visualmode())
-  else
-    -- Normal mode - format whole buffer
-    vim.fn.CocAction "format"
-  end
-end, { noremap = true, silent = true, desc = "Format with CoC" })
+  vim.lsp.buf.format({ async = true })
+end, { noremap = true, silent = true, desc = "Format with LSP" })
 
 keymap("n", "<leader>lo", "<cmd>Outline<cr>", opts)
 keymap("n", "<leader>lq", "<cmd>lua vim.diagnostic.setloclist()<cr>", opts)
@@ -435,6 +429,17 @@ keymap("n", "<leader>lgr", "<cmd>lua require('goto-preview').goto_preview_refere
 keymap("n", "<leader>lgc", "<cmd>lua require('goto-preview').close_all_win()<cr>", opts)
 keymap("n", "<leader>lt", '<cmd>lua require("user.functions").toggle_diagnostics()<cr>', opts)
 keymap("n", "<leader>lu", "<cmd>LuaSnipUnlinkCurrent<cr>", opts)
+
+-- Completion toggle (matching CoC's <leader>tc)
+keymap("n", "<leader>tc", "<cmd>lua require('user.lsp.blink').toggle_autocomplete()<cr>", opts)
+
+-- CocList replacements (native LSP equivalents using <space> prefix)
+keymap("n", "<space>a", "<cmd>Trouble diagnostics toggle<cr>", opts)             -- CocList diagnostics
+keymap("n", "<space>o", "<cmd>Outline<cr>", opts)                                 -- CocList outline
+keymap("n", "<space>s", "<cmd>FzfLua lsp_workspace_symbols<cr>", opts)            -- CocList symbols
+keymap("n", "<space>e", "<cmd>Mason<cr>", opts)                                   -- CocList extensions
+keymap("n", "<space>c", "<cmd>FzfLua commands<cr>", opts)                         -- CocList commands
+keymap("n", "<space>p", "<cmd>FzfLua resume<cr>", opts)                           -- CocListResume
 
 -- Terminal keymaps
 keymap("n", "<leader>T1", "<cmd>lua _FLOAT_TERM()<cr>", opts)

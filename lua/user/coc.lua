@@ -120,10 +120,78 @@ function _G.show_docs()
 end
 keyset("n", "K", "<CMD>lua _G.show_docs()<CR>", { silent = true })
 
--- Setup highlight for ghost text/inline preview
+-- Setup enhanced highlight groups for better visuals
 vim.cmd [[
-  highlight CocInlinePreview ctermfg=Gray guifg=#808080 gui=italic
-  highlight CocSuggestVirtualText ctermfg=Gray guifg=#808080 gui=italic
+  " ============ Completion Menu ============
+  " Main completion popup background
+  highlight CocFloating guibg=#1e1e2e guifg=#cdd6f4
+
+  " Completion menu borders
+  highlight CocMenuBorder guifg=#89b4fa guibg=#1e1e2e
+  highlight CocHoverBorder guifg=#f5c2e7 guibg=#1e1e2e
+  highlight CocSignatureBorder guifg=#a6e3a1 guibg=#1e1e2e
+
+  " Selected item in completion menu (current selection)
+  highlight CocMenuSel guibg=#313244 guifg=#cdd6f4 gui=bold
+
+  " Matched characters in completion (the part you typed)
+  highlight CocSearch guifg=#f9e2af gui=bold
+
+  " Completion item kinds with color coding
+  highlight CocSymbolClass guifg=#89b4fa
+  highlight CocSymbolFunction guifg=#a6e3a1
+  highlight CocSymbolMethod guifg=#a6e3a1
+  highlight CocSymbolVariable guifg=#cdd6f4
+  highlight CocSymbolInterface guifg=#94e2d5
+  highlight CocSymbolConstant guifg=#fab387
+  highlight CocSymbolEnum guifg=#f5c2e7
+
+  " Ghost text / inline preview
+  highlight CocInlinePreview guifg=#6c7086 gui=italic
+  highlight CocVirtualText guifg=#6c7086 gui=italic
+
+  " ============ Diagnostics ============
+  " Diagnostic signs in the gutter
+  highlight CocErrorSign guifg=#f38ba8 guibg=NONE gui=bold
+  highlight CocWarningSign guifg=#fab387 guibg=NONE gui=bold
+  highlight CocInfoSign guifg=#89dceb guibg=NONE
+  highlight CocHintSign guifg=#94e2d5 guibg=NONE
+
+  " Diagnostic underlines in the code
+  highlight CocErrorHighlight gui=undercurl guisp=#f38ba8
+  highlight CocWarningHighlight gui=undercurl guisp=#fab387
+  highlight CocInfoHighlight gui=undercurl guisp=#89dceb
+  highlight CocHintHighlight gui=undercurl guisp=#94e2d5
+
+  " Diagnostic floating window border
+  highlight CocDiagnosticBorder guifg=#f38ba8 guibg=#1e1e2e
+
+  " Diagnostic virtual text (if enabled)
+  highlight CocErrorVirtualText guifg=#f38ba8 gui=italic
+  highlight CocWarningVirtualText guifg=#fab387 gui=italic
+  highlight CocInfoVirtualText guifg=#89dceb gui=italic
+  highlight CocHintVirtualText guifg=#94e2d5 gui=italic
+
+  " Diagnostic text in floating windows
+  highlight CocErrorFloat guifg=#f38ba8 guibg=#1e1e2e
+  highlight CocWarningFloat guifg=#fab387 guibg=#1e1e2e
+  highlight CocInfoFloat guifg=#89dceb guibg=#1e1e2e
+  highlight CocHintFloat guifg=#94e2d5 guibg=#1e1e2e
+
+  " ============ Other UI Elements ============
+  " Hover documentation
+  highlight CocFloatingBorder guifg=#89b4fa guibg=#1e1e2e
+
+  " Current function in statusline
+  highlight CocStatuslineFunction guifg=#a6e3a1
+
+  " Scrollbar in floating windows
+  highlight CocScrollbar guifg=#585b70
+
+  " Highlighted symbol (when cursor on symbol)
+  highlight CocHighlightText guibg=#313244 gui=NONE
+  highlight CocHighlightRead guibg=#313244 gui=NONE
+  highlight CocHighlightWrite guibg=#45475a gui=NONE
 ]]
 
 -- Highlight the symbol and its references on a CursorHold event(cursor is idle)
