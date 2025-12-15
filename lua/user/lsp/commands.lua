@@ -14,10 +14,10 @@ function M.setup()
         ["end"] = { args.line2, end_line:len() },
       }
     end
-    vim.lsp.buf.format({
+    vim.lsp.buf.format {
       async = true,
       range = range,
-    })
+    }
   end, { range = true, desc = "Format code with LSP" })
 
   -- :OR command (Organize imports)
@@ -51,9 +51,11 @@ function M.setup()
   vim.api.nvim_create_user_command("LR", "LspRestart", { desc = "Restart LSP" })
 
   -- :LspLog to open LSP log
-  vim.api.nvim_create_user_command("LspLog", function()
-    vim.cmd("edit " .. vim.lsp.get_log_path())
-  end, { desc = "Open LSP log file" })
+  vim.api.nvim_create_user_command(
+    "LspLog",
+    function() vim.cmd("edit " .. vim.lsp.get_log_path()) end,
+    { desc = "Open LSP log file" }
+  )
 
   -- :LspStart to manually start LSP
   vim.api.nvim_create_user_command("LS", "LspStart", { desc = "Start LSP" })

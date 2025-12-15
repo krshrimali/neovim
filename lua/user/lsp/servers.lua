@@ -9,9 +9,7 @@ local function get_capabilities()
 
   -- blink.cmp capabilities
   local blink_ok, blink = pcall(require, "blink.cmp")
-  if blink_ok then
-    capabilities = blink.get_lsp_capabilities(capabilities)
-  end
+  if blink_ok then capabilities = blink.get_lsp_capabilities(capabilities) end
 
   -- Snippet support
   capabilities.textDocument.completion.completionItem.snippetSupport = true
@@ -40,45 +38,44 @@ local function on_attach(client, bufnr)
   vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
 
   -- Diagnostics navigation (matching CoC's [g / ]g)
-  vim.keymap.set("n", "[g", function()
-    vim.diagnostic.jump({ count = -1, float = true })
-  end, opts)
+  vim.keymap.set("n", "[g", function() vim.diagnostic.jump { count = -1, float = true } end, opts)
 
-  vim.keymap.set("n", "]g", function()
-    vim.diagnostic.jump({ count = 1, float = true })
-  end, opts)
+  vim.keymap.set("n", "]g", function() vim.diagnostic.jump { count = 1, float = true } end, opts)
 
   -- Rename (matching CoC's <leader>rn)
   vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
 
   -- Format (matching CoC's <leader>f) - both normal and visual mode
-  vim.keymap.set("n", "<leader>f", function()
-    vim.lsp.buf.format({ async = true })
-  end, opts)
+  vim.keymap.set("n", "<leader>f", function() vim.lsp.buf.format { async = true } end, opts)
 
   vim.keymap.set("v", "<leader>f", function()
     local start_row, _ = unpack(vim.api.nvim_buf_get_mark(0, "<"))
     local end_row, _ = unpack(vim.api.nvim_buf_get_mark(0, ">"))
-    vim.lsp.buf.format({
+    vim.lsp.buf.format {
       async = true,
       range = {
         ["start"] = { start_row, 0 },
         ["end"] = { end_row, 0 },
       },
-    })
+    }
   end, opts)
 
   -- Code actions (matching CoC's <leader>a, <leader>ac, <leader>as)
   vim.keymap.set({ "n", "v" }, "<leader>a", vim.lsp.buf.code_action, opts)
   vim.keymap.set("n", "<leader>ac", vim.lsp.buf.code_action, opts)
-  vim.keymap.set("n", "<leader>as", function()
-    vim.lsp.buf.code_action({
-      context = {
-        only = { "source" },
-        diagnostics = {},
-      },
-    })
-  end, opts)
+  vim.keymap.set(
+    "n",
+    "<leader>as",
+    function()
+      vim.lsp.buf.code_action {
+        context = {
+          only = { "source" },
+          diagnostics = {},
+        },
+      }
+    end,
+    opts
+  )
 
   -- Quickfix (matching CoC's <leader>qf)
   vim.keymap.set("n", "<leader>qf", vim.lsp.buf.code_action, opts)
@@ -87,25 +84,21 @@ local function on_attach(client, bufnr)
   vim.keymap.set("i", "<C-k>", vim.lsp.buf.signature_help, opts)
 
   -- Codelens (matching CoC's <leader>cl)
-  if client.server_capabilities.codeLensProvider then
-    vim.keymap.set("n", "<leader>cl", vim.lsp.codelens.run, opts)
-  end
+  if client.server_capabilities.codeLensProvider then vim.keymap.set("n", "<leader>cl", vim.lsp.codelens.run, opts) end
 
   -- Attach nvim-navic for breadcrumbs if available
   if client.server_capabilities.documentSymbolProvider then
     local navic_ok, navic = pcall(require, "nvim-navic")
-    if navic_ok then
-      navic.attach(client, bufnr)
-    end
+    if navic_ok then navic.attach(client, bufnr) end
   end
 
   -- Highlight symbol under cursor (matching CoC behavior)
   if client.server_capabilities.documentHighlightProvider then
     vim.api.nvim_create_augroup("lsp_document_highlight", { clear = false })
-    vim.api.nvim_clear_autocmds({
+    vim.api.nvim_clear_autocmds {
       buffer = bufnr,
       group = "lsp_document_highlight",
-    })
+    }
     vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
       group = "lsp_document_highlight",
       buffer = bufnr,
@@ -226,9 +219,7 @@ function M.setup()
     on_init = function(client)
       -- Setup neodev if available
       local neodev_ok, neodev = pcall(require, "neodev")
-      if neodev_ok then
-        neodev.setup({})
-      end
+      if neodev_ok then neodev.setup {} end
     end,
     settings = {
       Lua = {
@@ -298,7 +289,7 @@ function M.setup()
   vim.lsp.config.html = {}
 
   -- Enable all configured servers
-  vim.lsp.enable({
+  vim.lsp.enable {
     "basedpyright",
     "ruff",
     "ts_ls",
@@ -314,7 +305,7 @@ function M.setup()
     "taplo",
     "cssls",
     "html",
-  })
+  }
 end
 
 return M

@@ -9,9 +9,9 @@ local M = {}
 local state = {
   virtual_lines_enabled = false,
   virtual_text_enabled = false,
-  namespace = vim.api.nvim_create_namespace("lsp_virtual_diagnostics"),
-  virtual_lines_ns = vim.api.nvim_create_namespace("lsp_virtual_lines"),
-  virtual_text_ns = vim.api.nvim_create_namespace("lsp_virtual_text"),
+  namespace = vim.api.nvim_create_namespace "lsp_virtual_diagnostics",
+  virtual_lines_ns = vim.api.nvim_create_namespace "lsp_virtual_lines",
+  virtual_text_ns = vim.api.nvim_create_namespace "lsp_virtual_text",
   timer = nil,
   debounce_ms = 100,
 }
@@ -55,9 +55,7 @@ local function format_message(diag, max_width)
 
   -- Truncate if too long
   local full_msg = string.format("%s %s %s", prefix, source, message)
-  if #full_msg > max_width then
-    full_msg = full_msg:sub(1, max_width - 3) .. "..."
-  end
+  if #full_msg > max_width then full_msg = full_msg:sub(1, max_width - 3) .. "..." end
 
   return full_msg
 end
@@ -76,9 +74,7 @@ end
 -- Clear all virtual diagnostics for a buffer
 local function clear_virtual_diagnostics(bufnr)
   bufnr = bufnr or vim.api.nvim_get_current_buf()
-  if not vim.api.nvim_buf_is_valid(bufnr) then
-    return
-  end
+  if not vim.api.nvim_buf_is_valid(bufnr) then return end
 
   -- Clear virtual lines
   vim.api.nvim_buf_clear_namespace(bufnr, state.virtual_lines_ns, 0, -1)
@@ -90,21 +86,15 @@ end
 -- Render virtual lines for diagnostics
 local function render_virtual_lines(bufnr)
   bufnr = bufnr or vim.api.nvim_get_current_buf()
-  if not vim.api.nvim_buf_is_valid(bufnr) then
-    return
-  end
+  if not vim.api.nvim_buf_is_valid(bufnr) then return end
 
   -- Clear existing virtual lines
   vim.api.nvim_buf_clear_namespace(bufnr, state.virtual_lines_ns, 0, -1)
 
-  if not state.virtual_lines_enabled then
-    return
-  end
+  if not state.virtual_lines_enabled then return end
 
   local diagnostics = get_diagnostics(bufnr)
-  if #diagnostics == 0 then
-    return
-  end
+  if #diagnostics == 0 then return end
 
   -- Get window width for wrapping
   local win = vim.fn.bufwinid(bufnr)
@@ -115,18 +105,14 @@ local function render_virtual_lines(bufnr)
   local diag_by_line = {}
   for _, diag in ipairs(diagnostics) do
     local lnum = diag.lnum
-    if not diag_by_line[lnum] then
-      diag_by_line[lnum] = {}
-    end
+    if not diag_by_line[lnum] then diag_by_line[lnum] = {} end
     table.insert(diag_by_line[lnum], diag)
   end
 
   -- Render virtual lines in tree structure below the line
   for lnum, line_diags in pairs(diag_by_line) do
     -- Sort by severity (Error > Warning > Info > Hint)
-    table.sort(line_diags, function(a, b)
-      return a.severity < b.severity
-    end)
+    table.sort(line_diags, function(a, b) return a.severity < b.severity end)
 
     -- Create tree-structured virtual lines
     local virt_lines = {}
@@ -158,38 +144,28 @@ end
 -- Render virtual text for diagnostics
 local function render_virtual_text(bufnr)
   bufnr = bufnr or vim.api.nvim_get_current_buf()
-  if not vim.api.nvim_buf_is_valid(bufnr) then
-    return
-  end
+  if not vim.api.nvim_buf_is_valid(bufnr) then return end
 
   -- Clear existing virtual text
   vim.api.nvim_buf_clear_namespace(bufnr, state.virtual_text_ns, 0, -1)
 
-  if not state.virtual_text_enabled then
-    return
-  end
+  if not state.virtual_text_enabled then return end
 
   local diagnostics = get_diagnostics(bufnr)
-  if #diagnostics == 0 then
-    return
-  end
+  if #diagnostics == 0 then return end
 
   -- Group diagnostics by line
   local diag_by_line = {}
   for _, diag in ipairs(diagnostics) do
     local lnum = diag.lnum
-    if not diag_by_line[lnum] then
-      diag_by_line[lnum] = {}
-    end
+    if not diag_by_line[lnum] then diag_by_line[lnum] = {} end
     table.insert(diag_by_line[lnum], diag)
   end
 
   -- Render virtual text
   for lnum, line_diags in pairs(diag_by_line) do
     -- Sort by severity
-    table.sort(line_diags, function(a, b)
-      return a.severity < b.severity
-    end)
+    table.sort(line_diags, function(a, b) return a.severity < b.severity end)
 
     -- Show only the first (most severe) diagnostic as virtual text
     local diag = line_diags[1]
@@ -198,9 +174,7 @@ local function render_virtual_text(bufnr)
 
     -- Truncate message if too long
     local max_len = 60
-    if #msg > max_len then
-      msg = msg:sub(1, max_len - 3) .. "..."
-    end
+    if #msg > max_len then msg = msg:sub(1, max_len - 3) .. "..." end
 
     local virt_text = string.format(" %s %s", prefix, msg)
     local hl = severity_hl[diag.severity] or "DiagnosticVirtualTextInfo"
@@ -225,18 +199,12 @@ local function update_virtual_diagnostics(bufnr)
 
   -- Debounce updates
   state.timer = vim.defer_fn(function()
-    if not vim.api.nvim_buf_is_valid(bufnr) then
-      return
-    end
+    if not vim.api.nvim_buf_is_valid(bufnr) then return end
 
     -- Update based on enabled features
-    if state.virtual_lines_enabled then
-      render_virtual_lines(bufnr)
-    end
+    if state.virtual_lines_enabled then render_virtual_lines(bufnr) end
 
-    if state.virtual_text_enabled then
-      render_virtual_text(bufnr)
-    end
+    if state.virtual_text_enabled then render_virtual_text(bufnr) end
 
     state.timer = nil
   end, state.debounce_ms)
@@ -269,9 +237,7 @@ function M.toggle_virtual_text()
 end
 
 -- Refresh diagnostics manually
-function M.refresh()
-  update_virtual_diagnostics()
-end
+function M.refresh() update_virtual_diagnostics() end
 
 -- Show diagnostics for current line in a floating window
 function M.show_line_diagnostics()
@@ -305,46 +271,34 @@ function M.setup(opts)
 
   -- Auto-refresh on LSP diagnostic updates
   vim.api.nvim_create_autocmd("DiagnosticChanged", {
-    callback = function(args)
-      update_virtual_diagnostics(args.buf)
-    end,
+    callback = function(args) update_virtual_diagnostics(args.buf) end,
   })
 
   -- Refresh on buffer enter
   vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost" }, {
     callback = function(args)
       -- Small delay to ensure LSP has updated diagnostics
-      vim.defer_fn(function()
-        update_virtual_diagnostics(args.buf)
-      end, 50)
+      vim.defer_fn(function() update_virtual_diagnostics(args.buf) end, 50)
     end,
   })
 
   -- Clear on buffer leave/delete
   vim.api.nvim_create_autocmd({ "BufDelete", "BufWipeout" }, {
-    callback = function(args)
-      clear_virtual_diagnostics(args.buf)
-    end,
+    callback = function(args) clear_virtual_diagnostics(args.buf) end,
   })
 
   -- Refresh on cursor hold (when idle)
   vim.api.nvim_create_autocmd("CursorHold", {
-    callback = function(args)
-      update_virtual_diagnostics(args.buf)
-    end,
+    callback = function(args) update_virtual_diagnostics(args.buf) end,
   })
 
   -- Re-apply highlights on colorscheme change
   vim.api.nvim_create_autocmd("ColorScheme", {
-    callback = function()
-      setup_highlights()
-    end,
+    callback = function() setup_highlights() end,
   })
 end
 
 -- Get current state (for debugging)
-function M.get_state()
-  return state
-end
+function M.get_state() return state end
 
 return M
