@@ -413,9 +413,12 @@ keymap("n", "<leader>lb", "<cmd>Outline<cr>", opts)
 -- Native LSP Format (handled by LSP servers, configured in lsp/servers.lua with <leader>f)
 -- Note: <leader>f is the primary format keymap (set in lsp/servers.lua on_attach)
 -- <leader>lf is kept as an alias for consistency with other <leader>l* LSP keymaps
-vim.keymap.set({ "n", "v" }, "<leader>lf", function()
-  vim.lsp.buf.format({ async = true })
-end, { noremap = true, silent = true, desc = "Format with LSP" })
+vim.keymap.set(
+  { "n", "v" },
+  "<leader>lf",
+  function() vim.lsp.buf.format { async = true } end,
+  { noremap = true, silent = true, desc = "Format with LSP" }
+)
 
 keymap("n", "<leader>lo", "<cmd>Outline<cr>", opts)
 keymap("n", "<leader>lq", "<cmd>lua vim.diagnostic.setloclist()<cr>", opts)
@@ -434,12 +437,12 @@ keymap("n", "<leader>lu", "<cmd>LuaSnipUnlinkCurrent<cr>", opts)
 keymap("n", "<leader>tc", "<cmd>lua require('user.lsp.blink').toggle_autocomplete()<cr>", opts)
 
 -- CocList replacements (native LSP equivalents using <space> prefix)
-keymap("n", "<space>a", "<cmd>Trouble diagnostics toggle<cr>", opts)             -- CocList diagnostics
-keymap("n", "<space>o", "<cmd>Outline<cr>", opts)                                 -- CocList outline
-keymap("n", "<space>s", "<cmd>FzfLua lsp_workspace_symbols<cr>", opts)            -- CocList symbols
-keymap("n", "<space>e", "<cmd>Mason<cr>", opts)                                   -- CocList extensions
-keymap("n", "<space>c", "<cmd>FzfLua commands<cr>", opts)                         -- CocList commands
-keymap("n", "<space>p", "<cmd>FzfLua resume<cr>", opts)                           -- CocListResume
+keymap("n", "<space>a", "<cmd>Trouble diagnostics toggle<cr>", opts) -- CocList diagnostics
+keymap("n", "<space>o", "<cmd>Outline<cr>", opts) -- CocList outline
+keymap("n", "<space>s", "<cmd>FzfLua lsp_workspace_symbols<cr>", opts) -- CocList symbols
+keymap("n", "<space>e", "<cmd>Mason<cr>", opts) -- CocList extensions
+keymap("n", "<space>c", "<cmd>FzfLua commands<cr>", opts) -- CocList commands
+keymap("n", "<space>p", "<cmd>FzfLua resume<cr>", opts) -- CocListResume
 
 -- Terminal keymaps
 keymap("n", "<leader>T1", "<cmd>lua _FLOAT_TERM()<cr>", opts)

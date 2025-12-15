@@ -28,9 +28,7 @@ require("lazy").setup {
       "williamboman/mason-lspconfig.nvim",
       "saghen/blink.cmp",
     },
-    config = function()
-      require("user.lsp").setup()
-    end,
+    config = function() require("user.lsp").setup() end,
   },
 
   -- Mason for LSP server management
@@ -801,7 +799,7 @@ require("lazy").setup {
     event = "InsertEnter",
   },
   {
-    'dmtrKovalenko/fff.nvim',
+    "dmtrKovalenko/fff.nvim",
     build = function()
       -- this will download prebuild binary or try to use existing rustup toolchain to build from source
       -- (if you are using lazy you can use gb for rebuilding a plugin if needed)
@@ -809,9 +807,9 @@ require("lazy").setup {
     end,
     -- if you are using nixos
     -- build = "nix run .#release",
-    opts = {              -- (optional)
+    opts = { -- (optional)
       debug = {
-        enabled = true,   -- we expect your collaboration at least during the beta
+        enabled = true, -- we expect your collaboration at least during the beta
         show_scores = true, -- to help us optimize the scoring system, feel free to share your scores!
       },
     },
@@ -821,10 +819,10 @@ require("lazy").setup {
     keys = {
       {
         "ff", -- try it if you didn't it is a banger keybinding for a picker
-        function() require('fff').find_files() end,
-        desc = 'FFFind files',
-      }
-    }
+        function() require("fff").find_files() end,
+        desc = "FFFind files",
+      },
+    },
   },
   -- REMOVED: coc-import.nvim (was CoC-dependent)
   -- Import path functionality now handled by native LSP

@@ -2,7 +2,7 @@
 -- Auto-installs all LSP servers for your languages
 
 -- Setup Mason
-require("mason").setup({
+require("mason").setup {
   ui = {
     border = "rounded",
     icons = {
@@ -11,56 +11,56 @@ require("mason").setup({
       package_uninstalled = "✗",
     },
   },
-})
+}
 
 -- Setup mason-lspconfig for automatic server installation
-require("mason-lspconfig").setup({
+require("mason-lspconfig").setup {
   -- Automatically install these LSP servers
   ensure_installed = {
     -- Python
-    "basedpyright",   -- Python type checking (modern fork of Pyright)
-    "ruff",           -- Python linting/formatting (fast Rust-based)
+    "basedpyright", -- Python type checking (modern fork of Pyright)
+    "ruff", -- Python linting/formatting (fast Rust-based)
 
     -- JavaScript/TypeScript
-    "ts_ls",          -- TypeScript/JavaScript language server
+    "ts_ls", -- TypeScript/JavaScript language server
 
     -- Rust
-    "rust_analyzer",  -- Rust language server
+    "rust_analyzer", -- Rust language server
 
     -- C/C++
-    "clangd",         -- C/C++ language server
+    "clangd", -- C/C++ language server
 
     -- Go
-    "gopls",          -- Go language server
+    "gopls", -- Go language server
 
     -- Lua
-    "lua_ls",         -- Lua language server
+    "lua_ls", -- Lua language server
 
     -- Vim
-    "vimls",          -- Vim language server
+    "vimls", -- Vim language server
 
     -- Markdown
-    "marksman",       -- Markdown language server
+    "marksman", -- Markdown language server
 
     -- JSON
-    "jsonls",         -- JSON language server
+    "jsonls", -- JSON language server
 
     -- YAML
-    "yamlls",         -- YAML language server
+    "yamlls", -- YAML language server
 
     -- Shell
-    "bashls",         -- Bash language server
+    "bashls", -- Bash language server
 
     -- TOML
-    "taplo",          -- TOML language server
+    "taplo", -- TOML language server
 
     -- CSS
-    "cssls",          -- CSS language server
+    "cssls", -- CSS language server
 
     -- HTML
-    "html",           -- HTML language server
+    "html", -- HTML language server
   },
 
   -- Automatically install servers when they're configured
   automatic_installation = true,
-})
+}
