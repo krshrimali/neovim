@@ -124,6 +124,11 @@ function M.setup()
 
   -- Python: basedpyright (type checking + navigation)
   vim.lsp.config.basedpyright = {
+    on_attach = function(client, bufnr)
+      -- Disable diagnostics in favor of ruff
+      client.server_capabilities.diagnosticProvider = false
+      on_attach(client, bufnr)
+    end,
     settings = {
       basedpyright = {
         analysis = {
