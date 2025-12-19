@@ -23,8 +23,6 @@ fzf_lua.setup {
   --         default = false, -- Disable preview by default for speed
   --         border = "rounded",
   --         wrap = false,
-  --         hidden = true, -- Start with preview hidden
-  --         vertical = "down:45%",
   --         horizontal = "right:60%",
   --         layout = "flex",
   --         flip_columns = 120,
@@ -34,7 +32,19 @@ fzf_lua.setup {
   -- },
 
   winopts = {
+    height = 0.80,
+    width = 0.95,
+    row = 0.35,
+    col = 0.90,
     border = "rounded",
+    preview = {
+      border = "rounded",
+      wrap = false,
+      vertical = "down:45%",
+      horizontal = "right:60%",
+      layout = "flex",
+      flip_columns = 120,
+    },
   },
 
   -- Global fzf options that apply to ALL pickers
