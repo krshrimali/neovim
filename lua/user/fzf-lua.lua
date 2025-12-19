@@ -41,7 +41,7 @@ fzf_lua.setup {
       border = "rounded",
       wrap = false,
       vertical = "down:45%",
-      horizontal = "right:60%",
+      horizontal = "right:40%",
       layout = "flex",
       flip_columns = 120,
     },
