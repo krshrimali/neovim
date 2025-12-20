@@ -65,7 +65,9 @@ function M.setup_keymaps(bufnr)
   end, { buffer = bufnr, expr = true, silent = true })
 
   -- Ctrl-Space to manually trigger completion
+  -- Note: macOS terminals send <C-@> for Ctrl+Space
   vim.keymap.set("i", "<C-Space>", "<C-x><C-o>", opts)
+  vim.keymap.set("i", "<C-@>", "<C-x><C-o>", opts)
 
   -- Ctrl-y to accept completion (explicit)
   vim.keymap.set("i", "<C-y>", "<C-y>", opts)

@@ -220,12 +220,8 @@ function M.setup()
   }
 
   -- Lua (configured for Neovim development)
+  -- Note: neodev is set up in init.lua BEFORE this runs
   vim.lsp.config.lua_ls = {
-    on_init = function(client)
-      -- Setup neodev if available
-      local neodev_ok, neodev = pcall(require, "neodev")
-      if neodev_ok then neodev.setup {} end
-    end,
     settings = {
       Lua = {
         runtime = {
