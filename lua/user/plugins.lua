@@ -100,6 +100,21 @@ require("lazy").setup {
     config = true,
   },
 
+  -- Diffview - Standalone git diff viewer (FAST & POWERFUL)
+  {
+    "sindrets/diffview.nvim",
+    dependencies = { "nvim-web-devicons" },
+    cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewClose", "DiffviewToggleFiles", "DiffviewFocusFiles" },
+    keys = {
+      { "<leader>gdo", "<cmd>DiffviewOpen<cr>", desc = "Open diffview (all changes)" },
+      { "<leader>gdc", "<cmd>DiffviewClose<cr>", desc = "Close diffview" },
+      { "<leader>gdh", "<cmd>DiffviewFileHistory<cr>", desc = "File history" },
+      { "<leader>gdf", "<cmd>DiffviewFileHistory %<cr>", desc = "Current file history" },
+      { "<leader>gdt", "<cmd>DiffviewToggleFiles<cr>", desc = "Toggle file panel" },
+    },
+    config = function() require "user.diffview" end,
+  },
+
   -- Transparency - LAZY LOAD
   {
     "xiyaowong/transparent.nvim",

@@ -389,7 +389,9 @@ keymap("n", "<leader>gR", "<cmd>lua require 'gitsigns'.reset_buffer()<cr>", opts
 keymap("n", "<leader>gs", "<cmd>lua require 'gitsigns'.stage_hunk()<cr>", opts)
 keymap("n", "<leader>gu", "<cmd>lua require 'gitsigns'.undo_stage_hunk()<cr>", opts)
 keymap("n", "<leader>go", "<cmd>FzfLua git_status<cr>", opts)
-keymap("n", "<leader>gd", "<cmd>Gitsigns diffthis HEAD<cr>", opts)
+-- Diff viewing - multiple options for different use cases
+keymap("n", "<leader>gd", "<cmd>DiffviewOpen<cr>", opts) -- Open diffview (replaces old Gitsigns diffthis)
+keymap("n", "<leader>gD", "<cmd>Gitsigns diffthis HEAD<cr>", opts) -- Inline diff (keep as alternative)
 
 -- GitBlame
 keymap("n", "<leader>Gl", "<cmd>GitBlameToggle<cr>", opts)
