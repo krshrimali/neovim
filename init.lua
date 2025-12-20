@@ -49,7 +49,7 @@ vim.defer_fn(function()
   -- Outline/breadcrumbs available via <leader>lb keymap
 end, 50) -- Small delay for better startup
 
--- Native LSP completion handled by blink.cmp (configured in lua/user/lsp/blink.lua)
+-- Native LSP completion handled by Neovim's built-in vim.lsp.completion (configured in lua/user/lsp/blink.lua)
 
 -- fzf-lua is now loaded via lazy.nvim
 

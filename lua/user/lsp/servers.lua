@@ -7,11 +7,8 @@ local M = {}
 local function get_capabilities()
   local capabilities = vim.lsp.protocol.make_client_capabilities()
 
-  -- blink.cmp capabilities
-  local blink_ok, blink = pcall(require, "blink.cmp")
-  if blink_ok then capabilities = blink.get_lsp_capabilities(capabilities) end
-
-  -- Snippet support
+  -- Native completion capabilities (Neovim 0.11+)
+  -- Enable snippet support for LSP servers
   capabilities.textDocument.completion.completionItem.snippetSupport = true
   capabilities.textDocument.completion.completionItem.resolveSupport = {
     properties = {
@@ -21,12 +18,20 @@ local function get_capabilities()
     },
   }
 
+  -- Prefer UTF-8 position encoding to avoid mixed encoding warnings
+  capabilities.general = capabilities.general or {}
+  capabilities.general.positionEncodings = { "utf-8", "utf-16" }
+
   return capabilities
 end
 
 -- Setup keymaps on LSP attach (matching CoC keymaps)
 local function on_attach(client, bufnr)
   local opts = { noremap = true, silent = true, buffer = bufnr }
+
+  -- Enable native LSP completion for this buffer
+  local completion_ok, completion = pcall(require, "user.lsp.blink")
+  if completion_ok then completion.enable_for_buffer(client, bufnr) end
 
   -- Navigation (matching CoC keymaps)
   vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
@@ -124,15 +129,10 @@ function M.setup()
 
   -- Python: basedpyright (type checking + navigation)
   vim.lsp.config.basedpyright = {
-    on_attach = function(client, bufnr)
-      -- Disable diagnostics in favor of ruff
-      client.server_capabilities.diagnosticProvider = false
-      on_attach(client, bufnr)
-    end,
     settings = {
       basedpyright = {
         analysis = {
-          typeCheckingMode = "basic",
+          typeCheckingMode = "basic", -- Enable type checking (basedpyright's main purpose)
           autoSearchPaths = true,
           useLibraryCodeForTypes = true,
           diagnosticMode = "openFilesOnly",

@@ -26,7 +26,6 @@ require("lazy").setup {
     dependencies = {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
-      "saghen/blink.cmp",
     },
     config = function() require("user.lsp").setup() end,
   },
@@ -46,13 +45,6 @@ require("lazy").setup {
     dependencies = { "williamboman/mason.nvim" },
   },
 
-  -- Fast completion with blink.cmp
-  {
-    "saghen/blink.cmp",
-    lazy = false,
-    dependencies = "rafamadriz/friendly-snippets",
-    version = "v0.*",
-  },
 
   -- LSP progress notifications
   {
