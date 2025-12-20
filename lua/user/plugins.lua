@@ -805,6 +805,45 @@ require("lazy").setup {
     cmd = "Copilot",
     event = "InsertEnter",
   },
+  -- GitHub Integration Plugin (local - development directory)
+  {
+    dir = "/Users/krshrimali/Documents/projects/nvim-git",
+    name = "github",
+    lazy = false,
+    config = function()
+      require("github").setup({
+        -- Auto-detect repo from git
+        repo = nil,
+        -- Use space as leader (matches your config)
+        keymaps = {
+          open = "<leader>gh",
+          issues = "<leader>ghi",
+          prs = "<leader>ghp",
+          assigned = "<leader>gha",
+          refresh = "<leader>ghr",
+        },
+        -- Performance settings
+        performance = {
+          large_file_threshold = 1000,
+          chunk_size = 500,
+          items_per_page = 50,
+        },
+        -- UI settings
+        ui = {
+          list_height = 20,
+          detail_split = "vertical",
+          diff_split = "vertical",
+          virtual_scroll = true,
+        },
+      })
+    end,
+    keys = {
+      { "<leader>gh", "<cmd>Github<cr>", desc = "GitHub" },
+      { "<leader>ghi", "<cmd>GithubIssues<cr>", desc = "GitHub Issues" },
+      { "<leader>ghp", "<cmd>GithubPRs<cr>", desc = "GitHub PRs" },
+      { "<leader>gha", "<cmd>GithubAssigned<cr>", desc = "GitHub Assigned" },
+    },
+  },
   {
     "dmtrKovalenko/fff.nvim",
     build = function()

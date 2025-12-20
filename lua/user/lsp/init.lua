@@ -20,29 +20,7 @@ function M.setup()
     debounce_ms = 100,
   }
 
-  -- 5. Setup completion (blink.cmp)
-  require("user.lsp.blink").setup()
-
-  -- 6. Setup commands (:Format, :OR, etc.)
-  require("user.lsp.commands").setup()
-
-  -- 7. Configure all language servers
-  require("user.lsp.servers").setup()
-
-  -- 8. Setup fidget for LSP progress notifications
-  local fidget_ok, fidget = pcall(require, "fidget")
-  if fidget_ok then
-    fidget.setup {
-      notification = {
-        window = {
-          winblend = 0,
-          border = "rounded",
-        },
-      },
-    }
-  end
-
-  -- 9. Setup neodev for Lua LSP enhancements
+  -- 5. Setup neodev for Lua LSP enhancements (MUST be before lua_ls)
   local neodev_ok, neodev = pcall(require, "neodev")
   if neodev_ok then
     neodev.setup {
@@ -51,6 +29,28 @@ function M.setup()
         runtime = true,
         types = true,
         plugins = true,
+      },
+    }
+  end
+
+  -- 6. Setup completion (blink.cmp)
+  require("user.lsp.blink").setup()
+
+  -- 7. Setup commands (:Format, :OR, etc.)
+  require("user.lsp.commands").setup()
+
+  -- 8. Configure all language servers
+  require("user.lsp.servers").setup()
+
+  -- 9. Setup fidget for LSP progress notifications
+  local fidget_ok, fidget = pcall(require, "fidget")
+  if fidget_ok then
+    fidget.setup {
+      notification = {
+        window = {
+          winblend = 0,
+          border = "rounded",
+        },
       },
     }
   end
