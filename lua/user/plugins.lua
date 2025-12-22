@@ -819,7 +819,7 @@ require("lazy").setup {
     name = "github",
     lazy = false,
     config = function()
-      require("github").setup({
+      require("github").setup {
         -- Auto-detect repo from git
         repo = nil,
         -- Use space as leader (matches your config)
@@ -843,7 +843,7 @@ require("lazy").setup {
           diff_split = "vertical",
           virtual_scroll = true,
         },
-      })
+      }
     end,
     keys = {
       { "<leader>gh", "<cmd>Github<cr>", desc = "GitHub" },
