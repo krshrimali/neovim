@@ -435,8 +435,8 @@ keymap("n", "<leader>lgc", "<cmd>lua require('goto-preview').close_all_win()<cr>
 keymap("n", "<leader>lt", '<cmd>lua require("user.functions").toggle_diagnostics()<cr>', opts)
 keymap("n", "<leader>lu", "<cmd>LuaSnipUnlinkCurrent<cr>", opts)
 
--- Completion toggle (matching CoC's <leader>tc)
-keymap("n", "<leader>tc", "<cmd>lua require('user.lsp.blink').toggle_autocomplete()<cr>", opts)
+-- Completion toggle (blink.cmp toggle)
+keymap("n", "<leader>tc", "<cmd>lua require('user.lsp.blink').toggle()<cr>", opts)
 
 -- CocList replacements (native LSP equivalents using <space> prefix)
 keymap("n", "<space>a", "<cmd>Trouble diagnostics toggle<cr>", opts) -- CocList diagnostics
