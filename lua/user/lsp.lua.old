@@ -114,23 +114,6 @@ vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
   }
 )
 
--- Python: Pyright for LSP features (navigation, completion, hover)
-lspconfig.pyright.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
-  settings = {
-    python = {
-      analysis = {
-        -- Keep type checking for navigation but diagnostics will be filtered
-        autoSearchPaths = true,
-        useLibraryCodeForTypes = true,
-        diagnosticMode = "openFilesOnly", -- Only analyze open files for performance
-        typeCheckingMode = "basic", -- Use basic type checking for speed
-      },
-    },
-  },
-}
-
 -- Ruff for Python linting, formatting, and diagnostics
 lspconfig.ruff.setup {
   on_attach = function(client, bufnr)

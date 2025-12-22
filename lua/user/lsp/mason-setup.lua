@@ -18,8 +18,8 @@ require("mason-lspconfig").setup {
   -- Automatically install these LSP servers
   ensure_installed = {
     -- Python
-    "basedpyright", -- Python type checking (modern fork of Pyright)
     "ruff", -- Python linting/formatting (fast Rust-based)
+    "ty", -- Python type checking (fast type checker from Astral)
 
     -- JavaScript/TypeScript
     "ts_ls", -- TypeScript/JavaScript language server
