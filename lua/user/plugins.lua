@@ -18,6 +18,14 @@ vim.g.maplocalleader = " "
 -- Install your plugins here
 require("lazy").setup {
 
+  -- Completion plugin
+  {
+    "saghen/blink.cmp",
+    dependencies = { "rafamadriz/friendly-snippets" },
+    version = "1.*",
+    lazy = false,
+  },
+
   -- Native LSP with nvim-lspconfig (migrated from CoC)
   {
     "neovim/nvim-lspconfig",
@@ -26,6 +34,7 @@ require("lazy").setup {
     dependencies = {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
+      "saghen/blink.cmp",
     },
     config = function() require("user.lsp").setup() end,
   },
@@ -44,7 +53,6 @@ require("lazy").setup {
     lazy = false,
     dependencies = { "williamboman/mason.nvim" },
   },
-
 
   -- LSP progress notifications
   {
@@ -807,7 +815,7 @@ require("lazy").setup {
   },
   -- GitHub Integration Plugin (local - development directory)
   {
-    dir = "/Users/krshrimali/Documents/projects/nvim-git",
+    "krshrimali/gh.nvim",
     name = "github",
     lazy = false,
     config = function()
