@@ -118,32 +118,25 @@ function M.setup()
     on_attach = on_attach,
   })
 
-  -- Python: basedpyright (type checking + navigation)
-  vim.lsp.config.basedpyright = {
-    settings = {
-      basedpyright = {
-        analysis = {
-          typeCheckingMode = "basic", -- Enable type checking (basedpyright's main purpose)
-          autoSearchPaths = true,
-          useLibraryCodeForTypes = true,
-          diagnosticMode = "openFilesOnly",
-          autoImportCompletions = true,
-        },
-        disableOrganizeImports = true, -- Let Ruff handle this
-      },
-    },
-  }
-
   -- Python: Ruff (linting + formatting)
   vim.lsp.config.ruff = {
     on_attach = function(client, bufnr)
-      -- Disable hover in favor of basedpyright
+      -- Disable hover in favor of ty
       client.server_capabilities.hoverProvider = false
       on_attach(client, bufnr)
     end,
     init_options = {
       settings = {
         args = { "--line-length=88" },
+      },
+    },
+  }
+
+  -- Python: ty (fast type checker from Astral)
+  vim.lsp.config.ty = {
+    settings = {
+      ty = {
+        -- ty language server settings go here
       },
     },
   }
@@ -282,8 +275,8 @@ function M.setup()
 
   -- Enable all configured servers
   vim.lsp.enable {
-    "basedpyright",
     "ruff",
+    "ty",
     "ts_ls",
     "rust_analyzer",
     "clangd",
