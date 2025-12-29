@@ -9,9 +9,7 @@ local function get_capabilities()
 
   -- Blink.cmp capabilities
   local blink_ok, blink = pcall(require, "blink.cmp")
-  if blink_ok then
-    capabilities = blink.get_lsp_capabilities(capabilities)
-  end
+  if blink_ok then capabilities = blink.get_lsp_capabilities(capabilities) end
 
   -- Prefer UTF-8 position encoding to avoid mixed encoding warnings
   capabilities.general = capabilities.general or {}
