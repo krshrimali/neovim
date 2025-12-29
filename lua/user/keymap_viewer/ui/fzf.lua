@@ -1,7 +1,7 @@
 local M = {}
-local fzf_lua = require("fzf-lua")
-local formatter = require("user.keymap_viewer.formatter")
-local search = require("user.keymap_viewer.search")
+local fzf_lua = require "fzf-lua"
+local formatter = require "user.keymap_viewer.formatter"
+local search = require "user.keymap_viewer.search"
 
 -- Cache for keymaps
 local cached_keymaps = nil
@@ -11,49 +11,45 @@ local CACHE_TTL = 60 -- seconds
 -- Get all keymaps (with caching)
 function M.get_keymaps()
   local now = os.time()
-  if cached_keymaps and (now - cache_time) < CACHE_TTL then
-    return cached_keymaps
-  end
-  
-  local collector = require("user.keymap_viewer.collector")
-  local descriptions = require("user.keymap_viewer.descriptions")
-  
+  if cached_keymaps and (now - cache_time) < CACHE_TTL then return cached_keymaps end
+
+  local collector = require "user.keymap_viewer.collector"
+  local descriptions = require "user.keymap_viewer.descriptions"
+
   local keymaps = collector.collect_all()
   keymaps = descriptions.enrich_descriptions(keymaps)
-  
+
   cached_keymaps = keymaps
   cache_time = now
-  
+
   return keymaps
 end
 
 -- Open keymap viewer
 function M.open(options)
   options = options or {}
-  
+
   local keymaps = M.get_keymaps()
-  
+
   -- Apply initial filters
-  if options.mode then
-    keymaps = search.filter(keymaps, nil, { mode = options.mode })
-  end
-  
+  if options.mode then keymaps = search.filter(keymaps, nil, { mode = options.mode }) end
+
   -- Sort
   keymaps = search.sort(keymaps, options.sort_by or "key")
-  
+
   -- Prepare items as strings for FzfLua
   local items = {}
   local keymap_map = {} -- Map display text to keymap object
-  
+
   for _, km in ipairs(keymaps) do
     local display_text = formatter.format_for_fzf(km)
     table.insert(items, display_text)
     keymap_map[display_text] = km
   end
-  
+
   -- Store keymap_map globally for preview access
   _G._keymap_viewer_map = keymap_map
-  
+
   -- Custom actions
   local actions = {
     ["default"] = function(selected, _)
@@ -65,9 +61,7 @@ function M.open(options)
         local km = keymap_map[selected[1]]
         if km and km.source_file then
           vim.cmd("edit " .. vim.fn.fnameescape(km.source_file))
-          if km.source_line then
-            vim.fn.cursor(km.source_line, 1)
-          end
+          if km.source_line then vim.fn.cursor(km.source_line, 1) end
         end
       end
     end,
@@ -81,7 +75,7 @@ function M.open(options)
       end
     end,
   }
-  
+
   -- Use FzfLua's fzf_exec with proper API
   -- Create a custom picker configuration
   local picker_config = {
@@ -107,7 +101,7 @@ function M.open(options)
     },
     actions = actions,
   }
-  
+
   -- Create preview function that writes to a buffer
   local preview_buf = nil
   local function update_preview(selected_text)
@@ -119,27 +113,26 @@ function M.open(options)
       end
     end
   end
-  
+
   -- Use fzf_exec with items and custom preview
   -- Note: fzf_exec may need items as a function or table
   -- Try both approaches
-  local success, err = pcall(function()
-    fzf_lua.fzf_exec(items, picker_config)
-  end)
-  
+  local success, err = pcall(function() fzf_lua.fzf_exec(items, picker_config) end)
+
   if not success then
     -- Fallback: use FzfLua's built-in keymaps with custom items
     -- Create a temporary approach using the items directly
     vim.notify("Using fallback keymap viewer", vim.log.levels.INFO)
     -- For now, just show items in a simple picker
-    fzf_lua.fzf_exec(items, vim.tbl_extend("force", picker_config, {
-      fn_transform = function(x)
-        if x then
-          update_preview(x)
-        end
-        return x
-      end,
-    }))
+    fzf_lua.fzf_exec(
+      items,
+      vim.tbl_extend("force", picker_config, {
+        fn_transform = function(x)
+          if x then update_preview(x) end
+          return x
+        end,
+      })
+    )
   end
 end
 
