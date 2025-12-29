@@ -54,9 +54,7 @@ end, 50) -- Small delay for better startup
 -- fzf-lua is now loaded via lazy.nvim
 
 -- Initialize Keymap Viewer (after plugins are loaded)
-vim.defer_fn(function()
-  require "user.keymap_viewer"
-end, 100) -- Small delay to ensure FzfLua is available
+vim.defer_fn(function() require "user.keymap_viewer" end, 100) -- Small delay to ensure FzfLua is available
 
 -- Setup buffer browser (lazy loaded on keymap)
 vim.keymap.set(

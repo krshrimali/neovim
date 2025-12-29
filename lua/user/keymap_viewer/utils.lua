@@ -5,9 +5,7 @@ function M.format_key(key)
   if not key then return "" end
   -- Replace <leader> with actual leader key
   local leader = vim.g.mapleader or "\\"
-  if leader == " " then
-    leader = "Space"
-  end
+  if leader == " " then leader = "Space" end
   key = key:gsub("<leader>", leader)
   -- Replace other common keycodes
   key = key:gsub("<C%-", "Ctrl+")
@@ -34,22 +32,18 @@ end
 -- Extract command from rhs (right-hand side)
 function M.extract_command(rhs)
   if not rhs then return "" end
-  
+
   -- Remove <cmd> and <cr>
   local cmd = rhs:gsub("<cmd>", ""):gsub("<cr>", ""):gsub("<CR>", "")
-  
+
   -- Extract lua require calls
-  local lua_match = cmd:match("lua%s+(.+)")
-  if lua_match then
-    return "lua " .. lua_match:gsub("^%s+", ""):gsub("%s+$", "")
-  end
-  
+  local lua_match = cmd:match "lua%s+(.+)"
+  if lua_match then return "lua " .. lua_match:gsub("^%s+", ""):gsub("%s+$", "") end
+
   -- Extract vim commands
-  local vim_cmd = cmd:match(":([^<]+)")
-  if vim_cmd then
-    return vim_cmd:gsub("^%s+", ""):gsub("%s+$", "")
-  end
-  
+  local vim_cmd = cmd:match ":([^<]+)"
+  if vim_cmd then return vim_cmd:gsub("^%s+", ""):gsub("%s+$", "") end
+
   -- Return cleaned command
   return cmd:gsub("^%s+", ""):gsub("%s+$", "")
 end
@@ -65,12 +59,12 @@ function M.fuzzy_match(text, query)
   if not query or query == "" then return true end
   text = M.normalize_text(text)
   query = M.normalize_text(query)
-  
+
   local query_chars = {}
-  for char in query:gmatch(".") do
+  for char in query:gmatch "." do
     table.insert(query_chars, char)
   end
-  
+
   local text_idx = 1
   for _, char in ipairs(query_chars) do
     local found = false
@@ -91,20 +85,16 @@ end
 function M.group_by_prefix(keymaps)
   local groups = {}
   for _, km in ipairs(keymaps) do
-    local prefix = km.key:match("^(<leader>[^%s]+)")
+    local prefix = km.key:match "^(<leader>[^%s]+)"
     if prefix then
-      local group_key = prefix:match("(<leader>[^%w]+)")
+      local group_key = prefix:match "(<leader>[^%w]+)"
       if not group_key then
         group_key = prefix:sub(1, #prefix - 1) -- Remove last char
       end
-      if not groups[group_key] then
-        groups[group_key] = {}
-      end
+      if not groups[group_key] then groups[group_key] = {} end
       table.insert(groups[group_key], km)
     else
-      if not groups["_other"] then
-        groups["_other"] = {}
-      end
+      if not groups["_other"] then groups["_other"] = {} end
       table.insert(groups["_other"], km)
     end
   end

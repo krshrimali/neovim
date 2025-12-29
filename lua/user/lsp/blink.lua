@@ -5,11 +5,9 @@ local M = {}
 _G.blink_enabled = true
 
 function M.setup()
-  require("blink.cmp").setup({
+  require("blink.cmp").setup {
     -- Control enabled state with a function
-    enabled = function()
-      return _G.blink_enabled
-    end,
+    enabled = function() return _G.blink_enabled end,
 
     -- Custom keymap: Tab/Shift+Tab for navigation, Enter/Ctrl+y to accept
     keymap = {
@@ -45,7 +43,7 @@ function M.setup()
     fuzzy = {
       implementation = "prefer_rust_with_warning",
     },
-  })
+  }
 end
 
 -- Toggle blink.cmp on/off
@@ -55,17 +53,11 @@ function M.toggle()
   if _G.blink_enabled then
     vim.notify("Blink.cmp enabled", vim.log.levels.INFO)
     -- Show completion if we're in insert mode
-    if vim.fn.mode() == "i" then
-      pcall(function()
-        require("blink.cmp").show()
-      end)
-    end
+    if vim.fn.mode() == "i" then pcall(function() require("blink.cmp").show() end) end
   else
     vim.notify("Blink.cmp disabled", vim.log.levels.INFO)
     -- Hide completion menu if visible
-    pcall(function()
-      require("blink.cmp").hide()
-    end)
+    pcall(function() require("blink.cmp").hide() end)
   end
 end
 
