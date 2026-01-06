@@ -9,18 +9,14 @@ function M.setup()
     -- Control enabled state with a function
     enabled = function()
       -- Check global toggle state first
-      if not _G.blink_enabled then
-        return false
-      end
+      if not _G.blink_enabled then return false end
 
       -- Don't enable in certain buffer types and filetypes
       local buftype = vim.api.nvim_get_option_value("buftype", { buf = 0 })
       local filetype = vim.api.nvim_get_option_value("filetype", { buf = 0 })
 
       -- Disable in prompts, terminals, and tree viewers
-      if buftype == "prompt" or buftype == "terminal" or buftype == "nofile" then
-        return false
-      end
+      if buftype == "prompt" or buftype == "terminal" or buftype == "nofile" then return false end
 
       -- Disable in specific filetypes
       local disabled_filetypes = {
@@ -32,16 +28,12 @@ function M.setup()
       }
 
       for _, ft in ipairs(disabled_filetypes) do
-        if filetype == ft then
-          return false
-        end
+        if filetype == ft then return false end
       end
 
       -- Additional check: don't enable in very small buffers (likely prompts)
       local bufname = vim.api.nvim_buf_get_name(0)
-      if bufname:match("^%s*$") or bufname:match("input://") then
-        return false
-      end
+      if bufname:match "^%s*$" or bufname:match "input://" then return false end
 
       return true
     end,
