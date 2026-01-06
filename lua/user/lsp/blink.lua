@@ -7,7 +7,32 @@ _G.blink_enabled = true
 function M.setup()
   require("blink.cmp").setup {
     -- Control enabled state with a function
-    enabled = function() return _G.blink_enabled end,
+    enabled = function()
+      -- Don't enable in certain buffer types and filetypes
+      local buftype = vim.api.nvim_get_option_value("buftype", { buf = 0 })
+      local filetype = vim.api.nvim_get_option_value("filetype", { buf = 0 })
+
+      -- Disable in prompts, terminals, and tree viewers
+      if buftype == "prompt" or buftype == "terminal" then
+        return false
+      end
+
+      -- Disable in specific filetypes
+      local disabled_filetypes = {
+        "NvimTree",
+        "TelescopePrompt",
+        "fzf",
+        "help",
+      }
+
+      for _, ft in ipairs(disabled_filetypes) do
+        if filetype == ft then
+          return false
+        end
+      end
+
+      return _G.blink_enabled
+    end,
 
     -- Custom keymap: Tab/Shift+Tab for navigation, Enter/Ctrl+y to accept
     keymap = {
