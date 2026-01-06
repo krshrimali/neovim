@@ -57,19 +57,9 @@ end, 50) -- Small delay for better startup
 vim.defer_fn(function() require "user.keymap_viewer" end, 100) -- Small delay to ensure FzfLua is available
 
 -- Buffer management with FzfLua
-vim.keymap.set(
-  "n",
-  "<leader>bb",
-  "<cmd>FzfLua buffers<cr>",
-  { desc = "FzfLua Buffers", silent = true }
-)
+vim.keymap.set("n", "<leader>bb", "<cmd>FzfLua buffers<cr>", { desc = "FzfLua Buffers", silent = true })
 
-vim.keymap.set(
-  "n",
-  "<leader>bs",
-  "<cmd>FzfLua buffers<cr>",
-  { desc = "FzfLua Buffers", silent = true }
-)
+vim.keymap.set("n", "<leader>bs", "<cmd>FzfLua buffers<cr>", { desc = "FzfLua Buffers", silent = true })
 
 -- These are now handled by plugin lazy loading
 -- require("goto-preview").setup {} -- Now configured via goto_preview_lsp.lua
