@@ -313,8 +313,6 @@ end, { desc = "Scroll down and center", noremap = true, silent = true, remap = f
 -- Keymaps transferred from whichkey.lua
 -- Buffer management
 keymap("n", "<leader>b", "<cmd>FzfLua buffers<cr>", opts)
-keymap("n", "<leader>bb", "<cmd>lua require('user.buffer_browser').open_buffer_browser()<cr>", opts)
-keymap("n", "<leader>bs", "<cmd>lua require('user.buffer_browser').toggle_sidebar()<cr>", opts)
 
 -- File Explorer
 keymap("n", "<leader><leader>e", "<cmd>:NvimTreeToggle<cr>", opts)
