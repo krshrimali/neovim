@@ -321,6 +321,7 @@ keymap("n", "<leader><leader>e", "<cmd>:NvimTreeToggle<cr>", opts)
 keymap("n", "<leader>w", "<cmd>w<CR>", opts)
 keymap("n", "<leader>h", "<cmd>nohlsearch<CR>", opts)
 keymap("n", "<leader>q", "<cmd>lua require('user.functions').smart_quit()<CR>", opts)
+keymap("n", "<leader>fq", "<cmd>q!<CR>", opts)
 
 -- Options toggles
 keymap("n", "<leader>oc", "<cmd>lua vim.g.cmp_active=false<cr>", opts)
