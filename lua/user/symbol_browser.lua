@@ -90,7 +90,9 @@ local function flatten_symbols(symbols, depth, result)
       })
 
       -- Recursively add children
-      if symbol.children and type(symbol.children) == "table" then flatten_symbols(symbol.children, depth + 1, result) end
+      if symbol.children and type(symbol.children) == "table" then
+        flatten_symbols(symbol.children, depth + 1, result)
+      end
     end
   end
 
@@ -282,7 +284,10 @@ function M.show()
   local filepath = get_relative_filepath(bufnr)
 
   -- Header
-  table.insert(lines, "╭─ Document Symbols ────────────────────────────────────╮")
+  table.insert(
+    lines,
+    "╭─ Document Symbols ────────────────────────────────────╮"
+  )
   table.insert(lines, "│                                                       │")
 
   -- File path (55 - 8 for "File: " = 47 chars for path)
@@ -341,7 +346,10 @@ function M.show()
 
   table.insert(lines, "│                                                       │")
   table.insert(lines, "│  Press <Enter> to jump, 'q' to close                  │")
-  table.insert(lines, "╰───────────────────────────────────────────────────────╯")
+  table.insert(
+    lines,
+    "╰───────────────────────────────────────────────────────╯"
+  )
 
   -- Create buffer
   local buf = vim.api.nvim_create_buf(false, true)
