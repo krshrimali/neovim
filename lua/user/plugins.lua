@@ -123,10 +123,9 @@ require("lazy").setup {
     config = function() require "user.diffview" end,
   },
 
-  -- Transparency - LAZY LOAD
+  -- Transparency - DISABLED
   {
     "xiyaowong/transparent.nvim",
-    event = "VeryLazy",
   },
 
   -- Goto preview - LAZY LOAD
@@ -473,23 +472,23 @@ require("lazy").setup {
   },
 
   -- Project management - LAZY LOAD
-  {
-    "ahmedkhalf/project.nvim",
-    event = "VeryLazy",
-    config = function()
-      require("project_nvim").setup {
-        detection_methods = { "lsp", "pattern" },
-        patterns = { ".git", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json", "Cargo.toml" },
-        ignore_lsp = {},
-        exclude_dirs = {},
-        show_hidden = false,
-        silent_chdir = true,
-        scope_chdir = "global",
-        datapath = vim.fn.stdpath "data",
-      }
-      -- projects extension removed - using fzf-lua for file navigation
-    end,
-  },
+  -- {
+  --   "ahmedkhalf/project.nvim",
+  --   event = "VeryLazy",
+  --   config = function()
+  --     require("project_nvim").setup {
+  --       detection_methods = { "lsp", "pattern" },
+  --       patterns = { ".git", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json", "Cargo.toml" },
+  --       ignore_lsp = {},
+  --       exclude_dirs = {},
+  --       show_hidden = false,
+  --       silent_chdir = true,
+  --       scope_chdir = "global",
+  --       datapath = vim.fn.stdpath "data",
+  --     }
+  --     -- projects extension removed - using fzf-lua for file navigation
+  --   end,
+  -- },
 
   -- Custom utilities - LAZY LOAD
   {
@@ -523,6 +522,13 @@ require("lazy").setup {
       enabled = false,
       virtual_text_column = 1,
     },
+  },
+
+  -- Which-key - Show keybindings popup
+  {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    config = function() require "user.whichkey" end,
   },
 
   -- Snacks - LOAD IMMEDIATELY (UI and core functionality)
