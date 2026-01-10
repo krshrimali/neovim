@@ -81,7 +81,7 @@ lualine.setup {
   options = {
     globalstatus = true,
     icons_enabled = false,
-    theme = cursor_theme,
+    theme = "auto",
     component_separators = { left = "", right = "" },
     section_separators = { left = "", right = "" },
     disabled_filetypes = { "alpha", "dashboard" },
@@ -94,6 +94,20 @@ lualine.setup {
       {
         "filename",
         path = 3, -- Show absolute path
+      },
+      {
+        -- Breadcrumbs from nvim-navic
+        function()
+          local navic = require "nvim-navic"
+          if navic.is_available() then
+            return navic.get_location()
+          end
+          return ""
+        end,
+        cond = function()
+          local navic = require "nvim-navic"
+          return navic.is_available()
+        end,
       },
     },
     lualine_x = {
