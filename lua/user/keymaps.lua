@@ -321,6 +321,7 @@ keymap("n", "<leader><leader>e", "<cmd>:NvimTreeToggle<cr>", opts)
 keymap("n", "<leader>w", "<cmd>w<CR>", opts)
 keymap("n", "<leader>h", "<cmd>nohlsearch<CR>", opts)
 keymap("n", "<leader>q", "<cmd>lua require('user.functions').smart_quit()<CR>", opts)
+keymap("n", "<leader>Q", "<cmd>lua require('user.functions').force_quit()<CR>", opts) -- Force quit without prompt
 keymap("n", "<leader>fq", "<cmd>q!<CR>", opts)
 
 -- Options toggles
@@ -469,7 +470,15 @@ keymap("n", "<leader>tS", "<cmd>FzfLua blines<cr>", opts)
 -- Project
 keymap("n", "<leader>tp", "<cmd>FzfLua files<cr>", opts)
 
--- Transparent
-keymap("n", "<leader>xt", "<cmd>TransparentToggle<cr>", opts)
+-- Transparent - DISABLED
+-- keymap("n", "<leader>xt", "<cmd>TransparentToggle<cr>", opts)
+
+-- Symbol Browser (LSP document symbols in floating window)
+keymap("n", "<leader>ls", "<cmd>lua require('user.symbol_browser').toggle()<cr>", opts)
+
+-- Copy utilities
+keymap("n", "<leader>yi", "<cmd>lua require('user.copy_utils').copy_python_import()<cr>", opts) -- Python import
+keymap("n", "<leader>yp", "<cmd>lua require('user.copy_utils').copy_absolute_path()<cr>", opts) -- Absolute path
+keymap("n", "<leader>yr", "<cmd>lua require('user.copy_utils').copy_relative_path()<cr>", opts) -- Relative path
 
 return M
