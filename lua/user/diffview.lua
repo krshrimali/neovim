@@ -5,7 +5,7 @@ diffview.setup {
   diff_binaries = false, -- Show diffs for binaries
   enhanced_diff_hl = true, -- Enhanced diff highlighting for better visibility
   git_cmd = { "git" }, -- The git executable to use
-  use_icons = true, -- Requires nvim-web-devicons
+  use_icons = false, -- Disabled to avoid nerd fonts
   show_help_hints = true, -- Show hints for how to open the help panel
   watch_index = true, -- Update views and index buffers when the git index changes
   -- Performance optimizations
