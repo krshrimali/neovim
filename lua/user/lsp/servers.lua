@@ -23,10 +23,10 @@ local function on_attach(client, bufnr)
   local opts = { noremap = true, silent = true, buffer = bufnr }
 
   -- Navigation (matching CoC keymaps)
-  vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-  vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, opts)
-  vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-  vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+  vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
+  vim.keymap.set("n", "gy", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
+  vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
+  vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
 
   -- Hover documentation (matching CoC's K)
   vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
@@ -159,6 +159,7 @@ function M.setup()
 
   -- Rust
   vim.lsp.config.rust_analyzer = {
+    on_attach = on_attach,  -- Explicitly set on_attach
     settings = {
       ["rust-analyzer"] = {
         cargo = {
