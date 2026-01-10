@@ -38,9 +38,10 @@ function M.setup()
       return true
     end,
 
-    -- Custom keymap: Tab/Shift+Tab for navigation, Enter/Ctrl+y to accept
+    -- Custom keymap: Tab/Shift+Tab for navigation, Enter/Ctrl+y to accept, Ctrl+Space to trigger
     keymap = {
       preset = "default",
+      ["<C-Space>"] = { "show", "fallback" }, -- Manual trigger with Ctrl+Space
       ["<Tab>"] = { "select_next", "fallback" },
       ["<S-Tab>"] = { "select_prev", "fallback" },
       ["<CR>"] = { "accept", "fallback" },
@@ -49,23 +50,55 @@ function M.setup()
 
     -- Appearance settings
     appearance = {
-      nerd_font_variant = "mono",
+      -- Nerd fonts disabled - use ASCII icons only
+      use_nvim_cmp_as_default = false,
+      kind_icons = {
+        Text = "T",
+        Method = "m",
+        Function = "f",
+        Constructor = "c",
+        Field = "F",
+        Variable = "v",
+        Class = "C",
+        Interface = "I",
+        Module = "M",
+        Property = "p",
+        Unit = "u",
+        Value = "V",
+        Enum = "E",
+        Keyword = "k",
+        Snippet = "s",
+        Color = "C",
+        File = "f",
+        Reference = "r",
+        Folder = "d",
+        EnumMember = "e",
+        Constant = "c",
+        Struct = "S",
+        Event = "E",
+        Operator = "o",
+        TypeParameter = "t",
+      },
     },
 
     -- Completion settings
     completion = {
       menu = {
-        auto_show = true, -- Auto-show completion menu
+        auto_show = false, -- Disable auto-show, only show on Ctrl+Space
+        draw = {
+          -- Disable all icon sources, use only our custom kind_icons
+          columns = { { "kind_icon" }, { "label", "label_description", gap = 1 } },
+        },
       },
       documentation = {
-        auto_show = true, -- Auto-show documentation
+        auto_show = true, -- Auto-show documentation when menu is visible
         auto_show_delay_ms = 200,
       },
     },
 
     -- Sources configuration
     sources = {
-      default = { "lsp", "path", "snippets", "buffer" },
+      default = { "lsp", "path", "buffer" },
     },
 
     -- Use Rust fuzzy matcher if available
