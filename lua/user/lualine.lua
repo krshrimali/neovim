@@ -99,9 +99,7 @@ lualine.setup {
         -- Breadcrumbs from nvim-navic
         function()
           local navic = require "nvim-navic"
-          if navic.is_available() then
-            return navic.get_location()
-          end
+          if navic.is_available() then return navic.get_location() end
           return ""
         end,
         cond = function()
