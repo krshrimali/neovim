@@ -62,9 +62,21 @@ which_key.add {
 
   -- Diagnostics
   { "<leader>d", group = "Diagnostics" },
-  { "<leader>dl", "<cmd>lua require('user.diagnostics_display').show_line_diagnostics()<cr>", desc = "Line Diagnostics" },
-  { "<leader>df", "<cmd>lua require('user.diagnostics_display').show_file_diagnostics()<cr>", desc = "File Diagnostics" },
-  { "<leader>dw", "<cmd>lua require('user.diagnostics_display').show_workspace_diagnostics()<cr>", desc = "Workspace Diagnostics" },
+  {
+    "<leader>dl",
+    "<cmd>lua require('user.diagnostics_display').show_line_diagnostics()<cr>",
+    desc = "Line Diagnostics",
+  },
+  {
+    "<leader>df",
+    "<cmd>lua require('user.diagnostics_display').show_file_diagnostics()<cr>",
+    desc = "File Diagnostics",
+  },
+  {
+    "<leader>dw",
+    "<cmd>lua require('user.diagnostics_display').show_workspace_diagnostics()<cr>",
+    desc = "Workspace Diagnostics",
+  },
   { "<leader>dd", "<cmd>lua require('user.diagnostics_display').debug()<cr>", desc = "Debug Diagnostics" },
 
   -- File Explorer
@@ -155,9 +167,21 @@ which_key.add {
   { "<leader>lI", "<cmd>Mason<cr>", desc = "Mason Installer" },
   { "<leader>lj", "<cmd>lua vim.diagnostic.goto_next({buffer=0})<CR>", desc = "Next Diagnostic" },
   { "<leader>lk", "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>", desc = "Prev Diagnostic" },
-  { "<leader>ll", "<cmd>lua require('user.lsp.virtual_diagnostics').toggle_virtual_lines()<cr>", desc = "Toggle Virtual Lines" },
-  { "<leader>lv", "<cmd>lua require('user.lsp.virtual_diagnostics').toggle_virtual_text()<cr>", desc = "Toggle Virtual Text" },
-  { "<leader>ld", "<cmd>lua require('user.lsp.virtual_diagnostics').show_line_diagnostics()<cr>", desc = "Line Diagnostics" },
+  {
+    "<leader>ll",
+    "<cmd>lua require('user.lsp.virtual_diagnostics').toggle_virtual_lines()<cr>",
+    desc = "Toggle Virtual Lines",
+  },
+  {
+    "<leader>lv",
+    "<cmd>lua require('user.lsp.virtual_diagnostics').toggle_virtual_text()<cr>",
+    desc = "Toggle Virtual Text",
+  },
+  {
+    "<leader>ld",
+    "<cmd>lua require('user.lsp.virtual_diagnostics').show_line_diagnostics()<cr>",
+    desc = "Line Diagnostics",
+  },
   { "<leader>lb", "<cmd>Outline<cr>", desc = "Outline/Breadcrumbs" },
   { "<leader>lo", "<cmd>Outline<cr>", desc = "Outline" },
   { "<leader>lq", "<cmd>lua vim.diagnostic.setloclist()<cr>", desc = "Quickfix" },
@@ -173,8 +197,16 @@ which_key.add {
   -- LSP Goto Preview
   { "<leader>lg", group = "Goto Preview" },
   { "<leader>lgg", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>", desc = "Preview Definition" },
-  { "<leader>lgt", "<cmd>lua require('goto-preview').goto_preview_type_definition()<cr>", desc = "Preview Type Definition" },
-  { "<leader>lgi", "<cmd>lua require('goto-preview').goto_preview_implementation()<cr>", desc = "Preview Implementation" },
+  {
+    "<leader>lgt",
+    "<cmd>lua require('goto-preview').goto_preview_type_definition()<cr>",
+    desc = "Preview Type Definition",
+  },
+  {
+    "<leader>lgi",
+    "<cmd>lua require('goto-preview').goto_preview_implementation()<cr>",
+    desc = "Preview Implementation",
+  },
   { "<leader>lgr", "<cmd>lua require('goto-preview').goto_preview_references()<cr>", desc = "Preview References" },
   { "<leader>lgc", "<cmd>lua require('goto-preview').close_all_win()<cr>", desc = "Close All Previews" },
   { "<leader>lgw", "<cmd>lua require('goto-preview').close_all_win()<CR>", desc = "Close All Windows" },
@@ -195,7 +227,11 @@ which_key.add {
   { "<leader>oc", "<cmd>lua vim.g.cmp_active=false<cr>", desc = "Completion off" },
   { "<leader>oC", "<cmd>lua vim.g.cmp_active=true<cr>", desc = "Completion on" },
   { "<leader>ow", '<cmd>lua require("user.functions").toggle_option("wrap")<cr>', desc = "Toggle Wrap" },
-  { "<leader>or", '<cmd>lua require("user.functions").toggle_option("relativenumber")<cr>', desc = "Toggle Relative Number" },
+  {
+    "<leader>or",
+    '<cmd>lua require("user.functions").toggle_option("relativenumber")<cr>',
+    desc = "Toggle Relative Number",
+  },
   { "<leader>ol", '<cmd>lua require("user.functions").toggle_option("cursorline")<cr>', desc = "Toggle Cursorline" },
   { "<leader>os", '<cmd>lua require("user.functions").toggle_option("spell")<cr>', desc = "Toggle Spell" },
   { "<leader>ot", '<cmd>lua require("user.functions").toggle_tabline()<cr>', desc = "Toggle Tabline" },
