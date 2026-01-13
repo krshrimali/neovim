@@ -53,20 +53,13 @@ end, 50) -- Small delay for better startup
 
 -- fzf-lua is now loaded via lazy.nvim
 
--- Setup buffer browser (lazy loaded on keymap)
-vim.keymap.set(
-  "n",
-  "<leader>bb",
-  function() require("user.buffer_browser").open_buffer_browser() end,
-  { desc = "Buffer Browser", silent = true }
-)
+-- Initialize Keymap Viewer (after plugins are loaded)
+vim.defer_fn(function() require "user.keymap_viewer" end, 100) -- Small delay to ensure FzfLua is available
 
-vim.keymap.set(
-  "n",
-  "<leader>bs",
-  function() require("user.buffer_browser").toggle_sidebar() end,
-  { desc = "Buffer Sidebar", silent = true }
-)
+-- Buffer management with FzfLua
+vim.keymap.set("n", "<leader>bb", "<cmd>FzfLua buffers<cr>", { desc = "FzfLua Buffers", silent = true })
+
+vim.keymap.set("n", "<leader>bs", "<cmd>FzfLua buffers<cr>", { desc = "FzfLua Buffers", silent = true })
 
 -- These are now handled by plugin lazy loading
 -- require("goto-preview").setup {} -- Now configured via goto_preview_lsp.lua
