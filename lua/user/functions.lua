@@ -36,9 +36,19 @@ function M.smart_quit()
   local bufnr = vim.api.nvim_get_current_buf()
   local modified = vim.api.nvim_buf_get_option(bufnr, "modified")
   if modified then
+    -- Temporarily disable blink.cmp to prevent completion in the prompt
+    local blink_was_enabled = _G.blink_enabled
+    _G.blink_enabled = false
+
+    -- Hide any visible completion menu
+    pcall(function() require("blink.cmp").hide() end)
+
     vim.ui.input({
       prompt = "You have unsaved changes. Quit anyway? (y/n) ",
     }, function(input)
+      -- Restore blink.cmp state after prompt
+      _G.blink_enabled = blink_was_enabled
+
       if input == "y" then vim.cmd "q!" end
     end)
   else
