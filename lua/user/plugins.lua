@@ -18,6 +18,11 @@ vim.g.maplocalleader = " "
 -- Install your plugins here
 require("lazy").setup {
 
+  {
+    'krshrimali/gh.nvim',
+    connfig = true,
+  },
+
   -- Completion plugin
   {
     "saghen/blink.cmp",
