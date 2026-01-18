@@ -21,8 +21,8 @@ function M.show()
 
   -- Create buffer for floating window
   local buf = vim.api.nvim_create_buf(false, true)
-  vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
-  vim.api.nvim_buf_set_option(buf, 'filetype', 'breadcrumbs')
+  vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
+  vim.api.nvim_buf_set_option(buf, "filetype", "breadcrumbs")
 
   -- Build lines for display
   local lines = {}
@@ -51,7 +51,7 @@ function M.show()
 
   -- Set buffer content
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
-  vim.api.nvim_buf_set_option(buf, 'modifiable', false)
+  vim.api.nvim_buf_set_option(buf, "modifiable", false)
 
   -- Calculate window size
   local width = 60
@@ -61,29 +61,27 @@ function M.show()
 
   -- Window options
   local opts = {
-    relative = 'editor',
+    relative = "editor",
     width = width,
     height = height,
     row = row,
     col = col,
-    style = 'minimal',
-    border = 'rounded',
-    title = ' Breadcrumbs Navigation ',
-    title_pos = 'center',
+    style = "minimal",
+    border = "rounded",
+    title = " Breadcrumbs Navigation ",
+    title_pos = "center",
   }
 
   -- Create floating window
   local win = vim.api.nvim_open_win(buf, true, opts)
 
   -- Set window options
-  vim.api.nvim_win_set_option(win, 'winblend', 0)
-  vim.api.nvim_win_set_option(win, 'cursorline', true)
+  vim.api.nvim_win_set_option(win, "winblend", 0)
+  vim.api.nvim_win_set_option(win, "cursorline", true)
 
   -- Keymaps for navigation
   local function close_window()
-    if vim.api.nvim_win_is_valid(win) then
-      vim.api.nvim_win_close(win, true)
-    end
+    if vim.api.nvim_win_is_valid(win) then vim.api.nvim_win_close(win, true) end
   end
 
   local function navigate_to_item()
@@ -93,16 +91,16 @@ function M.show()
     -- Navigate to the corresponding location
     local item = data[current_line]
     if item and item.scope then
-      vim.api.nvim_win_set_cursor(0, {item.scope.start.line + 1, item.scope.start.character})
+      vim.api.nvim_win_set_cursor(0, { item.scope.start.line + 1, item.scope.start.character })
     end
   end
 
   -- Set keymaps
   local keymap_opts = { noremap = true, silent = true, buffer = buf }
-  vim.keymap.set('n', '<CR>', navigate_to_item, keymap_opts)
-  vim.keymap.set('n', '<ESC>', close_window, keymap_opts)
-  vim.keymap.set('n', 'q', close_window, keymap_opts)
-  vim.keymap.set('n', '<C-c>', close_window, keymap_opts)
+  vim.keymap.set("n", "<CR>", navigate_to_item, keymap_opts)
+  vim.keymap.set("n", "<ESC>", close_window, keymap_opts)
+  vim.keymap.set("n", "q", close_window, keymap_opts)
+  vim.keymap.set("n", "<C-c>", close_window, keymap_opts)
 end
 
 return M

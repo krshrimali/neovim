@@ -3,7 +3,7 @@
 -- This is a custom theme inspired by Cursor IDE's dark theme
 
 -- Load the Cursor Dark theme
-local cursor_theme = require("user.themes.init")
+local cursor_theme = require "user.themes.init"
 
 -- Setup the theme
 local status_ok, _ = pcall(cursor_theme.setup, {
@@ -13,8 +13,8 @@ local status_ok, _ = pcall(cursor_theme.setup, {
 })
 
 if not status_ok then
-  vim.notify("Failed to load Cursor Dark theme, falling back to default")
-  vim.cmd("colorscheme default")
+  vim.notify "Failed to load Cursor Dark theme, falling back to default"
+  vim.cmd "colorscheme default"
   return
 end
 
