@@ -83,7 +83,7 @@ function M.setup()
     -- Completion settings
     completion = {
       menu = {
-        auto_show = false, -- Disable auto-show, only show on Ctrl+Space
+        auto_show = true, -- Enable auto-show for always-on completion
         draw = {
           -- Disable all icon sources, use only our custom kind_icons
           columns = { { "kind_icon" }, { "label", "label_description", gap = 1 } },

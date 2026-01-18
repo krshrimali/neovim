@@ -324,14 +324,14 @@ keymap("n", "<leader>q", "<cmd>lua require('user.functions').smart_quit()<CR>", 
 keymap("n", "<leader>Q", "<cmd>lua require('user.functions').force_quit()<CR>", opts) -- Force quit without prompt
 keymap("n", "<leader>fq", "<cmd>q!<CR>", opts)
 
--- Options toggles
-keymap("n", "<leader>oc", "<cmd>lua vim.g.cmp_active=false<cr>", opts)
-keymap("n", "<leader>oC", "<cmd>lua vim.g.cmp_active=true<cr>", opts)
-keymap("n", "<leader>ow", '<cmd>lua require("user.functions").toggle_option("wrap")<cr>', opts)
-keymap("n", "<leader>or", '<cmd>lua require("user.functions").toggle_option("relativenumber")<cr>', opts)
-keymap("n", "<leader>ol", '<cmd>lua require("user.functions").toggle_option("cursorline")<cr>', opts)
-keymap("n", "<leader>os", '<cmd>lua require("user.functions").toggle_option("spell")<cr>', opts)
-keymap("n", "<leader>ot", '<cmd>lua require("user.functions").toggle_tabline()<cr>', opts)
+-- Options toggles (moved to <leader>x prefix to avoid conflict with octo <leader>o)
+keymap("n", "<leader>xc", "<cmd>lua vim.g.cmp_active=false<cr>", opts)
+keymap("n", "<leader>xC", "<cmd>lua vim.g.cmp_active=true<cr>", opts)
+keymap("n", "<leader>xw", '<cmd>lua require("user.functions").toggle_option("wrap")<cr>', opts)
+keymap("n", "<leader>xr", '<cmd>lua require("user.functions").toggle_option("relativenumber")<cr>', opts)
+keymap("n", "<leader>xl", '<cmd>lua require("user.functions").toggle_option("cursorline")<cr>', opts)
+keymap("n", "<leader>xs", '<cmd>lua require("user.functions").toggle_option("spell")<cr>', opts)
+keymap("n", "<leader>xt", '<cmd>lua require("user.functions").toggle_tabline()<cr>', opts)
 
 -- Window splits
 keymap("n", "<leader>ks", "<cmd>split<cr>", opts)
@@ -445,6 +445,9 @@ keymap("n", "<space>s", "<cmd>FzfLua lsp_workspace_symbols<cr>", opts) -- CocLis
 keymap("n", "<space>e", "<cmd>Mason<cr>", opts) -- CocList extensions
 keymap("n", "<space>c", "<cmd>FzfLua commands<cr>", opts) -- CocList commands
 keymap("n", "<space>p", "<cmd>FzfLua resume<cr>", opts) -- CocListResume
+keymap("n", "<space>ls", "<cmd>lua require('user.breadcrumbs_float').show()<cr>", opts) -- Breadcrumbs navigation
+keymap("n", "<space>q", "<cmd>q!<cr>", opts) -- Force quit without saving
+keymap("n", "<space>wq", "<cmd>wq!<cr>", opts) -- Save and force quit
 
 -- Terminal keymaps
 keymap("n", "<leader>T1", "<cmd>lua _FLOAT_TERM()<cr>", opts)
