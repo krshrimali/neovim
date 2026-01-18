@@ -44,6 +44,8 @@ require("transparent").setup {
     "WinBar",
     "WinBarNC",
     "NvimTreeNormal",
+    "WinSeparator",
+    "VertSplit",
   },
   exclude_groups = {}, -- table: groups you don't want to clear
 }

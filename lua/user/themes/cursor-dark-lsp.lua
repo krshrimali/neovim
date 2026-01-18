@@ -3,11 +3,15 @@ local colors = require("user.themes.cursor-dark").colors
 
 local M = {}
 
--- Helper function to create highlight groups
+-- Helper function to create highlight groups (respects transparency)
 local function hl(group, opts)
   if opts.link then
     vim.api.nvim_set_hl(0, group, { link = opts.link })
   else
+    -- Respect transparency setting
+    if vim.g.transparent_enabled and opts.bg then
+      opts = vim.tbl_extend("force", opts, { bg = "NONE" })
+    end
     vim.api.nvim_set_hl(0, group, opts)
   end
 end
@@ -327,6 +331,71 @@ function M.setup()
   -- Copilot highlights
   hl("CopilotSuggestion", { fg = colors.fg_dark, italic = true })
   hl("CopilotAnnotation", { fg = colors.fg_dark, italic = true })
+
+  -- Navic (breadcrumbs)
+  hl("NavicIconsFile", { fg = colors.blue })
+  hl("NavicIconsModule", { fg = colors.blue, italic = true })
+  hl("NavicIconsNamespace", { fg = colors.blue, italic = true })
+  hl("NavicIconsPackage", { fg = colors.blue })
+  hl("NavicIconsClass", { fg = colors.blue, bold = true })
+  hl("NavicIconsMethod", { fg = colors.yellow })
+  hl("NavicIconsProperty", { fg = colors.cyan })
+  hl("NavicIconsField", { fg = colors.cyan })
+  hl("NavicIconsConstructor", { fg = colors.yellow, bold = true })
+  hl("NavicIconsEnum", { fg = colors.blue, bold = true })
+  hl("NavicIconsInterface", { fg = colors.blue, italic = true })
+  hl("NavicIconsFunction", { fg = colors.yellow })
+  hl("NavicIconsVariable", { fg = colors.fg })
+  hl("NavicIconsConstant", { fg = colors.cyan })
+  hl("NavicIconsString", { fg = colors.orange })
+  hl("NavicIconsNumber", { fg = colors.cyan })
+  hl("NavicIconsBoolean", { fg = colors.blue })
+  hl("NavicIconsArray", { fg = colors.fg })
+  hl("NavicIconsObject", { fg = colors.fg })
+  hl("NavicIconsKey", { fg = colors.cyan })
+  hl("NavicIconsNull", { fg = colors.blue })
+  hl("NavicIconsEnumMember", { fg = colors.cyan })
+  hl("NavicIconsStruct", { fg = colors.blue, bold = true })
+  hl("NavicIconsEvent", { fg = colors.purple })
+  hl("NavicIconsOperator", { fg = colors.fg })
+  hl("NavicIconsTypeParameter", { fg = colors.blue, italic = true })
+  hl("NavicText", { fg = colors.fg })
+  hl("NavicSeparator", { fg = colors.fg_dark })
+
+  -- Aerial (symbols outline)
+  hl("AerialLine", { bg = colors.cursor_line })
+  hl("AerialLineNC", { bg = colors.cursor_line })
+  hl("AerialGuide", { fg = colors.fg_dark })
+  hl("AerialClass", { fg = colors.blue, bold = true })
+  hl("AerialClassIcon", { fg = colors.blue, bold = true })
+  hl("AerialConstructor", { fg = colors.yellow, bold = true })
+  hl("AerialConstructorIcon", { fg = colors.yellow, bold = true })
+  hl("AerialEnum", { fg = colors.blue, bold = true })
+  hl("AerialEnumIcon", { fg = colors.blue, bold = true })
+  hl("AerialEnumMember", { fg = colors.cyan })
+  hl("AerialEnumMemberIcon", { fg = colors.cyan })
+  hl("AerialField", { fg = colors.cyan })
+  hl("AerialFieldIcon", { fg = colors.cyan })
+  hl("AerialFile", { fg = colors.blue })
+  hl("AerialFileIcon", { fg = colors.blue })
+  hl("AerialFunction", { fg = colors.yellow })
+  hl("AerialFunctionIcon", { fg = colors.yellow })
+  hl("AerialInterface", { fg = colors.blue, italic = true })
+  hl("AerialInterfaceIcon", { fg = colors.blue, italic = true })
+  hl("AerialMethod", { fg = colors.yellow })
+  hl("AerialMethodIcon", { fg = colors.yellow })
+  hl("AerialModule", { fg = colors.blue, italic = true })
+  hl("AerialModuleIcon", { fg = colors.blue, italic = true })
+  hl("AerialNamespace", { fg = colors.blue, italic = true })
+  hl("AerialNamespaceIcon", { fg = colors.blue, italic = true })
+  hl("AerialProperty", { fg = colors.cyan })
+  hl("AerialPropertyIcon", { fg = colors.cyan })
+  hl("AerialStruct", { fg = colors.blue, bold = true })
+  hl("AerialStructIcon", { fg = colors.blue, bold = true })
+  hl("AerialTypeParameter", { fg = colors.blue, italic = true })
+  hl("AerialTypeParameterIcon", { fg = colors.blue, italic = true })
+  hl("AerialVariable", { fg = colors.fg })
+  hl("AerialVariableIcon", { fg = colors.fg })
 end
 
 return M

@@ -111,7 +111,6 @@ require("lazy").setup {
   -- Diffview - Standalone git diff viewer (FAST & POWERFUL)
   {
     "sindrets/diffview.nvim",
-    dependencies = { "nvim-web-devicons" },
     cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewClose", "DiffviewToggleFiles", "DiffviewFocusFiles" },
     keys = {
       { "<leader>gdo", "<cmd>DiffviewOpen<cr>", desc = "Open diffview (all changes)" },
@@ -155,7 +154,6 @@ require("lazy").setup {
   -- Telescope and extensions - LAZY LOAD
   {
     "ibhagwan/fzf-lua",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
     cmd = "FzfLua",
     keys = {
       { "<leader>ff", "<cmd>FzfLua files<cr>", desc = "Find Files" },
@@ -709,6 +707,8 @@ require("lazy").setup {
   },
   {
     "SmiteshP/nvim-navic",
+    lazy = false,
+    config = function() require("user.nvim-navic").setup() end,
   },
   {
     "coder/claudecode.nvim",
@@ -783,27 +783,27 @@ require("lazy").setup {
       {
         "<leader>oi",
         "<CMD>Octo issue list<CR>",
-        desc = "List GitHub Issues",
+        desc = "Octo: List GitHub Issues",
       },
       {
         "<leader>op",
         "<CMD>Octo pr list<CR>",
-        desc = "List GitHub PullRequests",
+        desc = "Octo: List GitHub PullRequests",
       },
       {
         "<leader>od",
         "<CMD>Octo discussion list<CR>",
-        desc = "List GitHub Discussions",
+        desc = "Octo: List GitHub Discussions",
       },
       {
         "<leader>on",
         "<CMD>Octo notification list<CR>",
-        desc = "List GitHub Notifications",
+        desc = "Octo: List GitHub Notifications",
       },
       {
         "<leader>os",
         function() require("octo.utils").create_base_search_command { include_current_repo = true } end,
-        desc = "Search GitHub",
+        desc = "Octo: Search GitHub",
       },
     },
     dependencies = {

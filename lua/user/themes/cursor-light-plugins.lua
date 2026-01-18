@@ -3,11 +3,15 @@ local colors = require("user.themes.cursor-light").colors
 
 local M = {}
 
--- Helper function to create highlight groups
+-- Helper function to create highlight groups (respects transparency)
 local function hl(group, opts)
   if opts.link then
     vim.api.nvim_set_hl(0, group, { link = opts.link })
   else
+    -- Respect transparency setting
+    if vim.g.transparent_enabled and opts.bg then
+      opts = vim.tbl_extend("force", opts, { bg = "NONE" })
+    end
     vim.api.nvim_set_hl(0, group, opts)
   end
 end
@@ -517,6 +521,64 @@ function M.setup()
   hl("NoiceSplit", { fg = colors.fg, bg = colors.bg })
   hl("NoiceSplitBorder", { fg = colors.border })
   hl("NoiceVirtualText", { fg = colors.fg_dark })
+
+  -- Blink.cmp (completion)
+  hl("BlinkCmpMenu", { fg = colors.fg, bg = colors.bg_popup })
+  hl("BlinkCmpMenuBorder", { fg = colors.border, bg = colors.bg_popup })
+  hl("BlinkCmpMenuSelection", { fg = colors.fg_light, bg = colors.selection })
+  hl("BlinkCmpScrollBarThumb", { bg = colors.blue })
+  hl("BlinkCmpScrollBarGutter", { bg = colors.bg_dark })
+  hl("BlinkCmpLabel", { fg = colors.fg })
+  hl("BlinkCmpLabelDeprecated", { fg = colors.fg_dark, strikethrough = true })
+  hl("BlinkCmpLabelMatch", { fg = colors.yellow, bold = true })
+  hl("BlinkCmpLabelDetail", { fg = colors.fg_dark })
+  hl("BlinkCmpLabelDescription", { fg = colors.fg_dark })
+  hl("BlinkCmpKind", { fg = colors.blue })
+  hl("BlinkCmpKindText", { fg = colors.fg })
+  hl("BlinkCmpKindMethod", { fg = colors.yellow })
+  hl("BlinkCmpKindFunction", { fg = colors.yellow })
+  hl("BlinkCmpKindConstructor", { fg = colors.yellow })
+  hl("BlinkCmpKindField", { fg = colors.blue })
+  hl("BlinkCmpKindVariable", { fg = colors.fg })
+  hl("BlinkCmpKindClass", { fg = colors.blue })
+  hl("BlinkCmpKindInterface", { fg = colors.blue })
+  hl("BlinkCmpKindModule", { fg = colors.blue })
+  hl("BlinkCmpKindProperty", { fg = colors.blue })
+  hl("BlinkCmpKindUnit", { fg = colors.cyan })
+  hl("BlinkCmpKindValue", { fg = colors.cyan })
+  hl("BlinkCmpKindEnum", { fg = colors.blue })
+  hl("BlinkCmpKindKeyword", { fg = colors.purple })
+  hl("BlinkCmpKindSnippet", { fg = colors.green })
+  hl("BlinkCmpKindColor", { fg = colors.pink })
+  hl("BlinkCmpKindFile", { fg = colors.blue })
+  hl("BlinkCmpKindReference", { fg = colors.purple })
+  hl("BlinkCmpKindFolder", { fg = colors.blue })
+  hl("BlinkCmpKindEnumMember", { fg = colors.cyan })
+  hl("BlinkCmpKindConstant", { fg = colors.cyan })
+  hl("BlinkCmpKindStruct", { fg = colors.blue })
+  hl("BlinkCmpKindEvent", { fg = colors.purple })
+  hl("BlinkCmpKindOperator", { fg = colors.fg })
+  hl("BlinkCmpKindTypeParameter", { fg = colors.blue })
+  hl("BlinkCmpDoc", { fg = colors.fg, bg = colors.bg_popup })
+  hl("BlinkCmpDocBorder", { fg = colors.border, bg = colors.bg_popup })
+  hl("BlinkCmpDocSeparator", { fg = colors.border, bg = colors.bg_popup })
+  hl("BlinkCmpDocCursorLine", { bg = colors.cursor_line })
+  hl("BlinkCmpSignatureHelp", { fg = colors.fg, bg = colors.bg_popup })
+  hl("BlinkCmpSignatureHelpBorder", { fg = colors.border, bg = colors.bg_popup })
+  hl("BlinkCmpSignatureHelpActiveParameter", { fg = colors.yellow, bold = true })
+  hl("BlinkCmpGhostText", { fg = colors.fg_dark, italic = true })
+
+  -- ClaudeCode.nvim
+  hl("ClaudeCodeNormal", { fg = colors.fg, bg = colors.bg_popup })
+  hl("ClaudeCodeBorder", { fg = colors.border, bg = colors.bg_popup })
+  hl("ClaudeCodeTitle", { fg = colors.purple, bg = colors.bg_popup, bold = true })
+  hl("ClaudeCodePrompt", { fg = colors.blue })
+  hl("ClaudeCodeResponse", { fg = colors.fg })
+  hl("ClaudeCodeCode", { fg = colors.orange, bg = colors.bg_dark })
+  hl("ClaudeCodeError", { fg = colors.error })
+  hl("ClaudeCodeWarning", { fg = colors.warning })
+  hl("ClaudeCodeInfo", { fg = colors.info })
+  hl("ClaudeCodeSuccess", { fg = colors.green })
 end
 
 return M

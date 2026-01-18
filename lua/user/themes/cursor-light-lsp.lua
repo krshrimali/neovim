@@ -3,11 +3,15 @@ local colors = require("user.themes.cursor-light").colors
 
 local M = {}
 
--- Helper function to create highlight groups
+-- Helper function to create highlight groups (respects transparency)
 local function hl(group, opts)
   if opts.link then
     vim.api.nvim_set_hl(0, group, { link = opts.link })
   else
+    -- Respect transparency setting
+    if vim.g.transparent_enabled and opts.bg then
+      opts = vim.tbl_extend("force", opts, { bg = "NONE" })
+    end
     vim.api.nvim_set_hl(0, group, opts)
   end
 end
@@ -388,6 +392,10 @@ function M.setup()
   hl("AerialTypeParameterIcon", { fg = colors.blue, italic = true })
   hl("AerialVariable", { fg = colors.fg })
   hl("AerialVariableIcon", { fg = colors.fg })
+
+  -- Copilot highlights
+  hl("CopilotSuggestion", { fg = colors.fg_dark, italic = true })
+  hl("CopilotAnnotation", { fg = colors.fg_dark, italic = true })
 end
 
 return M
