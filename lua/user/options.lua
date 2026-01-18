@@ -25,8 +25,8 @@ local options = {
   expandtab = true, -- convert tabs to spaces
   shiftwidth = 4, -- the number of spaces inserted for each indentation
   tabstop = 4, -- insert 2 spaces for a tab
-  cursorline = false, -- disable for better performance
-  number = false, -- disable numbers by default
+  cursorline = true, -- highlight the current line
+  number = true, -- enable numbers by default
   laststatus = 3,
   showcmd = true,
   ruler = false,
@@ -82,7 +82,9 @@ vim.o.foldenable = false
 vim.opt.lazyredraw = true -- Don't redraw while executing macros
 vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
 
-vim.api.nvim_command "highlight VertSplit guifg=fg guibg=bg"
+vim.opt.fillchars:append({ vert = " " })
+vim.api.nvim_command "highlight VertSplit guifg=NONE guibg=NONE"
+vim.api.nvim_command "highlight WinSeparator guifg=NONE guibg=NONE"
 vim.api.nvim_exec(
   [[
     autocmd FileType c,cpp setlocal shiftwidth=4 tabstop=4 expandtab

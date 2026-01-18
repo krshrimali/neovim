@@ -3,11 +3,15 @@ local colors = require("user.themes.cursor-dark").colors
 
 local M = {}
 
--- Helper function to create highlight groups
+-- Helper function to create highlight groups (respects transparency)
 local function hl(group, opts)
   if opts.link then
     vim.api.nvim_set_hl(0, group, { link = opts.link })
   else
+    -- Respect transparency setting
+    if vim.g.transparent_enabled and opts.bg then
+      opts = vim.tbl_extend("force", opts, { bg = "NONE" })
+    end
     vim.api.nvim_set_hl(0, group, opts)
   end
 end
@@ -249,6 +253,12 @@ function M.setup()
   hl("@string.toml", { fg = colors.orange })
   hl("@property.ini", { fg = colors.cyan })
   hl("@string.ini", { fg = colors.orange })
+
+  -- Treesitter Context
+  hl("TreesitterContext", { bg = colors.bg_light })
+  hl("TreesitterContextLineNumber", { fg = colors.line_number_current, bg = colors.bg_light })
+  hl("TreesitterContextSeparator", { fg = colors.border })
+  hl("TreesitterContextBottom", { underline = true, sp = colors.border })
 end
 
 return M
