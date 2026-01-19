@@ -74,9 +74,7 @@ local function hl(group, opts)
     vim.api.nvim_set_hl(0, group, { link = opts.link })
   else
     -- Respect transparency setting
-    if vim.g.transparent_enabled and opts.bg then
-      opts = vim.tbl_extend("force", opts, { bg = "NONE" })
-    end
+    if vim.g.transparent_enabled and opts.bg then opts = vim.tbl_extend("force", opts, { bg = "NONE" }) end
     vim.api.nvim_set_hl(0, group, opts)
   end
 end

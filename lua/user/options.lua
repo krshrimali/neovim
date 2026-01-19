@@ -82,7 +82,7 @@ vim.o.foldenable = false
 vim.opt.lazyredraw = true -- Don't redraw while executing macros
 vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
 
-vim.opt.fillchars:append({ vert = " " })
+vim.opt.fillchars:append { vert = " " }
 vim.api.nvim_command "highlight VertSplit guifg=NONE guibg=NONE"
 vim.api.nvim_command "highlight WinSeparator guifg=NONE guibg=NONE"
 vim.api.nvim_exec(
