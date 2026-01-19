@@ -19,7 +19,7 @@ vim.g.maplocalleader = " "
 require("lazy").setup {
 
   {
-    'krshrimali/gh.nvim',
+    "krshrimali/gh.nvim",
     connfig = true,
   },
 
