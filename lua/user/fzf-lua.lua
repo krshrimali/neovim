@@ -11,6 +11,13 @@ fzf_lua.setup {
   global_resume_query = true, -- Resume with query
   file_icon_padding = "", -- Remove padding for performance
 
+  -- Disable all nerd font icons globally
+  defaults = {
+    file_icons = false,
+    git_icons = false,
+    color_icons = false,
+  },
+
   -- Global options
   -- winopts = {
   --     height = 0.85,

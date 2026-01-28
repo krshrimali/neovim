@@ -1,101 +1,73 @@
-local options = {
-  pumblend = 0,
-  backup = false, -- creates a backup file
-  clipboard = "unnamedplus", -- allows neovim to access the system clipboard
-  cmdheight = 0, -- more space in the neovim command line for displaying messages
-  completeopt = { "menuone", "noselect" }, -- mostly just for cmp
-  conceallevel = 0, -- so that `` is visible in markdown files
-  fileencoding = "utf-8", -- the encoding written to a file
-  hlsearch = true, -- highlight all matches on previous search pattern
-  ignorecase = true, -- ignore case in search patterns
-  mouse = "a", -- allow the mouse to be used in neovim
-  pumheight = 10, -- pop up menu height
-  showmode = false, -- we don't need to see things like -- INSERT -- anymore
-  showtabline = 0, -- always show tabs
-  smartcase = true, -- smart case
-  smartindent = true, -- make indenting smarter again
-  splitbelow = true, -- force all horizontal splits to go below current window
-  splitright = true, -- force all vertical splits to go to the right of current window
-  swapfile = false, -- creates a swapfile
-  termguicolors = true, -- set term gui colors (most terminals support this)
-  timeoutlen = 300, -- time to wait for a mapped sequence to complete (in milliseconds) - reduced for faster response
-  undofile = true, -- enable persistent undo
-  updatetime = 250, -- balanced for LSP responsiveness (4000ms default)
-  writebackup = false, -- if a file is being edited by another program (or was written to file while editing with another program), it is not allowed to be edited
-  expandtab = true, -- convert tabs to spaces
-  shiftwidth = 4, -- the number of spaces inserted for each indentation
-  tabstop = 4, -- insert 2 spaces for a tab
-  cursorline = true, -- highlight the current line
-  number = true, -- enable numbers by default
-  laststatus = 3,
-  showcmd = true,
-  ruler = false,
-  relativenumber = false, -- set relative numbered lines
-  numberwidth = 4, -- set number column width to 2 {default 4}
-  signcolumn = "yes", -- always show the sign column, otherwise it would shift the text each time
-  wrap = true, -- display lines as one long line
-  sidescrolloff = 8,
-  guifont = "monospace:h17", -- the font used in graphical neovim applications
-  title = true,
-  autoread = true, -- automatically reload files changed outside of vim
-}
-vim.opt.fillchars = vim.opt.fillchars + "eob: "
-vim.opt.fillchars:append {
-  stl = " ",
-}
-vim.opt.fillchars:append "fold:•"
+-- Simplified Options - Inspired by Helix
+local opt = vim.opt
 
-vim.opt.shortmess:append "c"
+-- General
+opt.backup = false
+opt.swapfile = false
+opt.undofile = true
+opt.writebackup = false
+opt.clipboard = "unnamedplus"
+opt.fileencoding = "utf-8"
+opt.mouse = "a"
+opt.title = true
+opt.autoread = true
 
-for k, v in pairs(options) do
-  vim.opt[k] = v
-end
+-- UI
+opt.termguicolors = true
+opt.number = true
+opt.relativenumber = false
+opt.signcolumn = "yes"
+opt.cursorline = true
+opt.showmode = false
+opt.cmdheight = 0
+opt.laststatus = 3
+opt.pumheight = 10
+opt.wrap = true
+opt.scrolloff = 8
+opt.sidescrolloff = 8
 
-vim.cmd "set whichwrap+=<,>,[,],h,l"
-vim.cmd [[set iskeyword+=-]]
-vim.cmd "set sessionoptions-=folds"
-vim.cmd [[autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o]] -- this seem to work
+-- Search
+opt.hlsearch = true
+opt.ignorecase = true
+opt.smartcase = true
 
-vim.filetype.add {
-  extension = {
-    conf = "dosini",
-  },
-}
+-- Indentation
+opt.expandtab = true
+opt.shiftwidth = 4
+opt.tabstop = 4
+opt.smartindent = true
 
-vim.cmd [[autocmd TermOpen * setlocal signcolumn=no]]
-vim.cmd [[let g:python_recommended_style = 0]]
+-- Splits
+opt.splitbelow = true
+opt.splitright = true
 
-vim.opt.foldmethod = "manual" -- Changed from expr for better performance
--- vim.wo.foldexpr = "nvim_treesitter#foldexpr()" -- Disabled for performance
+-- Performance
+opt.timeoutlen = 300
+opt.updatetime = 250
+opt.lazyredraw = true
 
--- Transparent background for floating windows - DISABLED
--- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "NONE" })
-vim.opt.whichwrap:append "<>[]hl"
+-- Completion
+opt.completeopt = { "menuone", "noselect" }
+opt.shortmess:append "c"
 
-vim.g.transparent_enabled = false
+-- Folding (disabled)
+opt.foldenable = false
+opt.foldmethod = "manual"
+
+-- Misc
+opt.fillchars = { eob = " ", vert = " " }
+opt.whichwrap:append "<>[]hl"
+opt.iskeyword:append "-"
+
+-- Disable nerd fonts
 vim.g.use_nerd_fonts = false
 
-vim.o.foldcolumn = "1" -- '0' is not bad
-vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
-vim.o.foldlevelstart = 99
-vim.o.foldenable = false
-vim.opt.lazyredraw = true -- Don't redraw while executing macros
-vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
-
-vim.opt.fillchars:append { vert = " " }
-vim.api.nvim_command "highlight VertSplit guifg=NONE guibg=NONE"
-vim.api.nvim_command "highlight WinSeparator guifg=NONE guibg=NONE"
-vim.api.nvim_exec(
-  [[
-    autocmd FileType c,cpp setlocal shiftwidth=4 tabstop=4 expandtab
-]],
-  false
-)
-
-vim.opt.foldenable = false
-
--- Auto-reload files when changed externally (especially from terminal)
-vim.api.nvim_create_autocmd({ "TermLeave", "FocusGained", "BufEnter", "CursorHold" }, {
-  pattern = "*",
+-- Auto-reload files
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
   callback = function() vim.cmd "checktime" end,
+})
+
+-- Terminal signcolumn
+vim.api.nvim_create_autocmd("TermOpen", {
+  callback = function() vim.opt_local.signcolumn = "no" end,
 })
