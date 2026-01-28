@@ -216,7 +216,6 @@ which_key.add {
   { "<leader>ks", "<cmd>split<cr>", desc = "Horizontal Split" },
   { "<leader>kv", "<cmd>vsplit<cr>", desc = "Vertical Split" },
 
-
   -- Octo (GitHub) - comprehensive keymaps
   { "<leader>o", group = "Octo (GitHub)" },
 
