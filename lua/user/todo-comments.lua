@@ -13,6 +13,16 @@ if not status_ok then return end
 todo_comments.setup {
   signs = true, -- show icons in the signs column
   sign_priority = 8, -- sign priority
+  -- ASCII icons instead of nerd fonts
+  keywords = {
+    FIX = { icon = "F", alt = { "FIXME", "BUG", "FIXIT", "ISSUE" } },
+    TODO = { icon = "T", alt = { "TIP" } },
+    HACK = { icon = "H" },
+    WARN = { icon = "W", alt = { "WARNING", "XXX" } },
+    PERF = { icon = "P", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
+    NOTE = { icon = "N", alt = { "INFO" } },
+    TEST = { icon = "t", alt = { "TESTING", "PASSED", "FAILED" } },
+  },
   -- keywords recognized as todo comments
   -- keywords = {
   --   FIX = {

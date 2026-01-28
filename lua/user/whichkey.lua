@@ -216,11 +216,6 @@ which_key.add {
   { "<leader>ks", "<cmd>split<cr>", desc = "Horizontal Split" },
   { "<leader>kv", "<cmd>vsplit<cr>", desc = "Vertical Split" },
 
-  -- Minimap
-  { "<leader>m", group = "Minimap" },
-  { "<leader>mm", "<cmd>lua require('user.minimap').smart_toggle()<cr>", desc = "Toggle Minimap" },
-  { "<leader>mr", "<cmd>MinimapRefresh<cr>", desc = "Refresh Minimap" },
-  { "<leader>mc", "<cmd>MinimapClose<cr>", desc = "Close Minimap" },
 
   -- Octo (GitHub) - comprehensive keymaps
   { "<leader>o", group = "Octo (GitHub)" },
@@ -316,38 +311,14 @@ which_key.add {
   { "<leader>og", group = "Gists" },
   { "<leader>ogl", "<CMD>Octo gist list<CR>", desc = "List Gists" },
 
-  -- Replace (Spectre)
-  { "<leader>r", group = "Replace" },
-  { "<leader>rr", "<cmd>lua require('spectre').open()<cr>", desc = "Replace" },
-  { "<leader>rw", "<cmd>lua require('spectre').open_visual({select_word=true})<cr>", desc = "Replace Word" },
-  { "<leader>rf", "<cmd>lua require('spectre').open_file_search({select_word=true})<cr>", desc = "Replace File" },
-  { "<leader>rb", "<cmd>lua require('spectre').open_file_search()<cr>", desc = "Replace Buffer" },
-  { "<leader>rn", desc = "Rename (LSP)" },
+  -- Rename (LSP)
+  { "<leader>rn", vim.lsp.buf.rename, desc = "Rename (LSP)" },
 
-  -- Code Runner
-  { "<leader>R", group = "Run" },
-  { "<leader>Rb", ":TermExec cmd=./.buildme.sh<CR>", desc = "Build" },
-  { "<leader>Rp", ':TermExec cmd="python %<CR>"', desc = "Run Python" },
-
-  -- Session
-  { "<leader>S", group = "Session" },
-  { "<leader>Ss", "<cmd>SessionSave<cr>", desc = "Save Session" },
-  { "<leader>Sr", "<cmd>SessionRestore<cr>", desc = "Restore Session" },
-  { "<leader>Sx", "<cmd>SessionDelete<cr>", desc = "Delete Session" },
-
-  -- Terminal
+  -- Terminal (using user.terminal)
   { "<leader>T", group = "Terminal" },
-  { "<leader>T1", "<cmd>lua _FLOAT_TERM()<cr>", desc = "Float" },
-  { "<leader>T2", "<cmd>lua _VERTICAL_TERM()<cr>", desc = "Vertical" },
-  { "<leader>T3", "<cmd>lua _HORIZONTAL_TERM()<cr>", desc = "Horizontal" },
-  { "<leader>T4", "<cmd>lua _FLOAT_TERM()<cr>", desc = "Float Alt" },
-  { "<leader>Tn", "<cmd>lua _NODE_TOGGLE()<cr>", desc = "Node" },
-  { "<leader>Tu", "<cmd>lua _NCDU_TOGGLE()<cr>", desc = "NCDU" },
-  { "<leader>Tt", "<cmd>lua _HTOP_TOGGLE()<cr>", desc = "Htop" },
-  { "<leader>Tm", "<cmd>lua _MAKE_TOGGLE()<cr>", desc = "Make" },
   { "<leader>Tf", "<cmd>lua _FLOAT_TERM()<cr>", desc = "Float" },
-  { "<leader>Th", "<cmd>lua _HORIZONTAL_TERM()<cr>", desc = "Horizontal" },
   { "<leader>Tv", "<cmd>lua _VERTICAL_TERM()<cr>", desc = "Vertical" },
+  { "<leader>Th", "<cmd>lua _HORIZONTAL_TERM()<cr>", desc = "Horizontal" },
 
   -- Telescope/FzfLua
   { "<leader>t", group = "Telescope" },
@@ -382,12 +353,11 @@ which_key.add {
 
   -- Space prefix (CocList replacements)
   { "<space>a", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics" },
-  { "<space>o", "<cmd>Outline<cr>", desc = "Outline" },
   { "<space>s", "<cmd>FzfLua lsp_workspace_symbols<cr>", desc = "Symbols" },
   { "<space>e", "<cmd>Mason<cr>", desc = "Extensions" },
   { "<space>c", "<cmd>FzfLua commands<cr>", desc = "Commands" },
   { "<space>p", "<cmd>FzfLua resume<cr>", desc = "Resume" },
-  { "<space>ls", "<cmd>lua require('user.breadcrumbs_float').show()<cr>", desc = "Breadcrumbs (Float)" },
+  { "<space>ls", "<cmd>lua require('user.symbol_browser').toggle()<cr>", desc = "Symbol Browser" },
 }
 
 -- Visual mode mappings
