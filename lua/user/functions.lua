@@ -32,9 +32,7 @@ end
 
 function M.isempty(s) return s == nil or s == "" end
 
-function M.force_quit()
-  vim.cmd "q!"
-end
+function M.force_quit() vim.cmd "q!" end
 
 function M.smart_quit()
   local bufnr = vim.api.nvim_get_current_buf()
