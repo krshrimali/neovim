@@ -21,7 +21,7 @@ require("lazy").setup({
   -- ============================================
   {
     "neovim/nvim-lspconfig",
-    event = { "BufReadPre", "BufNewFile" },
+    event = "VeryLazy", -- Defer LSP startup for faster file opening
     dependencies = {
       { "williamboman/mason.nvim", cmd = "Mason", build = ":MasonUpdate", config = true },
       { "williamboman/mason-lspconfig.nvim" },
@@ -41,7 +41,7 @@ require("lazy").setup({
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
-    event = { "BufReadPost", "BufNewFile" },
+    event = "VeryLazy", -- Defer for faster file opening
     config = function() require "user.treesitter" end,
   },
 
@@ -76,7 +76,7 @@ require("lazy").setup({
   -- ============================================
   {
     "lewis6991/gitsigns.nvim",
-    event = { "BufReadPre", "BufNewFile" },
+    event = "VeryLazy", -- Defer to after UI is ready
     config = function() require "user.gitsigns" end,
   },
 
@@ -107,12 +107,12 @@ require("lazy").setup({
     config = true,
   },
 
-  { "tpope/vim-sleuth", event = { "BufReadPre", "BufNewFile" } },
+  { "tpope/vim-sleuth", event = "VeryLazy" },
 
   -- ============================================
   -- UI: Minimal UI enhancements
   -- ============================================
-  -- Theme - flexoki (matching Helix config)
+  -- Theme - flexoki
   {
     "kepano/flexoki-neovim",
     name = "flexoki",
@@ -123,10 +123,11 @@ require("lazy").setup({
     end,
   },
 
-  -- Transparent background
+  -- Transparent background (load on demand with :TransparentEnable)
   {
     "xiyaowong/transparent.nvim",
-    lazy = false,
+    cmd = { "TransparentEnable", "TransparentDisable", "TransparentToggle" },
+    keys = { { "<leader>ut", "<cmd>TransparentToggle<cr>", desc = "Toggle Transparent" } },
     opts = {
       extra_groups = {
         "NormalFloat",
@@ -141,11 +142,12 @@ require("lazy").setup({
     config = function() require "user.lualine" end,
   },
 
-  -- Snacks for gitbrowse and terminal
+  -- Snacks for gitbrowse (load on demand)
   {
     "folke/snacks.nvim",
-    lazy = false,
-    priority = 900,
+    keys = {
+      { "<leader>gy", function() require("snacks").gitbrowse({ open = function(url) vim.fn.setreg("+", url) end }) end, desc = "Copy GitHub permalink", mode = { "n", "x" } },
+    },
     opts = {
       bigfile = { enabled = false },
       gitbrowse = {
@@ -262,14 +264,14 @@ require("lazy").setup({
   -- Todo comments
   {
     "folke/todo-comments.nvim",
-    event = { "BufReadPost", "BufNewFile" },
+    event = "VeryLazy", -- Defer for faster file opening
     config = function() require "user.todo-comments" end,
   },
 
   -- Highlight words under cursor
   {
     "RRethy/vim-illuminate",
-    event = { "BufReadPost", "BufNewFile" },
+    event = "VeryLazy", -- Defer for faster file opening
     config = function() require "user.illuminate" end,
   },
 

@@ -46,6 +46,38 @@ which_key.setup {
   },
 }
 
+-- Surround keymaps (nvim-surround)
+which_key.add {
+  { "ys", group = "Surround add" },
+  { "ysiw", desc = "Surround word" },
+  { "ysi", desc = "Surround inner..." },
+  { "ysa", desc = "Surround around..." },
+  { "ys$", desc = "Surround to EOL" },
+  { "yss", desc = "Surround line" },
+
+  { "ds", group = "Surround delete" },
+  { "ds\"", desc = "Delete quotes" },
+  { "ds'", desc = "Delete single quotes" },
+  { "ds)", desc = "Delete parens" },
+  { "ds]", desc = "Delete brackets" },
+  { "ds}", desc = "Delete braces" },
+  { "dst", desc = "Delete HTML tag" },
+
+  { "cs", group = "Surround change" },
+  { "cs\"", desc = "Change from quotes" },
+  { "cs'", desc = "Change from single quotes" },
+  { "cs)", desc = "Change from parens" },
+  { "cs]", desc = "Change from brackets" },
+  { "cs}", desc = "Change from braces" },
+  { "cst", desc = "Change HTML tag" },
+}
+
+-- Visual mode surround
+which_key.add {
+  mode = { "v" },
+  { "S", desc = "Surround selection" },
+}
+
 -- Register keymaps with descriptions
 -- Normal mode mappings
 which_key.add {

@@ -87,23 +87,21 @@ local function on_attach(client, bufnr)
   end
 
   -- Highlight symbol under cursor (matching CoC behavior)
-  if client.server_capabilities.documentHighlightProvider then
-    vim.api.nvim_create_augroup("lsp_document_highlight", { clear = false })
-    vim.api.nvim_clear_autocmds {
-      buffer = bufnr,
-      group = "lsp_document_highlight",
-    }
-    vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-      group = "lsp_document_highlight",
-      buffer = bufnr,
-      callback = vim.lsp.buf.document_highlight,
-    })
-    vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-      group = "lsp_document_highlight",
-      buffer = bufnr,
-      callback = vim.lsp.buf.clear_references,
-    })
-  end
+  -- Disabled by default for performance - uncomment if needed
+  -- if client.server_capabilities.documentHighlightProvider then
+  --   vim.api.nvim_create_augroup("lsp_document_highlight", { clear = false })
+  --   vim.api.nvim_clear_autocmds { buffer = bufnr, group = "lsp_document_highlight" }
+  --   vim.api.nvim_create_autocmd({ "CursorHold" }, {
+  --     group = "lsp_document_highlight",
+  --     buffer = bufnr,
+  --     callback = vim.lsp.buf.document_highlight,
+  --   })
+  --   vim.api.nvim_create_autocmd({ "CursorMoved" }, {
+  --     group = "lsp_document_highlight",
+  --     buffer = bufnr,
+  --     callback = vim.lsp.buf.clear_references,
+  --   })
+  -- end
 end
 
 -- Server-specific configurations
@@ -214,8 +212,11 @@ function M.setup()
           globals = { "vim" },
         },
         workspace = {
-          library = vim.api.nvim_get_runtime_file("", true),
+          -- Don't scan runtime files - neodev handles this and it's slow
+          library = {},
           checkThirdParty = false,
+          maxPreload = 1000,
+          preloadFileSize = 100,
         },
         telemetry = {
           enable = false,
@@ -272,24 +273,42 @@ function M.setup()
   -- HTML
   vim.lsp.config.html = {}
 
-  -- Enable all configured servers
-  vim.lsp.enable {
-    "ruff",
-    "ty",
-    "ts_ls",
-    "rust_analyzer",
-    "clangd",
-    "gopls",
-    "lua_ls",
-    "vimls",
-    "marksman",
-    "jsonls",
-    "yamlls",
-    "bashls",
-    "taplo",
-    "cssls",
-    "html",
+  -- Enable servers on demand based on filetype
+  -- This is faster than enabling all servers at once
+  local filetype_servers = {
+    python = { "ruff", "ty" },
+    typescript = { "ts_ls" },
+    javascript = { "ts_ls" },
+    typescriptreact = { "ts_ls" },
+    javascriptreact = { "ts_ls" },
+    rust = { "rust_analyzer" },
+    c = { "clangd" },
+    cpp = { "clangd" },
+    go = { "gopls" },
+    lua = { "lua_ls" },
+    vim = { "vimls" },
+    markdown = { "marksman" },
+    json = { "jsonls" },
+    yaml = { "yamlls" },
+    sh = { "bashls" },
+    bash = { "bashls" },
+    toml = { "taplo" },
+    css = { "cssls" },
+    html = { "html" },
   }
+
+  -- Enable servers lazily based on current filetype
+  vim.api.nvim_create_autocmd("FileType", {
+    callback = function(args)
+      local ft = args.match
+      local servers = filetype_servers[ft]
+      if servers then
+        for _, server in ipairs(servers) do
+          pcall(vim.lsp.enable, server)
+        end
+      end
+    end,
+  })
 end
 
 return M
