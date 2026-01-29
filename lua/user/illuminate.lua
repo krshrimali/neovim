@@ -1,13 +1,14 @@
 -- default configuration
 require("illuminate").configure {
   -- providers: provider used to get references in the buffer, ordered by priority
+  -- LSP only for better performance (treesitter and regex are slower)
   providers = {
     "lsp",
-    "treesitter",
-    "regex",
   },
-  -- delay: delay in milliseconds
-  delay = 500,
+  -- delay: delay in milliseconds (higher = better performance)
+  delay = 200,
+  -- Disable for large files
+  large_file_cutoff = 2000,
   -- filetypes_denylist: filetypes to not illuminate, this overrides filetypes_allowlist
   filetypes_denylist = {
     "dirvish",
@@ -40,6 +41,6 @@ require("illuminate").configure {
   providers_regex_syntax_allowlist = {},
   -- under_cursor: whether or not to illuminate under the cursor
   under_cursor = true,
-  -- max_file_lines: files with more than this many lines will not be illuminated
-  max_file_lines = 2000,
+  -- Minimum count of matches to illuminate
+  min_count_to_highlight = 2,
 }
