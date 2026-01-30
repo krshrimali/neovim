@@ -89,9 +89,7 @@ local function get_path_items(filepath)
   local items = {}
   local cwd = vim.fn.getcwd()
 
-  if filepath == "" or not filepath then
-    return items
-  end
+  if filepath == "" or not filepath then return items end
 
   -- Normalize paths
   cwd = vim.fn.fnamemodify(cwd, ":p"):gsub("/$", "")
@@ -103,7 +101,7 @@ local function get_path_items(filepath)
     relative_path = filepath:sub(#cwd + 2)
   else
     -- File is outside cwd, show from home or root
-    local home = vim.fn.expand("~")
+    local home = vim.fn.expand "~"
     if filepath:find(home, 1, true) == 1 then
       relative_path = "~" .. filepath:sub(#home + 1)
       cwd = home
@@ -115,7 +113,7 @@ local function get_path_items(filepath)
 
   -- Split path into components
   local parts = {}
-  for part in relative_path:gmatch("[^/]+") do
+  for part in relative_path:gmatch "[^/]+" do
     table.insert(parts, part)
   end
 
@@ -149,9 +147,7 @@ local function find_containing_symbols(symbols, cursor_line, cursor_col, depth, 
   depth = depth or 0
   result = result or {}
 
-  if not symbols or type(symbols) ~= "table" then
-    return result
-  end
+  if not symbols or type(symbols) ~= "table" then return result end
 
   for _, symbol in ipairs(symbols) do
     local range = symbol.range or (symbol.location and symbol.location.range)
@@ -196,10 +192,8 @@ end
 
 -- Get LSP document symbols synchronously
 local function get_document_symbols(bufnr)
-  local clients = vim.lsp.get_clients({ bufnr = bufnr })
-  if not clients or #clients == 0 then
-    return nil
-  end
+  local clients = vim.lsp.get_clients { bufnr = bufnr }
+  if not clients or #clients == 0 then return nil end
 
   local client = nil
   for _, c in ipairs(clients) do
@@ -209,21 +203,15 @@ local function get_document_symbols(bufnr)
     end
   end
 
-  if not client then
-    return nil
-  end
+  if not client then return nil end
 
   local params = { textDocument = vim.lsp.util.make_text_document_params(bufnr) }
   local result = vim.lsp.buf_request_sync(bufnr, "textDocument/documentSymbol", params, 2000)
 
-  if not result or vim.tbl_isempty(result) then
-    return nil
-  end
+  if not result or vim.tbl_isempty(result) then return nil end
 
   for _, res in pairs(result) do
-    if res.result and type(res.result) == "table" then
-      return res.result
-    end
+    if res.result and type(res.result) == "table" then return res.result end
   end
 
   return nil
@@ -231,9 +219,7 @@ end
 
 -- Close the floating window
 function M.close()
-  if state.win and vim.api.nvim_win_is_valid(state.win) then
-    vim.api.nvim_win_close(state.win, true)
-  end
+  if state.win and vim.api.nvim_win_is_valid(state.win) then vim.api.nvim_win_close(state.win, true) end
   state.win = nil
   state.buf = nil
   state.items = {}
@@ -244,9 +230,7 @@ end
 
 -- Handle item selection
 local function select_item(item)
-  if not item then
-    return
-  end
+  if not item then return end
 
   local source_win = state.source_win
   local source_buf = state.source_buf
@@ -257,26 +241,20 @@ local function select_item(item)
     -- Open file picker at this directory
     local ok, fzf = pcall(require, "fzf-lua")
     if ok then
-      fzf.files({ cwd = item.path })
+      fzf.files { cwd = item.path }
     else
       vim.cmd("edit " .. vim.fn.fnameescape(item.path))
     end
   elseif item.kind == ItemKind.File then
     -- Already viewing this file, just close
-    if source_win and vim.api.nvim_win_is_valid(source_win) then
-      vim.api.nvim_set_current_win(source_win)
-    end
+    if source_win and vim.api.nvim_win_is_valid(source_win) then vim.api.nvim_set_current_win(source_win) end
   elseif item.kind == ItemKind.Symbol then
     -- Jump to symbol location and select the entire range
-    if source_win and vim.api.nvim_win_is_valid(source_win) then
-      vim.api.nvim_set_current_win(source_win)
-    end
+    if source_win and vim.api.nvim_win_is_valid(source_win) then vim.api.nvim_set_current_win(source_win) end
 
     if source_buf and vim.api.nvim_buf_is_valid(source_buf) then
       local win = vim.api.nvim_get_current_win()
-      if vim.api.nvim_win_get_buf(win) ~= source_buf then
-        vim.api.nvim_win_set_buf(win, source_buf)
-      end
+      if vim.api.nvim_win_get_buf(win) ~= source_buf then vim.api.nvim_win_set_buf(win, source_buf) end
 
       local range = item.range
       if range then
@@ -289,11 +267,11 @@ local function select_item(item)
         vim.api.nvim_win_set_cursor(win, { start_line, start_col })
 
         -- Enter visual mode and select to end
-        vim.cmd("normal! v")
+        vim.cmd "normal! v"
         vim.api.nvim_win_set_cursor(win, { end_line, math.max(0, end_col - 1) })
 
         -- Center the view
-        vim.cmd("normal! zz")
+        vim.cmd "normal! zz"
       end
     end
   end
@@ -472,9 +450,7 @@ function M.show()
   vim.keymap.set("n", "h", function()
     local cursor_pos = vim.api.nvim_win_get_cursor(0)
     local current_line = cursor_pos[1]
-    if current_line > 1 then
-      vim.api.nvim_win_set_cursor(0, { current_line - 1, 0 })
-    end
+    if current_line > 1 then vim.api.nvim_win_set_cursor(0, { current_line - 1, 0 }) end
   end, opts)
 
   -- Auto-close on leave
