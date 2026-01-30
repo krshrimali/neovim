@@ -118,9 +118,7 @@ require("lazy").setup({
     name = "flexoki",
     lazy = false,
     priority = 1000,
-    config = function()
-      vim.cmd.colorscheme "flexoki-light"
-    end,
+    config = function() vim.cmd.colorscheme "flexoki-light" end,
   },
 
   -- Transparent background (load on demand with :TransparentEnable)
@@ -146,7 +144,14 @@ require("lazy").setup({
   {
     "folke/snacks.nvim",
     keys = {
-      { "<leader>gy", function() require("snacks").gitbrowse({ open = function(url) vim.fn.setreg("+", url) end }) end, desc = "Copy GitHub permalink", mode = { "n", "x" } },
+      {
+        "<leader>gy",
+        function()
+          require("snacks").gitbrowse { open = function(url) vim.fn.setreg("+", url) end }
+        end,
+        desc = "Copy GitHub permalink",
+        mode = { "n", "x" },
+      },
     },
     opts = {
       bigfile = { enabled = false },
@@ -196,13 +201,35 @@ require("lazy").setup({
     opts = {
       icons = {
         indent = { top = "| ", middle = "|-", last = "+-", fold_open = "v", fold_closed = ">", ws = "  " },
-        folder_closed = "d", folder_open = "D",
+        folder_closed = "d",
+        folder_open = "D",
         kinds = {
-          Array = "[]", Boolean = "b", Class = "C", Constant = "c", Constructor = "C",
-          Enum = "E", EnumMember = "e", Event = "E", Field = "f", File = "F",
-          Function = "f", Interface = "I", Key = "k", Method = "m", Module = "M",
-          Namespace = "N", Null = "n", Number = "#", Object = "{}", Operator = "o",
-          Package = "P", Property = "p", String = "s", Struct = "S", TypeParameter = "t", Variable = "v",
+          Array = "[]",
+          Boolean = "b",
+          Class = "C",
+          Constant = "c",
+          Constructor = "C",
+          Enum = "E",
+          EnumMember = "e",
+          Event = "E",
+          Field = "f",
+          File = "F",
+          Function = "f",
+          Interface = "I",
+          Key = "k",
+          Method = "m",
+          Module = "M",
+          Namespace = "N",
+          Null = "n",
+          Number = "#",
+          Object = "{}",
+          Operator = "o",
+          Package = "P",
+          Property = "p",
+          String = "s",
+          Struct = "S",
+          TypeParameter = "t",
+          Variable = "v",
         },
       },
     },
@@ -216,15 +243,32 @@ require("lazy").setup({
     opts = {
       symbols = {
         icons = {
-          File = { icon = "F" }, Module = { icon = "M" }, Namespace = { icon = "N" },
-          Package = { icon = "P" }, Class = { icon = "C" }, Method = { icon = "m" },
-          Property = { icon = "p" }, Field = { icon = "f" }, Constructor = { icon = "c" },
-          Enum = { icon = "E" }, Interface = { icon = "I" }, Function = { icon = "F" },
-          Variable = { icon = "v" }, Constant = { icon = "C" }, String = { icon = "s" },
-          Number = { icon = "#" }, Boolean = { icon = "b" }, Array = { icon = "[]" },
-          Object = { icon = "{}" }, Key = { icon = "k" }, Null = { icon = "n" },
-          EnumMember = { icon = "e" }, Struct = { icon = "S" }, Event = { icon = "E" },
-          Operator = { icon = "o" }, TypeParameter = { icon = "t" },
+          File = { icon = "F" },
+          Module = { icon = "M" },
+          Namespace = { icon = "N" },
+          Package = { icon = "P" },
+          Class = { icon = "C" },
+          Method = { icon = "m" },
+          Property = { icon = "p" },
+          Field = { icon = "f" },
+          Constructor = { icon = "c" },
+          Enum = { icon = "E" },
+          Interface = { icon = "I" },
+          Function = { icon = "F" },
+          Variable = { icon = "v" },
+          Constant = { icon = "C" },
+          String = { icon = "s" },
+          Number = { icon = "#" },
+          Boolean = { icon = "b" },
+          Array = { icon = "[]" },
+          Object = { icon = "{}" },
+          Key = { icon = "k" },
+          Null = { icon = "n" },
+          EnumMember = { icon = "e" },
+          Struct = { icon = "S" },
+          Event = { icon = "E" },
+          Operator = { icon = "o" },
+          TypeParameter = { icon = "t" },
         },
       },
       symbol_folding = { markers = { "> ", "v " } },
@@ -283,9 +327,7 @@ require("lazy").setup({
       { "<leader>ghi", "<cmd>GithubIssues<cr>", desc = "GitHub Issues" },
       { "<leader>ghp", "<cmd>GithubPRs<cr>", desc = "GitHub PRs" },
     },
-    config = function()
-      require("github").setup {}
-    end,
+    config = function() require("github").setup {} end,
   },
 
   -- Goto Preview (LSP definition/reference previews)
@@ -296,7 +338,11 @@ require("lazy").setup({
       { "gpd", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>", desc = "Preview definition" },
       { "gpi", "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>", desc = "Preview implementation" },
       { "gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>", desc = "Preview references" },
-      { "gpt", "<cmd>lua require('goto-preview').goto_preview_type_definition()<CR>", desc = "Preview type definition" },
+      {
+        "gpt",
+        "<cmd>lua require('goto-preview').goto_preview_type_definition()<CR>",
+        desc = "Preview type definition",
+      },
       { "gP", "<cmd>lua require('goto-preview').close_all_win()<CR>", desc = "Close all previews" },
     },
     opts = {

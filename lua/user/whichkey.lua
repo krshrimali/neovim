@@ -56,7 +56,7 @@ which_key.add {
   { "yss", desc = "Surround line" },
 
   { "ds", group = "Surround delete" },
-  { "ds\"", desc = "Delete quotes" },
+  { 'ds"', desc = "Delete quotes" },
   { "ds'", desc = "Delete single quotes" },
   { "ds)", desc = "Delete parens" },
   { "ds]", desc = "Delete brackets" },
@@ -64,7 +64,7 @@ which_key.add {
   { "dst", desc = "Delete HTML tag" },
 
   { "cs", group = "Surround change" },
-  { "cs\"", desc = "Change from quotes" },
+  { 'cs"', desc = "Change from quotes" },
   { "cs'", desc = "Change from single quotes" },
   { "cs)", desc = "Change from parens" },
   { "cs]", desc = "Change from brackets" },
@@ -247,7 +247,6 @@ which_key.add {
   { "<leader>k", group = "Window" },
   { "<leader>ks", "<cmd>split<cr>", desc = "Horizontal Split" },
   { "<leader>kv", "<cmd>vsplit<cr>", desc = "Vertical Split" },
-
 
   -- Octo (GitHub) - comprehensive keymaps
   { "<leader>o", group = "Octo (GitHub)" },
