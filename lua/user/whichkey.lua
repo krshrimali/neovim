@@ -214,7 +214,7 @@ which_key.add {
     "<cmd>lua require('user.lsp.virtual_diagnostics').show_line_diagnostics()<cr>",
     desc = "Line Diagnostics",
   },
-  { "<leader>lb", "<cmd>Outline<cr>", desc = "Outline/Breadcrumbs" },
+  { "<leader>lb", "<cmd>lua require('user.breadcrumbs_float').toggle()<cr>", desc = "Breadcrumbs (Float)" },
   { "<leader>lo", "<cmd>Outline<cr>", desc = "Outline" },
   { "<leader>lq", "<cmd>lua vim.diagnostic.setloclist()<cr>", desc = "Quickfix" },
   { "<leader>lQ", "<cmd>FzfLua quickfix<cr>", desc = "Quickfix (FzfLua)" },
