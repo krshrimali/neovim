@@ -39,12 +39,14 @@ vim.api.nvim_create_autocmd("WinEnter", {
 -- ============================================
 -- Config Commands (like Helix :config-open)
 -- ============================================
-vim.api.nvim_create_user_command("ConfigOpen", function()
-  vim.cmd("edit " .. vim.fn.stdpath("config") .. "/init.lua")
-end, { desc = "Open Neovim config (init.lua)" })
+vim.api.nvim_create_user_command(
+  "ConfigOpen",
+  function() vim.cmd("edit " .. vim.fn.stdpath "config" .. "/init.lua") end,
+  { desc = "Open Neovim config (init.lua)" }
+)
 
 vim.api.nvim_create_user_command("ConfigWorkspaceOpen", function()
-  local config_path = vim.fn.stdpath("config")
+  local config_path = vim.fn.stdpath "config"
   vim.cmd("cd " .. config_path)
   vim.cmd("edit " .. config_path)
 end, { desc = "Open Neovim config directory" })
@@ -52,11 +54,9 @@ end, { desc = "Open Neovim config directory" })
 vim.api.nvim_create_user_command("ConfigRefresh", function()
   -- Clear user module cache
   for name, _ in pairs(package.loaded) do
-    if name:match("^user") then
-      package.loaded[name] = nil
-    end
+    if name:match "^user" then package.loaded[name] = nil end
   end
   -- Reload init.lua
-  dofile(vim.fn.stdpath("config") .. "/init.lua")
+  dofile(vim.fn.stdpath "config" .. "/init.lua")
   vim.notify("Config reloaded!", vim.log.levels.INFO)
 end, { desc = "Reload Neovim configuration" })
