@@ -19,15 +19,19 @@ vim.api.nvim_create_autocmd({ "TextYankPost" }, {
   callback = function() vim.highlight.on_yank { higroup = "Visual", timeout = 100 } end,
 })
 
--- Close floating windows with ESC
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "*",
+-- Close floating windows with ESC (only for actual floating windows)
+vim.api.nvim_create_autocmd("WinEnter", {
   callback = function()
     local win = vim.api.nvim_get_current_win()
     local config = vim.api.nvim_win_get_config(win)
     if config.relative ~= "" then
-      vim.keymap.set("n", "<Esc>", "<cmd>close<cr>", { buffer = true, silent = true })
-      vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = true, silent = true })
+      local buf = vim.api.nvim_get_current_buf()
+      -- Only set if not already set
+      if not vim.b[buf].float_keymaps_set then
+        vim.keymap.set("n", "<Esc>", "<cmd>close<cr>", { buffer = buf, silent = true })
+        vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = buf, silent = true })
+        vim.b[buf].float_keymaps_set = true
+      end
     end
   end,
 })

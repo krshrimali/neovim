@@ -90,9 +90,7 @@ keymap("n", "<leader>ld", vim.diagnostic.open_float, opts)
 -- ============================================
 keymap("n", "<leader>gg", "<cmd>lua require('user.terminal').lazygit_float()<cr>", opts)
 keymap("n", "glb", "<cmd>Gitsigns blame_line<cr>", opts)
-keymap({ "n", "x" }, "<leader>gy", function()
-  Snacks.gitbrowse { open = function(url) vim.fn.setreg("+", url) end }
-end, { desc = "Copy GitHub permalink" })
+-- <leader>gy is mapped in plugins.lua via snacks.nvim lazy keys
 
 -- ============================================
 -- FILE OPERATIONS (FzfLua)

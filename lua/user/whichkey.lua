@@ -46,6 +46,38 @@ which_key.setup {
   },
 }
 
+-- Surround keymaps (nvim-surround)
+which_key.add {
+  { "ys", group = "Surround add" },
+  { "ysiw", desc = "Surround word" },
+  { "ysi", desc = "Surround inner..." },
+  { "ysa", desc = "Surround around..." },
+  { "ys$", desc = "Surround to EOL" },
+  { "yss", desc = "Surround line" },
+
+  { "ds", group = "Surround delete" },
+  { 'ds"', desc = "Delete quotes" },
+  { "ds'", desc = "Delete single quotes" },
+  { "ds)", desc = "Delete parens" },
+  { "ds]", desc = "Delete brackets" },
+  { "ds}", desc = "Delete braces" },
+  { "dst", desc = "Delete HTML tag" },
+
+  { "cs", group = "Surround change" },
+  { 'cs"', desc = "Change from quotes" },
+  { "cs'", desc = "Change from single quotes" },
+  { "cs)", desc = "Change from parens" },
+  { "cs]", desc = "Change from brackets" },
+  { "cs}", desc = "Change from braces" },
+  { "cst", desc = "Change HTML tag" },
+}
+
+-- Visual mode surround
+which_key.add {
+  mode = { "v" },
+  { "S", desc = "Surround selection" },
+}
+
 -- Register keymaps with descriptions
 -- Normal mode mappings
 which_key.add {
@@ -182,7 +214,7 @@ which_key.add {
     "<cmd>lua require('user.lsp.virtual_diagnostics').show_line_diagnostics()<cr>",
     desc = "Line Diagnostics",
   },
-  { "<leader>lb", "<cmd>Outline<cr>", desc = "Outline/Breadcrumbs" },
+  { "<leader>lb", "<cmd>lua require('user.breadcrumbs_float').toggle()<cr>", desc = "Breadcrumbs (Float)" },
   { "<leader>lo", "<cmd>Outline<cr>", desc = "Outline" },
   { "<leader>lq", "<cmd>lua vim.diagnostic.setloclist()<cr>", desc = "Quickfix" },
   { "<leader>lQ", "<cmd>FzfLua quickfix<cr>", desc = "Quickfix (FzfLua)" },
@@ -352,11 +384,23 @@ which_key.add {
 
   -- Space prefix (CocList replacements)
   { "<space>a", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics" },
-  { "<space>s", "<cmd>FzfLua lsp_workspace_symbols<cr>", desc = "Symbols" },
+  -- { "<space>s", "<cmd>FzfLua lsp_workspace_symbols<cr>", desc = "Symbols" },
   { "<space>e", "<cmd>Mason<cr>", desc = "Extensions" },
   { "<space>c", "<cmd>FzfLua commands<cr>", desc = "Commands" },
   { "<space>p", "<cmd>FzfLua resume<cr>", desc = "Resume" },
   { "<space>ls", "<cmd>lua require('user.symbol_browser').toggle()<cr>", desc = "Symbol Browser" },
+
+  -- Tab management
+  { "<space>t", group = "Tabs" },
+  { "<space>tn", "<cmd>tabnew<cr>", desc = "New Tab" },
+  { "<space>tc", "<cmd>tabclose<cr>", desc = "Close Tab" },
+  { "<space>to", "<cmd>tabonly<cr>", desc = "Close Other Tabs" },
+  { "<space>tl", "<cmd>tabnext<cr>", desc = "Next Tab" },
+  { "<space>th", "<cmd>tabprev<cr>", desc = "Prev Tab" },
+  { "<space>tf", "<cmd>tabfirst<cr>", desc = "First Tab" },
+  { "<space>te", "<cmd>tablast<cr>", desc = "Last Tab" },
+  { "<space>tm", "<cmd>tabmove +1<cr>", desc = "Move Tab Right" },
+  { "<space>tM", "<cmd>tabmove -1<cr>", desc = "Move Tab Left" },
 }
 
 -- Visual mode mappings
