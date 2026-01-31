@@ -374,7 +374,7 @@ require("lazy").setup({
 
   -- GitHub Integration
   {
-    dir = "/path/to/gh.nvim",
+    "krshrimali/gh.nvim",
     cmd = { "Github", "GithubIssues", "GithubPRs", "GithubAssigned", "GithubRefresh" },
     keys = {
       { "<leader>gh", "<cmd>Github<cr>", desc = "GitHub" },
