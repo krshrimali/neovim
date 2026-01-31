@@ -384,11 +384,23 @@ which_key.add {
 
   -- Space prefix (CocList replacements)
   { "<space>a", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics" },
-  { "<space>s", "<cmd>FzfLua lsp_workspace_symbols<cr>", desc = "Symbols" },
+  -- { "<space>s", "<cmd>FzfLua lsp_workspace_symbols<cr>", desc = "Symbols" },
   { "<space>e", "<cmd>Mason<cr>", desc = "Extensions" },
   { "<space>c", "<cmd>FzfLua commands<cr>", desc = "Commands" },
   { "<space>p", "<cmd>FzfLua resume<cr>", desc = "Resume" },
   { "<space>ls", "<cmd>lua require('user.symbol_browser').toggle()<cr>", desc = "Symbol Browser" },
+
+  -- Tab management
+  { "<space>t", group = "Tabs" },
+  { "<space>tn", "<cmd>tabnew<cr>", desc = "New Tab" },
+  { "<space>tc", "<cmd>tabclose<cr>", desc = "Close Tab" },
+  { "<space>to", "<cmd>tabonly<cr>", desc = "Close Other Tabs" },
+  { "<space>tl", "<cmd>tabnext<cr>", desc = "Next Tab" },
+  { "<space>th", "<cmd>tabprev<cr>", desc = "Prev Tab" },
+  { "<space>tf", "<cmd>tabfirst<cr>", desc = "First Tab" },
+  { "<space>te", "<cmd>tablast<cr>", desc = "Last Tab" },
+  { "<space>tm", "<cmd>tabmove +1<cr>", desc = "Move Tab Right" },
+  { "<space>tM", "<cmd>tabmove -1<cr>", desc = "Move Tab Left" },
 }
 
 -- Visual mode mappings

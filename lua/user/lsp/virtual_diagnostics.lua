@@ -215,10 +215,8 @@ function M.toggle_virtual_lines()
   state.virtual_lines_enabled = not state.virtual_lines_enabled
 
   if state.virtual_lines_enabled then
-    vim.notify("Virtual lines enabled", vim.log.levels.INFO)
     update_virtual_diagnostics()
   else
-    vim.notify("Virtual lines disabled", vim.log.levels.INFO)
     clear_virtual_diagnostics()
   end
 end
@@ -228,10 +226,8 @@ function M.toggle_virtual_text()
   state.virtual_text_enabled = not state.virtual_text_enabled
 
   if state.virtual_text_enabled then
-    vim.notify("Virtual text enabled", vim.log.levels.INFO)
     update_virtual_diagnostics()
   else
-    vim.notify("Virtual text disabled", vim.log.levels.INFO)
     clear_virtual_diagnostics()
   end
 end
