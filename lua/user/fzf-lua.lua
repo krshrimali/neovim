@@ -118,7 +118,7 @@ fzf_lua.setup {
 
   files = {
     multiprocess = true,
-    previewer = false, -- Disable preview for faster file selection
+    previewer = "builtin", -- Enable file preview
     git_icons = false,
     file_icons = false,
     color_icons = false,
@@ -139,6 +139,18 @@ fzf_lua.setup {
     -- previewer = false, -- Disable previewer for instant opening
     -- -- Disable path transformations for speed
     -- path_shorten = false,
+  },
+
+  -- Recent files with preview
+  oldfiles = {
+    previewer = "builtin",
+    cwd_only = false,
+    file_icons = false,
+    git_icons = false,
+    color_icons = false,
+    actions = {
+      ["ctrl-q"] = _G.fzf_send_to_quickfix,
+    },
   },
 
   -- -- File picker optimizations

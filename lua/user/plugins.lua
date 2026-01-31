@@ -305,6 +305,69 @@ require("lazy").setup({
   -- Copilot (lazy)
   { "github/copilot.vim", cmd = "Copilot", event = "InsertEnter" },
 
+  -- Sidekick.nvim - AI CLI integration & Copilot NES
+  {
+    "folke/sidekick.nvim",
+    event = "VeryLazy",
+    opts = {},
+    keys = {
+      {
+        "<tab>",
+        function()
+          if not require("sidekick").nes_jump_or_apply() then
+            return "<Tab>"
+          end
+        end,
+        expr = true,
+        desc = "Goto/Apply Next Edit Suggestion",
+      },
+      {
+        "<leader>sk",
+        function() require("sidekick.cli").toggle() end,
+        desc = "Sidekick Toggle CLI",
+        mode = { "n", "t", "i", "x" },
+      },
+      {
+        "<leader>ss",
+        function() require("sidekick.cli").select() end,
+        desc = "Sidekick Select CLI",
+      },
+      {
+        "<leader>sd",
+        function() require("sidekick.cli").close() end,
+        desc = "Sidekick Detach CLI",
+      },
+      {
+        "<leader>st",
+        function() require("sidekick.cli").send({ msg = "{this}" }) end,
+        mode = { "x", "n" },
+        desc = "Sidekick Send This",
+      },
+      {
+        "<leader>sf",
+        function() require("sidekick.cli").send({ msg = "{file}" }) end,
+        desc = "Sidekick Send File",
+      },
+      {
+        "<leader>sv",
+        function() require("sidekick.cli").send({ msg = "{selection}" }) end,
+        mode = { "x" },
+        desc = "Sidekick Send Selection",
+      },
+      {
+        "<leader>sp",
+        function() require("sidekick.cli").prompt() end,
+        mode = { "n", "x" },
+        desc = "Sidekick Select Prompt",
+      },
+      {
+        "<leader>sc",
+        function() require("sidekick.cli").toggle({ name = "claude", focus = true }) end,
+        desc = "Sidekick Toggle Claude",
+      },
+    },
+  },
+
   -- Todo comments
   {
     "folke/todo-comments.nvim",
@@ -321,7 +384,8 @@ require("lazy").setup({
 
   -- GitHub Integration
   {
-    "krshrimali/gh.nvim",
+    dir = "/codemill/shrimali-r/gh.nvim",
+    cmd = { "Github", "GithubIssues", "GithubPRs", "GithubAssigned", "GithubRefresh" },
     keys = {
       { "<leader>gh", "<cmd>Github<cr>", desc = "GitHub" },
       { "<leader>ghi", "<cmd>GithubIssues<cr>", desc = "GitHub Issues" },

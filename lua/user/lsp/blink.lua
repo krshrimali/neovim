@@ -112,11 +112,9 @@ function M.toggle()
   _G.blink_enabled = not _G.blink_enabled
 
   if _G.blink_enabled then
-    vim.notify("Blink.cmp enabled", vim.log.levels.INFO)
     -- Show completion if we're in insert mode
     if vim.fn.mode() == "i" then pcall(function() require("blink.cmp").show() end) end
   else
-    vim.notify("Blink.cmp disabled", vim.log.levels.INFO)
     -- Hide completion menu if visible
     pcall(function() require("blink.cmp").hide() end)
   end
