@@ -314,9 +314,7 @@ require("lazy").setup({
       {
         "<tab>",
         function()
-          if not require("sidekick").nes_jump_or_apply() then
-            return "<Tab>"
-          end
+          if not require("sidekick").nes_jump_or_apply() then return "<Tab>" end
         end,
         expr = true,
         desc = "Goto/Apply Next Edit Suggestion",
@@ -339,18 +337,18 @@ require("lazy").setup({
       },
       {
         "<leader>st",
-        function() require("sidekick.cli").send({ msg = "{this}" }) end,
+        function() require("sidekick.cli").send { msg = "{this}" } end,
         mode = { "x", "n" },
         desc = "Sidekick Send This",
       },
       {
         "<leader>sf",
-        function() require("sidekick.cli").send({ msg = "{file}" }) end,
+        function() require("sidekick.cli").send { msg = "{file}" } end,
         desc = "Sidekick Send File",
       },
       {
         "<leader>sv",
-        function() require("sidekick.cli").send({ msg = "{selection}" }) end,
+        function() require("sidekick.cli").send { msg = "{selection}" } end,
         mode = { "x" },
         desc = "Sidekick Send Selection",
       },
@@ -362,7 +360,7 @@ require("lazy").setup({
       },
       {
         "<leader>sc",
-        function() require("sidekick.cli").toggle({ name = "claude", focus = true }) end,
+        function() require("sidekick.cli").toggle { name = "claude", focus = true } end,
         desc = "Sidekick Toggle Claude",
       },
     },
