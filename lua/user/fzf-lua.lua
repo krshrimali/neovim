@@ -118,10 +118,11 @@ fzf_lua.setup {
 
   files = {
     multiprocess = true,
-    previewer = true,
+    previewer = "builtin", -- Enable file preview
     git_icons = false,
     file_icons = false,
     color_icons = false,
+    cwd_prompt = false,
     actions = {
       ["ctrl-q"] = _G.fzf_send_to_quickfix,
     },
@@ -138,6 +139,18 @@ fzf_lua.setup {
     -- previewer = false, -- Disable previewer for instant opening
     -- -- Disable path transformations for speed
     -- path_shorten = false,
+  },
+
+  -- Recent files with preview
+  oldfiles = {
+    previewer = "builtin",
+    cwd_only = false,
+    file_icons = false,
+    git_icons = false,
+    color_icons = false,
+    actions = {
+      ["ctrl-q"] = _G.fzf_send_to_quickfix,
+    },
   },
 
   -- -- File picker optimizations
@@ -271,9 +284,9 @@ fzf_lua.setup {
       prompt = "GitFiles> ",
       cmd = "git ls-files --exclude-standard",
       multiprocess = true,
-      git_icons = true,
-      file_icons = true,
-      color_icons = true,
+      git_icons = false,
+      file_icons = false,
+      color_icons = false,
       actions = {
         ["ctrl-q"] = _G.fzf_send_to_quickfix,
       },
@@ -282,9 +295,9 @@ fzf_lua.setup {
       prompt = "GitStatus> ",
       cmd = "git -c color.status=false status -s",
       multiprocess = true,
-      file_icons = true,
-      git_icons = true,
-      color_icons = true,
+      file_icons = false,
+      git_icons = false,
+      color_icons = false,
       previewer = "git_diff",
       actions = {
         ["ctrl-q"] = _G.fzf_send_to_quickfix,

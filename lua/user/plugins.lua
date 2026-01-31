@@ -21,7 +21,7 @@ require("lazy").setup({
   -- ============================================
   {
     "neovim/nvim-lspconfig",
-    event = { "BufReadPre", "BufNewFile" },
+    event = "VeryLazy", -- Defer LSP startup for faster file opening
     dependencies = {
       { "williamboman/mason.nvim", cmd = "Mason", build = ":MasonUpdate", config = true },
       { "williamboman/mason-lspconfig.nvim" },
@@ -41,7 +41,7 @@ require("lazy").setup({
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
-    event = { "BufReadPost", "BufNewFile" },
+    event = "VeryLazy", -- Defer for faster file opening
     config = function() require "user.treesitter" end,
   },
 
@@ -76,7 +76,7 @@ require("lazy").setup({
   -- ============================================
   {
     "lewis6991/gitsigns.nvim",
-    event = { "BufReadPre", "BufNewFile" },
+    event = "VeryLazy", -- Defer to after UI is ready
     config = function() require "user.gitsigns" end,
   },
 
@@ -107,12 +107,12 @@ require("lazy").setup({
     config = true,
   },
 
-  { "tpope/vim-sleuth", event = { "BufReadPre", "BufNewFile" } },
+  { "tpope/vim-sleuth", event = "VeryLazy" },
 
   -- ============================================
   -- UI: Minimal UI enhancements
   -- ============================================
-  -- Theme - flexoki (matching Helix config)
+  -- Theme - flexoki
   {
     "kepano/flexoki-neovim",
     name = "flexoki",
@@ -121,10 +121,11 @@ require("lazy").setup({
     config = function() vim.cmd.colorscheme "flexoki-light" end,
   },
 
-  -- Transparent background
+  -- Transparent background (load on demand with :TransparentEnable)
   {
     "xiyaowong/transparent.nvim",
-    lazy = false,
+    cmd = { "TransparentEnable", "TransparentDisable", "TransparentToggle" },
+    keys = { { "<leader>ut", "<cmd>TransparentToggle<cr>", desc = "Toggle Transparent" } },
     opts = {
       extra_groups = {
         "NormalFloat",
@@ -139,11 +140,19 @@ require("lazy").setup({
     config = function() require "user.lualine" end,
   },
 
-  -- Snacks for gitbrowse and terminal
+  -- Snacks for gitbrowse (load on demand)
   {
     "folke/snacks.nvim",
-    lazy = false,
-    priority = 900,
+    keys = {
+      {
+        "<leader>gy",
+        function()
+          require("snacks").gitbrowse { open = function(url) vim.fn.setreg("+", url) end }
+        end,
+        desc = "Copy GitHub permalink",
+        mode = { "n", "x" },
+      },
+    },
     opts = {
       bigfile = { enabled = false },
       gitbrowse = {
@@ -296,23 +305,85 @@ require("lazy").setup({
   -- Copilot (lazy)
   { "github/copilot.vim", cmd = "Copilot", event = "InsertEnter" },
 
+  -- Sidekick.nvim - AI CLI integration & Copilot NES
+  {
+    "folke/sidekick.nvim",
+    event = "VeryLazy",
+    opts = {},
+    keys = {
+      {
+        "<tab>",
+        function()
+          if not require("sidekick").nes_jump_or_apply() then return "<Tab>" end
+        end,
+        expr = true,
+        desc = "Goto/Apply Next Edit Suggestion",
+      },
+      {
+        "<leader>sk",
+        function() require("sidekick.cli").toggle() end,
+        desc = "Sidekick Toggle CLI",
+        mode = { "n", "t", "i", "x" },
+      },
+      {
+        "<leader>ss",
+        function() require("sidekick.cli").select() end,
+        desc = "Sidekick Select CLI",
+      },
+      {
+        "<leader>sd",
+        function() require("sidekick.cli").close() end,
+        desc = "Sidekick Detach CLI",
+      },
+      {
+        "<leader>st",
+        function() require("sidekick.cli").send { msg = "{this}" } end,
+        mode = { "x", "n" },
+        desc = "Sidekick Send This",
+      },
+      {
+        "<leader>sf",
+        function() require("sidekick.cli").send { msg = "{file}" } end,
+        desc = "Sidekick Send File",
+      },
+      {
+        "<leader>sv",
+        function() require("sidekick.cli").send { msg = "{selection}" } end,
+        mode = { "x" },
+        desc = "Sidekick Send Selection",
+      },
+      {
+        "<leader>sp",
+        function() require("sidekick.cli").prompt() end,
+        mode = { "n", "x" },
+        desc = "Sidekick Select Prompt",
+      },
+      {
+        "<leader>sc",
+        function() require("sidekick.cli").toggle { name = "claude", focus = true } end,
+        desc = "Sidekick Toggle Claude",
+      },
+    },
+  },
+
   -- Todo comments
   {
     "folke/todo-comments.nvim",
-    event = { "BufReadPost", "BufNewFile" },
+    event = "VeryLazy", -- Defer for faster file opening
     config = function() require "user.todo-comments" end,
   },
 
   -- Highlight words under cursor
   {
     "RRethy/vim-illuminate",
-    event = { "BufReadPost", "BufNewFile" },
+    event = "VeryLazy", -- Defer for faster file opening
     config = function() require "user.illuminate" end,
   },
 
   -- GitHub Integration
   {
-    "krshrimali/gh.nvim",
+    dir = "/codemill/shrimali-r/gh.nvim",
+    cmd = { "Github", "GithubIssues", "GithubPRs", "GithubAssigned", "GithubRefresh" },
     keys = {
       { "<leader>gh", "<cmd>Github<cr>", desc = "GitHub" },
       { "<leader>ghi", "<cmd>GithubIssues<cr>", desc = "GitHub Issues" },
