@@ -270,22 +270,9 @@ function M.setup(opts)
     callback = function(args) update_virtual_diagnostics(args.buf) end,
   })
 
-  -- Refresh on buffer enter
-  vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost" }, {
-    callback = function(args)
-      -- Small delay to ensure LSP has updated diagnostics
-      vim.defer_fn(function() update_virtual_diagnostics(args.buf) end, 50)
-    end,
-  })
-
   -- Clear on buffer leave/delete
   vim.api.nvim_create_autocmd({ "BufDelete", "BufWipeout" }, {
     callback = function(args) clear_virtual_diagnostics(args.buf) end,
-  })
-
-  -- Refresh on cursor hold (when idle)
-  vim.api.nvim_create_autocmd("CursorHold", {
-    callback = function(args) update_virtual_diagnostics(args.buf) end,
   })
 
   -- Re-apply highlights on colorscheme change
