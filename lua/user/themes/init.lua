@@ -50,18 +50,6 @@ function M.load()
     end,
   })
 
-  -- Reapply highlights when entering buffers with different filetypes
-  vim.api.nvim_create_autocmd("FileType", {
-    group = "CursorDarkTheme",
-    callback = function()
-      -- Small delay to ensure filetype is fully set
-      vim.defer_fn(function()
-        treesitter_theme.setup()
-        lsp_theme.setup()
-      end, 10)
-    end,
-  })
-
   -- Ensure highlights are applied when entering vim
   vim.api.nvim_create_autocmd("VimEnter", {
     group = "CursorDarkTheme",
@@ -70,7 +58,7 @@ function M.load()
         treesitter_theme.setup()
         plugins_theme.setup()
         lsp_theme.setup()
-      end, 100)
+      end, 20)
     end,
   })
 end
