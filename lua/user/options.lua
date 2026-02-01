@@ -43,7 +43,7 @@ opt.splitright = true
 
 -- Performance
 opt.timeoutlen = 300
-opt.updatetime = 250
+opt.updatetime = 400
 opt.lazyredraw = true
 
 -- Completion
@@ -63,7 +63,7 @@ opt.iskeyword:append "-"
 vim.g.use_nerd_fonts = false
 
 -- Auto-reload files
-vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
   callback = function() vim.cmd "checktime" end,
 })
 
