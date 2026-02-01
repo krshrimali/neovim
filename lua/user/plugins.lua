@@ -309,7 +309,9 @@ require("lazy").setup({
   {
     "folke/sidekick.nvim",
     event = "VeryLazy",
-    opts = {},
+    opts = {
+      nes = { enabled = false },
+    },
     keys = {
       {
         "<tab>",
