@@ -84,7 +84,8 @@ require("lazy").setup({
     "sindrets/diffview.nvim",
     cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewClose" },
     keys = {
-      { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Git diff" },
+      { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Git diff (split)" },
+      { "<leader>gu", "<cmd>DiffviewOpen --view=diff1_plain<cr>", desc = "Git diff (unified)" },
       { "<leader>gf", "<cmd>DiffviewFileHistory %<cr>", desc = "File history" },
     },
     config = function() require "user.diffview" end,
