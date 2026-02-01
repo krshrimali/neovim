@@ -1,7 +1,7 @@
 local status_ok, diffview = pcall(require, "diffview")
 if not status_ok then return end
 
-local actions = require("diffview.actions")
+local actions = require "diffview.actions"
 
 diffview.setup {
   diff_binaries = false, -- Show diffs for binaries
