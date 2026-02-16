@@ -11,8 +11,8 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+vim.g.mapleader = ","
+vim.g.maplocalleader = ","
 
 -- Simplified plugin list - inspired by Helix minimalism
 require("lazy").setup({
@@ -304,7 +304,7 @@ require("lazy").setup({
   },
 
   -- Copilot (lazy)
-  { "github/copilot.vim", cmd = "Copilot", event = "InsertEnter" },
+  -- { "github/copilot.vim", cmd = "Copilot", event = "InsertEnter" },
 
   -- Sidekick.nvim - AI CLI integration & Copilot NES
   {
