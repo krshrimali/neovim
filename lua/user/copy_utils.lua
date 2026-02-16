@@ -228,4 +228,41 @@ function M.copy_relative_path()
   vim.notify(string.format("Copied relative path: %s", rel_path), vim.log.levels.INFO)
 end
 
+-- Copy file path with line range (file_path:line_start:line_end)
+function M.copy_path_with_lines()
+  local filepath = vim.api.nvim_buf_get_name(0)
+  if filepath == "" then
+    vim.notify("No file name", vim.log.levels.WARN)
+    return
+  end
+
+  local cwd = vim.fn.getcwd()
+  local abs_path = vim.fn.fnamemodify(filepath, ":p")
+  local rel_path
+  if abs_path:find(cwd, 1, true) == 1 then
+    rel_path = abs_path:sub(#cwd + 2)
+  else
+    rel_path = vim.fn.fnamemodify(filepath, ":~:.")
+  end
+
+  local mode = vim.fn.mode()
+  local line_start, line_end
+  if mode == "v" or mode == "V" or mode == "\22" then
+    line_start = vim.fn.line "v"
+    line_end = vim.fn.line "."
+    if line_start > line_end then
+      line_start, line_end = line_end, line_start
+    end
+  else
+    line_start = vim.fn.line "."
+    line_end = line_start
+  end
+
+  local result = string.format("%s:%d:%d", rel_path, line_start, line_end)
+
+  vim.fn.setreg("+", result)
+  vim.fn.setreg('"', result)
+  vim.notify(string.format("Copied: %s", result), vim.log.levels.INFO)
+end
+
 return M
