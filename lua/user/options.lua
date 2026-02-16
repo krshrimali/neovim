@@ -44,7 +44,6 @@ opt.splitright = true
 -- Performance
 opt.timeoutlen = 300
 opt.updatetime = 400
-opt.lazyredraw = true
 
 -- Completion
 opt.completeopt = { "menuone", "noselect" }
