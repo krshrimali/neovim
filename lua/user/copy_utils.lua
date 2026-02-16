@@ -1,5 +1,5 @@
 -- Utilities for copying file paths and Python imports
--- Keymaps: <leader>yi (Python import), <leader>yp (absolute path), <leader>yr (relative path)
+-- Keymaps: <leader>ci (Python import), <leader>cp (absolute path), <leader>cr (relative path)
 
 local M = {}
 
