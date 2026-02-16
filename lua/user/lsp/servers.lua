@@ -77,9 +77,6 @@ local function on_attach(client, bufnr)
   -- Signature help (matching CoC's <C-k> in insert mode)
   vim.keymap.set("i", "<C-k>", vim.lsp.buf.signature_help, opts)
 
-  -- Codelens (matching CoC's <leader>cl)
-  if client.server_capabilities.codeLensProvider then vim.keymap.set("n", "<leader>cl", vim.lsp.codelens.run, opts) end
-
   -- Attach nvim-navic for breadcrumbs if available
   if client.server_capabilities.documentSymbolProvider then
     local navic_ok, navic = pcall(require, "nvim-navic")
