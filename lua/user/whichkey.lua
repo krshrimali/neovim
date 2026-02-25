@@ -372,11 +372,38 @@ which_key.add {
   { "<leader>c", group = "Code/Copy", mode = { "n", "v" } },
   { "<leader>ca", vim.lsp.buf.code_action, desc = "Code Action", mode = { "n", "v" } },
   { "<leader>cl", "<cmd>lua vim.lsp.codelens.run()<cr>", desc = "CodeLens Action", mode = { "n", "v" } },
-  { "<leader>ci", "<cmd>lua require('user.copy_utils').copy_python_import()<cr>", desc = "Copy Python Import", mode = { "n", "v" } },
-  { "<leader>cp", "<cmd>lua require('user.copy_utils').copy_absolute_path()<cr>", desc = "Copy Absolute Path", mode = { "n", "v" } },
-  { "<leader>cr", "<cmd>lua require('user.copy_utils').copy_relative_path()<cr>", desc = "Copy Relative Path", mode = { "n", "v" } },
-  { "<leader>cL", "<cmd>lua require('user.copy_utils').copy_path_with_lines()<cr>", desc = "Copy Path:Lines", mode = { "n", "v" } },
-  { "<leader>cy", function() require("snacks").gitbrowse { open = function(url) vim.fn.setreg("+", url) end } end, desc = "Copy GitHub Permalink", mode = { "n", "v" } },
+  {
+    "<leader>ci",
+    "<cmd>lua require('user.copy_utils').copy_python_import()<cr>",
+    desc = "Copy Python Import",
+    mode = { "n", "v" },
+  },
+  {
+    "<leader>cp",
+    "<cmd>lua require('user.copy_utils').copy_absolute_path()<cr>",
+    desc = "Copy Absolute Path",
+    mode = { "n", "v" },
+  },
+  {
+    "<leader>cr",
+    "<cmd>lua require('user.copy_utils').copy_relative_path()<cr>",
+    desc = "Copy Relative Path",
+    mode = { "n", "v" },
+  },
+  {
+    "<leader>cL",
+    "<cmd>lua require('user.copy_utils').copy_path_with_lines()<cr>",
+    desc = "Copy Path:Lines",
+    mode = { "n", "v" },
+  },
+  {
+    "<leader>cy",
+    function()
+      require("snacks").gitbrowse { open = function(url) vim.fn.setreg("+", url) end }
+    end,
+    desc = "Copy GitHub Permalink",
+    mode = { "n", "v" },
+  },
 
   -- Claude Code
   { "<leader>a", group = "AI/Claude" },
