@@ -80,6 +80,31 @@ require("lazy").setup({
     config = function() require "user.gitsigns" end,
   },
 
+  -- Inline diff overlay (shows old text as virtual lines)
+  {
+    "echasnovski/mini.diff",
+    event = "VeryLazy",
+    keys = {
+      { "<leader>gm", function() require("mini.diff").toggle_overlay() end, desc = "Toggle diff overlay" },
+    },
+    opts = {
+      view = {
+        style = "sign",
+        signs = { add = "+", change = "~", delete = "-" },
+      },
+      -- Disable signs to avoid conflict with gitsigns signcolumn
+      mappings = {
+        apply = "",
+        reset = "",
+        textobject = "",
+        goto_first = "",
+        goto_prev = "[m",
+        goto_next = "]m",
+        goto_last = "",
+      },
+    },
+  },
+
   {
     "sindrets/diffview.nvim",
     cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewClose" },
@@ -119,7 +144,7 @@ require("lazy").setup({
     name = "flexoki",
     lazy = false,
     priority = 1000,
-    config = function() vim.cmd.colorscheme "flexoki-light" end,
+    config = function() vim.cmd.colorscheme "flexoki-dark" end,
   },
 
   -- Transparent background (load on demand with :TransparentEnable)
@@ -284,8 +309,8 @@ require("lazy").setup({
     "coder/claudecode.nvim",
     dependencies = { "folke/snacks.nvim" },
     keys = {
-      { "<leader><cr>", "<cmd>ClaudeCode<cr>", desc = "Toggle Claude", mode = { "n", "t", "x" } },
-      { "<leader><cr>", "<cmd>ClaudeCodeSend<cr>", mode = "v", desc = "Send to Claude" },
+      { "<leader><cr>", "<cmd>ClaudeCode<cr>", desc = "Toggle Claude", mode = { "n", "t" } },
+      { "<leader><cr>", "<cmd>ClaudeCodeSend<cr>", mode = { "v", "x" }, desc = "Send to Claude" },
       { "<leader>aa", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
       { "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
     },

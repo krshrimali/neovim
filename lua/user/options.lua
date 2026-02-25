@@ -53,6 +53,9 @@ opt.shortmess:append "c"
 opt.foldenable = false
 opt.foldmethod = "manual"
 
+-- Diff
+opt.diffopt:append "linematch:60"
+
 -- Misc
 opt.fillchars = { eob = " ", vert = " " }
 opt.whichwrap:append "<>[]hl"

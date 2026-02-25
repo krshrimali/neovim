@@ -6,7 +6,7 @@ lualine.setup {
   options = {
     globalstatus = true,
     icons_enabled = false,
-    theme = "ayu_light", -- Light theme that works well
+    theme = "auto", -- Light theme that works well
     component_separators = { left = "|", right = "|" },
     section_separators = { left = "", right = "" },
     disabled_filetypes = { "alpha", "dashboard", "NvimTree" },
