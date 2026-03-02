@@ -1,7 +1,73 @@
 -- Utilities for copying file paths and Python imports
 -- Keymaps: <leader>ci (Python import), <leader>cp (absolute path), <leader>cr (relative path)
+-- <leader>cf (parent func body), <leader>cF (file:func_start:func_end)
+-- <leader>cc (parent class body), <leader>cC (file:class_start:class_end)
 
 local M = {}
+
+-- LSP symbol kinds for functions and classes
+-- https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#symbolKind
+local FUNCTION_KINDS = { [6] = true, [9] = true, [12] = true } -- Method, Constructor, Function
+local CLASS_KINDS = { [5] = true, [10] = true, [11] = true, [23] = true } -- Class, Enum, Interface, Struct
+
+-- Fetch document symbols from the first LSP client that supports it
+local function get_lsp_symbols(bufnr)
+  for _, client in ipairs(vim.lsp.get_clients { bufnr = bufnr }) do
+    if client.server_capabilities.documentSymbolProvider then
+      local params = { textDocument = vim.lsp.util.make_text_document_params(bufnr) }
+      local result = vim.lsp.buf_request_sync(bufnr, "textDocument/documentSymbol", params, 2000)
+      if result then
+        for _, res in pairs(result) do
+          if res.result then return res.result end
+        end
+      end
+    end
+  end
+  return nil
+end
+
+-- Walk the symbol tree and return the innermost symbol of the given kinds that contains the cursor
+local function find_innermost_symbol(symbols, cursor_line, cursor_col, kind_set)
+  local found = nil
+  for _, symbol in ipairs(symbols) do
+    local range = symbol.range or (symbol.location and symbol.location.range)
+    if range then
+      local sl, el = range.start.line, range["end"].line
+      local sc, ec = range.start.character, range["end"].character
+      local in_range = (cursor_line > sl and cursor_line < el)
+        or (cursor_line == sl and cursor_line == el and cursor_col >= sc and cursor_col <= ec)
+        or (cursor_line == sl and cursor_line ~= el and cursor_col >= sc)
+        or (cursor_line == el and cursor_line ~= sl and cursor_col <= ec)
+      if in_range then
+        if kind_set[symbol.kind] then found = symbol end
+        if symbol.children then
+          local deeper = find_innermost_symbol(symbol.children, cursor_line, cursor_col, kind_set)
+          if deeper then found = deeper end
+        end
+      end
+    end
+  end
+  return found
+end
+
+-- Extract buffer lines for a symbol's range
+local function symbol_text(symbol, bufnr)
+  local range = symbol.range
+  local lines = vim.api.nvim_buf_get_lines(bufnr, range.start.line, range["end"].line + 1, false)
+  return table.concat(lines, "\n")
+end
+
+local function get_relative_path()
+  local filepath = vim.api.nvim_buf_get_name(0)
+  if filepath == "" then return nil end
+  local cwd = vim.fn.getcwd()
+  local abs_path = vim.fn.fnamemodify(filepath, ":p")
+  if abs_path:find(cwd, 1, true) == 1 then
+    return abs_path:sub(#cwd + 2)
+  else
+    return vim.fn.fnamemodify(filepath, ":~:.")
+  end
+end
 
 -- Get the symbol under cursor using LSP or Treesitter
 local function get_symbol_under_cursor()
@@ -203,46 +269,23 @@ end
 
 -- Copy relative file path (relative to cwd)
 function M.copy_relative_path()
-  local filepath = vim.api.nvim_buf_get_name(0)
-  if filepath == "" then
+  local rel_path = get_relative_path()
+  if not rel_path then
     vim.notify("No file name", vim.log.levels.WARN)
     return
   end
 
-  local cwd = vim.fn.getcwd()
-  local abs_path = vim.fn.fnamemodify(filepath, ":p")
-
-  local rel_path
-  if abs_path:find(cwd, 1, true) == 1 then
-    -- File is under cwd
-    rel_path = abs_path:sub(#cwd + 2) -- +2 to skip the trailing /
-  else
-    -- File is outside cwd, use relative path from cwd
-    rel_path = vim.fn.fnamemodify(filepath, ":~:.")
-  end
-
-  -- Copy to clipboard
   vim.fn.setreg("+", rel_path)
   vim.fn.setreg('"', rel_path)
-
   vim.notify(string.format("Copied relative path: %s", rel_path), vim.log.levels.INFO)
 end
 
 -- Copy file path with line range (file_path:line_start:line_end)
 function M.copy_path_with_lines()
-  local filepath = vim.api.nvim_buf_get_name(0)
-  if filepath == "" then
+  local rel_path = get_relative_path()
+  if not rel_path then
     vim.notify("No file name", vim.log.levels.WARN)
     return
-  end
-
-  local cwd = vim.fn.getcwd()
-  local abs_path = vim.fn.fnamemodify(filepath, ":p")
-  local rel_path
-  if abs_path:find(cwd, 1, true) == 1 then
-    rel_path = abs_path:sub(#cwd + 2)
-  else
-    rel_path = vim.fn.fnamemodify(filepath, ":~:.")
   end
 
   local mode = vim.fn.mode()
@@ -263,6 +306,81 @@ function M.copy_path_with_lines()
   vim.fn.setreg("+", result)
   vim.fn.setreg('"', result)
   vim.notify(string.format("Copied: %s", result), vim.log.levels.INFO)
+end
+
+local function lsp_find_symbol(kind_set)
+  local bufnr = vim.api.nvim_get_current_buf()
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  local cursor_line = cursor[1] - 1 -- 0-indexed
+  local cursor_col = cursor[2]
+  local symbols = get_lsp_symbols(bufnr)
+  if not symbols then return nil, nil end
+  local symbol = find_innermost_symbol(symbols, cursor_line, cursor_col, kind_set)
+  return symbol, bufnr
+end
+
+-- Copy the full text of the enclosing function (via LSP)
+function M.copy_parent_function()
+  local symbol, bufnr = lsp_find_symbol(FUNCTION_KINDS)
+  if not symbol then
+    vim.notify("No parent function found", vim.log.levels.WARN)
+    return
+  end
+  local text = symbol_text(symbol, bufnr)
+  vim.fn.setreg("+", text)
+  vim.fn.setreg('"', text)
+  vim.notify("Copied function: " .. symbol.name, vim.log.levels.INFO)
+end
+
+-- Copy the full text of the enclosing class/struct/impl (via LSP)
+function M.copy_parent_class()
+  local symbol, bufnr = lsp_find_symbol(CLASS_KINDS)
+  if not symbol then
+    vim.notify("No parent class found", vim.log.levels.WARN)
+    return
+  end
+  local text = symbol_text(symbol, bufnr)
+  vim.fn.setreg("+", text)
+  vim.fn.setreg('"', text)
+  vim.notify("Copied class: " .. symbol.name, vim.log.levels.INFO)
+end
+
+-- Copy file:func_start:func_end for the enclosing function (via LSP)
+function M.copy_parent_function_with_lines()
+  local rel_path = get_relative_path()
+  if not rel_path then
+    vim.notify("No file name", vim.log.levels.WARN)
+    return
+  end
+  local symbol = lsp_find_symbol(FUNCTION_KINDS)
+  if not symbol then
+    vim.notify("No parent function found", vim.log.levels.WARN)
+    return
+  end
+  local range = symbol.range
+  local result = string.format("%s:%d:%d", rel_path, range.start.line + 1, range["end"].line + 1)
+  vim.fn.setreg("+", result)
+  vim.fn.setreg('"', result)
+  vim.notify("Copied: " .. result, vim.log.levels.INFO)
+end
+
+-- Copy file:class_start:class_end for the enclosing class/struct/impl (via LSP)
+function M.copy_parent_class_with_lines()
+  local rel_path = get_relative_path()
+  if not rel_path then
+    vim.notify("No file name", vim.log.levels.WARN)
+    return
+  end
+  local symbol = lsp_find_symbol(CLASS_KINDS)
+  if not symbol then
+    vim.notify("No parent class found", vim.log.levels.WARN)
+    return
+  end
+  local range = symbol.range
+  local result = string.format("%s:%d:%d", rel_path, range.start.line + 1, range["end"].line + 1)
+  vim.fn.setreg("+", result)
+  vim.fn.setreg('"', result)
+  vim.notify("Copied: " .. result, vim.log.levels.INFO)
 end
 
 return M

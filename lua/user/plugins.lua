@@ -23,7 +23,12 @@ require("lazy").setup({
     "neovim/nvim-lspconfig",
     event = "VeryLazy", -- Defer LSP startup for faster file opening
     dependencies = {
-      { "williamboman/mason.nvim", cmd = "Mason", build = ":MasonUpdate", config = true },
+      {
+        "williamboman/mason.nvim",
+        cmd = "Mason",
+        build = ":MasonUpdate",
+        config = true,
+      },
       { "williamboman/mason-lspconfig.nvim" },
       { "saghen/blink.cmp", version = "1.*", dependencies = { "rafamadriz/friendly-snippets" } },
       { "folke/neodev.nvim", config = true },
@@ -419,6 +424,8 @@ require("lazy").setup({
     },
     config = function() require("github").setup {} end,
   },
+
+  { "nvim-mini/mini.map", version = false },
 
   -- Goto Preview (LSP definition/reference previews)
   {
