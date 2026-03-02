@@ -330,7 +330,7 @@ require("lazy").setup({
 
   -- Sidekick.nvim - AI CLI integration & Copilot NES
   {
-    "folke/sidekick.nvim",
+    "krshrimali/sidekick.nvim",
     event = "VeryLazy",
     opts = {
       nes = { enabled = false },
