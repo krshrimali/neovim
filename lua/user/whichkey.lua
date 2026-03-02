@@ -378,6 +378,12 @@ which_key.add {
   { "<leader>cL", "<cmd>lua require('user.copy_utils').copy_path_with_lines()<cr>", desc = "Copy Path:Lines", mode = { "n", "v" } },
   { "<leader>cy", function() require("snacks").gitbrowse { open = function(url) vim.fn.setreg("+", url) end } end, desc = "Copy GitHub Permalink", mode = { "n", "v" } },
 
+  -- Copy parent context (treesitter): lowercase = name, uppercase = file:start:end
+  { "<leader>cf", "<cmd>lua require('user.copy_utils').copy_parent_function()<cr>", desc = "Copy Parent Function Name", mode = { "n", "v" } },
+  { "<leader>cF", "<cmd>lua require('user.copy_utils').copy_parent_function_with_lines()<cr>", desc = "Copy File:FuncStart:FuncEnd", mode = { "n", "v" } },
+  { "<leader>cc", "<cmd>lua require('user.copy_utils').copy_parent_class()<cr>", desc = "Copy Parent Class Name", mode = { "n", "v" } },
+  { "<leader>cC", "<cmd>lua require('user.copy_utils').copy_parent_class_with_lines()<cr>", desc = "Copy File:ClassStart:ClassEnd", mode = { "n", "v" } },
+
   -- Claude Code
   { "<leader>a", group = "AI/Claude" },
   { "<leader>am", "<cmd>ClaudeCodeSelectModel<cr>", desc = "Select Model" },
