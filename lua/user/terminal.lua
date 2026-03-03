@@ -531,18 +531,11 @@ local function setup_keymaps()
 end
 
 -- Additional safety: Disable treesitter for terminal buffers
-vim.api.nvim_create_autocmd("BufWinEnter", {
-  pattern = "*",
+-- Use TermOpen instead of BufWinEnter for better performance
+vim.api.nvim_create_autocmd("TermOpen", {
   callback = function()
     local buf = vim.api.nvim_get_current_buf()
-
-    -- Safely check buffer type
-    local ok, buftype = pcall(vim.api.nvim_buf_get_option, buf, "buftype")
-
-    if ok and buftype == "terminal" then
-      -- Disable treesitter highlighting for terminal buffers
-      disable_treesitter_for_terminal(buf)
-    end
+    disable_treesitter_for_terminal(buf)
   end,
 })
 
@@ -550,6 +543,11 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 vim.api.nvim_create_autocmd("WinClosed", {
   pattern = "*",
   callback = function()
+    -- Early exit if no terminals are tracked (performance optimization)
+    if not terminals.horizontal and not terminals.vertical then
+      return
+    end
+
     -- Check if any terminal windows are still open
     local terminal_windows = {}
 

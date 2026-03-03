@@ -50,29 +50,9 @@ function M.load()
     end,
   })
 
-  -- Reapply highlights when entering buffers with different filetypes
-  vim.api.nvim_create_autocmd("FileType", {
-    group = "CursorLightTheme",
-    callback = function()
-      -- Small delay to ensure filetype is fully set
-      vim.defer_fn(function()
-        treesitter_theme.setup()
-        lsp_theme.setup()
-      end, 10)
-    end,
-  })
-
-  -- Ensure highlights are applied when entering vim
-  vim.api.nvim_create_autocmd("VimEnter", {
-    group = "CursorLightTheme",
-    callback = function()
-      vim.defer_fn(function()
-        treesitter_theme.setup()
-        plugins_theme.setup()
-        lsp_theme.setup()
-      end, 100)
-    end,
-  })
+  -- NOTE: Removed FileType autocommand for performance
+  -- Theme highlights are set once at ColorScheme change and LazyLoad
+  -- VimEnter is kept but only runs once at startup
 end
 
 -- Export colors for other configurations to use
