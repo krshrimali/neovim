@@ -544,9 +544,7 @@ vim.api.nvim_create_autocmd("WinClosed", {
   pattern = "*",
   callback = function()
     -- Early exit if no terminals are tracked (performance optimization)
-    if not terminals.horizontal and not terminals.vertical then
-      return
-    end
+    if not terminals.horizontal and not terminals.vertical then return end
 
     -- Check if any terminal windows are still open
     local terminal_windows = {}
