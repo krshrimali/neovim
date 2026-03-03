@@ -75,16 +75,10 @@ keymap("n", "glb", "<cmd>Gitsigns blame_line<cr>", opts)
 -- <leader>gy is mapped in plugins.lua via snacks.nvim lazy keys
 
 -- ============================================
--- FILE OPERATIONS (FzfLua)
+-- FILE OPERATIONS (Snacks.picker - defined in plugins.lua)
 -- ============================================
-keymap("n", "<C-p>", "<cmd>FzfLua files<cr>", opts)
-keymap("n", "<leader>ff", "<cmd>FzfLua files<cr>", opts)
-keymap("n", "<leader>fr", "<cmd>FzfLua oldfiles<cr>", opts)
-keymap("n", "<leader>/", "<cmd>FzfLua live_grep<cr>", opts)
-keymap("n", "<leader>b", "<cmd>FzfLua buffers<cr>", opts)
-keymap("n", "<leader>fh", "<cmd>FzfLua helptags<cr>", opts)
-keymap("n", "<leader>fk", "<cmd>FzfLua keymaps<cr>", opts)
-keymap("n", "<leader>fs", "<cmd>FzfLua lsp_document_symbols<cr>", opts)
+-- <C-p>, <leader>ff, <leader>fr, <leader>/, <leader>b, <leader>fh, <leader>fk, <leader>fs
+-- are all mapped in plugins.lua via Snacks.picker for better performance
 
 -- ============================================
 -- WINDOW SPLITS (like Helix <space>k)
