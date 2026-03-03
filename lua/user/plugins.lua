@@ -56,15 +56,6 @@ require("lazy").setup({
   {
     "ibhagwan/fzf-lua",
     cmd = "FzfLua",
-    keys = {
-      { "<C-p>", "<cmd>FzfLua files<cr>", desc = "Find Files" },
-      { "<leader>ff", "<cmd>FzfLua files<cr>", desc = "Find Files" },
-      { "<leader>fr", "<cmd>FzfLua oldfiles<cr>", desc = "Recent Files" },
-      { "<leader>/", "<cmd>FzfLua live_grep<cr>", desc = "Live Grep" },
-      { "<leader>b", "<cmd>FzfLua buffers<cr>", desc = "Buffers" },
-      { "<leader>fh", "<cmd>FzfLua helptags<cr>", desc = "Help Tags" },
-      { "<leader>fk", "<cmd>FzfLua keymaps<cr>", desc = "Keymaps" },
-    },
     config = function() require "user.fzf-lua" end,
   },
 
@@ -143,13 +134,12 @@ require("lazy").setup({
   -- ============================================
   -- UI: Minimal UI enhancements
   -- ============================================
-  -- Theme - flexoki
+  -- Theme - space-vim-theme
   {
-    "kepano/flexoki-neovim",
-    name = "flexoki",
+    "liuchengxu/space-vim-theme",
     lazy = false,
     priority = 1000,
-    config = function() vim.cmd.colorscheme "flexoki-dark" end,
+    config = function() vim.cmd.colorscheme "space_vim_theme" end,
   },
 
   -- Transparent background (load on demand with :TransparentEnable)
@@ -171,21 +161,48 @@ require("lazy").setup({
     config = function() require "user.lualine" end,
   },
 
-  -- Snacks for gitbrowse (load on demand)
+  -- Snacks for picker and gitbrowse
   {
     "folke/snacks.nvim",
+    lazy = false,
+    priority = 900,
     keys = {
+      -- Picker keymaps
+      { "<C-p>", function() Snacks.picker.files() end, desc = "Find Files" },
+      { "<leader>ff", function() Snacks.picker.files() end, desc = "Find Files" },
+      { "<leader>fr", function() Snacks.picker.recent() end, desc = "Recent Files" },
+      { "<leader>/", function() Snacks.picker.grep() end, desc = "Live Grep" },
+      { "<leader>b", function() Snacks.picker.buffers() end, desc = "Buffers" },
+      { "<leader>fh", function() Snacks.picker.help() end, desc = "Help Tags" },
+      { "<leader>fk", function() Snacks.picker.keymaps() end, desc = "Keymaps" },
+      { "<leader>fs", function() Snacks.picker.lsp_symbols() end, desc = "LSP Symbols" },
+      { "<leader>fd", function() Snacks.picker.diagnostics() end, desc = "Diagnostics" },
+      { "<leader>fc", function() Snacks.picker.commands() end, desc = "Commands" },
+      { "<leader>fw", function() Snacks.picker.grep_word() end, desc = "Grep Word", mode = { "n", "x" } },
+      -- Git
       {
         "<leader>gy",
         function()
-          require("snacks").gitbrowse { open = function(url) vim.fn.setreg("+", url) end }
+          Snacks.gitbrowse { open = function(url) vim.fn.setreg("+", url) end }
         end,
         desc = "Copy GitHub permalink",
         mode = { "n", "x" },
       },
     },
     opts = {
+      animations = { enabled = false },
       bigfile = { enabled = false },
+      dashboard = { enabled = false },
+      explorer = { enabled = false },
+      indent = { enabled = false },
+      input = { enabled = false },
+      notifier = { enabled = false },
+      quickfile = { enabled = false },
+      scope = { enabled = false },
+      scroll = { enabled = false },
+      statuscolumn = { enabled = false },
+      terminal = { enabled = false },
+      words = { enabled = false },
       gitbrowse = {
         what = "permalink",
         url_patterns = {
@@ -197,17 +214,56 @@ require("lazy").setup({
           },
         },
       },
-      dashboard = { enabled = false },
-      explorer = { enabled = false },
-      indent = { enabled = false },
-      input = { enabled = false },
-      picker = { enabled = false },
-      notifier = { enabled = false },
-      quickfile = { enabled = false },
-      scope = { enabled = false },
-      scroll = { enabled = false },
-      statuscolumn = { enabled = false },
-      words = { enabled = false },
+      picker = {
+        enabled = true,
+        prompt = ":",
+        focus = "input",
+        layout = {
+          cycle = true,
+          preset = "ivy",
+        },
+        matcher = {
+          fuzzy = true,
+          smartcase = true,
+          ignorecase = true,
+          sort_empty = false,
+          filename_bonus = true,
+          file_pos = true,
+          -- Disable expensive bonuses for performance
+          cwd_bonus = false,
+          frecency = false,
+          history_bonus = false,
+        },
+        sort = {
+          fields = { "score:desc", "#text", "idx" },
+        },
+        ui_select = true,
+        formatters = {
+          file = {
+            filename_first = false,
+            truncate = 80,
+            filename_only = false,
+            icon_width = 2,
+            git_status_hl = false,
+          },
+        },
+        icons = {
+          files = { enabled = false },
+        },
+        win = {
+          input = {
+            keys = {
+              ["<c-x>"] = { "edit_split", mode = { "i", "n" } },
+            },
+          },
+          preview = {
+            wo = {
+              number = false,
+              relativenumber = false,
+            },
+          },
+        },
+      },
     },
   },
 

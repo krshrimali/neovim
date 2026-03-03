@@ -58,28 +58,9 @@ function M.setup(opts)
     end,
   })
 
-  -- Reapply treesitter highlights when treesitter is loaded
-  vim.api.nvim_create_autocmd("FileType", {
-    group = "HexxaDarkTheme",
-    callback = function()
-      vim.defer_fn(function()
-        treesitter_theme.setup()
-        lsp_theme.setup()
-      end, 50)
-    end,
-  })
-
-  -- Reapply all highlights when entering a buffer
-  vim.api.nvim_create_autocmd("BufEnter", {
-    group = "HexxaDarkTheme",
-    callback = function()
-      vim.defer_fn(function()
-        treesitter_theme.setup()
-        plugins_theme.setup()
-        lsp_theme.setup()
-      end, 10)
-    end,
-  })
+  -- NOTE: Removed FileType and BufEnter autocommands for performance
+  -- Theme highlights are set once at ColorScheme change and LazyDone
+  -- If you need to refresh highlights, use :HexxaReload
 
   -- Create a command to reload the theme
   vim.api.nvim_create_user_command("HexxaReload", function() M.reload() end, { desc = "Reload Hexxa Dark theme" })
