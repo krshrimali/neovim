@@ -102,6 +102,14 @@ keymap("i", "<M-]>", "<Plug>(copilot-next)", { silent = true })
 keymap("i", "<M-[>", "<Plug>(copilot-previous)", { silent = true })
 
 -- ============================================
+-- MOUSE
+-- ============================================
+keymap("n", "<C-LeftMouse>", "<LeftMouse><cmd>lua vim.lsp.buf.definition()<cr>", opts)
+keymap("n", "<C-RightMouse>", "<RightMouse><cmd>lua vim.lsp.buf.references()<cr>", opts)
+keymap("n", "<A-LeftMouse>", "<C-o>", opts)
+keymap("n", "<A-RightMouse>", "<C-i>", opts)
+
+-- ============================================
 -- QUICKFIX
 -- ============================================
 keymap("n", "<leader>xq", "<cmd>copen<cr>", opts)
