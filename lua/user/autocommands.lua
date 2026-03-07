@@ -19,19 +19,23 @@ vim.api.nvim_create_autocmd({ "TextYankPost" }, {
   callback = function() vim.highlight.on_yank { higroup = "Visual", timeout = 100 } end,
 })
 
--- Close floating windows with ESC (only for actual floating windows)
+-- Close floating windows with ESC (only while the window is actually floating)
 vim.api.nvim_create_autocmd("WinEnter", {
   callback = function()
     local win = vim.api.nvim_get_current_win()
     local config = vim.api.nvim_win_get_config(win)
     if config.relative ~= "" then
       local buf = vim.api.nvim_get_current_buf()
-      -- Only set if not already set
-      if not vim.b[buf].float_keymaps_set then
-        vim.keymap.set("n", "<Esc>", "<cmd>close<cr>", { buffer = buf, silent = true })
-        vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = buf, silent = true })
-        vim.b[buf].float_keymaps_set = true
-      end
+      local esc_id = vim.keymap.set("n", "<Esc>", "<cmd>close<cr>", { buffer = buf, silent = true })
+      local q_id = vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = buf, silent = true })
+      -- Remove keymaps when leaving this floating window
+      vim.api.nvim_create_autocmd("WinLeave", {
+        callback = function()
+          pcall(vim.keymap.del, "n", "<Esc>", { buffer = buf })
+          pcall(vim.keymap.del, "n", "q", { buffer = buf })
+        end,
+        once = true,
+      })
     end
   end,
 })
