@@ -313,21 +313,21 @@ local breadcrumbs = { get_breadcrumbs }
 
 -- Clickable git log viewer
 function _G.LualineGitLog()
-  local handle = io.popen("git log --oneline --no-decorate -20 2>/dev/null")
+  local handle = io.popen "git log --oneline --no-decorate -20 2>/dev/null"
   if not handle then return end
-  local output = handle:read("*a")
+  local output = handle:read "*a"
   handle:close()
   if output == "" then return end
 
   local entries = {}
-  for line in output:gmatch("[^\n]+") do
-    local hash, msg = line:match("^(%S+)%s+(.+)$")
+  for line in output:gmatch "[^\n]+" do
+    local hash, msg = line:match "^(%S+)%s+(.+)$"
     if hash then table.insert(entries, { hash = hash, name = hash .. "  " .. msg }) end
   end
   if #entries == 0 then return end
 
   show_picker("Git Log (recent)", entries, function(item)
-    vim.cmd("new")
+    vim.cmd "new"
     local buf = vim.api.nvim_get_current_buf()
     vim.bo[buf].buftype = "nofile"
     vim.bo[buf].bufhidden = "wipe"
@@ -336,10 +336,12 @@ function _G.LualineGitLog()
 
     local diff_handle = io.popen("git show --stat --patch " .. item.hash .. " 2>/dev/null")
     if diff_handle then
-      local diff = diff_handle:read("*a")
+      local diff = diff_handle:read "*a"
       diff_handle:close()
       local lines = {}
-      for l in diff:gmatch("[^\n]+") do table.insert(lines, l) end
+      for l in diff:gmatch "[^\n]+" do
+        table.insert(lines, l)
+      end
       vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
     end
     vim.bo[buf].modifiable = false
