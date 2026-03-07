@@ -32,9 +32,7 @@ vim.api.nvim_create_autocmd("WinEnter", {
       local function close_float()
         local w = vim.api.nvim_get_current_win()
         local c = vim.api.nvim_win_get_config(w)
-        if c.relative ~= "" then
-          vim.api.nvim_win_close(w, true)
-        end
+        if c.relative ~= "" then vim.api.nvim_win_close(w, true) end
       end
       vim.keymap.set("n", "<Esc>", close_float, { buffer = buf, silent = true, desc = "Close float" })
       vim.keymap.set("n", "q", close_float, { buffer = buf, silent = true, desc = "Close float" })
