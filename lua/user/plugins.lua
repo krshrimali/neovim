@@ -134,13 +134,17 @@ require("lazy").setup({
   -- ============================================
   -- UI: Minimal UI enhancements
   -- ============================================
-  -- Theme - space-vim-theme
-  -- {
-  --   "liuchengxu/space-vim-theme",
-  --   lazy = false,
-  --   priority = 1000,
-  --   config = function() vim.cmd.colorscheme "space_vim_theme" end,
-  -- },
+  -- Theme - flexoki
+  {
+    "kepano/flexoki-neovim",
+    name = "flexoki",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.opt.background = "light"
+      vim.cmd.colorscheme("flexoki-light")
+    end,
+  },
 
   -- Transparent background (load on demand with :TransparentEnable)
   {
