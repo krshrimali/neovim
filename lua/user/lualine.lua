@@ -10,8 +10,23 @@ function _G.LualineGoForward()
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-i>", true, false, true), "n", false)
 end
 
+function _G.LualineFilePicker()
+  local ok, snacks = pcall(require, "snacks")
+  if ok then snacks.picker.files() else vim.cmd("FzfLua files") end
+end
+
+function _G.LualineSearchPicker()
+  local ok, snacks = pcall(require, "snacks")
+  if ok then snacks.picker.grep() else vim.cmd("FzfLua live_grep") end
+end
+
 local nav_buttons = {
-  function() return "%@v:lua.LualineGoBack@ \u{2190} %X %@v:lua.LualineGoForward@ \u{2192} %X" end,
+  function()
+    return "%@v:lua.LualineGoBack@ \u{2190} %X"
+      .. " %@v:lua.LualineGoForward@ \u{2192} %X"
+      .. " %@v:lua.LualineFilePicker@files%X"
+      .. " %@v:lua.LualineSearchPicker@search%X"
+  end,
 }
 
 -- Clickable breadcrumbs component
