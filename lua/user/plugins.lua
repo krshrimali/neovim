@@ -446,6 +446,43 @@ require("lazy").setup({
       },
       {
         "<leader>sf",
+        function()
+          -- Send parent function to sidekick using built-in treesitter
+          local ok, parser = pcall(vim.treesitter.get_parser, 0)
+          if not ok or not parser then
+            vim.notify("Treesitter parser not available for this filetype", vim.log.levels.ERROR)
+            return
+          end
+          parser:parse()
+          local node = vim.treesitter.get_node()
+          if not node then
+            vim.notify("No treesitter node at cursor", vim.log.levels.WARN)
+            return
+          end
+          while node do
+            local t = node:type()
+            if t == "function_definition" or t == "function_declaration"
+              or t == "method_definition" or t == "method_declaration"
+              or t == "function_item" or t == "fn_item"
+              or t == "function" or t == "local_function" then
+              break
+            end
+            node = node:parent()
+          end
+          if not node then
+            vim.notify("No parent function found", vim.log.levels.WARN)
+            return
+          end
+          local sr, _, er, _ = node:range()
+          local lines = vim.api.nvim_buf_get_lines(0, sr, er + 1, false)
+          local text = table.concat(lines, "\n")
+          local path = vim.fn.fnamemodify(vim.fn.expand("%"), ":.")
+          require("sidekick.cli").send { msg = path .. ":" .. (sr + 1) .. ":" .. (er + 1) .. "\n" .. text }
+        end,
+        desc = "Sidekick Send Function",
+      },
+      {
+        "<leader>sl",
         function() require("sidekick.cli").send { msg = "{file}" } end,
         desc = "Sidekick Send File",
       },
@@ -454,6 +491,18 @@ require("lazy").setup({
         function() require("sidekick.cli").send { msg = "{selection}" } end,
         mode = { "x" },
         desc = "Sidekick Send Selection",
+      },
+      {
+        "<leader>sy",
+        function()
+          local clip = vim.fn.getreg("+")
+          if clip == "" then
+            vim.notify("Clipboard is empty", vim.log.levels.WARN)
+            return
+          end
+          require("sidekick.cli").send { msg = clip }
+        end,
+        desc = "Sidekick Send Clipboard",
       },
       {
         "<leader>sp",
