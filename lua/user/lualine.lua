@@ -364,34 +364,6 @@ function _G.LualineGitLog()
   end)
 end
 
--- Clickable git actions via Neogit
-function _G.LualineGitPush()
-  local ok, neogit = pcall(require, "neogit")
-  if ok then
-    neogit.open { "push" }
-  else
-    vim.notify("Neogit not installed", vim.log.levels.ERROR)
-  end
-end
-
-function _G.LualineGitPull()
-  local ok, neogit = pcall(require, "neogit")
-  if ok then
-    neogit.open { "pull" }
-  else
-    vim.notify("Neogit not installed", vim.log.levels.ERROR)
-  end
-end
-
-function _G.LualineGitStatus()
-  local ok, neogit = pcall(require, "neogit")
-  if ok then
-    neogit.open()
-  else
-    vim.notify("Neogit not installed", vim.log.levels.ERROR)
-  end
-end
-
 -- Macro recording indicator
 local function macro_recording()
   local reg = vim.fn.reg_recording()
@@ -435,14 +407,6 @@ lualine.setup {
         fmt = function(str) return "%@v:lua.LualineGitLog@ " .. str .. " %X" end,
       },
       { "diff", symbols = { added = "+", modified = "~", removed = "-" } },
-      {
-        function()
-          return "%@v:lua.LualineGitPush@push%X"
-            .. " %@v:lua.LualineGitPull@pull%X"
-            .. " %@v:lua.LualineGitStatus@status%X"
-        end,
-        cond = function() return vim.fn.isdirectory ".git" == 1 or vim.fn.finddir(".git", ";") ~= "" end,
-      },
     },
     lualine_c = {
       nav_buttons,
