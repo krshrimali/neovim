@@ -106,6 +106,7 @@ keymap("i", "<M-[>", "<Plug>(copilot-previous)", { silent = true })
 -- ============================================
 keymap("n", "<C-LeftMouse>", "<LeftMouse><cmd>lua vim.lsp.buf.definition()<cr>", opts)
 keymap("n", "<C-RightMouse>", "<RightMouse><cmd>lua vim.lsp.buf.references()<cr>", opts)
+keymap("n", "<MiddleMouse>", "<LeftMouse><cmd>lua vim.lsp.buf.hover()<cr>", opts)
 keymap("n", "<A-LeftMouse>", "<C-o>", opts)
 keymap("n", "<A-RightMouse>", "<C-i>", opts)
 

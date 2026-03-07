@@ -11,7 +11,7 @@ function _G.LualineGoForward()
 end
 
 local nav_buttons = {
-  function() return "%@v:lua.LualineGoBack@  <-  %X %@v:lua.LualineGoForward@  ->  %X" end,
+  function() return "%@v:lua.LualineGoBack@ \u{2190} %X %@v:lua.LualineGoForward@ \u{2192} %X" end,
 }
 
 -- Clickable breadcrumbs component
@@ -277,37 +277,76 @@ local function get_breadcrumbs()
     last_breadcrumb_output = ""
     return ""
   end
-  last_breadcrumb_output = table.concat(parts, " > ")
+
+  last_breadcrumb_output = table.concat(parts, " \u{203a}")
   return last_breadcrumb_output
 end
 
 local breadcrumbs = { get_breadcrumbs }
 
+-- Macro recording indicator
+local function macro_recording()
+  local reg = vim.fn.reg_recording()
+  if reg ~= "" then return "REC @" .. reg end
+  return ""
+end
+
+-- Search count indicator
+local function search_count()
+  if vim.v.hlsearch == 0 then return "" end
+  local ok, result = pcall(vim.fn.searchcount, { maxcount = 999, timeout = 250 })
+  if not ok or result.total == 0 then return "" end
+  return string.format("[%d/%d]", result.current, result.total)
+end
+
+-- LSP server names
+local function lsp_status()
+  local clients = vim.lsp.get_clients({ bufnr = 0 })
+  if #clients == 0 then return "" end
+  local names = {}
+  for _, c in ipairs(clients) do
+    table.insert(names, c.name)
+  end
+  return table.concat(names, ", ")
+end
+
 lualine.setup {
   options = {
     globalstatus = true,
     icons_enabled = false,
-    theme = "auto", -- Light theme that works well
-    component_separators = { left = "|", right = "|" },
-    section_separators = { left = "", right = "" },
+    theme = "auto",
+    component_separators = { left = "\u{2502}", right = "\u{2502}" },
+    section_separators = { left = "\u{2590}", right = "\u{258c}" },
     disabled_filetypes = { "alpha", "dashboard", "NvimTree" },
   },
   sections = {
     lualine_a = { "mode" },
-    lualine_b = { "branch" },
+    lualine_b = {
+      "branch",
+      { "diff", symbols = { added = "+", modified = "~", removed = "-" } },
+    },
     lualine_c = {
       nav_buttons,
-      { "filename", path = 1 }, -- Relative path
+      {
+        "filename",
+        path = 1,
+        symbols = { modified = " [+]", readonly = " [-]", unnamed = "[No Name]" },
+      },
       breadcrumbs,
     },
-    lualine_x = { "diagnostics" },
+    lualine_x = {
+      { macro_recording, color = { fg = "#ff9e64", gui = "bold" } },
+      { search_count, color = { fg = "#7aa2f7" } },
+      "diagnostics",
+      { lsp_status, color = { fg = "#9ece6a" } },
+    },
     lualine_y = { "filetype" },
     lualine_z = { "location", "progress" },
   },
   inactive_sections = {
     lualine_a = {},
     lualine_b = {},
-    lualine_c = { "filename" },
+    lualine_c = { { "filename", path = 1 } },
     lualine_x = { "location" },
     lualine_y = {},
     lualine_z = {},
