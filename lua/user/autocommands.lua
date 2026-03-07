@@ -23,10 +23,10 @@ vim.api.nvim_create_autocmd({ "TextYankPost" }, {
 vim.api.nvim_create_autocmd("ModeChanged", {
   pattern = "[vV\x16]*:n",
   callback = function()
-    local rel_path = vim.fn.fnamemodify(vim.fn.expand("%"), ":.")
+    local rel_path = vim.fn.fnamemodify(vim.fn.expand "%", ":.")
     if rel_path == "" then return end
-    local start_line = vim.fn.line("'<")
-    local end_line = vim.fn.line("'>")
+    local start_line = vim.fn.line "'<"
+    local end_line = vim.fn.line "'>"
     vim.fn.setreg("+", rel_path .. ":" .. start_line .. ":" .. end_line)
   end,
 })

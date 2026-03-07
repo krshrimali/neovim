@@ -20,13 +20,32 @@ local breadcrumb_state = { symbols = nil, bufnr = nil, changedtick = nil, displa
 
 -- LSP symbol kind number to name
 local kind_names = {
-  [1] = "File", [2] = "Module", [3] = "Namespace", [4] = "Package",
-  [5] = "Class", [6] = "Method", [7] = "Property", [8] = "Field",
-  [9] = "Constructor", [10] = "Enum", [11] = "Interface", [12] = "Function",
-  [13] = "Variable", [14] = "Constant", [15] = "String", [16] = "Number",
-  [17] = "Boolean", [18] = "Array", [19] = "Object", [20] = "Key",
-  [21] = "Null", [22] = "EnumMember", [23] = "Struct", [24] = "Event",
-  [25] = "Operator", [26] = "TypeParameter",
+  [1] = "File",
+  [2] = "Module",
+  [3] = "Namespace",
+  [4] = "Package",
+  [5] = "Class",
+  [6] = "Method",
+  [7] = "Property",
+  [8] = "Field",
+  [9] = "Constructor",
+  [10] = "Enum",
+  [11] = "Interface",
+  [12] = "Function",
+  [13] = "Variable",
+  [14] = "Constant",
+  [15] = "String",
+  [16] = "Number",
+  [17] = "Boolean",
+  [18] = "Array",
+  [19] = "Object",
+  [20] = "Key",
+  [21] = "Null",
+  [22] = "EnumMember",
+  [23] = "Struct",
+  [24] = "Event",
+  [25] = "Operator",
+  [26] = "TypeParameter",
 }
 
 -- Collect all symbols of a given kind from the symbol tree
@@ -42,9 +61,7 @@ local function collect_symbols_by_kind(symbols, target_kind, result, parent_name
         table.insert(result, { name = display, line = sel.start.line, col = sel.start.character })
       end
     end
-    if symbol.children then
-      collect_symbols_by_kind(symbol.children, target_kind, result, symbol.name)
-    end
+    if symbol.children then collect_symbols_by_kind(symbol.children, target_kind, result, symbol.name) end
   end
   return result
 end
@@ -64,7 +81,9 @@ local function show_picker(title, items, on_select)
   vim.bo[buf].bufhidden = "wipe"
 
   local width = 10
-  for _, line in ipairs(lines) do width = math.max(width, #line + 4) end
+  for _, line in ipairs(lines) do
+    width = math.max(width, #line + 4)
+  end
   width = math.min(width, 60)
   local height = math.min(#lines, 20)
 
@@ -83,7 +102,9 @@ local function show_picker(title, items, on_select)
   })
   vim.wo[win].cursorline = true
 
-  local function close() if vim.api.nvim_win_is_valid(win) then vim.api.nvim_win_close(win, true) end end
+  local function close()
+    if vim.api.nvim_win_is_valid(win) then vim.api.nvim_win_close(win, true) end
+  end
 
   local function select()
     local idx = vim.api.nvim_win_get_cursor(win)[1]
@@ -125,7 +146,11 @@ function _G.LualineBreadcrumbClick(idx)
       local stat = vim.uv.fs_stat(item.path)
       if stat and stat.type == "directory" then
         local ok, fzf = pcall(require, "fzf-lua")
-        if ok then fzf.files({ cwd = item.path }) else vim.cmd("edit " .. vim.fn.fnameescape(item.path)) end
+        if ok then
+          fzf.files { cwd = item.path }
+        else
+          vim.cmd("edit " .. vim.fn.fnameescape(item.path))
+        end
       else
         vim.cmd("edit " .. vim.fn.fnameescape(item.path))
       end
@@ -141,7 +166,7 @@ function _G.LualineBreadcrumbClick(idx)
   local kind_name = kind_names[target.symbol_kind] or "Symbol"
   show_picker(kind_name .. "s", siblings, function(item)
     vim.api.nvim_win_set_cursor(0, { item.line + 1, item.col })
-    vim.cmd("normal! zz")
+    vim.cmd "normal! zz"
   end)
 end
 
@@ -176,9 +201,7 @@ local function find_containing_symbols(symbols, cursor_line, cursor_col, result)
           col = sel.start.character,
           symbol_kind = symbol.kind,
         })
-        if symbol.children then
-          find_containing_symbols(symbol.children, cursor_line, cursor_col, result)
-        end
+        if symbol.children then find_containing_symbols(symbol.children, cursor_line, cursor_col, result) end
       end
     end
   end
@@ -188,7 +211,7 @@ end
 -- Async symbol fetching - updates cache without blocking statusline
 local function refresh_symbols(bufnr)
   if vim.bo[bufnr].buftype ~= "" then return end
-  local clients = vim.lsp.get_clients({ bufnr = bufnr })
+  local clients = vim.lsp.get_clients { bufnr = bufnr }
   for _, c in ipairs(clients) do
     if c.server_capabilities.documentSymbolProvider then
       local params = { textDocument = vim.lsp.util.make_text_document_params(bufnr) }
@@ -213,9 +236,7 @@ vim.api.nvim_create_autocmd({ "CursorHold", "BufEnter", "TextChanged", "InsertLe
     local bufnr = vim.api.nvim_get_current_buf()
     if vim.bo[bufnr].buftype ~= "" then return end
     local changedtick = vim.b[bufnr].changedtick
-    if breadcrumb_state.bufnr ~= bufnr or breadcrumb_state.changedtick ~= changedtick then
-      refresh_symbols(bufnr)
-    end
+    if breadcrumb_state.bufnr ~= bufnr or breadcrumb_state.changedtick ~= changedtick then refresh_symbols(bufnr) end
   end,
 })
 
@@ -245,7 +266,7 @@ local function get_breadcrumbs()
   if filepath ~= "" then
     local rel = vim.fn.fnamemodify(filepath, ":.")
     local dir_parts = {}
-    for part in rel:gmatch("[^/]+") do
+    for part in rel:gmatch "[^/]+" do
       table.insert(dir_parts, part)
     end
     -- Add directory segments (all but last which is the filename)
@@ -301,7 +322,7 @@ end
 
 -- LSP server names
 local function lsp_status()
-  local clients = vim.lsp.get_clients({ bufnr = 0 })
+  local clients = vim.lsp.get_clients { bufnr = 0 }
   if #clients == 0 then return "" end
   local names = {}
   for _, c in ipairs(clients) do
