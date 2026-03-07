@@ -112,6 +112,16 @@ require("lazy").setup({
     config = function() require "user.diffview" end,
   },
 
+  {
+    "NeogitOrg/neogit",
+    cmd = "Neogit",
+    dependencies = { "nvim-lua/plenary.nvim", "sindrets/diffview.nvim" },
+    opts = {
+      integrations = { diffview = true },
+      signs = { section = { ">", "v" }, item = { ">", "v" } },
+    },
+  },
+
   -- ============================================
   -- EDITING: Essential editing enhancements
   -- ============================================
