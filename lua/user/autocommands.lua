@@ -19,6 +19,18 @@ vim.api.nvim_create_autocmd({ "TextYankPost" }, {
   callback = function() vim.highlight.on_yank { higroup = "Visual", timeout = 100 } end,
 })
 
+-- Copy relative_path:start_line:end_line to clipboard on visual selection
+vim.api.nvim_create_autocmd("ModeChanged", {
+  pattern = "[vV\x16]*:n",
+  callback = function()
+    local rel_path = vim.fn.fnamemodify(vim.fn.expand("%"), ":.")
+    if rel_path == "" then return end
+    local start_line = vim.fn.line("'<")
+    local end_line = vim.fn.line("'>")
+    vim.fn.setreg("+", rel_path .. ":" .. start_line .. ":" .. end_line)
+  end,
+})
+
 -- Close floating windows with ESC (only for actual floating windows)
 vim.api.nvim_create_autocmd("WinEnter", {
   callback = function()
