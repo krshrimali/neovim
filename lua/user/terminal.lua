@@ -141,7 +141,7 @@ local function set_terminal_keymaps(buf)
   -- Skip sidekick terminals - they manage their own keymaps
   local ft = vim.bo[buf].filetype
   local bufname = vim.api.nvim_buf_get_name(buf)
-  if ft == "sidekick_terminal" or bufname:find("sidekick") then return end
+  if ft == "sidekick_terminal" or bufname:find "sidekick" then return end
 
   local opts = { buffer = buf, noremap = true, silent = true }
 
