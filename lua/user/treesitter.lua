@@ -3,7 +3,7 @@ if not status_ok then return end
 
 configs.setup {
   -- Only install minimal parsers to reduce startup time
-  ensure_installed = { "lua", "python" }, -- Minimal set, others installed on demand
+  ensure_installed = { "lua", "python", "diff", "gitcommit" }, -- Minimal set, others installed on demand
   sync_install = false, -- install languages synchronously (only applied to `ensure_installed`)
   -- max_file_lines = 3000, -- Removed to ensure no interference with LSP
   ignore_install = { "" }, -- List of parsers to ignore installing
