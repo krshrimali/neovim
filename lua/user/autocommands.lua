@@ -19,7 +19,6 @@ vim.api.nvim_create_autocmd({ "TextYankPost" }, {
   callback = function() vim.highlight.on_yank { higroup = "Visual", timeout = 100 } end,
 })
 
-
 -- Close floating windows with ESC (only for actual floating windows)
 vim.api.nvim_create_autocmd("WinEnter", {
   callback = function()
