@@ -116,3 +116,39 @@ keymap("n", "<A-RightMouse>", "<C-i>", opts)
 keymap("n", "<leader>xq", "<cmd>copen<cr>", opts)
 keymap("n", "]q", "<cmd>cnext<cr>", opts)
 keymap("n", "[q", "<cmd>cprev<cr>", opts)
+
+-- ============================================
+-- RIGHT-CLICK POPUP MENU
+-- ============================================
+-- Navigation
+vim.cmd [[
+  amenu PopUp.Go\ to\ Definition      <cmd>lua vim.lsp.buf.definition()<cr>
+  amenu PopUp.Go\ to\ References      <cmd>lua vim.lsp.buf.references()<cr>
+  amenu PopUp.Go\ to\ Implementation  <cmd>lua vim.lsp.buf.implementation()<cr>
+  amenu PopUp.Go\ to\ Type\ Definition <cmd>lua vim.lsp.buf.type_definition()<cr>
+  amenu PopUp.-sep1-                   <Nop>
+
+  " Actions
+  amenu PopUp.Rename\ Symbol           <cmd>lua vim.lsp.buf.rename()<cr>
+  amenu PopUp.Code\ Actions            <cmd>lua vim.lsp.buf.code_action()<cr>
+  amenu PopUp.Hover\ Documentation     <cmd>lua vim.lsp.buf.hover()<cr>
+  amenu PopUp.Signature\ Help          <cmd>lua vim.lsp.buf.signature_help()<cr>
+  amenu PopUp.-sep2-                   <Nop>
+
+  " Diagnostics
+  amenu PopUp.Show\ Diagnostic         <cmd>lua vim.diagnostic.open_float()<cr>
+  amenu PopUp.Next\ Diagnostic         <cmd>lua vim.diagnostic.goto_next()<cr>
+  amenu PopUp.Prev\ Diagnostic         <cmd>lua vim.diagnostic.goto_prev()<cr>
+  amenu PopUp.-sep3-                   <Nop>
+
+  " Git
+  amenu PopUp.Git\ Blame\ Line         <cmd>Gitsigns blame_line<cr>
+  amenu PopUp.Git\ Preview\ Hunk       <cmd>Gitsigns preview_hunk<cr>
+  amenu PopUp.-sep4-                   <Nop>
+
+  " Edit
+  amenu PopUp.Format\ File             <cmd>lua vim.lsp.buf.format({ async = true })<cr>
+  amenu PopUp.Copy\ File\ Path         <cmd>let @+ = fnamemodify(expand('%'), ':.')<cr>
+  amenu PopUp.Copy\ Path:Line          <cmd>let @+ = fnamemodify(expand('%'), ':.') . ':' . line('.')<cr>
+  vmenu PopUp.Copy\ Path:Line\ Range   <Esc><cmd>let @+ = fnamemodify(expand('%'), ':.') . ':' . line("'<") . ':' . line("'>")<cr>
+]]
