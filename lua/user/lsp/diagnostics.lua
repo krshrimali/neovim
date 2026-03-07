@@ -71,6 +71,9 @@ function M.setup()
     highlight LspVirtualLineWarn guifg=#fab387 gui=italic
     highlight LspVirtualLineInfo guifg=#89b4fa gui=italic
     highlight LspVirtualLineHint guifg=#94e2d5 gui=italic
+
+    " Unused/unnecessary code - gray out
+    highlight DiagnosticUnnecessary guifg=#6c7086 gui=strikethrough
   ]]
 end
 
