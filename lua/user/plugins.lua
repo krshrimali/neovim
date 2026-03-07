@@ -473,10 +473,16 @@ require("lazy").setup({
           end
           while node do
             local t = node:type()
-            if t == "function_definition" or t == "function_declaration"
-              or t == "method_definition" or t == "method_declaration"
-              or t == "function_item" or t == "fn_item"
-              or t == "function" or t == "local_function" then
+            if
+              t == "function_definition"
+              or t == "function_declaration"
+              or t == "method_definition"
+              or t == "method_declaration"
+              or t == "function_item"
+              or t == "fn_item"
+              or t == "function"
+              or t == "local_function"
+            then
               break
             end
             node = node:parent()
@@ -488,7 +494,7 @@ require("lazy").setup({
           local sr, _, er, _ = node:range()
           local lines = vim.api.nvim_buf_get_lines(0, sr, er + 1, false)
           local text = table.concat(lines, "\n")
-          local path = vim.fn.fnamemodify(vim.fn.expand("%"), ":.")
+          local path = vim.fn.fnamemodify(vim.fn.expand "%", ":.")
           require("sidekick.cli").send { msg = path .. ":" .. (sr + 1) .. ":" .. (er + 1) .. "\n" .. text }
         end,
         desc = "Sidekick Send Function",
@@ -507,7 +513,7 @@ require("lazy").setup({
       {
         "<leader>sy",
         function()
-          local clip = vim.fn.getreg("+")
+          local clip = vim.fn.getreg "+"
           if clip == "" then
             vim.notify("Clipboard is empty", vim.log.levels.WARN)
             return
