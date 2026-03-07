@@ -102,25 +102,31 @@ local function show_picker(title, items, on_select)
   })
   vim.wo[win].cursorline = true
 
+  local closed = false
   local function close()
-    if vim.api.nvim_win_is_valid(win) then vim.api.nvim_win_close(win, true) end
+    if closed then return end
+    if vim.api.nvim_win_is_valid(win) then
+      closed = true
+      vim.api.nvim_win_close(win, true)
+    end
   end
 
   local function select()
+    if closed or not vim.api.nvim_win_is_valid(win) then return end
     local idx = vim.api.nvim_win_get_cursor(win)[1]
     close()
     on_select(items[idx])
   end
 
-  local opts = { noremap = true, silent = true, buffer = buf }
-  vim.keymap.set("n", "<CR>", select, opts)
+  local kopts = { noremap = true, silent = true, buffer = buf }
+  vim.keymap.set("n", "<CR>", select, kopts)
   vim.keymap.set("n", "<LeftMouse>", function()
-    -- Process the mouse click first to move cursor, then select
+    if closed or not vim.api.nvim_win_is_valid(win) then return end
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<LeftMouse>", true, false, true), "n", false)
     vim.schedule(select)
-  end, opts)
-  vim.keymap.set("n", "q", close, opts)
-  vim.keymap.set("n", "<Esc>", close, opts)
+  end, kopts)
+  vim.keymap.set("n", "q", close, kopts)
+  vim.keymap.set("n", "<Esc>", close, kopts)
 
   vim.api.nvim_create_autocmd({ "BufLeave", "WinLeave" }, { buffer = buf, callback = close, once = true })
 end
@@ -305,6 +311,42 @@ end
 
 local breadcrumbs = { get_breadcrumbs }
 
+-- Clickable git log viewer
+function _G.LualineGitLog()
+  local handle = io.popen("git log --oneline --no-decorate -20 2>/dev/null")
+  if not handle then return end
+  local output = handle:read("*a")
+  handle:close()
+  if output == "" then return end
+
+  local entries = {}
+  for line in output:gmatch("[^\n]+") do
+    local hash, msg = line:match("^(%S+)%s+(.+)$")
+    if hash then table.insert(entries, { hash = hash, name = hash .. "  " .. msg }) end
+  end
+  if #entries == 0 then return end
+
+  show_picker("Git Log (recent)", entries, function(item)
+    vim.cmd("new")
+    local buf = vim.api.nvim_get_current_buf()
+    vim.bo[buf].buftype = "nofile"
+    vim.bo[buf].bufhidden = "wipe"
+    vim.bo[buf].swapfile = false
+    vim.bo[buf].filetype = "git"
+
+    local diff_handle = io.popen("git show --stat --patch " .. item.hash .. " 2>/dev/null")
+    if diff_handle then
+      local diff = diff_handle:read("*a")
+      diff_handle:close()
+      local lines = {}
+      for l in diff:gmatch("[^\n]+") do table.insert(lines, l) end
+      vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+    end
+    vim.bo[buf].modifiable = false
+    vim.api.nvim_buf_set_name(buf, "git://" .. item.hash)
+  end)
+end
+
 -- Macro recording indicator
 local function macro_recording()
   local reg = vim.fn.reg_recording()
@@ -343,7 +385,10 @@ lualine.setup {
   sections = {
     lualine_a = { "mode" },
     lualine_b = {
-      "branch",
+      {
+        "branch",
+        fmt = function(str) return "%@v:lua.LualineGitLog@ " .. str .. " %X" end,
+      },
       { "diff", symbols = { added = "+", modified = "~", removed = "-" } },
     },
     lualine_c = {

@@ -9,6 +9,7 @@ opt.writebackup = false
 opt.clipboard = "unnamedplus"
 opt.fileencoding = "utf-8"
 opt.mouse = "a"
+opt.mousemodel = "popup_setpos"
 opt.title = true
 opt.autoread = true
 
