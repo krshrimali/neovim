@@ -144,6 +144,7 @@ vim.cmd [[
   " Git
   amenu PopUp.Git\ Blame\ Line         <cmd>Gitsigns blame_line<cr>
   amenu PopUp.Git\ Preview\ Hunk       <cmd>Gitsigns preview_hunk<cr>
+  amenu PopUp.Git\ Open\ Lazygit       <cmd>lua require('user.terminal').lazygit_float()<cr>
   amenu PopUp.-sep4-                   <Nop>
 
   " Edit
