@@ -74,7 +74,43 @@ function M.setup()
 
     " Unused/unnecessary code - gray out
     highlight DiagnosticUnnecessary guifg=#6c7086 gui=strikethrough
+
+    " Deprecated symbols - strikethrough
+    highlight DiagnosticDeprecated gui=strikethrough guisp=#fab387
+
   ]]
+
+  -- Theme-aware highlights (adapt to light/dark background)
+  local is_light = vim.o.background == "light"
+
+  local hl = vim.api.nvim_set_hl
+
+  -- Current search match (distinct from other matches)
+  hl(0, "CurSearch", { fg = is_light and "#100f0f" or "#1e1e2e", bg = is_light and "#d0a215" or "#f9e2af", bold = true })
+  hl(0, "Search", { fg = is_light and "#100f0f" or "#1e1e2e", bg = is_light and "#e8cca7" or "#f5c2e7" })
+
+  -- Window split separator
+  hl(0, "WinSeparator", { fg = is_light and "#b7b5ac" or "#45475a", bg = "NONE" })
+
+  -- Floating windows
+  local float_bg = is_light and "#f2f0e5" or "#1e1e2e"
+  hl(0, "NormalFloat", { bg = float_bg })
+  hl(0, "FloatBorder", { fg = is_light and "#5171a5" or "#89b4fa", bg = float_bg })
+  hl(0, "FloatTitle", { fg = is_light and "#100f0f" or "#cdd6f4", bg = float_bg, bold = true })
+
+  -- Matching parentheses
+  hl(0, "MatchParen", { fg = is_light and "#bc5215" or "#f9e2af", bold = true, underline = true })
+
+  -- Dimmed punctuation
+  local dim = is_light and "#9e9a90" or "#7f849c"
+  hl(0, "@punctuation.bracket", { fg = dim })
+  hl(0, "@punctuation.delimiter", { fg = dim })
+
+  -- Visual selection
+  hl(0, "Visual", { bg = is_light and "#d0cec7" or "#45475a" })
+
+  -- LSP inlay hints
+  hl(0, "LspInlayHint", { fg = is_light and "#878580" or "#6c7086", italic = true })
 end
 
 return M
