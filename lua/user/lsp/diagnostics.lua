@@ -89,7 +89,11 @@ function M.setup()
   hl(0, "DiagnosticDeprecated", { strikethrough = true, sp = warn })
 
   -- Current search match (distinct from other matches)
-  hl(0, "CurSearch", { fg = is_light and "#100f0f" or "#1e1e2e", bg = is_light and "#d0a215" or "#f9e2af", bold = true })
+  hl(
+    0,
+    "CurSearch",
+    { fg = is_light and "#100f0f" or "#1e1e2e", bg = is_light and "#d0a215" or "#f9e2af", bold = true }
+  )
   hl(0, "Search", { fg = is_light and "#100f0f" or "#1e1e2e", bg = is_light and "#e8cca7" or "#f5c2e7" })
 
   -- Window split separator
