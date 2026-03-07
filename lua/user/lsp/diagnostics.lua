@@ -4,29 +4,20 @@
 local M = {}
 
 function M.setup()
-  -- Define diagnostic signs (matching CoC)
-  local signs = {
-    { name = "DiagnosticSignError", text = "E" },
-    { name = "DiagnosticSignWarn", text = "W" },
-    { name = "DiagnosticSignInfo", text = "I" },
-    { name = "DiagnosticSignHint", text = "H" },
-  }
-
-  for _, sign in ipairs(signs) do
-    vim.fn.sign_define(sign.name, {
-      texthl = sign.name,
-      text = sign.text,
-      numhl = "",
-    })
-  end
-
   -- Configure diagnostic behavior (matching CoC)
   vim.diagnostic.config {
     -- Virtual text disabled (using custom virtual diagnostics plugin instead)
     virtual_text = false,
 
-    -- Show signs in the sign column
-    signs = true,
+    -- Show signs in the sign column with custom text
+    signs = {
+      text = {
+        [vim.diagnostic.severity.ERROR] = "E",
+        [vim.diagnostic.severity.WARN] = "W",
+        [vim.diagnostic.severity.INFO] = "I",
+        [vim.diagnostic.severity.HINT] = "H",
+      },
+    },
 
     -- Underline diagnostics
     underline = true,
