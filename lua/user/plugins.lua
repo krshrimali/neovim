@@ -415,11 +415,14 @@ require("lazy").setup({
       cli = {
         win = {
           keys = {
-            interrupt = { "<C-c>", function(terminal)
-              if terminal.job and terminal:is_running() then
-                vim.api.nvim_chan_send(terminal.job, "\x03")
-              end
-            end, mode = "t", desc = "interrupt (SIGINT)" },
+            interrupt = {
+              "<C-c>",
+              function(terminal)
+                if terminal.job and terminal:is_running() then vim.api.nvim_chan_send(terminal.job, "\x03") end
+              end,
+              mode = "t",
+              desc = "interrupt (SIGINT)",
+            },
             normal_mode = { "jk", "stopinsert", mode = "t", desc = "enter normal mode" },
           },
         },
