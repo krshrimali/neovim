@@ -12,12 +12,20 @@ end
 
 function _G.LualineFilePicker()
   local ok, snacks = pcall(require, "snacks")
-  if ok then snacks.picker.files() else vim.cmd("FzfLua files") end
+  if ok then
+    snacks.picker.files()
+  else
+    vim.cmd "FzfLua files"
+  end
 end
 
 function _G.LualineSearchPicker()
   local ok, snacks = pcall(require, "snacks")
-  if ok then snacks.picker.grep() else vim.cmd("FzfLua live_grep") end
+  if ok then
+    snacks.picker.grep()
+  else
+    vim.cmd "FzfLua live_grep"
+  end
 end
 
 local nav_buttons = {
