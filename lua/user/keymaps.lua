@@ -58,6 +58,9 @@ keymap("v", "p", '"_dP', opts)
 keymap("n", "+", "<C-a>", opts)
 keymap("n", "-", "<C-x>", opts)
 
+-- Select all
+keymap("n", "<C-a>", "ggVG", opts)
+
 -- ============================================
 -- SEARCH & NAVIGATION
 -- ============================================
