@@ -155,4 +155,9 @@ vim.cmd [[
   amenu PopUp.Copy\ File\ Path         <cmd>let @+ = fnamemodify(expand('%'), ':.')<cr>
   amenu PopUp.Copy\ Path:Line          <cmd>let @+ = fnamemodify(expand('%'), ':.') . ':' . line('.')<cr>
   vmenu PopUp.Copy\ Path:Line\ Range   <Esc><cmd>let @+ = fnamemodify(expand('%'), ':.') . ':' . line("'<") . ':' . line("'>")<cr>
+  amenu PopUp.-sep5-                   <Nop>
+
+  " Splits
+  amenu PopUp.Split\ Right             <cmd>vsplit<cr>
+  amenu PopUp.Split\ Left              <cmd>set splitright!<bar>vsplit<bar>set splitright<cr>
 ]]
