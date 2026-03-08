@@ -177,7 +177,55 @@ require("lazy").setup({
   {
     "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
-    config = function() require "user.lualine" end,
+    opts = function()
+      local c = require "user.lualine"
+      return {
+        options = {
+          globalstatus = true,
+          icons_enabled = false,
+          theme = "auto",
+          component_separators = { left = "\u{2502}", right = "\u{2502}" },
+          section_separators = { left = "\u{2590}", right = "\u{258c}" },
+          disabled_filetypes = { "alpha", "dashboard", "NvimTree" },
+        },
+        sections = {
+          lualine_a = { "mode" },
+          lualine_b = {
+            {
+              "branch",
+              fmt = function(str) return "%@v:lua.LualineGitLog@ " .. str .. " %X" end,
+            },
+            { "diff", symbols = { added = "+", modified = "~", removed = "-" } },
+          },
+          lualine_c = {
+            c.nav_buttons,
+            { "filename", path = 1, symbols = { modified = " [+]", readonly = " [-]", unnamed = "[No Name]" } },
+            c.breadcrumbs,
+          },
+          lualine_x = {
+            { c.macro_recording, color = { fg = "#ff9e64", gui = "bold" } },
+            { c.search_count, color = { fg = "#7aa2f7" } },
+            "diagnostics",
+            { c.lsp_status, color = { fg = "#9ece6a" } },
+          },
+          lualine_y = { "filetype" },
+          lualine_z = { "location", "progress" },
+        },
+        inactive_sections = {
+          lualine_a = {},
+          lualine_b = {},
+          lualine_c = { { "filename", path = 1 } },
+          lualine_x = { "location" },
+          lualine_y = {},
+          lualine_z = {},
+        },
+      }
+    end,
+    config = function(_, opts)
+      local lualine = require "lualine"
+      require("user.lualine").setup(lualine)
+      lualine.setup(opts)
+    end,
   },
 
   -- Snacks for picker and gitbrowse
