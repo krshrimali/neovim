@@ -169,8 +169,8 @@ require("lazy").setup({
     },
     config = function(_, opts)
       require("transparent").setup(opts)
-      require("transparent").clear_prefix("BufferLine")
-      vim.cmd("TransparentEnable")
+      require("transparent").clear_prefix "BufferLine"
+      vim.cmd "TransparentEnable"
     end,
   },
 
