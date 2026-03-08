@@ -1,6 +1,6 @@
--- Simplified Lualine Configuration
-local status_ok, lualine = pcall(require, "lualine")
-if not status_ok then return end
+-- Lualine components module
+local M = {}
+local _lualine = nil -- set by M.setup()
 
 -- Clickable jump navigation for statusline
 function _G.LualineGoBack()
@@ -28,7 +28,7 @@ function _G.LualineSearchPicker()
   end
 end
 
-local nav_buttons = {
+M.nav_buttons = {
   function()
     return "%@v:lua.LualineGoBack@ \u{2190} %X"
       .. " %@v:lua.LualineGoForward@ \u{2192} %X"
@@ -160,7 +160,6 @@ function _G.LualineBreadcrumbClick(idx)
   if not target then return end
 
   if target.kind == "directory" then
-    -- Show sibling entries in the parent directory
     local dir = target.dir
     if not dir then return end
     local entries = vim.fn.readdir(dir)
@@ -187,7 +186,6 @@ function _G.LualineBreadcrumbClick(idx)
     return
   end
 
-  -- Symbol breadcrumb: find all symbols of the same kind
   if not breadcrumb_state.symbols or not target.symbol_kind then return end
   local siblings = collect_symbols_by_kind(breadcrumb_state.symbols, target.symbol_kind)
   if #siblings == 0 then return end
@@ -249,8 +247,7 @@ local function refresh_symbols(bufnr)
           breadcrumb_state.symbols = result
           breadcrumb_state.bufnr = bufnr
           breadcrumb_state.changedtick = vim.b[bufnr].changedtick
-          -- Trigger lualine refresh
-          lualine.refresh()
+          if _lualine then _lualine.refresh() end
         end
       end, bufnr)
       return
@@ -259,28 +256,9 @@ local function refresh_symbols(bufnr)
   breadcrumb_state.symbols = nil
 end
 
--- Refresh symbols on cursor hold, buffer enter, and after text changes
-vim.api.nvim_create_autocmd({ "CursorHold", "BufEnter", "TextChanged", "InsertLeave" }, {
-  callback = function()
-    local bufnr = vim.api.nvim_get_current_buf()
-    if vim.bo[bufnr].buftype ~= "" then return end
-    local changedtick = vim.b[bufnr].changedtick
-    if breadcrumb_state.bufnr ~= bufnr or breadcrumb_state.changedtick ~= changedtick then refresh_symbols(bufnr) end
-  end,
-})
-
--- Also refresh on CursorMoved so breadcrumbs update as you move (uses cached symbols)
-vim.api.nvim_create_autocmd("CursorMoved", {
-  callback = function()
-    if vim.bo.buftype ~= "" then return end
-    lualine.refresh()
-  end,
-})
-
 local last_breadcrumb_output = ""
 
 local function get_breadcrumbs()
-  -- Don't recalculate when inside floating/special buffers (preserves state)
   if vim.bo.buftype ~= "" then return last_breadcrumb_output end
 
   local ok, cursor = pcall(vim.api.nvim_win_get_cursor, 0)
@@ -290,7 +268,6 @@ local function get_breadcrumbs()
   local parts = {}
   local idx = 0
 
-  -- Add directory breadcrumbs from file path
   local filepath = vim.api.nvim_buf_get_name(0)
   if filepath ~= "" then
     local rel = vim.fn.fnamemodify(filepath, ":.")
@@ -298,7 +275,6 @@ local function get_breadcrumbs()
     for part in rel:gmatch "[^/]+" do
       table.insert(dir_parts, part)
     end
-    -- Add directory segments (all but last which is the filename)
     local current_path = vim.fn.getcwd()
     for i = 1, #dir_parts - 1 do
       current_path = current_path .. "/" .. dir_parts[i]
@@ -308,7 +284,6 @@ local function get_breadcrumbs()
     end
   end
 
-  -- Add symbol breadcrumbs from LSP
   if breadcrumb_state.symbols then
     local crumbs = find_containing_symbols(breadcrumb_state.symbols, cursor[1] - 1, cursor[2])
     for _, crumb in ipairs(crumbs) do
@@ -332,7 +307,7 @@ local function get_breadcrumbs()
   return last_breadcrumb_output
 end
 
-local breadcrumbs = { get_breadcrumbs }
+M.breadcrumbs = { get_breadcrumbs }
 
 -- Clickable git log viewer
 function _G.LualineGitLog()
@@ -372,23 +347,21 @@ function _G.LualineGitLog()
   end)
 end
 
--- Macro recording indicator
-local function macro_recording()
+-- Component functions exposed for use in opts
+function M.macro_recording()
   local reg = vim.fn.reg_recording()
   if reg ~= "" then return "REC @" .. reg end
   return ""
 end
 
--- Search count indicator
-local function search_count()
+function M.search_count()
   if vim.v.hlsearch == 0 then return "" end
   local ok, result = pcall(vim.fn.searchcount, { maxcount = 999, timeout = 250 })
   if not ok or result.total == 0 then return "" end
   return string.format("[%d/%d]", result.current, result.total)
 end
 
--- LSP server names
-local function lsp_status()
+function M.lsp_status()
   local clients = vim.lsp.get_clients { bufnr = 0 }
   if #clients == 0 then return "" end
   local names = {}
@@ -398,48 +371,25 @@ local function lsp_status()
   return table.concat(names, ", ")
 end
 
-lualine.setup {
-  options = {
-    globalstatus = true,
-    icons_enabled = false,
-    theme = "auto",
-    component_separators = { left = "\u{2502}", right = "\u{2502}" },
-    section_separators = { left = "\u{2590}", right = "\u{258c}" },
-    disabled_filetypes = { "alpha", "dashboard", "NvimTree" },
-  },
-  sections = {
-    lualine_a = { "mode" },
-    lualine_b = {
-      {
-        "branch",
-        fmt = function(str) return "%@v:lua.LualineGitLog@ " .. str .. " %X" end,
-      },
-      { "diff", symbols = { added = "+", modified = "~", removed = "-" } },
-    },
-    lualine_c = {
-      nav_buttons,
-      {
-        "filename",
-        path = 1,
-        symbols = { modified = " [+]", readonly = " [-]", unnamed = "[No Name]" },
-      },
-      breadcrumbs,
-    },
-    lualine_x = {
-      { macro_recording, color = { fg = "#ff9e64", gui = "bold" } },
-      { search_count, color = { fg = "#7aa2f7" } },
-      "diagnostics",
-      { lsp_status, color = { fg = "#9ece6a" } },
-    },
-    lualine_y = { "filetype" },
-    lualine_z = { "location", "progress" },
-  },
-  inactive_sections = {
-    lualine_a = {},
-    lualine_b = {},
-    lualine_c = { { "filename", path = 1 } },
-    lualine_x = { "location" },
-    lualine_y = {},
-    lualine_z = {},
-  },
-}
+-- Called from plugins.lua config after lualine is loaded
+function M.setup(lualine)
+  _lualine = lualine
+
+  vim.api.nvim_create_autocmd({ "CursorHold", "BufEnter", "TextChanged", "InsertLeave" }, {
+    callback = function()
+      local bufnr = vim.api.nvim_get_current_buf()
+      if vim.bo[bufnr].buftype ~= "" then return end
+      local changedtick = vim.b[bufnr].changedtick
+      if breadcrumb_state.bufnr ~= bufnr or breadcrumb_state.changedtick ~= changedtick then refresh_symbols(bufnr) end
+    end,
+  })
+
+  vim.api.nvim_create_autocmd("CursorMoved", {
+    callback = function()
+      if vim.bo.buftype ~= "" then return end
+      lualine.refresh()
+    end,
+  })
+end
+
+return M
