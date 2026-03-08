@@ -152,14 +152,14 @@ require("lazy").setup({
     priority = 1000,
     config = function()
       vim.opt.background = "light"
-      vim.cmd.colorscheme "flexoki-light"
+      vim.cmd.colorscheme "flexoki-dark"
     end,
   },
 
   -- Transparent background (load on demand with :TransparentEnable)
   {
     "xiyaowong/transparent.nvim",
-    cmd = { "TransparentEnable", "TransparentDisable", "TransparentToggle" },
+    lazy = false,
     keys = { { "<leader>ut", "<cmd>TransparentToggle<cr>", desc = "Toggle Transparent" } },
     opts = {
       extra_groups = {
@@ -167,6 +167,11 @@ require("lazy").setup({
         "NvimTreeNormal",
       },
     },
+    config = function(_, opts)
+      require("transparent").setup(opts)
+      require("transparent").clear_prefix("BufferLine")
+      vim.cmd("TransparentEnable")
+    end,
   },
 
   {
