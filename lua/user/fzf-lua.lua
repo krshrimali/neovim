@@ -22,7 +22,8 @@ fzf_lua.setup {
   },
   actions = {
     files = {
-      ["alt-q"] = { fn = fzf_lua.actions.file_sel_to_qf, prefix = "select-all" },
+      [1]        = true, -- inherit all default bindings (enter, ctrl-s, ctrl-v, etc.)
+      ["alt-q"]  = { fn = fzf_lua.actions.file_sel_to_qf, prefix = "select-all" },
     },
   },
 }
