@@ -200,7 +200,7 @@ require("lazy").setup({
           },
           lualine_x = {
             { c.macro_recording, color = { fg = "#ff9e64", gui = "bold" } },
-            { c.search_count, color = { fg = "#7aa2f7" } },
+            { c.search_count,    color = { fg = "#7aa2f7" } },
             "diagnostics",
             { c.lsp_status, color = { fg = "#9ece6a" } },
           },
@@ -527,14 +527,14 @@ require("lazy").setup({
           while node do
             local t = node:type()
             if
-              t == "function_definition"
-              or t == "function_declaration"
-              or t == "method_definition"
-              or t == "method_declaration"
-              or t == "function_item"
-              or t == "fn_item"
-              or t == "function"
-              or t == "local_function"
+                t == "function_definition"
+                or t == "function_declaration"
+                or t == "method_definition"
+                or t == "method_declaration"
+                or t == "function_item"
+                or t == "fn_item"
+                or t == "function"
+                or t == "local_function"
             then
               break
             end
@@ -587,6 +587,63 @@ require("lazy").setup({
         desc = "Sidekick Toggle Claude",
       },
     },
+  },
+
+  {
+    "Isrothy/neominimap.nvim",
+    version = "v3.x.x",
+    lazy = false, -- NOTE: NO NEED to Lazy load
+    -- Optional. You can also set your own keybindings
+    keys = {
+      -- Global Minimap Controls
+      { "<leader>nm",  "<cmd>Neominimap Toggle<cr>",      desc = "Toggle global minimap" },
+      { "<leader>no",  "<cmd>Neominimap Enable<cr>",      desc = "Enable global minimap" },
+      { "<leader>nc",  "<cmd>Neominimap Disable<cr>",     desc = "Disable global minimap" },
+      { "<leader>nr",  "<cmd>Neominimap Refresh<cr>",     desc = "Refresh global minimap" },
+
+      -- Window-Specific Minimap Controls
+      { "<leader>nwt", "<cmd>Neominimap WinToggle<cr>",   desc = "Toggle minimap for current window" },
+      { "<leader>nwr", "<cmd>Neominimap WinRefresh<cr>",  desc = "Refresh minimap for current window" },
+      { "<leader>nwo", "<cmd>Neominimap WinEnable<cr>",   desc = "Enable minimap for current window" },
+      { "<leader>nwc", "<cmd>Neominimap WinDisable<cr>",  desc = "Disable minimap for current window" },
+
+      -- Tab-Specific Minimap Controls
+      { "<leader>ntt", "<cmd>Neominimap TabToggle<cr>",   desc = "Toggle minimap for current tab" },
+      { "<leader>ntr", "<cmd>Neominimap TabRefresh<cr>",  desc = "Refresh minimap for current tab" },
+      { "<leader>nto", "<cmd>Neominimap TabEnable<cr>",   desc = "Enable minimap for current tab" },
+      { "<leader>ntc", "<cmd>Neominimap TabDisable<cr>",  desc = "Disable minimap for current tab" },
+
+      -- Buffer-Specific Minimap Controls
+      { "<leader>nbt", "<cmd>Neominimap BufToggle<cr>",   desc = "Toggle minimap for current buffer" },
+      { "<leader>nbr", "<cmd>Neominimap BufRefresh<cr>",  desc = "Refresh minimap for current buffer" },
+      { "<leader>nbo", "<cmd>Neominimap BufEnable<cr>",   desc = "Enable minimap for current buffer" },
+      { "<leader>nbc", "<cmd>Neominimap BufDisable<cr>",  desc = "Disable minimap for current buffer" },
+
+      ---Focus Controls
+      { "<leader>nf",  "<cmd>Neominimap Focus<cr>",       desc = "Focus on minimap" },
+      { "<leader>nu",  "<cmd>Neominimap Unfocus<cr>",     desc = "Unfocus minimap" },
+      { "<leader>ns",  "<cmd>Neominimap ToggleFocus<cr>", desc = "Switch focus on minimap" },
+    },
+    init = function()
+      -- The following options are recommended when layout == "float"
+      vim.opt.wrap = false
+      vim.opt.sidescrolloff = 36 -- Set a large value
+
+      --- Put your configuration here
+      ---@type Neominimap.UserConfig
+      vim.g.neominimap = {
+        auto_enable = false,
+        click = {
+          enabled = true
+        },
+        diagnostic = {
+          enabled = false
+        },
+        mini_diff = {
+          enabled = true
+        }
+      }
+    end,
   },
 
   -- Todo comments
