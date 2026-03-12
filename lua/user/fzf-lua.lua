@@ -20,6 +20,11 @@ fzf_lua.setup {
       ["ctrl-q"] = "select-all+accept",
     },
   },
+  actions = {
+    files = {
+      ["alt-q"] = { fn = fzf_lua.actions.file_sel_to_qf, prefix = "select-all" },
+    },
+  },
 }
 
 -- Register for vim.ui.select (used by LSP code actions, etc.)

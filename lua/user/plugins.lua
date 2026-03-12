@@ -30,15 +30,15 @@ require("lazy").setup({
         config = true,
       },
       { "williamboman/mason-lspconfig.nvim" },
-      { "saghen/blink.cmp", version = "1.*", dependencies = { "rafamadriz/friendly-snippets" } },
-      { "folke/neodev.nvim", config = true },
-      { "b0o/schemastore.nvim", lazy = true },
+      { "saghen/blink.cmp",                 version = "1.*", dependencies = { "rafamadriz/friendly-snippets" } },
+      { "folke/neodev.nvim",                config = true },
+      { "b0o/schemastore.nvim",             lazy = true },
     },
     config = function() require("user.lsp").setup() end,
   },
 
   -- LSP progress (minimal UI)
-  { "j-hui/fidget.nvim", event = "LspAttach", opts = {} },
+  { "j-hui/fidget.nvim",     event = "LspAttach",   opts = {} },
 
   -- ============================================
   -- SYNTAX: Treesitter (essential)
@@ -105,9 +105,9 @@ require("lazy").setup({
     "sindrets/diffview.nvim",
     cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewClose" },
     keys = {
-      { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Git diff (split)" },
+      { "<leader>gd", "<cmd>DiffviewOpen<cr>",                    desc = "Git diff (split)" },
       { "<leader>gu", "<cmd>DiffviewOpen --view=diff1_plain<cr>", desc = "Git diff (unified)" },
-      { "<leader>gf", "<cmd>DiffviewFileHistory %<cr>", desc = "File history" },
+      { "<leader>gf", "<cmd>DiffviewFileHistory %<cr>",           desc = "File history" },
     },
     config = function() require "user.diffview" end,
   },
@@ -139,7 +139,7 @@ require("lazy").setup({
     config = true,
   },
 
-  { "tpope/vim-sleuth", event = "VeryLazy" },
+  { "tpope/vim-sleuth",      event = "VeryLazy" },
 
   -- ============================================
   -- UI: Minimal UI enhancements
@@ -150,10 +150,6 @@ require("lazy").setup({
     name = "flexoki",
     lazy = false,
     priority = 1000,
-    config = function()
-      vim.opt.background = "light"
-      vim.cmd.colorscheme "flexoki-dark"
-    end,
   },
 
   -- Transparent background (load on demand with :TransparentEnable)
@@ -235,17 +231,17 @@ require("lazy").setup({
     priority = 900,
     keys = {
       -- Picker keymaps
-      { "<C-p>", function() Snacks.picker.files() end, desc = "Find Files" },
-      { "<leader>ff", function() Snacks.picker.files() end, desc = "Find Files" },
-      { "<leader>fr", function() Snacks.picker.recent() end, desc = "Recent Files" },
-      { "<leader>/", function() Snacks.picker.grep() end, desc = "Live Grep" },
-      { "<leader>b", function() Snacks.picker.buffers() end, desc = "Buffers" },
-      { "<leader>fh", function() Snacks.picker.help() end, desc = "Help Tags" },
-      { "<leader>fk", function() Snacks.picker.keymaps() end, desc = "Keymaps" },
+      { "<C-p>",      function() Snacks.picker.files() end,       desc = "Find Files" },
+      { "<leader>ff", function() Snacks.picker.files() end,       desc = "Find Files" },
+      { "<leader>fr", function() Snacks.picker.recent() end,      desc = "Recent Files" },
+      { "<leader>/",  function() Snacks.picker.grep() end,        desc = "Live Grep" },
+      { "<leader>b",  function() Snacks.picker.buffers() end,     desc = "Buffers" },
+      { "<leader>fh", function() Snacks.picker.help() end,        desc = "Help Tags" },
+      { "<leader>fk", function() Snacks.picker.keymaps() end,     desc = "Keymaps" },
       { "<leader>fs", function() Snacks.picker.lsp_symbols() end, desc = "LSP Symbols" },
       { "<leader>fd", function() Snacks.picker.diagnostics() end, desc = "Diagnostics" },
-      { "<leader>fc", function() Snacks.picker.commands() end, desc = "Commands" },
-      { "<leader>fw", function() Snacks.picker.grep_word() end, desc = "Grep Word", mode = { "n", "x" } },
+      { "<leader>fc", function() Snacks.picker.commands() end,    desc = "Commands" },
+      { "<leader>fw", function() Snacks.picker.grep_word() end,   desc = "Grep Word",   mode = { "n", "x" } },
       -- Git
       {
         "<leader>gy",
@@ -321,6 +317,7 @@ require("lazy").setup({
           input = {
             keys = {
               ["<c-x>"] = { "edit_split", mode = { "i", "n" } },
+              ["<A-q>"] = { "qflist_all", mode = { "i", "n" } },
             },
           },
           preview = {
@@ -349,7 +346,7 @@ require("lazy").setup({
     "folke/trouble.nvim",
     cmd = "Trouble",
     keys = {
-      { "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics" },
+      { "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>",              desc = "Diagnostics" },
       { "<leader>xd", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Buffer Diagnostics" },
     },
     opts = {
@@ -430,17 +427,17 @@ require("lazy").setup({
   },
 
   -- Better quickfix
-  { "kevinhwang91/nvim-bqf", ft = "qf", config = function() require "user.bqf" end },
+  { "kevinhwang91/nvim-bqf", ft = "qf",         config = function() require "user.bqf" end },
 
   -- Claude Code integration
   {
     "coder/claudecode.nvim",
     dependencies = { "folke/snacks.nvim" },
     keys = {
-      { "<leader><cr>", "<cmd>ClaudeCode<cr>", desc = "Toggle Claude", mode = { "n", "t" } },
-      { "<leader><cr>", "<cmd>ClaudeCodeSend<cr>", mode = { "v", "x" }, desc = "Send to Claude" },
-      { "<leader>aa", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
-      { "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
+      { "<leader><cr>", "<cmd>ClaudeCode<cr>",           desc = "Toggle Claude", mode = { "n", "t" } },
+      { "<leader><cr>", "<cmd>ClaudeCodeSend<cr>",       mode = { "v", "x" },    desc = "Send to Claude" },
+      { "<leader>aa",   "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
+      { "<leader>ad",   "<cmd>ClaudeCodeDiffDeny<cr>",   desc = "Deny diff" },
     },
     opts = {
       port_range = { min = 10000, max = 65535 },
@@ -611,9 +608,9 @@ require("lazy").setup({
     "krshrimali/gh.nvim",
     cmd = { "Github", "GithubIssues", "GithubPRs", "GithubAssigned", "GithubRefresh" },
     keys = {
-      { "<leader>gh", "<cmd>Github<cr>", desc = "GitHub" },
+      { "<leader>gh",  "<cmd>Github<cr>",       desc = "GitHub" },
       { "<leader>ghi", "<cmd>GithubIssues<cr>", desc = "GitHub Issues" },
-      { "<leader>ghp", "<cmd>GithubPRs<cr>", desc = "GitHub PRs" },
+      { "<leader>ghp", "<cmd>GithubPRs<cr>",    desc = "GitHub PRs" },
     },
     config = function() require("github").setup {} end,
   },
@@ -634,9 +631,9 @@ require("lazy").setup({
     "rmagatti/goto-preview",
     dependencies = { "rmagatti/logger.nvim" },
     keys = {
-      { "gpd", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>", desc = "Preview definition" },
+      { "gpd", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>",     desc = "Preview definition" },
       { "gpi", "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>", desc = "Preview implementation" },
-      { "gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>", desc = "Preview references" },
+      { "gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>",     desc = "Preview references" },
       {
         "gpt",
         "<cmd>lua require('goto-preview').goto_preview_type_definition()<CR>",
@@ -673,7 +670,7 @@ require("lazy").setup({
     cmd = "Octo",
     keys = {
       { "<leader>oi", "<cmd>Octo issue list<cr>", desc = "Octo: Issues" },
-      { "<leader>op", "<cmd>Octo pr list<cr>", desc = "Octo: PRs" },
+      { "<leader>op", "<cmd>Octo pr list<cr>",    desc = "Octo: PRs" },
     },
     dependencies = {
       "nvim-lua/plenary.nvim",
