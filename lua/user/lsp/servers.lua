@@ -127,11 +127,7 @@ function M.setup()
 
   -- Python: ty (fast type checker from Astral)
   vim.lsp.config.ty = {
-    settings = {
-      ty = {
-        -- ty language server settings go here
-      },
-    },
+    root_markers = { "pyproject.toml", "setup.py", "setup.cfg", ".git" },
   }
 
   -- TypeScript/JavaScript
