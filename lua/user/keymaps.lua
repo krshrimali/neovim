@@ -1,7 +1,7 @@
 -- Simplified Keymaps - Inspired by Helix
 -- Leader: Comma (,)
 
-vim.cmd("cabbrev tn tabnext")
+vim.cmd "cabbrev tn tabnext"
 local opts = { noremap = true, silent = true }
 local keymap = vim.keymap.set
 

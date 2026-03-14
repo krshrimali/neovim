@@ -739,8 +739,8 @@ require("lazy").setup({
     },
   },
   {
-    "justinmk/guh.nvim"
-  }
+    "justinmk/guh.nvim",
+  },
 }, {
   -- Lazy.nvim performance options
   performance = {
