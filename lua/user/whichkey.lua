@@ -224,6 +224,11 @@ which_key.add {
   { "<leader>lt", '<cmd>lua require("user.functions").toggle_diagnostics()<cr>', desc = "Toggle Diagnostics" },
   { "<leader>lu", "<cmd>LuaSnipUnlinkCurrent<cr>", desc = "Unlink Snippet" },
   { "<leader>lH", "<cmd>IlluminateToggle<cr>", desc = "Toggle Illuminate" },
+  {
+    "<leader>lh",
+    "<cmd>lua vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())<cr>",
+    desc = "Toggle Inlay Hints",
+  },
 
   -- LSP Goto Preview
   { "<leader>lg", group = "Goto Preview" },
