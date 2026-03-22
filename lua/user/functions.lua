@@ -19,7 +19,7 @@ function M.force_quit() vim.cmd "q!" end
 
 function M.smart_quit()
   local bufnr = vim.api.nvim_get_current_buf()
-  local modified = vim.api.nvim_buf_get_option(bufnr, "modified")
+  local modified = vim.api.nvim_get_option_value("modified", { buf = bufnr })
   if modified then
     -- Temporarily disable blink.cmp to prevent completion in the prompt
     local blink_was_enabled = _G.blink_enabled

@@ -6,7 +6,7 @@ local function disable_treesitter_for_terminal(buf)
   if not vim.api.nvim_buf_is_valid(buf) then return end
 
   -- Safely disable syntax highlighting for terminal buffers
-  pcall(function() vim.api.nvim_buf_set_option(buf, "syntax", "") end)
+  pcall(function() vim.api.nvim_set_option_value("syntax", "", { buf = buf }) end)
 
   -- Try to disable treesitter highlighting for this buffer
   local ok, ts_highlighter = pcall(require, "nvim-treesitter.highlighter")
@@ -24,11 +24,11 @@ local function configure_terminal_buffer(buf)
   -- Safely set buffer options
   local success = true
 
-  success = success and pcall(function() vim.api.nvim_buf_set_option(buf, "buftype", "terminal") end)
+  success = success and pcall(function() vim.api.nvim_set_option_value("buftype", "terminal", { buf = buf }) end)
 
-  success = success and pcall(function() vim.api.nvim_buf_set_option(buf, "modifiable", true) end)
+  success = success and pcall(function() vim.api.nvim_set_option_value("modifiable", true, { buf = buf }) end)
 
-  success = success and pcall(function() vim.api.nvim_buf_set_option(buf, "swapfile", false) end)
+  success = success and pcall(function() vim.api.nvim_set_option_value("swapfile", false, { buf = buf }) end)
 
   return success
 end
@@ -163,8 +163,8 @@ vim.api.nvim_create_autocmd("TermOpen", {
   pattern = "*",
   callback = function()
     local buf = vim.api.nvim_get_current_buf()
-    local filetype = vim.api.nvim_buf_get_option(buf, "filetype")
-    local buftype = vim.api.nvim_buf_get_option(buf, "buftype")
+    local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf })
+    local buftype = vim.api.nvim_get_option_value("buftype", { buf = buf })
 
     -- Only process if this is actually a terminal buffer
     if buftype == "terminal" then
@@ -366,7 +366,7 @@ function M.cargo_test() M.float_terminal "cargo test" end
 function M.lazygit_float()
   -- Create buffer first and set its properties
   local buf = vim.api.nvim_create_buf(false, true)
-  vim.api.nvim_buf_set_option(buf, "filetype", "lazygit")
+  vim.api.nvim_set_option_value("filetype", "lazygit", { buf = buf })
 
   -- Create floating window
   local width = math.floor(vim.o.columns * 0.95)
@@ -414,7 +414,7 @@ function M.lazygit_tab()
   local buf = vim.api.nvim_get_current_buf()
 
   -- Set buffer options before opening terminal to prevent autocmd interference
-  vim.api.nvim_buf_set_option(buf, "filetype", "lazygit")
+  vim.api.nvim_set_option_value("filetype", "lazygit", { buf = buf })
 
   local job_id = vim.fn.termopen "lazygit"
 
@@ -558,7 +558,7 @@ vim.api.nvim_create_autocmd("WinClosed", {
       if vim.api.nvim_win_is_valid(win) then
         local buf = vim.api.nvim_win_get_buf(win)
         if vim.api.nvim_buf_is_valid(buf) then
-          local ok, buftype = pcall(vim.api.nvim_buf_get_option, buf, "buftype")
+          local ok, buftype = pcall(vim.api.nvim_get_option_value, "buftype", { buf = buf })
           if ok and buftype == "terminal" then table.insert(terminal_windows, buf) end
         end
       end

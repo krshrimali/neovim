@@ -1,5 +1,5 @@
 local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
   vim.fn.system {
     "git",
     "clone",
@@ -242,6 +242,7 @@ require("lazy").setup({
       { "<leader>fd", function() Snacks.picker.diagnostics() end, desc = "Diagnostics" },
       { "<leader>fc", function() Snacks.picker.commands() end,    desc = "Commands" },
       { "<leader>fw", function() Snacks.picker.grep_word() end,   desc = "Grep Word",   mode = { "n", "x" } },
+      { "<leader>fp", function() Snacks.picker.projects() end,    desc = "Projects" },
       -- Git
       {
         "<leader>gy",
@@ -284,6 +285,24 @@ require("lazy").setup({
         layout = {
           cycle = true,
           preset = "ivy",
+          -- Override ivy with a taller centered float
+          layout = {
+            backdrop = false,
+            width = 0.8,
+            min_width = 80,
+            height = 0.8,
+            min_height = 30,
+            box = "vertical",
+            border = "rounded",
+            title = "{title} {live} {flags}",
+            title_pos = "center",
+            { win = "input", height = 1, border = "bottom" },
+            {
+              box = "horizontal",
+              { win = "list",    border = "none" },
+              { win = "preview", title = "{preview}", border = "left", width = 0.5 },
+            },
+          },
         },
         matcher = {
           fuzzy = true,
@@ -336,6 +355,71 @@ require("lazy").setup({
     "folke/which-key.nvim",
     event = "VeryLazy",
     config = function() require "user.whichkey" end,
+  },
+
+  {
+    'dmtrKovalenko/fff.nvim',
+    build = function()
+      -- this will download prebuild binary or try to use existing rustup toolchain to build from source
+      -- (if you are using lazy you can use gb for rebuilding a plugin if needed)
+      require("fff.download").download_or_build_binary()
+    end,
+    -- if you are using nixos
+    -- build = "nix run .#release",
+    opts = {              -- (optional)
+      debug = {
+        enabled = true,   -- we expect your collaboration at least during the beta
+        show_scores = true, -- to help us optimize the scoring system, feel free to share your scores!
+      },
+    },
+    -- No need to lazy-load with lazy.nvim.
+    -- This plugin initializes itself lazily.
+    lazy = false,
+    keys = {
+      {
+        "ff", -- try it if you didn't it is a banger keybinding for a picker
+        function() require('fff').find_files() end,
+        desc = 'FFFind files',
+      },
+      {
+        "fg",
+        function() require('fff').live_grep() end,
+        desc = 'LiFFFe grep',
+      },
+      {
+        "fz",
+        function()
+          require('fff').live_grep({
+            grep = {
+              modes = { 'fuzzy', 'plain' }
+            }
+          })
+        end,
+        desc = 'Live fffuzy grep',
+      },
+      {
+        "fc",
+        function() require('fff').live_grep({ query = vim.fn.expand("<cword>") }) end,
+        desc = 'Search current word',
+      },
+    }
+  },
+
+  -- ============================================
+  -- AI: Copilot
+  -- ============================================
+  {
+    "github/copilot.vim",
+    event = "InsertEnter",
+    init = function()
+      vim.g.copilot_no_tab_map = true
+    end,
+    keys = {
+      { "<C-g>",  'copilot#Accept("")',       mode = "i", expr = true, replace_keycodes = false, desc = "Accept Copilot suggestion" },
+      { "<C-]>",  "<Plug>(copilot-next)",     mode = "i", desc = "Next Copilot suggestion" },
+      { "<C-p>",  "<Plug>(copilot-prev)",     mode = "i", desc = "Prev Copilot suggestion" },
+      { "<C-\\>", "<Plug>(copilot-dismiss)",  mode = "i", desc = "Dismiss Copilot suggestion" },
+    },
   },
 
   -- ============================================
@@ -429,39 +513,6 @@ require("lazy").setup({
   -- Better quickfix
   { "kevinhwang91/nvim-bqf", ft = "qf",         config = function() require "user.bqf" end },
 
-  -- Claude Code integration
-  {
-    "coder/claudecode.nvim",
-    dependencies = { "folke/snacks.nvim" },
-    keys = {
-      { "<leader><cr>", "<cmd>ClaudeCode<cr>",           desc = "Toggle Claude", mode = { "n", "t" } },
-      { "<leader><cr>", "<cmd>ClaudeCodeSend<cr>",       mode = { "v", "x" },    desc = "Send to Claude" },
-      { "<leader>aa",   "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
-      { "<leader>ad",   "<cmd>ClaudeCodeDiffDeny<cr>",   desc = "Deny diff" },
-    },
-    opts = {
-      port_range = { min = 10000, max = 65535 },
-      auto_start = true,
-      log_level = "info",
-      terminal_cmd = "claude",
-      track_selection = true,
-      terminal = {
-        provider = "snacks",
-        snacks_win_opts = { position = "float", width = 0.6, height = 0.6, border = "rounded" },
-      },
-      diff_opts = { auto_close_on_accept = true, vertical_split = true },
-    },
-  },
-
-  -- Copilot (lazy)
-  -- { "github/copilot.vim", cmd = "Copilot", event = "InsertEnter" },
-  {
-    "zbirenbaum/copilot.lua",
-    requires = {
-      "copilotlsp-nvim/copilot-lsp", -- (optional) for NES functionality
-    }
-  },
-
   -- Sidekick.nvim - AI CLI integration & Copilot NES
   {
     "krshrimali/sidekick.nvim",
@@ -517,46 +568,8 @@ require("lazy").setup({
       },
       {
         "<leader>sf",
-        function()
-          -- Send parent function to sidekick using built-in treesitter
-          local ok, parser = pcall(vim.treesitter.get_parser, 0)
-          if not ok or not parser then
-            vim.notify("Treesitter parser not available for this filetype", vim.log.levels.ERROR)
-            return
-          end
-          parser:parse()
-          local node = vim.treesitter.get_node()
-          if not node then
-            vim.notify("No treesitter node at cursor", vim.log.levels.WARN)
-            return
-          end
-          while node do
-            local t = node:type()
-            if
-                t == "function_definition"
-                or t == "function_declaration"
-                or t == "method_definition"
-                or t == "method_declaration"
-                or t == "function_item"
-                or t == "fn_item"
-                or t == "function"
-                or t == "local_function"
-            then
-              break
-            end
-            node = node:parent()
-          end
-          if not node then
-            vim.notify("No parent function found", vim.log.levels.WARN)
-            return
-          end
-          local sr, _, er, _ = node:range()
-          local lines = vim.api.nvim_buf_get_lines(0, sr, er + 1, false)
-          local text = table.concat(lines, "\n")
-          local path = vim.fn.fnamemodify(vim.fn.expand "%", ":.")
-          require("sidekick.cli").send { msg = path .. ":" .. (sr + 1) .. ":" .. (er + 1) .. "\n" .. text }
-        end,
-        desc = "Sidekick Send Function",
+        function() require("user.ai_context").send_function_with_context() end,
+        desc = "Sidekick Send Function (with type + diagnostics)",
       },
       {
         "<leader>sl",
@@ -632,7 +645,6 @@ require("lazy").setup({
     },
     init = function()
       -- The following options are recommended when layout == "float"
-      vim.opt.wrap = false
       vim.opt.sidescrolloff = 36 -- Set a large value
 
       --- Put your configuration here

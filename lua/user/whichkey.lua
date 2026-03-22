@@ -88,29 +88,6 @@ which_key.add {
   { "<leader>Q", "<cmd>lua require('user.functions').force_quit()<CR>", desc = "Force Quit" },
   { "<leader>fq", "<cmd>q!<CR>", desc = "Force Quit Without Prompt" },
 
-  -- Buffer operations
-  { "<leader>b", group = "Buffers" },
-  { "<leader>b", "<cmd>FzfLua buffers<cr>", desc = "List Buffers" },
-
-  -- Diagnostics
-  { "<leader>d", group = "Diagnostics" },
-  {
-    "<leader>dl",
-    "<cmd>lua require('user.diagnostics_display').show_line_diagnostics()<cr>",
-    desc = "Line Diagnostics",
-  },
-  {
-    "<leader>df",
-    "<cmd>lua require('user.diagnostics_display').show_file_diagnostics()<cr>",
-    desc = "File Diagnostics",
-  },
-  {
-    "<leader>dw",
-    "<cmd>lua require('user.diagnostics_display').show_workspace_diagnostics()<cr>",
-    desc = "Workspace Diagnostics",
-  },
-  { "<leader>dd", "<cmd>lua require('user.diagnostics_display').debug()<cr>", desc = "Debug Diagnostics" },
-
   -- File Explorer
   { "<leader><leader>", group = "Extra" },
   { "<leader><leader>e", "<cmd>:NvimTreeToggle<cr>", desc = "File Explorer" },
@@ -120,29 +97,16 @@ which_key.add {
 
   -- Find (FzfLua)
   { "<leader>f", group = "Find" },
-  { "<leader>ff", "<cmd>FzfLua files<cr>", desc = "Find Files" },
   { "<leader>fg", "<cmd>FzfLua git_files<cr>", desc = "Git Files" },
-  { "<leader>fr", "<cmd>FzfLua oldfiles<cr>", desc = "Recent Files" },
-  { "<leader>fp", "<cmd>FzfLua oldfiles<cr>", desc = "Recent Files (Projects)" },
-  { "<leader>fh", "<cmd>FzfLua helptags<cr>", desc = "Help Tags" },
   { "<leader>fH", "<cmd>FzfLua highlights<cr>", desc = "Highlights" },
-  { "<leader>fc", "<cmd>FzfLua colorschemes<cr>", desc = "Colorschemes" },
-  { "<leader>fk", "<cmd>FzfLua keymaps<cr>", desc = "Keymaps" },
   { "<leader>fC", "<cmd>FzfLua commands<cr>", desc = "Commands" },
   { "<leader>fR", "<cmd>FzfLua registers<cr>", desc = "Registers" },
   { "<leader>fM", "<cmd>FzfLua manpages<cr>", desc = "Man Pages" },
   { "<leader>fl", "<cmd>FzfLua resume<cr>", desc = "Resume Last Search" },
   { "<leader>fB", "<cmd>FzfLua git_branches<cr>", desc = "Git Branches" },
-  { "<leader>fb", desc = "Find in Base" },
   { "<leader>fi", "<cmd>FzfLua lsp_incoming_calls<cr>", desc = "LSP Incoming Calls" },
   { "<leader>fo", "<cmd>FzfLua lsp_outgoing_calls<cr>", desc = "LSP Outgoing Calls" },
   { "<leader>fI", "<cmd>FzfLua lsp_implementations<cr>", desc = "LSP Implementations" },
-  { "<leader>/", "<cmd>FzfLua live_grep<cr>", desc = "Live Grep" },
-
-  -- Find/Search in buffer
-  { "<leader>fs", group = "Search" },
-  { "<leader>fss", "<cmd>FzfLua grep_cword<cr>", desc = "Grep Word Under Cursor" },
-  { "<leader>fsb", "<cmd>FzfLua grep_curbuf<cr>", desc = "Grep Current Buffer" },
 
   -- Git
   { "<leader>g", group = "Git" },
@@ -436,13 +400,6 @@ which_key.add {
     mode = { "n", "v" },
   },
 
-  -- Claude Code
-  { "<leader>a", group = "AI/Claude" },
-  { "<leader>am", "<cmd>ClaudeCodeSelectModel<cr>", desc = "Select Model" },
-  { "<leader>ab", "<cmd>ClaudeCodeAdd %<cr>", desc = "Add Buffer" },
-  { "<leader>aa", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept Diff" },
-  { "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny Diff" },
-
   -- Space prefix (CocList replacements)
   { "<space>a", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics" },
   -- { "<space>s", "<cmd>FzfLua lsp_workspace_symbols<cr>", desc = "Symbols" },
@@ -467,7 +424,58 @@ which_key.add {
 -- Visual mode mappings
 which_key.add {
   mode = { "v" },
-  { "<leader>a", "<cmd>lua vim.lsp.buf.code_action()<cr>", desc = "Code Action" },
   { "<leader>f", desc = "Format Selection" },
-  { "<leader><cr>", "<cmd>ClaudeCodeSend<cr>", desc = "Send to Claude" },
+}
+
+-- Text objects: show descriptions when you type i/a in operator-pending or visual mode
+which_key.add {
+  mode = { "o", "x" },
+  { "i",   group = "inside" },
+  { "i)",  desc = "inside ()" },
+  { "i(",  desc = "inside ()" },
+  { "i]",  desc = "inside []" },
+  { "i[",  desc = "inside []" },
+  { "i}",  desc = "inside {}" },
+  { "i{",  desc = "inside {}" },
+  { 'i"',  desc = "inside \"\"" },
+  { "i'",  desc = "inside ''" },
+  { "i`",  desc = "inside ``" },
+  { "iw",  desc = "inside word" },
+  { "iW",  desc = "inside WORD" },
+  { "ip",  desc = "inside paragraph" },
+  { "is",  desc = "inside sentence" },
+  { "it",  desc = "inside tag" },
+
+  { "a",   group = "around" },
+  { "a)",  desc = "around ()" },
+  { "a(",  desc = "around ()" },
+  { "a]",  desc = "around []" },
+  { "a[",  desc = "around []" },
+  { "a}",  desc = "around {}" },
+  { "a{",  desc = "around {}" },
+  { 'a"',  desc = "around \"\"" },
+  { "a'",  desc = "around ''" },
+  { "a`",  desc = "around ``" },
+  { "aw",  desc = "around word" },
+  { "aW",  desc = "around WORD" },
+  { "ap",  desc = "around paragraph" },
+  { "as",  desc = "around sentence" },
+  { "at",  desc = "around tag" },
+}
+
+-- <leader>v: visual select shortcuts using letters (no bracket typing)
+which_key.add {
+  { "<leader>v",  group = "Visual select" },
+  { "<leader>vp", desc = "inside ()" },
+  { "<leader>vP", desc = "around ()" },
+  { "<leader>vc", desc = "inside {}" },
+  { "<leader>vC", desc = "around {}" },
+  { "<leader>vb", desc = "inside []" },
+  { "<leader>vB", desc = "around []" },
+  { "<leader>vq", desc = 'inside ""' },
+  { "<leader>vQ", desc = 'around ""' },
+  { "<leader>vs", desc = "inside ''" },
+  { "<leader>vS", desc = "around ''" },
+  { "<leader>vw", desc = "inside word" },
+  { "<leader>vW", desc = "inside WORD" },
 }

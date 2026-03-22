@@ -14,11 +14,11 @@ configs.setup {
     -- Disable only for VERY large files and terminal buffers
     disable = function(lang, buf)
       -- Disable for terminal buffers to prevent highlighting errors
-      local buftype = vim.api.nvim_buf_get_option(buf, "buftype")
+      local buftype = vim.api.nvim_get_option_value("buftype", { buf = buf })
       if buftype == "terminal" then return true end
 
       local max_filesize = 500 * 1024 -- 500KB limit - only disable for very large files
-      local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+      local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
       if ok and stats and stats.size > max_filesize then return true end
     end,
   },
