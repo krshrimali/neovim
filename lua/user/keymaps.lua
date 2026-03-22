@@ -131,6 +131,24 @@ for i = 1, 9 do
 end
 
 -- ============================================
+-- VISUAL SELECT SHORTCUTS (letter mnemonics, no bracket typing)
+-- p=parens, c=curly, b=brackets, q=double quotes, s=single quotes
+-- lowercase=inside, uppercase=around
+-- ============================================
+keymap("n", "<leader>vp", "vi)", opts)
+keymap("n", "<leader>vP", "va)", opts)
+keymap("n", "<leader>vc", "vi}", opts)
+keymap("n", "<leader>vC", "va}", opts)
+keymap("n", "<leader>vb", "vi]", opts)
+keymap("n", "<leader>vB", "va]", opts)
+keymap("n", "<leader>vq", 'vi"', opts)
+keymap("n", "<leader>vQ", 'va"', opts)
+keymap("n", "<leader>vs", "vi'", opts)
+keymap("n", "<leader>vS", "va'", opts)
+keymap("n", "<leader>vw", "viw",  opts)
+keymap("n", "<leader>vW", "viW",  opts)
+
+-- ============================================
 -- QUICKFIX
 -- ============================================
 keymap("n", "<leader>xq", "<cmd>copen<cr>", opts)
