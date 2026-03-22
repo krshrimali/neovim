@@ -271,7 +271,7 @@ function M.setup()
 
   -- CoC Code actions
   hl("CocCodeLens", { fg = colors.fg_dark, italic = true })
-  hl("CocUnusedHighlight", { fg = colors.fg_dark, strikethrough = true })
+  hl("CocUnusedHighlight", { fg = colors.fg_dark })
   hl("CocInlayHint", { fg = colors.fg_dark, italic = true })
 
   -- CoC References

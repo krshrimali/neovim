@@ -83,7 +83,7 @@ function M.setup()
   hl(0, "LspVirtualLineHint", { fg = hint, italic = true })
 
   -- Unused/unnecessary code - gray out
-  hl(0, "DiagnosticUnnecessary", { fg = dim, strikethrough = true })
+  hl(0, "DiagnosticUnnecessary", { fg = dim })
 
   -- Deprecated symbols - strikethrough
   hl(0, "DiagnosticDeprecated", { strikethrough = true, sp = warn })
