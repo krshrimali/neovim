@@ -115,6 +115,20 @@ keymap("n", "<A-LeftMouse>", "<C-o>", opts)
 keymap("n", "<A-RightMouse>", "<C-i>", opts)
 
 -- ============================================
+-- TAB NAVIGATION
+-- ============================================
+keymap("n", "]t", "<cmd>tabnext<CR>", opts)
+keymap("n", "[t", "<cmd>tabprev<CR>", opts)
+keymap("n", "<leader>tn", "<cmd>tabnew<CR>", opts)
+keymap("n", "<leader>tc", "<cmd>tabclose<CR>", opts)
+keymap("n", "<leader>tf", "<cmd>tabfirst<CR>", opts)
+keymap("n", "<leader>tl", "<cmd>tablast<CR>", opts)
+-- Jump to tab by number
+for i = 1, 9 do
+  keymap("n", "<leader>" .. i .. "t", i .. "gt", opts)
+end
+
+-- ============================================
 -- QUICKFIX
 -- ============================================
 keymap("n", "<leader>xq", "<cmd>copen<cr>", opts)
