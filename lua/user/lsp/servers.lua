@@ -150,7 +150,7 @@ function M.setup()
 
   -- Rust
   vim.lsp.config.rust_analyzer = {
-    on_attach = on_attach, -- Explicitly set on_attach
+    on_attach = on_attach,
     settings = {
       ["rust-analyzer"] = {
         cargo = {
@@ -160,7 +160,7 @@ function M.setup()
           autoimport = { enable = true },
         },
         check = {
-          command = "clippy",
+          command = "check",
         },
       },
     },
