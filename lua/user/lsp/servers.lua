@@ -302,6 +302,15 @@ function M.setup()
       end
     end,
   })
+
+  -- Handle buffers already open when LSP loads (VeryLazy timing issue)
+  local ft = vim.bo.filetype
+  local servers = filetype_servers[ft]
+  if servers then
+    for _, server in ipairs(servers) do
+      pcall(vim.lsp.enable, server)
+    end
+  end
 end
 
 return M
