@@ -221,7 +221,7 @@ function M.show()
   M.close()
 
   local bufnr = vim.api.nvim_get_current_buf()
-  local buftype = vim.api.nvim_buf_get_option(bufnr, "buftype")
+  local buftype = vim.api.nvim_get_option_value("buftype", { buf = bufnr })
   if buftype ~= "" then
     vim.notify("Symbol browser not available for special buffers", vim.log.levels.WARN)
     return
@@ -354,9 +354,9 @@ function M.show()
   -- Create buffer
   local buf = vim.api.nvim_create_buf(false, true)
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
-  vim.api.nvim_buf_set_option(buf, "modifiable", false)
-  vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
-  vim.api.nvim_buf_set_option(buf, "filetype", "symbol-browser")
+  vim.api.nvim_set_option_value("modifiable", false, { buf = buf })
+  vim.api.nvim_set_option_value("bufhidden", "wipe", { buf = buf })
+  vim.api.nvim_set_option_value("filetype", "symbol-browser", { buf = buf })
 
   -- Apply highlights
   for _, hl in ipairs(highlights) do
@@ -385,8 +385,8 @@ function M.show()
   })
 
   -- Set window options
-  vim.api.nvim_win_set_option(win, "winblend", 0)
-  vim.api.nvim_win_set_option(win, "cursorline", true)
+  vim.api.nvim_set_option_value("winblend", 0, { win = win })
+  vim.api.nvim_set_option_value("cursorline", true, { win = win })
 
   -- Store state
   state.float_win = win

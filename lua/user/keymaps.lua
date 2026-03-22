@@ -117,8 +117,10 @@ keymap("n", "<A-RightMouse>", "<C-i>", opts)
 -- ============================================
 -- TAB NAVIGATION
 -- ============================================
-keymap("n", "]t", "<cmd>tabnext<CR>", opts)
-keymap("n", "[t", "<cmd>tabprev<CR>", opts)
+keymap("n", "]t",           "<cmd>tabnext<CR>",  opts)
+keymap("n", "[t",           "<cmd>tabprev<CR>",  opts)
+keymap("n", "<leader>tth",  "<cmd>tabprev<CR>",  opts)
+keymap("n", "<leader>ttl",  "<cmd>tabnext<CR>",  opts)
 keymap("n", "<leader>tn", "<cmd>tabnew<CR>", opts)
 keymap("n", "<leader>tc", "<cmd>tabclose<CR>", opts)
 keymap("n", "<leader>tf", "<cmd>tabfirst<CR>", opts)

@@ -54,8 +54,7 @@ local function on_attach(client, bufnr)
     }
   end, opts)
 
-  -- Code actions (matching CoC's <leader>a, <leader>ac, <leader>as)
-  vim.keymap.set({ "n", "v" }, "<leader>a", vim.lsp.buf.code_action, opts)
+  -- Code actions (matching CoC's <leader>ac, <leader>as)
   vim.keymap.set("n", "<leader>ac", vim.lsp.buf.code_action, opts)
   vim.keymap.set(
     "n",

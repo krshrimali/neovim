@@ -36,11 +36,11 @@ function M.parse_lua_files()
   -- Get all lua files recursively
   local function get_lua_files(dir)
     local files = {}
-    local handle = vim.loop.fs_scandir(dir)
+    local handle = vim.uv.fs_scandir(dir)
     if not handle then return files end
 
     while true do
-      local name, type = vim.loop.fs_scandir_next(handle)
+      local name, type = vim.uv.fs_scandir_next(handle)
       if not name then break end
 
       local path = dir .. "/" .. name
