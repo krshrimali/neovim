@@ -7,20 +7,20 @@ local FUNCTION_TYPES = {
   function_declaration = true,
   method_definition = true,
   method_declaration = true,
-  function_item = true,  -- Rust
-  fn_item = true,        -- Rust (some grammars)
+  function_item = true, -- Rust
+  fn_item = true, -- Rust (some grammars)
   ["function"] = true,
   local_function = true,
 }
 
 -- Node types that represent an enclosing type/class/impl block
 local ENCLOSING_TYPE_TYPES = {
-  impl_item = true,         -- Rust: impl Foo / impl Trait for Foo
-  trait_item = true,        -- Rust: trait Foo
-  class_definition = true,  -- Python: class Foo(Bar):
+  impl_item = true, -- Rust: impl Foo / impl Trait for Foo
+  trait_item = true, -- Rust: trait Foo
+  class_definition = true, -- Python: class Foo(Bar):
   class_declaration = true, -- TS/JS/Java/C++
-  class_specifier = true,   -- C++: class Foo {
-  struct_item = true,       -- Rust: struct Foo (when methods inside)
+  class_specifier = true, -- C++: class Foo {
+  struct_item = true, -- Rust: struct Foo (when methods inside)
 }
 
 -- Extract the "header" of a node: everything up to and including the first { or :
@@ -43,9 +43,7 @@ end
 local function find_enclosing_type(node)
   local parent = node:parent()
   while parent do
-    if ENCLOSING_TYPE_TYPES[parent:type()] then
-      return parent
-    end
+    if ENCLOSING_TYPE_TYPES[parent:type()] then return parent end
     parent = parent:parent()
   end
   return nil
@@ -54,9 +52,7 @@ end
 -- Collect diagnostics within a line range and format them as a string
 local function diagnostics_in_range(bufnr, sr, er)
   local all = vim.diagnostic.get(bufnr)
-  local in_range = vim.tbl_filter(function(d)
-    return d.lnum >= sr and d.lnum <= er
-  end, all)
+  local in_range = vim.tbl_filter(function(d) return d.lnum >= sr and d.lnum <= er end, all)
   if #in_range == 0 then return nil end
 
   local severity_label = { [1] = "ERROR", [2] = "WARN", [3] = "INFO", [4] = "HINT" }
@@ -113,16 +109,12 @@ function M.send_function_with_context()
 
   -- 3. Diagnostics in function range
   local diag_str = diagnostics_in_range(bufnr, sr, er)
-  if diag_str then
-    table.insert(parts, "-- diagnostics\n" .. diag_str)
-  end
+  if diag_str then table.insert(parts, "-- diagnostics\n" .. diag_str) end
 
   local msg = table.concat(parts, "\n\n")
   -- Pass as `text` (sidekick.Text[]) to bypass template rendering,
   -- which would misinterpret `{...}` in Rust/C code as context variables.
-  local text = vim.tbl_map(function(line)
-    return { { line } }
-  end, vim.split(msg, "\n", { plain = true }))
+  local text = vim.tbl_map(function(line) return { { line } } end, vim.split(msg, "\n", { plain = true }))
   require("sidekick.cli").send { text = text }
 end
 
