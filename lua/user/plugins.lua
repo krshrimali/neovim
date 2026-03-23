@@ -648,6 +648,24 @@ require("lazy").setup({
   },
 
   { "nvim-mini/mini.map", version = false },
+
+  -- Align text by delimiter (e.g. `|` for markdown tables)
+  -- Usage: select lines in visual, press `ga` then the delimiter (e.g. `|`)
+  -- Or in normal mode: `ga` with a motion (e.g. `gaip|` to align paragraph by `|`)
+  {
+    "echasnovski/mini.align",
+    version = false,
+    keys = {
+      { "ga", mode = { "n", "x" }, desc = "Align (mini.align)" },
+      { "gA", mode = { "n", "x" }, desc = "Align with preview (mini.align)" },
+    },
+    opts = {
+      mappings = {
+        start = "ga",
+        start_with_preview = "gA",
+      },
+    },
+  },
   -- {
   --   "MeanderingProgrammer/render-markdown.nvim",
   --   dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.nvim" }, -- if you use the mini.nvim suite
