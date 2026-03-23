@@ -106,6 +106,14 @@ keymap("i", "<M-]>", "<Plug>(copilot-next)", { silent = true })
 keymap("i", "<M-[>", "<Plug>(copilot-previous)", { silent = true })
 
 -- ============================================
+-- LSP NAVIGATION (global, no on_attach dependency)
+-- ============================================
+keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<cr>", opts)
+keymap("n", "gy", "<cmd>lua vim.lsp.buf.type_definition()<cr>", opts)
+keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", opts)
+keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<cr>", opts)
+
+-- ============================================
 -- MOUSE
 -- ============================================
 keymap("n", "<C-LeftMouse>", "<LeftMouse><cmd>lua vim.lsp.buf.definition()<cr>", opts)
