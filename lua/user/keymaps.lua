@@ -125,10 +125,10 @@ keymap("n", "<A-RightMouse>", "<C-i>", opts)
 -- ============================================
 -- TAB NAVIGATION
 -- ============================================
-keymap("n", "]t",           "<cmd>tabnext<CR>",  opts)
-keymap("n", "[t",           "<cmd>tabprev<CR>",  opts)
-keymap("n", "<leader>tth",  "<cmd>tabprev<CR>",  opts)
-keymap("n", "<leader>ttl",  "<cmd>tabnext<CR>",  opts)
+keymap("n", "]t", "<cmd>tabnext<CR>", opts)
+keymap("n", "[t", "<cmd>tabprev<CR>", opts)
+keymap("n", "<leader>tth", "<cmd>tabprev<CR>", opts)
+keymap("n", "<leader>ttl", "<cmd>tabnext<CR>", opts)
 keymap("n", "<leader>tn", "<cmd>tabnew<CR>", opts)
 keymap("n", "<leader>tc", "<cmd>tabclose<CR>", opts)
 keymap("n", "<leader>tf", "<cmd>tabfirst<CR>", opts)
@@ -153,8 +153,8 @@ keymap("n", "<leader>vq", 'vi"', opts)
 keymap("n", "<leader>vQ", 'va"', opts)
 keymap("n", "<leader>vs", "vi'", opts)
 keymap("n", "<leader>vS", "va'", opts)
-keymap("n", "<leader>vw", "viw",  opts)
-keymap("n", "<leader>vW", "viW",  opts)
+keymap("n", "<leader>vw", "viw", opts)
+keymap("n", "<leader>vW", "viW", opts)
 
 -- ============================================
 -- QUICKFIX

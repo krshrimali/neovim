@@ -8,8 +8,6 @@ require "user.functions"
 require "user.autocommands"
 
 -- -- Terminal config (deferred)
-vim.defer_fn(function()
-  require "user.terminal"
-end, 100)
+vim.defer_fn(function() require "user.terminal" end, 100)
 
 -- vim.g.clipboard = "osc52"
