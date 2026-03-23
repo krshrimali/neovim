@@ -30,15 +30,15 @@ require("lazy").setup({
         config = true,
       },
       { "williamboman/mason-lspconfig.nvim" },
-      { "saghen/blink.cmp",                 version = "1.*", dependencies = { "rafamadriz/friendly-snippets" } },
-      { "folke/neodev.nvim",                config = true },
-      { "b0o/schemastore.nvim",             lazy = true },
+      { "saghen/blink.cmp", version = "1.*", dependencies = { "rafamadriz/friendly-snippets" } },
+      { "folke/neodev.nvim", config = true },
+      { "b0o/schemastore.nvim", lazy = true },
     },
     config = function() require("user.lsp").setup() end,
   },
 
   -- LSP progress (minimal UI)
-  { "j-hui/fidget.nvim",     event = "LspAttach",   opts = {} },
+  { "j-hui/fidget.nvim", event = "LspAttach", opts = {} },
 
   -- ============================================
   -- SYNTAX: Treesitter (essential)
@@ -105,9 +105,9 @@ require("lazy").setup({
     "sindrets/diffview.nvim",
     cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewClose" },
     keys = {
-      { "<leader>gd", "<cmd>DiffviewOpen<cr>",                    desc = "Git diff (split)" },
+      { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Git diff (split)" },
       { "<leader>gu", "<cmd>DiffviewOpen --view=diff1_plain<cr>", desc = "Git diff (unified)" },
-      { "<leader>gf", "<cmd>DiffviewFileHistory %<cr>",           desc = "File history" },
+      { "<leader>gf", "<cmd>DiffviewFileHistory %<cr>", desc = "File history" },
     },
     config = function() require "user.diffview" end,
   },
@@ -139,7 +139,7 @@ require("lazy").setup({
     config = true,
   },
 
-  { "tpope/vim-sleuth",      event = "VeryLazy" },
+  { "tpope/vim-sleuth", event = "VeryLazy" },
 
   -- ============================================
   -- UI: Minimal UI enhancements
@@ -200,7 +200,7 @@ require("lazy").setup({
           },
           lualine_x = {
             { c.macro_recording, color = { fg = "#ff9e64", gui = "bold" } },
-            { c.search_count,    color = { fg = "#7aa2f7" } },
+            { c.search_count, color = { fg = "#7aa2f7" } },
             "diagnostics",
             { c.lsp_status, color = { fg = "#9ece6a" } },
           },
@@ -231,18 +231,18 @@ require("lazy").setup({
     priority = 900,
     keys = {
       -- Picker keymaps
-      { "<C-p>",      function() Snacks.picker.files() end,       desc = "Find Files" },
-      { "<leader>ff", function() Snacks.picker.files() end,       desc = "Find Files" },
-      { "<leader>fr", function() Snacks.picker.recent() end,      desc = "Recent Files" },
-      { "<leader>/",  function() Snacks.picker.grep() end,        desc = "Live Grep" },
-      { "<leader>b",  function() Snacks.picker.buffers() end,     desc = "Buffers" },
-      { "<leader>fh", function() Snacks.picker.help() end,        desc = "Help Tags" },
-      { "<leader>fk", function() Snacks.picker.keymaps() end,     desc = "Keymaps" },
+      { "<C-p>", function() Snacks.picker.files() end, desc = "Find Files" },
+      { "<leader>ff", function() Snacks.picker.files() end, desc = "Find Files" },
+      { "<leader>fr", function() Snacks.picker.recent() end, desc = "Recent Files" },
+      { "<leader>/", function() Snacks.picker.grep() end, desc = "Live Grep" },
+      { "<leader>b", function() Snacks.picker.buffers() end, desc = "Buffers" },
+      { "<leader>fh", function() Snacks.picker.help() end, desc = "Help Tags" },
+      { "<leader>fk", function() Snacks.picker.keymaps() end, desc = "Keymaps" },
       { "<leader>fs", function() Snacks.picker.lsp_symbols() end, desc = "LSP Symbols" },
       { "<leader>fd", function() Snacks.picker.diagnostics() end, desc = "Diagnostics" },
-      { "<leader>fc", function() Snacks.picker.commands() end,    desc = "Commands" },
-      { "<leader>fw", function() Snacks.picker.grep_word() end,   desc = "Grep Word",   mode = { "n", "x" } },
-      { "<leader>fp", function() Snacks.picker.projects() end,    desc = "Projects" },
+      { "<leader>fc", function() Snacks.picker.commands() end, desc = "Commands" },
+      { "<leader>fw", function() Snacks.picker.grep_word() end, desc = "Grep Word", mode = { "n", "x" } },
+      { "<leader>fp", function() Snacks.picker.projects() end, desc = "Projects" },
       -- Git
       {
         "<leader>gy",
@@ -299,7 +299,7 @@ require("lazy").setup({
             { win = "input", height = 1, border = "bottom" },
             {
               box = "horizontal",
-              { win = "list",    border = "none" },
+              { win = "list", border = "none" },
               { win = "preview", title = "{preview}", border = "left", width = 0.5 },
             },
           },
@@ -363,14 +363,19 @@ require("lazy").setup({
   {
     "github/copilot.vim",
     event = "InsertEnter",
-    init = function()
-      vim.g.copilot_no_tab_map = true
-    end,
+    init = function() vim.g.copilot_no_tab_map = true end,
     keys = {
-      { "<C-g>",  'copilot#Accept("")',       mode = "i", expr = true, replace_keycodes = false, desc = "Accept Copilot suggestion" },
-      { "<C-]>",  "<Plug>(copilot-next)",     mode = "i", desc = "Next Copilot suggestion" },
-      { "<C-p>",  "<Plug>(copilot-prev)",     mode = "i", desc = "Prev Copilot suggestion" },
-      { "<C-\\>", "<Plug>(copilot-dismiss)",  mode = "i", desc = "Dismiss Copilot suggestion" },
+      {
+        "<C-g>",
+        'copilot#Accept("")',
+        mode = "i",
+        expr = true,
+        replace_keycodes = false,
+        desc = "Accept Copilot suggestion",
+      },
+      { "<C-]>", "<Plug>(copilot-next)", mode = "i", desc = "Next Copilot suggestion" },
+      { "<C-p>", "<Plug>(copilot-prev)", mode = "i", desc = "Prev Copilot suggestion" },
+      { "<C-\\>", "<Plug>(copilot-dismiss)", mode = "i", desc = "Dismiss Copilot suggestion" },
     },
   },
 
@@ -382,7 +387,7 @@ require("lazy").setup({
     "folke/trouble.nvim",
     cmd = "Trouble",
     keys = {
-      { "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>",              desc = "Diagnostics" },
+      { "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics" },
       { "<leader>xd", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Buffer Diagnostics" },
     },
     opts = {
@@ -463,7 +468,7 @@ require("lazy").setup({
   },
 
   -- Better quickfix
-  { "kevinhwang91/nvim-bqf", ft = "qf",         config = function() require "user.bqf" end },
+  { "kevinhwang91/nvim-bqf", ft = "qf", config = function() require "user.bqf" end },
 
   -- Sidekick.nvim - AI CLI integration & Copilot NES
   {
@@ -567,33 +572,33 @@ require("lazy").setup({
     -- Optional. You can also set your own keybindings
     keys = {
       -- Global Minimap Controls
-      { "<leader>nm",  "<cmd>Neominimap Toggle<cr>",      desc = "Toggle global minimap" },
-      { "<leader>no",  "<cmd>Neominimap Enable<cr>",      desc = "Enable global minimap" },
-      { "<leader>nc",  "<cmd>Neominimap Disable<cr>",     desc = "Disable global minimap" },
-      { "<leader>nr",  "<cmd>Neominimap Refresh<cr>",     desc = "Refresh global minimap" },
+      { "<leader>nm", "<cmd>Neominimap Toggle<cr>", desc = "Toggle global minimap" },
+      { "<leader>no", "<cmd>Neominimap Enable<cr>", desc = "Enable global minimap" },
+      { "<leader>nc", "<cmd>Neominimap Disable<cr>", desc = "Disable global minimap" },
+      { "<leader>nr", "<cmd>Neominimap Refresh<cr>", desc = "Refresh global minimap" },
 
       -- Window-Specific Minimap Controls
-      { "<leader>nwt", "<cmd>Neominimap WinToggle<cr>",   desc = "Toggle minimap for current window" },
-      { "<leader>nwr", "<cmd>Neominimap WinRefresh<cr>",  desc = "Refresh minimap for current window" },
-      { "<leader>nwo", "<cmd>Neominimap WinEnable<cr>",   desc = "Enable minimap for current window" },
-      { "<leader>nwc", "<cmd>Neominimap WinDisable<cr>",  desc = "Disable minimap for current window" },
+      { "<leader>nwt", "<cmd>Neominimap WinToggle<cr>", desc = "Toggle minimap for current window" },
+      { "<leader>nwr", "<cmd>Neominimap WinRefresh<cr>", desc = "Refresh minimap for current window" },
+      { "<leader>nwo", "<cmd>Neominimap WinEnable<cr>", desc = "Enable minimap for current window" },
+      { "<leader>nwc", "<cmd>Neominimap WinDisable<cr>", desc = "Disable minimap for current window" },
 
       -- Tab-Specific Minimap Controls
-      { "<leader>ntt", "<cmd>Neominimap TabToggle<cr>",   desc = "Toggle minimap for current tab" },
-      { "<leader>ntr", "<cmd>Neominimap TabRefresh<cr>",  desc = "Refresh minimap for current tab" },
-      { "<leader>nto", "<cmd>Neominimap TabEnable<cr>",   desc = "Enable minimap for current tab" },
-      { "<leader>ntc", "<cmd>Neominimap TabDisable<cr>",  desc = "Disable minimap for current tab" },
+      { "<leader>ntt", "<cmd>Neominimap TabToggle<cr>", desc = "Toggle minimap for current tab" },
+      { "<leader>ntr", "<cmd>Neominimap TabRefresh<cr>", desc = "Refresh minimap for current tab" },
+      { "<leader>nto", "<cmd>Neominimap TabEnable<cr>", desc = "Enable minimap for current tab" },
+      { "<leader>ntc", "<cmd>Neominimap TabDisable<cr>", desc = "Disable minimap for current tab" },
 
       -- Buffer-Specific Minimap Controls
-      { "<leader>nbt", "<cmd>Neominimap BufToggle<cr>",   desc = "Toggle minimap for current buffer" },
-      { "<leader>nbr", "<cmd>Neominimap BufRefresh<cr>",  desc = "Refresh minimap for current buffer" },
-      { "<leader>nbo", "<cmd>Neominimap BufEnable<cr>",   desc = "Enable minimap for current buffer" },
-      { "<leader>nbc", "<cmd>Neominimap BufDisable<cr>",  desc = "Disable minimap for current buffer" },
+      { "<leader>nbt", "<cmd>Neominimap BufToggle<cr>", desc = "Toggle minimap for current buffer" },
+      { "<leader>nbr", "<cmd>Neominimap BufRefresh<cr>", desc = "Refresh minimap for current buffer" },
+      { "<leader>nbo", "<cmd>Neominimap BufEnable<cr>", desc = "Enable minimap for current buffer" },
+      { "<leader>nbc", "<cmd>Neominimap BufDisable<cr>", desc = "Disable minimap for current buffer" },
 
       ---Focus Controls
-      { "<leader>nf",  "<cmd>Neominimap Focus<cr>",       desc = "Focus on minimap" },
-      { "<leader>nu",  "<cmd>Neominimap Unfocus<cr>",     desc = "Unfocus minimap" },
-      { "<leader>ns",  "<cmd>Neominimap ToggleFocus<cr>", desc = "Switch focus on minimap" },
+      { "<leader>nf", "<cmd>Neominimap Focus<cr>", desc = "Focus on minimap" },
+      { "<leader>nu", "<cmd>Neominimap Unfocus<cr>", desc = "Unfocus minimap" },
+      { "<leader>ns", "<cmd>Neominimap ToggleFocus<cr>", desc = "Switch focus on minimap" },
     },
     init = function()
       -- The following options are recommended when layout == "float"
@@ -635,9 +640,9 @@ require("lazy").setup({
     "krshrimali/gh.nvim",
     cmd = { "Github", "GithubIssues", "GithubPRs", "GithubAssigned", "GithubRefresh" },
     keys = {
-      { "<leader>gh",  "<cmd>Github<cr>",       desc = "GitHub" },
+      { "<leader>gh", "<cmd>Github<cr>", desc = "GitHub" },
       { "<leader>ghi", "<cmd>GithubIssues<cr>", desc = "GitHub Issues" },
-      { "<leader>ghp", "<cmd>GithubPRs<cr>",    desc = "GitHub PRs" },
+      { "<leader>ghp", "<cmd>GithubPRs<cr>", desc = "GitHub PRs" },
     },
     config = function() require("github").setup {} end,
   },
@@ -658,9 +663,9 @@ require("lazy").setup({
     "rmagatti/goto-preview",
     dependencies = { "rmagatti/logger.nvim" },
     keys = {
-      { "gpd", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>",     desc = "Preview definition" },
+      { "gpd", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>", desc = "Preview definition" },
       { "gpi", "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>", desc = "Preview implementation" },
-      { "gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>",     desc = "Preview references" },
+      { "gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>", desc = "Preview references" },
       {
         "gpt",
         "<cmd>lua require('goto-preview').goto_preview_type_definition()<CR>",
@@ -697,7 +702,7 @@ require("lazy").setup({
     cmd = "Octo",
     keys = {
       { "<leader>oi", "<cmd>Octo issue list<cr>", desc = "Octo: Issues" },
-      { "<leader>op", "<cmd>Octo pr list<cr>",    desc = "Octo: PRs" },
+      { "<leader>op", "<cmd>Octo pr list<cr>", desc = "Octo: PRs" },
     },
     dependencies = {
       "nvim-lua/plenary.nvim",
@@ -725,47 +730,41 @@ require("lazy").setup({
         "<C-\\>",
         function() require("agentic").toggle() end,
         mode = { "n", "v", "i" },
-        desc = "Toggle Agentic Chat"
+        desc = "Toggle Agentic Chat",
       },
       {
         "<C-'>",
         function() require("agentic").add_selection_or_file_to_context() end,
         mode = { "n", "v" },
-        desc = "Add file or selection to Agentic to Context"
+        desc = "Add file or selection to Agentic to Context",
       },
       {
         "<C-,>",
         function() require("agentic").new_session() end,
         mode = { "n", "v", "i" },
-        desc = "New Agentic Session"
+        desc = "New Agentic Session",
       },
       {
         "<A-i>r", -- ai Restore
-        function()
-          require("agentic").restore_session()
-        end,
+        function() require("agentic").restore_session() end,
         desc = "Agentic Restore session",
         silent = true,
         mode = { "n", "v", "i" },
       },
       {
         "<leader>ad", -- ai Diagnostics
-        function()
-          require("agentic").add_current_line_diagnostics()
-        end,
+        function() require("agentic").add_current_line_diagnostics() end,
         desc = "Add current line diagnostic to Agentic",
         mode = { "n" },
       },
       {
         "<leader>aD", -- ai all Diagnostics
-        function()
-          require("agentic").add_buffer_diagnostics()
-        end,
+        function() require("agentic").add_buffer_diagnostics() end,
         desc = "Add all buffer diagnostics to Agentic",
         mode = { "n" },
       },
     },
-  }
+  },
 }, {
   -- Lazy.nvim performance options
   performance = {
