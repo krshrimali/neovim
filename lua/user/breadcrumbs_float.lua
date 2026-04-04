@@ -263,15 +263,21 @@ local function select_item(item)
         local end_line = range["end"].line + 1
         local end_col = range["end"].character
 
-        -- Move to start position
-        vim.api.nvim_win_set_cursor(win, { start_line, start_col })
-
-        -- Enter visual mode and select to end
-        vim.cmd "normal! v"
+        -- Select from end to start so cursor stays at start
         vim.api.nvim_win_set_cursor(win, { end_line, math.max(0, end_col - 1) })
+        vim.cmd "normal! v"
+        vim.api.nvim_win_set_cursor(win, { start_line, start_col })
 
         -- Center the view
         vim.cmd "normal! zz"
+
+        -- Temporary visual-mode <CR> to deselect and stay at start
+        vim.keymap.set("x", "<CR>", function()
+          local pos = vim.api.nvim_win_get_cursor(0)
+          vim.cmd("normal! " .. vim.api.nvim_replace_termcodes("<Esc>", true, false, true))
+          vim.api.nvim_win_set_cursor(0, pos)
+          vim.keymap.del("x", "<CR>", { buffer = source_buf })
+        end, { buffer = source_buf, noremap = true, silent = true })
       end
     end
   end
