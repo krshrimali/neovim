@@ -26,7 +26,14 @@ local function on_attach(client, bufnr)
   vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
   vim.keymap.set("n", "gy", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
   vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-  vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+  vim.keymap.set("n", "gr", function()
+    vim.lsp.buf.references(nil, {
+      on_list = function(options)
+        vim.fn.setqflist({}, " ", options)
+        vim.cmd "copen"
+      end,
+    })
+  end, opts)
 
   -- Hover documentation (matching CoC's K)
   vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)

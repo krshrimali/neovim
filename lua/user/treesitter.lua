@@ -4,15 +4,19 @@ if not status_ok then return end
 configs.setup {
   -- Only install minimal parsers to reduce startup time
   ensure_installed = { "lua", "python", "diff", "gitcommit" }, -- Minimal set, others installed on demand
+  auto_install = true, -- Automatically install parsers when entering a new filetype
   sync_install = false, -- install languages synchronously (only applied to `ensure_installed`)
   -- max_file_lines = 3000, -- Removed to ensure no interference with LSP
   ignore_install = { "" }, -- List of parsers to ignore installing
 
   highlight = {
     enable = true, -- false will disable the whole extension
-    disable = { "markdown", "css", "html" }, -- Disable for heavy file types
-    -- Disable only for VERY large files and terminal buffers
+    -- Disable for heavy file types, terminal buffers, and very large files
     disable = function(lang, buf)
+      -- Disable for specific heavy file types
+      local disabled_langs = { markdown = true, css = true, html = true }
+      if disabled_langs[lang] then return true end
+
       -- Disable for terminal buffers to prevent highlighting errors
       local buftype = vim.api.nvim_get_option_value("buftype", { buf = buf })
       if buftype == "terminal" then return true end

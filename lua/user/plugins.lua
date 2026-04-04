@@ -604,8 +604,9 @@ require("lazy").setup({
       { "<leader>ns", "<cmd>Neominimap ToggleFocus<cr>", desc = "Switch focus on minimap" },
     },
     init = function()
-      -- The following options are recommended when layout == "float"
-      vim.opt.sidescrolloff = 36 -- Set a large value
+      -- NOTE: sidescrolloff = 36 is recommended when minimap layout == "float",
+      -- but we don't set it here to avoid overriding the user's global setting.
+      -- It will be set dynamically when the minimap is enabled.
 
       --- Put your configuration here
       ---@type Neominimap.UserConfig
@@ -736,6 +737,96 @@ require("lazy").setup({
   },
   {
     "justinmk/guh.nvim",
+  },
+
+  -- Zen mode (distraction-free writing)
+  {
+    "folke/zen-mode.nvim",
+    cmd = "ZenMode",
+    keys = {
+      { "<leader>z", "<cmd>ZenMode<cr>", desc = "Zen Mode" },
+    },
+    opts = {
+      window = {
+        width = 100,
+        options = {
+          signcolumn = "no",
+          number = false,
+          relativenumber = false,
+          cursorline = false,
+          foldcolumn = "0",
+        },
+      },
+      plugins = {
+        gitsigns = { enabled = false },
+        tmux = { enabled = true },
+      },
+      on_open = function()
+        vim.opt.laststatus = 0
+        vim.opt.cmdheight = 1
+      end,
+      on_close = function()
+        vim.opt.laststatus = 3
+        vim.opt.cmdheight = 0
+      end,
+    },
+  },
+
+  -- Refactoring (extract function/variable, inline variable)
+  {
+    "ThePrimeagen/refactoring.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    keys = {
+      { "<leader>re", function() require("refactoring").refactor("Extract Function") end, mode = "x", desc = "Extract Function" },
+      { "<leader>rf", function() require("refactoring").refactor("Extract Function To File") end, mode = "x", desc = "Extract Function To File" },
+      { "<leader>rv", function() require("refactoring").refactor("Extract Variable") end, mode = "x", desc = "Extract Variable" },
+      { "<leader>ri", function() require("refactoring").refactor("Inline Variable") end, mode = { "n", "x" }, desc = "Inline Variable" },
+      { "<leader>rI", function() require("refactoring").refactor("Inline Function") end, desc = "Inline Function" },
+      { "<leader>rb", function() require("refactoring").refactor("Extract Block") end, desc = "Extract Block" },
+      { "<leader>rB", function() require("refactoring").refactor("Extract Block To File") end, desc = "Extract Block To File" },
+      {
+        "<leader>rr",
+        function() require("refactoring").select_refactor() end,
+        mode = { "n", "x" },
+        desc = "Refactoring Menu",
+      },
+    },
+    opts = {},
+  },
+
+  -- Project-wide search and replace
+  {
+    "MagicDuck/grug-far.nvim",
+    cmd = "GrugFar",
+    keys = {
+      { "<leader>sr", function() require("grug-far").open() end, desc = "Search & Replace (project)" },
+      {
+        "<leader>sw",
+        function() require("grug-far").open({ prefills = { search = vim.fn.expand("<cword>") } }) end,
+        desc = "Search & Replace (word)",
+      },
+      {
+        "<leader>sF",
+        function() require("grug-far").open({ prefills = { paths = vim.fn.expand("%") } }) end,
+        desc = "Search & Replace (file)",
+      },
+      {
+        "<leader>sr",
+        function()
+          require("grug-far").open({
+            prefills = { search = vim.fn.getreg("/"):gsub("\\<", ""):gsub("\\>", "") },
+          })
+        end,
+        mode = "x",
+        desc = "Search & Replace (selection)",
+      },
+    },
+    opts = {
+      icons = { enabled = false },
+    },
   },
 }, {
   -- Lazy.nvim performance options
