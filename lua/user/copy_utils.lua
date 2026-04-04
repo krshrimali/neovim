@@ -132,9 +132,8 @@ local function get_symbol_under_cursor()
   end
 
   -- Fallback: Try Treesitter
-  local ok, ts_utils = pcall(require, "nvim-treesitter.ts_utils")
-  if ok then
-    local node = ts_utils.get_node_at_cursor()
+  local node = vim.treesitter.get_node()
+  do
     if node then
       -- Try to find the identifier or name node
       while node do

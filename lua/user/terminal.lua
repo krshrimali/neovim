@@ -8,12 +8,8 @@ local function disable_treesitter_for_terminal(buf)
   -- Safely disable syntax highlighting for terminal buffers
   pcall(function() vim.api.nvim_set_option_value("syntax", "", { buf = buf }) end)
 
-  -- Try to disable treesitter highlighting for this buffer
-  local ok, ts_highlighter = pcall(require, "nvim-treesitter.highlighter")
-  if ok and ts_highlighter then
-    -- Force disable treesitter highlighting for this buffer
-    pcall(function() ts_highlighter.detach(buf) end)
-  end
+  -- Disable treesitter highlighting for this buffer
+  pcall(vim.treesitter.stop, buf)
 end
 
 -- Function to safely configure terminal buffer options
