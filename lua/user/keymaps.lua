@@ -17,6 +17,13 @@ keymap("n", "<leader>w", "<cmd>w<CR>", opts)
 keymap("n", "<leader>q", "<cmd>q<CR>", opts)
 keymap("n", "<leader>Q", "<cmd>q!<CR>", opts)
 keymap("n", "<leader>h", "<cmd>nohlsearch<CR>", opts)
+keymap("n", "<leader>R", function()
+  for name, _ in pairs(package.loaded) do
+    package.loaded[name] = nil
+  end
+  dofile(vim.env.MYVIMRC)
+  vim.notify("Config reloaded")
+end, opts)
 
 -- ============================================
 -- BUFFER NAVIGATION (like Helix H/L)
