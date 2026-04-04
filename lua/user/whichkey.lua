@@ -91,8 +91,8 @@ which_key.add {
   -- File Explorer
   { "<leader><leader>", group = "Extra" },
   { "<leader><leader>e", "<cmd>:NvimTreeToggle<cr>", desc = "File Explorer" },
-  { "<leader><leader>f", ":lua find_files()<CR>", desc = "Find Files (Current Dir)" },
-  { "<leader><leader>g", ":lua live_grep()<CR>", desc = "Live Grep (Current Dir)" },
+  { "<leader><leader>f", function() Snacks.picker.files() end, desc = "Find Files" },
+  { "<leader><leader>g", function() Snacks.picker.grep() end, desc = "Live Grep" },
   { "<leader><leader>s", ":FzfLua command_history<CR>", desc = "Command History" },
 
   -- Find (FzfLua)
@@ -112,13 +112,13 @@ which_key.add {
   { "<leader>g", group = "Git" },
   { "<leader>gg", "<cmd>lua require('user.terminal').lazygit_float()<cr>", desc = "Lazygit (Float)" },
   { "<leader>gt", "<cmd>lua require('user.terminal').lazygit_tab()<cr>", desc = "Lazygit (Tab)" },
-  { "<leader>gj", "<cmd>lua require 'gitsigns'.next_hunk()<cr>", desc = "Next Hunk" },
-  { "<leader>gk", "<cmd>lua require 'gitsigns'.prev_hunk()<cr>", desc = "Prev Hunk" },
+  { "<leader>gj", function() require("gitsigns").nav_hunk("next") end, desc = "Next Hunk" },
+  { "<leader>gk", function() require("gitsigns").nav_hunk("prev") end, desc = "Prev Hunk" },
   { "<leader>gp", "<cmd>lua require 'gitsigns'.preview_hunk()<cr>", desc = "Preview Hunk" },
   { "<leader>gr", "<cmd>lua require 'gitsigns'.reset_hunk()<cr>", desc = "Reset Hunk" },
   { "<leader>gR", "<cmd>lua require 'gitsigns'.reset_buffer()<cr>", desc = "Reset Buffer" },
   { "<leader>gs", "<cmd>lua require 'gitsigns'.stage_hunk()<cr>", desc = "Stage Hunk" },
-  { "<leader>gu", "<cmd>lua require 'gitsigns'.undo_stage_hunk()<cr>", desc = "Undo Stage Hunk" },
+  { "<leader>gu", "<cmd>Gitsigns undo_stage_hunk<cr>", desc = "Undo Stage Hunk" },
   { "<leader>go", "<cmd>FzfLua git_status<cr>", desc = "Git Status" },
   { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Diffview" },
   { "<leader>gD", "<cmd>Gitsigns diffthis HEAD<cr>", desc = "Diff This (Inline)" },
@@ -134,8 +134,7 @@ which_key.add {
 
   -- Git Blame
   { "<leader>gl", group = "Git Blame" },
-  { "<leader>gll", "<cmd>GitBlameToggle<cr>", desc = "Toggle Git Blame" },
-  { "<leader>glf", "<cmd>Git blame<cr>", desc = "Git Blame (Fugitive)" },
+  { "<leader>gll", "<cmd>Gitsigns toggle_current_line_blame<cr>", desc = "Toggle Line Blame" },
   { "<leader>glg", "<cmd>Gitsigns blame_line<cr>", desc = "Blame Line" },
   { "<leader>glb", "<cmd>Gitsigns blame_line<cr>", desc = "Blame Line" },
 
@@ -149,11 +148,10 @@ which_key.add {
   -- Git (Snacks)
   { "<leader>gy", desc = "Git Browse (copy)" },
 
-  -- GitBlame (capital G)
-  { "<leader>G", group = "GitBlame" },
-  { "<leader>Gl", "<cmd>GitBlameToggle<cr>", desc = "Toggle Git Blame" },
-  { "<leader>Gc", "<cmd>GitBlameCopySHA<cr>", desc = "Copy SHA" },
-  { "<leader>Go", "<cmd>GitBlameOpenCommitURL<cr>", desc = "Open Commit URL" },
+  -- Git (capital G)
+  { "<leader>G", group = "Git" },
+  { "<leader>Gl", "<cmd>Gitsigns toggle_current_line_blame<cr>", desc = "Toggle Line Blame" },
+  { "<leader>Gb", "<cmd>Gitsigns blame<cr>", desc = "Full Buffer Blame" },
 
   -- LSP
   { "<leader>l", group = "LSP" },
@@ -161,8 +159,8 @@ which_key.add {
   { "<leader>lf", "<cmd>lua vim.lsp.buf.format({ async = true })<cr>", desc = "Format" },
   { "<leader>li", "<cmd>LspInfo<cr>", desc = "LSP Info" },
   { "<leader>lI", "<cmd>Mason<cr>", desc = "Mason Installer" },
-  { "<leader>lj", "<cmd>lua vim.diagnostic.goto_next({buffer=0})<CR>", desc = "Next Diagnostic" },
-  { "<leader>lk", "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>", desc = "Prev Diagnostic" },
+  { "<leader>lj", function() vim.diagnostic.jump({ count = 1, float = true }) end, desc = "Next Diagnostic" },
+  { "<leader>lk", function() vim.diagnostic.jump({ count = -1, float = true }) end, desc = "Prev Diagnostic" },
   {
     "<leader>ll",
     "<cmd>lua require('user.lsp.virtual_diagnostics').toggle_virtual_lines()<cr>",
@@ -186,7 +184,6 @@ which_key.add {
   { "<leader>ls", "<cmd>lua require('user.symbol_browser').toggle()<cr>", desc = "Symbol Browser" },
   { "<leader>lS", "<cmd>FzfLua lsp_live_workspace_symbols<cr>", desc = "Workspace Symbols" },
   { "<leader>lt", '<cmd>lua require("user.functions").toggle_diagnostics()<cr>', desc = "Toggle Diagnostics" },
-  { "<leader>lu", "<cmd>LuaSnipUnlinkCurrent<cr>", desc = "Unlink Snippet" },
   { "<leader>lH", "<cmd>IlluminateToggle<cr>", desc = "Toggle Illuminate" },
   {
     "<leader>lh",
@@ -310,8 +307,23 @@ which_key.add {
   { "<leader>og", group = "Gists" },
   { "<leader>ogl", "<CMD>Octo gist list<CR>", desc = "List Gists" },
 
-  -- Rename (LSP)
+  -- Rename / Refactor
+  { "<leader>r", group = "Rename/Refactor" },
   { "<leader>rn", vim.lsp.buf.rename, desc = "Rename (LSP)" },
+  { "<leader>rr", desc = "Refactoring Menu" },
+  { "<leader>re", desc = "Extract Function", mode = "x" },
+  { "<leader>rf", desc = "Extract Function To File", mode = "x" },
+  { "<leader>rv", desc = "Extract Variable", mode = "x" },
+  { "<leader>ri", desc = "Inline Variable", mode = { "n", "x" } },
+  { "<leader>rI", desc = "Inline Function" },
+  { "<leader>rb", desc = "Extract Block" },
+  { "<leader>rB", desc = "Extract Block To File" },
+
+  -- Search & Replace
+  { "<leader>s", group = "Search/Replace/Sidekick" },
+
+  -- Zen Mode
+  { "<leader>z", desc = "Zen Mode" },
 
   -- Terminal (using user.terminal)
   { "<leader>T", group = "Terminal" },

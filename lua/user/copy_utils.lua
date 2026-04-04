@@ -212,7 +212,7 @@ end
 -- Copy Python import statement for current symbol
 function M.copy_python_import()
   local bufnr = vim.api.nvim_get_current_buf()
-  local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
+  local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
 
   if filetype ~= "python" then
     vim.notify("Not a Python file", vim.log.levels.WARN)
