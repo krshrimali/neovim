@@ -35,14 +35,13 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 -- Enable treesitter-based indentation, except for these filetypes
-local disabled_indent_langs = { python = true, css = true, rust = true, cpp = true, yaml = true, json = true, html = true, javascript = true }
+local disabled_indent_langs =
+  { python = true, css = true, rust = true, cpp = true, yaml = true, json = true, html = true, javascript = true }
 
 vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("UserTreesitterIndent", { clear = true }),
   callback = function(args)
     local ft = args.match
-    if not disabled_indent_langs[ft] then
-      vim.bo[args.buf].indentexpr = "v:lua.require'vim.treesitter'.indentexpr()"
-    end
+    if not disabled_indent_langs[ft] then vim.bo[args.buf].indentexpr = "v:lua.require'vim.treesitter'.indentexpr()" end
   end,
 })

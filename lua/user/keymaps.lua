@@ -22,7 +22,7 @@ keymap("n", "<leader>R", function()
     package.loaded[name] = nil
   end
   dofile(vim.env.MYVIMRC)
-  vim.notify("Config reloaded")
+  vim.notify "Config reloaded"
 end, opts)
 
 -- ============================================
