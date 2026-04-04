@@ -113,9 +113,8 @@ nvim_tree.setup {
     enable = true,
     auto_open = true,
   },
-  -- Auto-open nvim-tree when starting Neovim
   on_attach = on_attach,
-  update_cwd = true,
+  sync_root_with_cwd = true,
   renderer = {
     group_empty = false,
     highlight_git = false,
@@ -172,7 +171,7 @@ nvim_tree.setup {
   },
   update_focused_file = {
     enable = true,
-    update_cwd = true,
+    update_root = true,
     ignore_list = {},
   },
   -- system_open = {
@@ -201,5 +200,4 @@ nvim_tree.setup {
     cursorline = true,
     side = "left",
   },
-  on_attach = on_attach,
 }

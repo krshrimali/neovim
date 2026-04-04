@@ -111,7 +111,14 @@ keymap("i", "<M-[>", "<Plug>(copilot-previous)", { silent = true })
 keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<cr>", opts)
 keymap("n", "gy", "<cmd>lua vim.lsp.buf.type_definition()<cr>", opts)
 keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", opts)
-keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<cr>", opts)
+keymap("n", "gr", function()
+  vim.lsp.buf.references(nil, {
+    on_list = function(options)
+      vim.fn.setqflist({}, " ", options)
+      vim.cmd "copen"
+    end,
+  })
+end, opts)
 
 -- ============================================
 -- MOUSE
@@ -183,8 +190,8 @@ vim.cmd [[
 
   " Diagnostics
   amenu PopUp.Show\ Diagnostic         <cmd>lua vim.diagnostic.open_float()<cr>
-  amenu PopUp.Next\ Diagnostic         <cmd>lua vim.diagnostic.goto_next()<cr>
-  amenu PopUp.Prev\ Diagnostic         <cmd>lua vim.diagnostic.goto_prev()<cr>
+  amenu PopUp.Next\ Diagnostic         <cmd>lua vim.diagnostic.jump({ count = 1, float = true })<cr>
+  amenu PopUp.Prev\ Diagnostic         <cmd>lua vim.diagnostic.jump({ count = -1, float = true })<cr>
   amenu PopUp.-sep3-                   <Nop>
 
   " Git
