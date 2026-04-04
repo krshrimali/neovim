@@ -125,12 +125,6 @@ require("lazy").setup({
   -- ============================================
   -- EDITING: Essential editing enhancements
   -- ============================================
-  {
-    "numToStr/Comment.nvim",
-    keys = { { "gc", mode = { "n", "v" } }, { "gb", mode = { "n", "v" } } },
-    config = true,
-  },
-
   { "windwp/nvim-autopairs", event = "InsertEnter", config = true },
 
   {
