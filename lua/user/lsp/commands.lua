@@ -1,5 +1,5 @@
 -- LSP Commands
--- Recreates CoC commands: :Format, :OR (organize imports), :LspInfo, :LspRestart
+-- Recreates CoC commands: :Format, :OR (organize imports), plus :lsp aliases
 
 local M = {}
 
@@ -22,7 +22,10 @@ function M.setup()
 
   -- :OR command (Organize imports)
   vim.api.nvim_create_user_command("OR", function()
-    local params = vim.lsp.util.make_range_params()
+    local win = vim.api.nvim_get_current_win()
+    local client = vim.lsp.get_clients({ bufnr = 0 })[1]
+    local offset_encoding = client and client.offset_encoding or "utf-16"
+    local params = vim.lsp.util.make_range_params(win, offset_encoding)
     params.context = { only = { "source.organizeImports" } }
 
     local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 1000)
@@ -35,7 +38,7 @@ function M.setup()
       if res.result then
         for _, action in pairs(res.result) do
           if action.edit then
-            vim.lsp.util.apply_workspace_edit(action.edit, "utf-8")
+            vim.lsp.util.apply_workspace_edit(action.edit, offset_encoding)
           elseif action.command then
             vim.lsp.buf.execute_command(action.command)
           end
@@ -44,24 +47,10 @@ function M.setup()
     end
   end, { desc = "Organize imports" })
 
-  -- :LspInfo (already built-in, but we can alias it)
-  vim.api.nvim_create_user_command("LI", "LspInfo", { desc = "Show LSP info" })
-
-  -- :LspRestart (already built-in)
-  vim.api.nvim_create_user_command("LR", "LspRestart", { desc = "Restart LSP" })
-
-  -- :LspLog to open LSP log
-  vim.api.nvim_create_user_command(
-    "LspLog",
-    function() vim.cmd("edit " .. vim.lsp.get_log_path()) end,
-    { desc = "Open LSP log file" }
-  )
-
-  -- :LspStart to manually start LSP
-  vim.api.nvim_create_user_command("LS", "LspStart", { desc = "Start LSP" })
-
-  -- :LspStop to manually stop LSP
-  vim.api.nvim_create_user_command("LspStop", "LspStop", { desc = "Stop LSP" })
+  -- Aliases for :lsp subcommands (Neovim 0.12+)
+  vim.api.nvim_create_user_command("LI", "lsp status", { desc = "Show LSP info" })
+  vim.api.nvim_create_user_command("LR", "lsp restart", { desc = "Restart LSP" })
+  vim.api.nvim_create_user_command("LS", "lsp start", { desc = "Start LSP" })
 end
 
 return M
