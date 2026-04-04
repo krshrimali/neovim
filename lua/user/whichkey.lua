@@ -157,7 +157,7 @@ which_key.add {
   { "<leader>l", group = "LSP" },
   { "<leader>la", "<cmd>lua vim.lsp.buf.code_action()<cr>", desc = "Code Action" },
   { "<leader>lf", "<cmd>lua vim.lsp.buf.format({ async = true })<cr>", desc = "Format" },
-  { "<leader>li", "<cmd>LspInfo<cr>", desc = "LSP Info" },
+  { "<leader>li", "<cmd>lsp status<cr>", desc = "LSP Info" },
   { "<leader>lI", "<cmd>Mason<cr>", desc = "Mason Installer" },
   { "<leader>lj", function() vim.diagnostic.jump({ count = 1, float = true }) end, desc = "Next Diagnostic" },
   { "<leader>lk", function() vim.diagnostic.jump({ count = -1, float = true }) end, desc = "Prev Diagnostic" },
