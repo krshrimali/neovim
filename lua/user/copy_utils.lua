@@ -1,5 +1,5 @@
--- Utilities for copying file paths and Python imports
--- Keymaps: <leader>ci (Python import), <leader>cp (absolute path), <leader>cr (relative path)
+-- Utilities for copying file paths and import statements
+-- Keymaps: <leader>ci (import statement), <leader>cp (absolute path), <leader>cr (relative path)
 -- <leader>cf (parent func body), <leader>cF (file:func_start:func_end)
 -- <leader>cc (parent class body), <leader>cC (file:class_start:class_end)
 
@@ -169,52 +169,111 @@ local function get_symbol_under_cursor()
   return nil
 end
 
--- Convert file path to Python module path
-local function file_path_to_python_module(filepath)
-  -- Remove .py extension
-  local module_path = filepath:gsub("%.py$", "")
-
-  -- Replace path separators with dots
-  module_path = module_path:gsub("/", ".")
-
-  -- Remove __init__ from the end if present
-  module_path = module_path:gsub("%.__init__$", "")
-
-  return module_path
-end
-
--- Find the Python package root (directory containing the module)
-local function find_python_package_root(filepath)
-  local dir = vim.fn.fnamemodify(filepath, ":h")
-  local parts = {}
-
-  -- Split the path into parts
-  for part in dir:gmatch "[^/]+" do
-    table.insert(parts, part)
-  end
-
-  -- Look for common project indicators
-  -- Start from the end and work backwards to find the package root
+-- Make filepath relative to cwd
+local function get_relative_filepath(filepath)
   local cwd = vim.fn.getcwd()
-
-  -- If file is under cwd, make it relative to cwd
   if filepath:find(cwd, 1, true) == 1 then
-    -- Get relative path from cwd
-    local rel_path = filepath:sub(#cwd + 2) -- +2 to skip the trailing /
-    return rel_path
+    return filepath:sub(#cwd + 2)
   end
-
-  -- Otherwise return the full path
   return filepath
 end
 
--- Copy Python import statement for current symbol
-function M.copy_python_import()
+-- Language-specific import configurations
+local lang_import_config = {
+  python = {
+    module_path = function(rel_path)
+      local mod = rel_path:gsub("%.py$", "")
+      mod = mod:gsub("/", ".")
+      mod = mod:gsub("%.__init__$", "")
+      return mod
+    end,
+    format_import = function(mod, symbol)
+      if symbol and symbol ~= "" then
+        return string.format("from %s import %s", mod, symbol)
+      end
+      return string.format("from %s import ", mod)
+    end,
+  },
+
+  typescript = {
+    module_path = function(rel_path)
+      local mod = rel_path:gsub("%.tsx?$", ""):gsub("%.jsx?$", "")
+      mod = mod:gsub("/index$", "")
+      if not mod:match "^@" then
+        mod = "./" .. mod
+      end
+      return mod
+    end,
+    format_import = function(mod, symbol)
+      if symbol and symbol ~= "" then
+        return string.format("import { %s } from '%s'", symbol, mod)
+      end
+      return string.format("import '%s'", mod)
+    end,
+  },
+
+  rust = {
+    module_path = function(rel_path)
+      local mod = rel_path:gsub("^src/", ""):gsub("%.rs$", "")
+      mod = mod:gsub("/", "::")
+      mod = mod:gsub("::mod$", "")
+      return "crate::" .. mod
+    end,
+    format_import = function(mod, symbol)
+      if symbol and symbol ~= "" then
+        return string.format("use %s::%s;", mod, symbol)
+      end
+      return string.format("use %s;", mod)
+    end,
+  },
+
+  c = {
+    module_path = function(rel_path)
+      return rel_path
+    end,
+    format_import = function(mod, _symbol)
+      return string.format('#include "%s"', mod)
+    end,
+  },
+
+  go = {
+    module_path = function(rel_path)
+      return vim.fn.fnamemodify(rel_path, ":h")
+    end,
+    format_import = function(mod, _symbol)
+      return string.format('import "%s"', mod)
+    end,
+  },
+
+  lua = {
+    module_path = function(rel_path)
+      local mod = rel_path:gsub("%.lua$", "")
+      mod = mod:gsub("/", ".")
+      mod = mod:gsub("%.init$", "")
+      return mod
+    end,
+    format_import = function(mod, symbol)
+      if symbol and symbol ~= "" then
+        return string.format('local %s = require("%s").%s', symbol, mod, symbol)
+      end
+      return string.format('require("%s")', mod)
+    end,
+  },
+}
+
+lang_import_config.javascript = lang_import_config.typescript
+lang_import_config.typescriptreact = lang_import_config.typescript
+lang_import_config.javascriptreact = lang_import_config.typescript
+lang_import_config.cpp = lang_import_config.c
+
+-- Copy import statement for current symbol (language-aware)
+function M.copy_import()
   local bufnr = vim.api.nvim_get_current_buf()
   local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
 
-  if filetype ~= "python" then
-    vim.notify("Not a Python file", vim.log.levels.WARN)
+  local config = lang_import_config[filetype]
+  if not config then
+    vim.notify(string.format("No import format configured for filetype: %s", filetype), vim.log.levels.WARN)
     return
   end
 
@@ -224,29 +283,17 @@ function M.copy_python_import()
     return
   end
 
-  -- Get relative path from cwd or use the path as-is
-  local module_file = find_python_package_root(filepath)
-
-  -- Convert to module path
-  local module_path = file_path_to_python_module(module_file)
-
-  -- Get symbol under cursor
+  local rel_path = get_relative_filepath(filepath)
+  local module_path = config.module_path(rel_path)
   local symbol = get_symbol_under_cursor()
+  local import_statement = config.format_import(module_path, symbol)
 
-  local import_statement
-  if symbol and symbol ~= "" then
-    import_statement = string.format("from %s import %s", module_path, symbol)
-  else
-    import_statement = string.format("from %s import ", module_path)
-  end
-
-  -- Copy to clipboard
   vim.fn.setreg("+", import_statement)
   vim.fn.setreg('"', import_statement)
-
-  -- Show notification
   vim.notify(string.format("Copied: %s", import_statement), vim.log.levels.INFO)
 end
+
+M.copy_python_import = M.copy_import
 
 -- Copy absolute file path
 function M.copy_absolute_path()

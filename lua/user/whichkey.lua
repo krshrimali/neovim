@@ -355,8 +355,8 @@ which_key.add {
   { "<leader>cl", "<cmd>lua vim.lsp.codelens.run()<cr>", desc = "CodeLens Action", mode = { "n", "v" } },
   {
     "<leader>ci",
-    "<cmd>lua require('user.copy_utils').copy_python_import()<cr>",
-    desc = "Copy Python Import",
+    "<cmd>lua require('user.copy_utils').copy_import()<cr>",
+    desc = "Copy Import Statement",
     mode = { "n", "v" },
   },
   {
