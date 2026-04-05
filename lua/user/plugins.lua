@@ -186,10 +186,20 @@ require("lazy").setup({
             c.breadcrumbs,
           },
           lualine_x = {
-            { c.macro_recording, color = { fg = "#ff9e64", gui = "bold" } },
-            { c.search_count,    color = { fg = "#7aa2f7" } },
+            { c.macro_recording, color = function()
+              local hl = vim.api.nvim_get_hl(0, { name = "DiagnosticWarn", link = false })
+              return { fg = hl.fg and string.format("#%06x", hl.fg) or "#ff9e64", gui = "bold" }
+            end },
+            { c.search_count, color = function()
+              local hl = vim.api.nvim_get_hl(0, { name = "Function", link = false })
+              return { fg = hl.fg and string.format("#%06x", hl.fg) or "#7aa2f7" }
+            end },
             "diagnostics",
-            { c.lsp_status, color = { fg = "#9ece6a" } },
+            { c.lsp_status, color = function()
+              local hl = vim.api.nvim_get_hl(0, { name = "DiagnosticOk", link = false })
+              if not hl.fg then hl = vim.api.nvim_get_hl(0, { name = "String", link = false }) end
+              return { fg = hl.fg and string.format("#%06x", hl.fg) or "#9ece6a" }
+            end },
           },
           lualine_y = { "filetype" },
           lualine_z = { "location", "progress" },
