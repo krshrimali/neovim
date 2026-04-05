@@ -3,7 +3,6 @@
 
 require "user.options"
 require "user.plugins"
-require "user.treesitter"
 require "user.keymaps"
 require "user.functions"
 require "user.autocommands"
