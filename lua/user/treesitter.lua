@@ -1,48 +1,85 @@
--- Neovim 0.12+ built-in treesitter configuration
--- Highlighting is enabled by default; this file handles disabling for specific cases
--- and configuring indent.
+local status_ok, configs = pcall(require, "nvim-treesitter.configs")
+if not status_ok then return end
 
--- Filetypes where treesitter highlighting should be disabled
-local disabled_hl_langs = { markdown = true, css = true, html = true }
+configs.setup {
+  -- Only install minimal parsers to reduce startup time
+  ensure_installed = { "lua", "python", "diff", "gitcommit" }, -- Minimal set, others installed on demand
+  auto_install = true, -- Automatically install parsers when entering a new filetype
+  sync_install = false, -- install languages synchronously (only applied to `ensure_installed`)
+  -- max_file_lines = 3000, -- Removed to ensure no interference with LSP
+  ignore_install = { "" }, -- List of parsers to ignore installing
 
-vim.api.nvim_create_autocmd("FileType", {
-  group = vim.api.nvim_create_augroup("UserTreesitter", { clear = true }),
-  callback = function(args)
-    local buf = args.buf
-    local ft = args.match
+  highlight = {
+    enable = true, -- false will disable the whole extension
+    -- Disable for heavy file types, terminal buffers, and very large files
+    disable = function(lang, buf)
+      -- Disable for specific heavy file types
+      local disabled_langs = { markdown = true, css = true, html = true }
+      if disabled_langs[lang] then return true end
 
-    -- Disable for specific filetypes
-    if disabled_hl_langs[ft] then
-      vim.treesitter.stop(buf)
-      return
-    end
+      -- Disable for terminal buffers to prevent highlighting errors
+      local buftype = vim.api.nvim_get_option_value("buftype", { buf = buf })
+      if buftype == "terminal" then return true end
 
-    -- Disable for terminal buffers
-    local buftype = vim.api.nvim_get_option_value("buftype", { buf = buf })
-    if buftype == "terminal" then
-      vim.treesitter.stop(buf)
-      return
-    end
+      local max_filesize = 500 * 1024 -- 500KB limit - only disable for very large files
+      local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
+      if ok and stats and stats.size > max_filesize then return true end
+    end,
+  },
 
-    -- Disable for very large files (>500KB)
-    local max_filesize = 500 * 1024
-    local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
-    if ok and stats and stats.size > max_filesize then
-      vim.treesitter.stop(buf)
-      return
-    end
-  end,
-})
+  -- Disable heavy features for startup performance
+  autopairs = {
+    enable = false, -- Disabled for better performance
+  },
 
--- Enable treesitter-based indentation, except for these filetypes
-local disabled_indent_langs = { python = true, css = true, rust = true, cpp = true, yaml = true, json = true, html = true, javascript = true }
+  indent = {
+    enable = true,
+    disable = { "python", "css", "rust", "cpp", "yaml", "json", "html", "javascript" }, -- More disabled for performance
+  },
 
-vim.api.nvim_create_autocmd("FileType", {
-  group = vim.api.nvim_create_augroup("UserTreesitterIndent", { clear = true }),
-  callback = function(args)
-    local ft = args.match
-    if not disabled_indent_langs[ft] then
-      vim.bo[args.buf].indentexpr = "v:lua.require'vim.treesitter'.indentexpr()"
-    end
-  end,
-})
+  -- Disable incremental selection to reduce startup time
+  incremental_selection = {
+    enable = false, -- Disabled for better startup performance
+  },
+
+  -- Disable matchup for better performance
+  matchup = {
+    enable = false, -- Disabled for better startup performance
+  },
+
+  -- Disable autotag for better performance
+  autotag = {
+    enable = false, -- Disabled for better startup performance
+  },
+
+  -- Disable rainbow for better performance
+  rainbow = {
+    enable = false, -- Disabled for better startup performance
+  },
+
+  -- Disable playground for better performance
+  playground = {
+    enable = false, -- Disabled for better startup performance
+  },
+
+  -- Simplify textobjects or disable for better performance
+  textobjects = {
+    select = {
+      enable = true,
+      lookahead = false, -- Disabled for better performance
+      keymaps = {
+        -- Keep only essential textobjects
+        ["af"] = "@function.outer",
+        ["if"] = "@function.inner",
+        ["ac"] = "@class.outer",
+        ["ic"] = "@class.inner",
+      },
+    },
+    move = {
+      enable = false, -- Disabled for better startup performance
+    },
+    swap = {
+      enable = false, -- Disabled for better startup performance
+    },
+  },
+}
