@@ -23,7 +23,7 @@ function M.setup()
     underline = true,
 
     -- Don't update diagnostics in insert mode
-    update_in_insert = false,
+    update_in_insert = true,
 
     -- Sort by severity (errors first)
     severity_sort = true,
