@@ -97,7 +97,8 @@ function M.setup()
 
     -- Sources configuration
     sources = {
-      default = { "lsp", "path", "buffer" },
+      -- Add buffer later if required
+      default = { "lsp", "path" },
     },
 
     -- Use Rust fuzzy matcher if available
