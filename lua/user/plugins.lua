@@ -30,15 +30,15 @@ require("lazy").setup({
         config = true,
       },
       { "williamboman/mason-lspconfig.nvim" },
-      { "saghen/blink.cmp",                 version = "1.*", dependencies = { "rafamadriz/friendly-snippets" } },
-      { "folke/neodev.nvim",                config = true },
-      { "b0o/schemastore.nvim",             lazy = true },
+      { "saghen/blink.cmp", version = "1.*", dependencies = { "rafamadriz/friendly-snippets" } },
+      { "folke/neodev.nvim", config = true },
+      { "b0o/schemastore.nvim", lazy = true },
     },
     config = function() require("user.lsp").setup() end,
   },
 
   -- LSP progress (minimal UI)
-  { "j-hui/fidget.nvim",     event = "LspAttach",   opts = {} },
+  { "j-hui/fidget.nvim", event = "LspAttach", opts = {} },
 
   -- ============================================
   -- SYNTAX: Treesitter (essential)
@@ -105,9 +105,9 @@ require("lazy").setup({
     "sindrets/diffview.nvim",
     cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewClose" },
     keys = {
-      { "<leader>gd", "<cmd>DiffviewOpen<cr>",                    desc = "Git diff (split)" },
+      { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Git diff (split)" },
       { "<leader>gu", "<cmd>DiffviewOpen --view=diff1_plain<cr>", desc = "Git diff (unified)" },
-      { "<leader>gf", "<cmd>DiffviewFileHistory %<cr>",           desc = "File history" },
+      { "<leader>gf", "<cmd>DiffviewFileHistory %<cr>", desc = "File history" },
     },
     config = function() require "user.diffview" end,
   },
@@ -133,7 +133,7 @@ require("lazy").setup({
     config = true,
   },
 
-  { "tpope/vim-sleuth",       event = "VeryLazy" },
+  { "tpope/vim-sleuth", event = "VeryLazy" },
 
   -- Word motions that respect snake_case and kebab-case boundaries
   { "chaoren/vim-wordmotion", event = "VeryLazy" },
@@ -201,14 +201,14 @@ require("lazy").setup({
               color = function()
                 local hl = vim.api.nvim_get_hl(0, { name = "DiagnosticWarn", link = false })
                 return { fg = hl.fg and string.format("#%06x", hl.fg) or "#ff9e64", gui = "bold" }
-              end
+              end,
             },
             {
               c.search_count,
               color = function()
                 local hl = vim.api.nvim_get_hl(0, { name = "Function", link = false })
                 return { fg = hl.fg and string.format("#%06x", hl.fg) or "#7aa2f7" }
-              end
+              end,
             },
             "diagnostics",
             {
@@ -217,7 +217,7 @@ require("lazy").setup({
                 local hl = vim.api.nvim_get_hl(0, { name = "DiagnosticOk", link = false })
                 if not hl.fg then hl = vim.api.nvim_get_hl(0, { name = "String", link = false }) end
                 return { fg = hl.fg and string.format("#%06x", hl.fg) or "#9ece6a" }
-              end
+              end,
             },
           },
           lualine_y = { "filetype" },
@@ -247,18 +247,18 @@ require("lazy").setup({
     priority = 900,
     keys = {
       -- Picker keymaps
-      { "<C-p>",      function() Snacks.picker.files() end,       desc = "Find Files" },
-      { "<leader>ff", function() Snacks.picker.files() end,       desc = "Find Files" },
-      { "<leader>fr", function() Snacks.picker.recent() end,      desc = "Recent Files" },
-      { "<leader>/",  function() Snacks.picker.grep() end,        desc = "Live Grep" },
-      { "<leader>b",  function() Snacks.picker.buffers() end,     desc = "Buffers" },
-      { "<leader>fh", function() Snacks.picker.help() end,        desc = "Help Tags" },
-      { "<leader>fk", function() Snacks.picker.keymaps() end,     desc = "Keymaps" },
+      { "<C-p>", function() Snacks.picker.files() end, desc = "Find Files" },
+      { "<leader>ff", function() Snacks.picker.files() end, desc = "Find Files" },
+      { "<leader>fr", function() Snacks.picker.recent() end, desc = "Recent Files" },
+      { "<leader>/", function() Snacks.picker.grep() end, desc = "Live Grep" },
+      { "<leader>b", function() Snacks.picker.buffers() end, desc = "Buffers" },
+      { "<leader>fh", function() Snacks.picker.help() end, desc = "Help Tags" },
+      { "<leader>fk", function() Snacks.picker.keymaps() end, desc = "Keymaps" },
       { "<leader>fs", function() Snacks.picker.lsp_symbols() end, desc = "LSP Symbols" },
       { "<leader>fd", function() Snacks.picker.diagnostics() end, desc = "Diagnostics" },
-      { "<leader>fc", function() Snacks.picker.commands() end,    desc = "Commands" },
-      { "<leader>fw", function() Snacks.picker.grep_word() end,   desc = "Grep Word",   mode = { "n", "x" } },
-      { "<leader>fp", function() Snacks.picker.projects() end,    desc = "Projects" },
+      { "<leader>fc", function() Snacks.picker.commands() end, desc = "Commands" },
+      { "<leader>fw", function() Snacks.picker.grep_word() end, desc = "Grep Word", mode = { "n", "x" } },
+      { "<leader>fp", function() Snacks.picker.projects() end, desc = "Projects" },
       -- Git
       {
         "<leader>gy",
@@ -315,7 +315,7 @@ require("lazy").setup({
             { win = "input", height = 1, border = "bottom" },
             {
               box = "horizontal",
-              { win = "list",    border = "none" },
+              { win = "list", border = "none" },
               { win = "preview", title = "{preview}", border = "left", width = 0.5 },
             },
           },
@@ -389,8 +389,8 @@ require("lazy").setup({
         replace_keycodes = false,
         desc = "Accept Copilot suggestion",
       },
-      { "<C-]>",  "<Plug>(copilot-next)",    mode = "i", desc = "Next Copilot suggestion" },
-      { "<C-p>",  "<Plug>(copilot-prev)",    mode = "i", desc = "Prev Copilot suggestion" },
+      { "<C-]>", "<Plug>(copilot-next)", mode = "i", desc = "Next Copilot suggestion" },
+      { "<C-p>", "<Plug>(copilot-prev)", mode = "i", desc = "Prev Copilot suggestion" },
       { "<C-\\>", "<Plug>(copilot-dismiss)", mode = "i", desc = "Dismiss Copilot suggestion" },
     },
   },
@@ -403,7 +403,7 @@ require("lazy").setup({
     "folke/trouble.nvim",
     cmd = "Trouble",
     keys = {
-      { "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>",              desc = "Diagnostics" },
+      { "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics" },
       { "<leader>xd", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Buffer Diagnostics" },
     },
     opts = {
@@ -484,7 +484,7 @@ require("lazy").setup({
   },
 
   -- Better quickfix
-  { "kevinhwang91/nvim-bqf", ft = "qf",      config = function() require "user.bqf" end },
+  { "kevinhwang91/nvim-bqf", ft = "qf", config = function() require "user.bqf" end },
 
   -- Sidekick.nvim - AI CLI integration & Copilot NES
   {
@@ -589,33 +589,33 @@ require("lazy").setup({
     -- Optional. You can also set your own keybindings
     keys = {
       -- Global Minimap Controls
-      { "<leader>nm",  "<cmd>Neominimap Toggle<cr>",      desc = "Toggle global minimap" },
-      { "<leader>no",  "<cmd>Neominimap Enable<cr>",      desc = "Enable global minimap" },
-      { "<leader>nc",  "<cmd>Neominimap Disable<cr>",     desc = "Disable global minimap" },
-      { "<leader>nr",  "<cmd>Neominimap Refresh<cr>",     desc = "Refresh global minimap" },
+      { "<leader>nm", "<cmd>Neominimap Toggle<cr>", desc = "Toggle global minimap" },
+      { "<leader>no", "<cmd>Neominimap Enable<cr>", desc = "Enable global minimap" },
+      { "<leader>nc", "<cmd>Neominimap Disable<cr>", desc = "Disable global minimap" },
+      { "<leader>nr", "<cmd>Neominimap Refresh<cr>", desc = "Refresh global minimap" },
 
       -- Window-Specific Minimap Controls
-      { "<leader>nwt", "<cmd>Neominimap WinToggle<cr>",   desc = "Toggle minimap for current window" },
-      { "<leader>nwr", "<cmd>Neominimap WinRefresh<cr>",  desc = "Refresh minimap for current window" },
-      { "<leader>nwo", "<cmd>Neominimap WinEnable<cr>",   desc = "Enable minimap for current window" },
-      { "<leader>nwc", "<cmd>Neominimap WinDisable<cr>",  desc = "Disable minimap for current window" },
+      { "<leader>nwt", "<cmd>Neominimap WinToggle<cr>", desc = "Toggle minimap for current window" },
+      { "<leader>nwr", "<cmd>Neominimap WinRefresh<cr>", desc = "Refresh minimap for current window" },
+      { "<leader>nwo", "<cmd>Neominimap WinEnable<cr>", desc = "Enable minimap for current window" },
+      { "<leader>nwc", "<cmd>Neominimap WinDisable<cr>", desc = "Disable minimap for current window" },
 
       -- Tab-Specific Minimap Controls
-      { "<leader>ntt", "<cmd>Neominimap TabToggle<cr>",   desc = "Toggle minimap for current tab" },
-      { "<leader>ntr", "<cmd>Neominimap TabRefresh<cr>",  desc = "Refresh minimap for current tab" },
-      { "<leader>nto", "<cmd>Neominimap TabEnable<cr>",   desc = "Enable minimap for current tab" },
-      { "<leader>ntc", "<cmd>Neominimap TabDisable<cr>",  desc = "Disable minimap for current tab" },
+      { "<leader>ntt", "<cmd>Neominimap TabToggle<cr>", desc = "Toggle minimap for current tab" },
+      { "<leader>ntr", "<cmd>Neominimap TabRefresh<cr>", desc = "Refresh minimap for current tab" },
+      { "<leader>nto", "<cmd>Neominimap TabEnable<cr>", desc = "Enable minimap for current tab" },
+      { "<leader>ntc", "<cmd>Neominimap TabDisable<cr>", desc = "Disable minimap for current tab" },
 
       -- Buffer-Specific Minimap Controls
-      { "<leader>nbt", "<cmd>Neominimap BufToggle<cr>",   desc = "Toggle minimap for current buffer" },
-      { "<leader>nbr", "<cmd>Neominimap BufRefresh<cr>",  desc = "Refresh minimap for current buffer" },
-      { "<leader>nbo", "<cmd>Neominimap BufEnable<cr>",   desc = "Enable minimap for current buffer" },
-      { "<leader>nbc", "<cmd>Neominimap BufDisable<cr>",  desc = "Disable minimap for current buffer" },
+      { "<leader>nbt", "<cmd>Neominimap BufToggle<cr>", desc = "Toggle minimap for current buffer" },
+      { "<leader>nbr", "<cmd>Neominimap BufRefresh<cr>", desc = "Refresh minimap for current buffer" },
+      { "<leader>nbo", "<cmd>Neominimap BufEnable<cr>", desc = "Enable minimap for current buffer" },
+      { "<leader>nbc", "<cmd>Neominimap BufDisable<cr>", desc = "Disable minimap for current buffer" },
 
       ---Focus Controls
-      { "<leader>nf",  "<cmd>Neominimap Focus<cr>",       desc = "Focus on minimap" },
-      { "<leader>nu",  "<cmd>Neominimap Unfocus<cr>",     desc = "Unfocus minimap" },
-      { "<leader>ns",  "<cmd>Neominimap ToggleFocus<cr>", desc = "Switch focus on minimap" },
+      { "<leader>nf", "<cmd>Neominimap Focus<cr>", desc = "Focus on minimap" },
+      { "<leader>nu", "<cmd>Neominimap Unfocus<cr>", desc = "Unfocus minimap" },
+      { "<leader>ns", "<cmd>Neominimap ToggleFocus<cr>", desc = "Switch focus on minimap" },
     },
     init = function()
       -- NOTE: sidescrolloff = 36 is recommended when minimap layout == "float",
@@ -658,14 +658,14 @@ require("lazy").setup({
     "krshrimali/gh.nvim",
     cmd = { "Github", "GithubIssues", "GithubPRs", "GithubAssigned", "GithubRefresh" },
     keys = {
-      { "<leader>gh",  "<cmd>Github<cr>",       desc = "GitHub" },
+      { "<leader>gh", "<cmd>Github<cr>", desc = "GitHub" },
       { "<leader>ghi", "<cmd>GithubIssues<cr>", desc = "GitHub Issues" },
-      { "<leader>ghp", "<cmd>GithubPRs<cr>",    desc = "GitHub PRs" },
+      { "<leader>ghp", "<cmd>GithubPRs<cr>", desc = "GitHub PRs" },
     },
     config = function() require("github").setup {} end,
   },
 
-  { "nvim-mini/mini.map",    version = false },
+  { "nvim-mini/mini.map", version = false },
 
   -- Align text by delimiter (e.g. `|` for markdown tables)
   -- Usage: select lines in visual, press `ga` then the delimiter (e.g. `|`)
@@ -699,9 +699,9 @@ require("lazy").setup({
     "rmagatti/goto-preview",
     dependencies = { "rmagatti/logger.nvim" },
     keys = {
-      { "gpd", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>",     desc = "Preview definition" },
+      { "gpd", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>", desc = "Preview definition" },
       { "gpi", "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>", desc = "Preview implementation" },
-      { "gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>",     desc = "Preview references" },
+      { "gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>", desc = "Preview references" },
       {
         "gpt",
         "<cmd>lua require('goto-preview').goto_preview_type_definition()<CR>",
@@ -738,7 +738,7 @@ require("lazy").setup({
     cmd = "Octo",
     keys = {
       { "<leader>oi", "<cmd>Octo issue list<cr>", desc = "Octo: Issues" },
-      { "<leader>op", "<cmd>Octo pr list<cr>",    desc = "Octo: PRs" },
+      { "<leader>op", "<cmd>Octo pr list<cr>", desc = "Octo: PRs" },
     },
     dependencies = {
       "nvim-lua/plenary.nvim",
@@ -794,13 +794,45 @@ require("lazy").setup({
       "nvim-treesitter/nvim-treesitter",
     },
     keys = {
-      { "<leader>re", function() require("refactoring").refactor("Extract Function") end,         mode = "x",                    desc = "Extract Function" },
-      { "<leader>rf", function() require("refactoring").refactor("Extract Function To File") end, mode = "x",                    desc = "Extract Function To File" },
-      { "<leader>rv", function() require("refactoring").refactor("Extract Variable") end,         mode = "x",                    desc = "Extract Variable" },
-      { "<leader>ri", function() require("refactoring").refactor("Inline Variable") end,          mode = { "n", "x" },           desc = "Inline Variable" },
-      { "<leader>rI", function() require("refactoring").refactor("Inline Function") end,          desc = "Inline Function" },
-      { "<leader>rb", function() require("refactoring").refactor("Extract Block") end,            desc = "Extract Block" },
-      { "<leader>rB", function() require("refactoring").refactor("Extract Block To File") end,    desc = "Extract Block To File" },
+      {
+        "<leader>re",
+        function() require("refactoring").refactor "Extract Function" end,
+        mode = "x",
+        desc = "Extract Function",
+      },
+      {
+        "<leader>rf",
+        function() require("refactoring").refactor "Extract Function To File" end,
+        mode = "x",
+        desc = "Extract Function To File",
+      },
+      {
+        "<leader>rv",
+        function() require("refactoring").refactor "Extract Variable" end,
+        mode = "x",
+        desc = "Extract Variable",
+      },
+      {
+        "<leader>ri",
+        function() require("refactoring").refactor "Inline Variable" end,
+        mode = { "n", "x" },
+        desc = "Inline Variable",
+      },
+      {
+        "<leader>rI",
+        function() require("refactoring").refactor "Inline Function" end,
+        desc = "Inline Function",
+      },
+      {
+        "<leader>rb",
+        function() require("refactoring").refactor "Extract Block" end,
+        desc = "Extract Block",
+      },
+      {
+        "<leader>rB",
+        function() require("refactoring").refactor "Extract Block To File" end,
+        desc = "Extract Block To File",
+      },
       {
         "<leader>rr",
         function() require("refactoring").select_refactor() end,
@@ -819,20 +851,20 @@ require("lazy").setup({
       { "<leader>sr", function() require("grug-far").open() end, desc = "Search & Replace (project)" },
       {
         "<leader>sw",
-        function() require("grug-far").open({ prefills = { search = vim.fn.expand("<cword>") } }) end,
+        function() require("grug-far").open { prefills = { search = vim.fn.expand "<cword>" } } end,
         desc = "Search & Replace (word)",
       },
       {
         "<leader>sF",
-        function() require("grug-far").open({ prefills = { paths = vim.fn.expand("%") } }) end,
+        function() require("grug-far").open { prefills = { paths = vim.fn.expand "%" } } end,
         desc = "Search & Replace (file)",
       },
       {
         "<leader>sr",
         function()
-          require("grug-far").open({
+          require("grug-far").open {
             prefills = { search = vim.fn.getreg("/"):gsub("\\<", ""):gsub("\\>", "") },
-          })
+          }
         end,
         mode = "x",
         desc = "Search & Replace (selection)",
