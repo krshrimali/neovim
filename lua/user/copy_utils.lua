@@ -173,9 +173,7 @@ end
 -- Make filepath relative to cwd
 local function get_relative_filepath(filepath)
   local cwd = vim.fn.getcwd()
-  if filepath:find(cwd, 1, true) == 1 then
-    return filepath:sub(#cwd + 2)
-  end
+  if filepath:find(cwd, 1, true) == 1 then return filepath:sub(#cwd + 2) end
   return filepath
 end
 
@@ -189,9 +187,7 @@ local lang_import_config = {
       return mod
     end,
     format_import = function(mod, symbol)
-      if symbol and symbol ~= "" then
-        return string.format("from %s import %s", mod, symbol)
-      end
+      if symbol and symbol ~= "" then return string.format("from %s import %s", mod, symbol) end
       return string.format("from %s import ", mod)
     end,
   },
@@ -200,15 +196,11 @@ local lang_import_config = {
     module_path = function(rel_path)
       local mod = rel_path:gsub("%.tsx?$", ""):gsub("%.jsx?$", "")
       mod = mod:gsub("/index$", "")
-      if not mod:match "^@" then
-        mod = "./" .. mod
-      end
+      if not mod:match "^@" then mod = "./" .. mod end
       return mod
     end,
     format_import = function(mod, symbol)
-      if symbol and symbol ~= "" then
-        return string.format("import { %s } from '%s'", symbol, mod)
-      end
+      if symbol and symbol ~= "" then return string.format("import { %s } from '%s'", symbol, mod) end
       return string.format("import '%s'", mod)
     end,
   },
@@ -221,29 +213,19 @@ local lang_import_config = {
       return "crate::" .. mod
     end,
     format_import = function(mod, symbol)
-      if symbol and symbol ~= "" then
-        return string.format("use %s::%s;", mod, symbol)
-      end
+      if symbol and symbol ~= "" then return string.format("use %s::%s;", mod, symbol) end
       return string.format("use %s;", mod)
     end,
   },
 
   c = {
-    module_path = function(rel_path)
-      return rel_path
-    end,
-    format_import = function(mod, _symbol)
-      return string.format('#include "%s"', mod)
-    end,
+    module_path = function(rel_path) return rel_path end,
+    format_import = function(mod, _symbol) return string.format('#include "%s"', mod) end,
   },
 
   go = {
-    module_path = function(rel_path)
-      return vim.fn.fnamemodify(rel_path, ":h")
-    end,
-    format_import = function(mod, _symbol)
-      return string.format('import "%s"', mod)
-    end,
+    module_path = function(rel_path) return vim.fn.fnamemodify(rel_path, ":h") end,
+    format_import = function(mod, _symbol) return string.format('import "%s"', mod) end,
   },
 
   lua = {
@@ -254,9 +236,7 @@ local lang_import_config = {
       return mod
     end,
     format_import = function(mod, symbol)
-      if symbol and symbol ~= "" then
-        return string.format('local %s = require("%s").%s', symbol, mod, symbol)
-      end
+      if symbol and symbol ~= "" then return string.format('local %s = require("%s").%s', symbol, mod, symbol) end
       return string.format('require("%s")', mod)
     end,
   },
