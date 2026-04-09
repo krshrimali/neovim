@@ -937,6 +937,105 @@ local function apply(c, name, background)
   hl("AlphaButtons", { fg = c.fg })
 
   -----------------------------------------------------------------------
+  -- Snacks Picker
+  -- The picker's defaults link many groups (file, dirname, hidden paths)
+  -- to NonText/Conceal, which the editor base intentionally renders very
+  -- dim. That makes filenames disappear in the picker — override the
+  -- key text groups so they stay readable on every variant.
+  -----------------------------------------------------------------------
+  hl("SnacksPicker", { fg = c.fg, bg = c.bg_popup })
+  hl("SnacksPickerNormal", { fg = c.fg, bg = c.bg_popup })
+  hl("SnacksPickerBorder", { fg = c.border, bg = c.bg_popup })
+  hl("SnacksPickerTitle", { fg = c.bg, bg = c.blue, bold = true })
+  hl("SnacksPickerFooter", { fg = c.fg_dark, bg = c.bg_popup })
+
+  -- List window (results)
+  hl("SnacksPickerList", { fg = c.fg, bg = c.bg_popup })
+  hl("SnacksPickerListNormal", { fg = c.fg, bg = c.bg_popup })
+  hl("SnacksPickerListBorder", { fg = c.border, bg = c.bg_popup })
+  hl("SnacksPickerListTitle", { fg = c.bg, bg = c.blue, bold = true })
+  hl("SnacksPickerListCursorLine", { bg = c.selection })
+
+  -- Input window (prompt)
+  hl("SnacksPickerInput", { fg = c.fg, bg = c.bg_popup })
+  hl("SnacksPickerInputNormal", { fg = c.fg, bg = c.bg_popup })
+  hl("SnacksPickerInputBorder", { fg = c.border, bg = c.bg_popup })
+  hl("SnacksPickerInputTitle", { fg = c.bg, bg = c.blue, bold = true })
+  hl("SnacksPickerInputCursorLine", { bg = c.bg_popup })
+  hl("SnacksPickerInputSearch", { fg = c.yellow, bold = true })
+  hl("SnacksPickerPrompt", { fg = c.blue, bold = true })
+
+  -- Preview window
+  hl("SnacksPickerPreview", { fg = c.fg, bg = c.bg })
+  hl("SnacksPickerPreviewNormal", { fg = c.fg, bg = c.bg })
+  hl("SnacksPickerPreviewBorder", { fg = c.border, bg = c.bg })
+  hl("SnacksPickerPreviewTitle", { fg = c.bg, bg = c.purple, bold = true })
+  hl("SnacksPickerPreviewCursorLine", { bg = c.cursor_line })
+
+  -- The headline fix: filenames, dirnames, and path-component groups.
+  hl("SnacksPickerFile", { fg = c.fg })           -- basename of a file (was invisible)
+  hl("SnacksPickerDir", { fg = c.fg_dark })       -- dirname of a path  (was invisible)
+  hl("SnacksPickerDirectory", { fg = c.blue })    -- standalone directory entries
+  hl("SnacksPickerPathHidden", { fg = c.fg_dark, italic = true })
+  hl("SnacksPickerPathIgnored", { fg = c.fg_dark, italic = true })
+  hl("SnacksPickerLink", { fg = c.teal, italic = true })
+  hl("SnacksPickerLinkBroken", { fg = c.error, italic = true })
+
+  -- Selection / highlighting
+  hl("SnacksPickerMatch", { fg = c.yellow, bold = true })
+  hl("SnacksPickerSelected", { fg = c.purple, bold = true })
+  hl("SnacksPickerUnselected", { fg = c.fg_dark })
+  hl("SnacksPickerTotals", { fg = c.fg_dark })
+  hl("SnacksPickerIdx", { fg = c.number_green })
+  hl("SnacksPickerRow", { fg = c.number_green })
+  hl("SnacksPickerCol", { fg = c.fg_dark })
+  hl("SnacksPickerDelim", { fg = c.fg_dark })
+  hl("SnacksPickerComment", { fg = c.green, italic = true })
+  hl("SnacksPickerDesc", { fg = c.fg_dark })
+  hl("SnacksPickerDimmed", { fg = c.fg_dark })
+  hl("SnacksPickerSpecial", { fg = c.purple })
+  hl("SnacksPickerLabel", { fg = c.purple, bold = true })
+  hl("SnacksPickerSpinner", { fg = c.blue })
+  hl("SnacksPickerTree", { fg = c.fg_dark })
+  hl("SnacksPickerBold", { fg = c.fg, bold = true })
+  hl("SnacksPickerItalic", { fg = c.fg, italic = true })
+  hl("SnacksPickerCode", { fg = c.orange })
+  hl("SnacksPickerToggle", { fg = c.bg, bg = c.blue, bold = true })
+
+  -- Git groups inside the picker
+  hl("SnacksPickerGitCommit", { fg = c.yellow })
+  hl("SnacksPickerGitBranch", { fg = c.purple, bold = true })
+  hl("SnacksPickerGitBranchCurrent", { fg = c.git_add, bold = true })
+  hl("SnacksPickerGitDate", { fg = c.teal })
+  hl("SnacksPickerGitAuthor", { fg = c.orange })
+  hl("SnacksPickerGitMsg", { fg = c.fg })
+  hl("SnacksPickerGitType", { fg = c.blue, bold = true })
+  hl("SnacksPickerGitScope", { fg = c.purple, italic = true })
+  hl("SnacksPickerGitBreaking", { fg = c.error, bold = true })
+  hl("SnacksPickerGitIssue", { fg = c.pink })
+  hl("SnacksPickerGitDetached", { fg = c.warning })
+  hl("SnacksPickerGitStatus", { fg = c.purple })
+  hl("SnacksPickerGitStatusAdded", { fg = c.git_add })
+  hl("SnacksPickerGitStatusModified", { fg = c.warning })
+  hl("SnacksPickerGitStatusDeleted", { fg = c.git_delete })
+  hl("SnacksPickerGitStatusRenamed", { fg = c.purple })
+  hl("SnacksPickerGitStatusUntracked", { fg = c.fg_dark })
+  hl("SnacksPickerGitStatusIgnored", { fg = c.fg_dark })
+  hl("SnacksPickerGitStatusUnmerged", { fg = c.error })
+  hl("SnacksPickerGitStatusStaged", { fg = c.hint })
+
+  -- Snacks notifier (already covered partially elsewhere; ensure parity)
+  hl("SnacksNotifierInfo", { fg = c.info })
+  hl("SnacksNotifierWarn", { fg = c.warning })
+  hl("SnacksNotifierError", { fg = c.error })
+  hl("SnacksNotifierDebug", { fg = c.hint })
+  hl("SnacksNotifierTrace", { fg = c.purple })
+  hl("SnacksNotifierTitle", { fg = c.fg_alt, bold = true })
+  hl("SnacksNotifierBorder", { fg = c.border })
+  hl("SnacksNotifierFooter", { fg = c.fg_dark })
+  hl("SnacksNotifierIcon", { fg = c.blue })
+
+  -----------------------------------------------------------------------
   -- Terminal palette
   -----------------------------------------------------------------------
   for i = 0, 15 do
@@ -1102,6 +1201,132 @@ local abyss = {
   },
 }
 
+-- True Dark — pure #000 background, #fff foreground, fully saturated
+-- primary/secondary accent colors. No greys, no off-tones, no warmth.
+-- Maximum contrast, OLED-friendly.
+local true_dark = {
+  bg = "#000000",
+  bg_alt = "#000000",
+  bg_dark = "#000000",
+  bg_light = "#1a1a1a",
+  bg_popup = "#0a0a0a",
+  bg_float = "#0a0a0a",
+  bg_statusline = "#000000",
+
+  fg = "#ffffff",
+  fg_alt = "#ffffff",
+  fg_dark = "#888888",
+  fg_light = "#ffffff",
+
+  -- Pure saturated syntax colors
+  blue = "#00aaff", -- keywords (pure azure)
+  light_blue = "#66ddff", -- variables (cyan-ish, distinct from blue)
+  bright_blue = "#00ffff", -- constants (pure cyan)
+  teal = "#00ffcc", -- types (pure aqua)
+  green = "#00cc66", -- comments (pure green, slightly dim for readability)
+  number_green = "#00ff00", -- numbers (pure green)
+  yellow = "#ffff00", -- functions (pure yellow)
+  orange = "#ff8800", -- strings (pure orange)
+  red = "#ff0033", -- errors (pure red)
+  regex_red = "#ff3366",
+  purple = "#ff00ff", -- control flow (pure magenta)
+  pink = "#ff66cc",
+
+  border = "#222222",
+  selection = "#003366",
+  selection_inactive = "#1a1a1a",
+  search = "#665500",
+  search_current = "#ffaa00",
+  match_paren = "#444444",
+  cursor_line = "#0f0f0f",
+  line_number = "#666666",
+  line_number_current = "#ffffff",
+  indent = "#1a1a1a",
+  indent_active = "#444444",
+
+  git_add = "#00ff00",
+  git_change = "#00aaff",
+  git_delete = "#ff0033",
+  git_add_bg = "#002200",
+  git_change_bg = "#001a33",
+  git_delete_bg = "#220011",
+
+  error = "#ff0033",
+  warning = "#ffaa00",
+  info = "#00aaff",
+  hint = "#00ffcc",
+
+  term = {
+    "#000000", "#ff0033", "#00ff00", "#ffff00",
+    "#00aaff", "#ff00ff", "#00ffff", "#ffffff",
+    "#666666", "#ff3366", "#33ff33", "#ffff33",
+    "#33bbff", "#ff33ff", "#33ffff", "#ffffff",
+  },
+}
+
+-- True Light — pure #fff background, #000 foreground. Same philosophy as
+-- True Dark but tone-adjusted so each color stays readable on white
+-- (pure yellow/cyan disappear on white, so functions become deep gold and
+-- types become teal).
+local true_light = {
+  bg = "#ffffff",
+  bg_alt = "#ffffff",
+  bg_dark = "#ffffff",
+  bg_light = "#e8e8e8",
+  bg_popup = "#f5f5f5",
+  bg_float = "#f5f5f5",
+  bg_statusline = "#ffffff",
+
+  fg = "#000000",
+  fg_alt = "#000000",
+  fg_dark = "#666666",
+  fg_light = "#000000",
+
+  blue = "#0000ff", -- keywords (pure blue)
+  light_blue = "#0066cc", -- variables
+  bright_blue = "#003399", -- constants (deep blue)
+  teal = "#008080", -- types (pure teal)
+  green = "#008000", -- comments (pure green)
+  number_green = "#006600", -- numbers (deep green)
+  yellow = "#996600", -- functions (deep gold — pure yellow disappears)
+  orange = "#cc4400", -- strings (deep orange)
+  red = "#cc0000", -- errors
+  regex_red = "#990033",
+  purple = "#800080", -- control flow (pure purple)
+  pink = "#cc0066",
+
+  border = "#cccccc",
+  selection = "#cce5ff",
+  selection_inactive = "#e8e8e8",
+  search = "#ffff00",
+  search_current = "#ffaa00",
+  match_paren = "#bbbbbb",
+  cursor_line = "#f5f5f5",
+  line_number = "#999999",
+  line_number_current = "#000000",
+  indent = "#e8e8e8",
+  indent_active = "#888888",
+
+  git_add = "#008000",
+  git_change = "#0000ff",
+  git_delete = "#cc0000",
+  git_add_bg = "#e6ffe6",
+  git_change_bg = "#e6f0ff",
+  git_delete_bg = "#ffe6e6",
+
+  error = "#cc0000",
+  warning = "#cc6600",
+  info = "#0000ff",
+  hint = "#008080",
+
+  term = {
+    "#000000", "#cc0000", "#008000", "#996600",
+    "#0000ff", "#800080", "#008080", "#000000",
+    "#666666", "#ff0000", "#00cc00", "#cc9900",
+    "#0066ff", "#cc00cc", "#00cccc", "#000000",
+  },
+}
+
 -- ---------------------------------------------------------------------------
 -- Public API
 -- ---------------------------------------------------------------------------
@@ -1113,6 +1338,8 @@ M.palettes = {
   ["vscode-light-modern"] = { palette = light_modern, background = "light" },
   ["vscode-monokai"] = { palette = monokai, background = "dark" },
   ["vscode-abyss"] = { palette = abyss, background = "dark" },
+  ["vscode-true-dark"] = { palette = true_dark, background = "dark" },
+  ["vscode-true-light"] = { palette = true_light, background = "light" },
 }
 
 -- Backwards-compatible aliases for the original short names.
