@@ -81,10 +81,22 @@ local dark = {
 
   -- Terminal
   term = {
-    "#000000", "#cd3131", "#0dbc79", "#e5e510",
-    "#2472c8", "#bc3fbc", "#11a8cd", "#e5e5e5",
-    "#666666", "#f14c4c", "#23d18b", "#f5f543",
-    "#3b8eea", "#d670d6", "#29b8db", "#ffffff",
+    "#000000",
+    "#cd3131",
+    "#0dbc79",
+    "#e5e510",
+    "#2472c8",
+    "#bc3fbc",
+    "#11a8cd",
+    "#e5e5e5",
+    "#666666",
+    "#f14c4c",
+    "#23d18b",
+    "#f5f543",
+    "#3b8eea",
+    "#d670d6",
+    "#29b8db",
+    "#ffffff",
   },
 }
 
@@ -146,10 +158,22 @@ local light = {
 
   -- Terminal
   term = {
-    "#000000", "#cd3131", "#107c10", "#949800",
-    "#0451a5", "#bc05bc", "#0598bc", "#555555",
-    "#666666", "#cd3131", "#14ce14", "#b5ba00",
-    "#0451a5", "#bc05bc", "#0598bc", "#a5a5a5",
+    "#000000",
+    "#cd3131",
+    "#107c10",
+    "#949800",
+    "#0451a5",
+    "#bc05bc",
+    "#0598bc",
+    "#555555",
+    "#666666",
+    "#cd3131",
+    "#14ce14",
+    "#b5ba00",
+    "#0451a5",
+    "#bc05bc",
+    "#0598bc",
+    "#a5a5a5",
   },
 }
 
@@ -162,9 +186,7 @@ local function make_hl()
     if opts.link then
       vim.api.nvim_set_hl(0, group, { link = opts.link })
     else
-      if vim.g.transparent_enabled and opts.bg then
-        opts = vim.tbl_extend("force", opts, { bg = "NONE" })
-      end
+      if vim.g.transparent_enabled and opts.bg then opts = vim.tbl_extend("force", opts, { bg = "NONE" }) end
       vim.api.nvim_set_hl(0, group, opts)
     end
   end
@@ -973,9 +995,9 @@ local function apply(c, name, background)
   hl("SnacksPickerPreviewCursorLine", { bg = c.cursor_line })
 
   -- The headline fix: filenames, dirnames, and path-component groups.
-  hl("SnacksPickerFile", { fg = c.fg })           -- basename of a file (was invisible)
-  hl("SnacksPickerDir", { fg = c.fg_dark })       -- dirname of a path  (was invisible)
-  hl("SnacksPickerDirectory", { fg = c.blue })    -- standalone directory entries
+  hl("SnacksPickerFile", { fg = c.fg }) -- basename of a file (was invisible)
+  hl("SnacksPickerDir", { fg = c.fg_dark }) -- dirname of a path  (was invisible)
+  hl("SnacksPickerDirectory", { fg = c.blue }) -- standalone directory entries
   hl("SnacksPickerPathHidden", { fg = c.fg_dark, italic = true })
   hl("SnacksPickerPathIgnored", { fg = c.fg_dark, italic = true })
   hl("SnacksPickerLink", { fg = c.teal, italic = true })
@@ -1134,10 +1156,22 @@ local monokai = {
   hint = "#a6e22e",
 
   term = {
-    "#272822", "#f92672", "#a6e22e", "#f4bf75",
-    "#66d9ef", "#ae81ff", "#a1efe4", "#f8f8f2",
-    "#75715e", "#f92672", "#a6e22e", "#f4bf75",
-    "#66d9ef", "#ae81ff", "#a1efe4", "#f9f8f5",
+    "#272822",
+    "#f92672",
+    "#a6e22e",
+    "#f4bf75",
+    "#66d9ef",
+    "#ae81ff",
+    "#a1efe4",
+    "#f8f8f2",
+    "#75715e",
+    "#f92672",
+    "#a6e22e",
+    "#f4bf75",
+    "#66d9ef",
+    "#ae81ff",
+    "#a1efe4",
+    "#f9f8f5",
   },
 }
 
@@ -1194,10 +1228,22 @@ local abyss = {
   hint = "#ffeebb",
 
   term = {
-    "#000c18", "#a72253", "#37a554", "#dbb774",
-    "#225588", "#9966b8", "#52a4c4", "#6688cc",
-    "#406385", "#a72253", "#37a554", "#dbb774",
-    "#225588", "#9966b8", "#52a4c4", "#ffffff",
+    "#000c18",
+    "#a72253",
+    "#37a554",
+    "#dbb774",
+    "#225588",
+    "#9966b8",
+    "#52a4c4",
+    "#6688cc",
+    "#406385",
+    "#a72253",
+    "#37a554",
+    "#dbb774",
+    "#225588",
+    "#9966b8",
+    "#52a4c4",
+    "#ffffff",
   },
 }
 
@@ -1257,10 +1303,22 @@ local true_dark = {
   hint = "#00ffcc",
 
   term = {
-    "#000000", "#ff0033", "#00ff00", "#ffff00",
-    "#00aaff", "#ff00ff", "#00ffff", "#ffffff",
-    "#666666", "#ff3366", "#33ff33", "#ffff33",
-    "#33bbff", "#ff33ff", "#33ffff", "#ffffff",
+    "#000000",
+    "#ff0033",
+    "#00ff00",
+    "#ffff00",
+    "#00aaff",
+    "#ff00ff",
+    "#00ffff",
+    "#ffffff",
+    "#666666",
+    "#ff3366",
+    "#33ff33",
+    "#ffff33",
+    "#33bbff",
+    "#ff33ff",
+    "#33ffff",
+    "#ffffff",
   },
 }
 
@@ -1320,10 +1378,22 @@ local true_light = {
   hint = "#008080",
 
   term = {
-    "#000000", "#cc0000", "#008000", "#996600",
-    "#0000ff", "#800080", "#008080", "#000000",
-    "#666666", "#ff0000", "#00cc00", "#cc9900",
-    "#0066ff", "#cc00cc", "#00cccc", "#000000",
+    "#000000",
+    "#cc0000",
+    "#008000",
+    "#996600",
+    "#0000ff",
+    "#800080",
+    "#008080",
+    "#000000",
+    "#666666",
+    "#ff0000",
+    "#00cc00",
+    "#cc9900",
+    "#0066ff",
+    "#cc00cc",
+    "#00cccc",
+    "#000000",
   },
 }
 
