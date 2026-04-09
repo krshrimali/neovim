@@ -33,9 +33,7 @@ end
 function M.build(name)
   local vscode = require "user.themes.vscode"
   local p = vscode.get_palette(name)
-  if not p then
-    error("vscode_lualine: unknown variant '" .. tostring(name) .. "'")
-  end
+  if not p then error("vscode_lualine: unknown variant '" .. tostring(name) .. "'") end
 
   -- Mode-color overrides per palette. The default uses VSCode's iconic
   -- statusbar blue (#007acc) for normal mode — high contrast against
