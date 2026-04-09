@@ -51,7 +51,21 @@ function M.build(name)
   }
 
   -- Some variants need special-casing so the mode bg isn't washed out.
-  if name == "vscode-monokai" then
+  if name == "vscode-true-dark" then
+    mode.normal = "#00aaff"
+    mode.insert = "#00ff00"
+    mode.visual = "#ff00ff"
+    mode.replace = "#ff0033"
+    mode.command = "#ffff00"
+    mode.terminal = "#00ffff"
+  elseif name == "vscode-true-light" then
+    mode.normal = "#0000ff"
+    mode.insert = "#008000"
+    mode.visual = "#800080"
+    mode.replace = "#cc0000"
+    mode.command = "#996600"
+    mode.terminal = "#008080"
+  elseif name == "vscode-monokai" then
     mode.normal = "#66d9ef"
     mode.insert = "#a6e22e"
     mode.visual = "#fd971f"
