@@ -66,7 +66,7 @@ opt.iskeyword:append "-"
 vim.g.use_nerd_fonts = false
 
 -- Auto-reload files
-vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
+vim.api.nvim_create_autocmd({ "FocusGained" }, {
   callback = function() vim.cmd "checktime" end,
 })
 
