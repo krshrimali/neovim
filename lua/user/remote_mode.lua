@@ -8,9 +8,7 @@ local active = false
 
 local defaults = {
   auto = true,
-  detect = function()
-    return vim.env.SSH_TTY ~= nil or vim.env.SSH_CONNECTION ~= nil
-  end,
+  detect = function() return vim.env.SSH_TTY ~= nil or vim.env.SSH_CONNECTION ~= nil end,
   options = {
     cursorline = false,
     cursorcolumn = false,
@@ -69,16 +67,12 @@ local function apply_treesitter_limit(limit)
     group = vim.api.nvim_create_augroup("RemoteModeTSLimit", { clear = true }),
     callback = function(args)
       local line_count = vim.api.nvim_buf_line_count(args.buf)
-      if line_count > limit then
-        pcall(vim.treesitter.stop, args.buf)
-      end
+      if line_count > limit then pcall(vim.treesitter.stop, args.buf) end
     end,
   })
 end
 
-local function clear_treesitter_limit()
-  pcall(vim.api.nvim_del_augroup_by_name, "RemoteModeTSLimit")
-end
+local function clear_treesitter_limit() pcall(vim.api.nvim_del_augroup_by_name, "RemoteModeTSLimit") end
 
 function M.enable()
   if active then return end
@@ -86,9 +80,7 @@ function M.enable()
   apply_options(config.options)
   vim.diagnostic.config(config.diagnostic)
   apply_lualine(config.lualine_refresh)
-  if config.treesitter_disable_above then
-    apply_treesitter_limit(config.treesitter_disable_above)
-  end
+  if config.treesitter_disable_above then apply_treesitter_limit(config.treesitter_disable_above) end
   active = true
   vim.notify("remote-mode: enabled", vim.log.levels.INFO)
 end
@@ -108,12 +100,14 @@ function M.disable()
 end
 
 function M.toggle()
-  if active then M.disable() else M.enable() end
+  if active then
+    M.disable()
+  else
+    M.enable()
+  end
 end
 
-function M.status()
-  vim.notify("remote-mode: " .. (active and "ON" or "OFF"), vim.log.levels.INFO)
-end
+function M.status() vim.notify("remote-mode: " .. (active and "ON" or "OFF"), vim.log.levels.INFO) end
 
 function M.setup(user)
   config = vim.tbl_deep_extend("force", defaults, user or {})
