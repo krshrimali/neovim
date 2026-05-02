@@ -836,23 +836,6 @@ require("lazy").setup({
     opts = {},
   },
 
-  -- Markdown preview server (live, Mermaid, Kitty split)
-  {
-    dir = "/path/to/markdown-server.nvim",
-    ft = "markdown",
-    keys = {
-      { "<leader>mp", "<cmd>MDPreview<cr>", desc = "Markdown: start preview" },
-      { "<leader>ms", "<cmd>MDPreviewStop<cr>", desc = "Markdown: stop preview" },
-      { "<leader>mi", "<cmd>MDPreviewImage<cr>", desc = "Markdown: toggle image mode" },
-      { "<leader>mo", "<cmd>MDPreviewOpen<cr>", desc = "Markdown: reopen split" },
-    },
-    config = function()
-      require("markdown-server").setup {
-        port = 8765,
-      }
-    end,
-  },
-
   -- Project-wide search and replace
   {
     "MagicDuck/grug-far.nvim",
