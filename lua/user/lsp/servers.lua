@@ -182,6 +182,7 @@ function M.setup()
       "--completion-style=detailed",
       "--function-arg-placeholders",
       "--fallback-style=llvm",
+      "--query-driver=/usr/bin/c++,/usr/bin/cc,/usr/bin/gcc,/usr/bin/g++,/usr/bin/clang,/usr/bin/clang++",
     },
   }
 
