@@ -120,7 +120,8 @@ which_key.add {
   { "<leader>gs", "<cmd>lua require 'gitsigns'.stage_hunk()<cr>", desc = "Stage Hunk" },
   { "<leader>gu", "<cmd>Gitsigns undo_stage_hunk<cr>", desc = "Undo Stage Hunk" },
   { "<leader>go", "<cmd>FzfLua git_status<cr>", desc = "Git Status" },
-  { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Diffview" },
+  -- NOTE: '<leader>gd' is the Diffview group below - it can't also be a
+  -- mapping of its own. Use '<leader>gdo' to open a Diffview.
   { "<leader>gD", "<cmd>Gitsigns diffthis HEAD<cr>", desc = "Diff This (Inline)" },
   { "<leader>gb", desc = "Grep in Base" },
 
@@ -131,6 +132,19 @@ which_key.add {
   { "<leader>gdh", "<cmd>DiffviewFileHistory<cr>", desc = "File History" },
   { "<leader>gdf", "<cmd>DiffviewFileHistory %<cr>", desc = "Current File History" },
   { "<leader>gdt", "<cmd>DiffviewToggleFiles<cr>", desc = "Toggle File Panel" },
+  { "<leader>gds", "<cmd>DiffviewOpen --cached<cr>", desc = "Staged Changes (index vs HEAD)" },
+  {
+    "<leader>gdm",
+    function()
+      for _, ref in ipairs { "origin/HEAD", "origin/main", "origin/master", "main", "master" } do
+        vim.fn.system { "git", "rev-parse", "--verify", "--quiet", ref }
+        if vim.v.shell_error == 0 then return vim.cmd("DiffviewOpen " .. ref .. "...HEAD") end
+      end
+      vim.notify("No default branch to diff against", vim.log.levels.WARN)
+    end,
+    desc = "Changes vs Default Branch",
+  },
+  { "<leader>gdr", "<cmd>DiffviewRefresh<cr>", desc = "Refresh File List" },
 
   -- Git Blame
   { "<leader>gl", group = "Git Blame" },

@@ -102,13 +102,18 @@ require("lazy").setup({
   },
 
   {
-    "sindrets/diffview.nvim",
-    cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewClose" },
-    keys = {
-      { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Git diff (split)" },
-      { "<leader>gu", "<cmd>DiffviewOpen --view=diff1_plain<cr>", desc = "Git diff (unified)" },
-      { "<leader>gf", "<cmd>DiffviewFileHistory %<cr>", desc = "File history" },
+    dir = "/home/krshrimali/Documents/diffview.nvim",
+    cmd = {
+      "DiffviewOpen",
+      "DiffviewFileHistory",
+      "DiffviewClose",
+      "DiffviewRefresh",
+      "DiffviewToggleFiles",
+      "DiffviewFocusFiles",
+      "DiffviewLog",
     },
+    -- The keys live in the '<leader>gd' group in `user.whichkey` - keeping
+    -- them in one place. The commands above still lazy-load the plugin.
     config = function() require "user.diffview" end,
   },
 

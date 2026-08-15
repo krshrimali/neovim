@@ -28,6 +28,14 @@ diffview.setup {
     fold_open = "",
     done = "✓",
   },
+  -- Applied to 'diffopt' while a view is open, and restored when the last one
+  -- is closed. This is what lines up changed lines with each other, so the
+  -- within-line highlighting actually points at what changed.
+  -- Set an entry to `false` to keep your own value: ':h diffview-config-diffopt'.
+  diffopt = {
+    algorithm = "histogram",
+    linematch = 60,
+  },
   view = {
     -- Configure the layout and behavior of different types of views.
     -- Available layouts:
@@ -101,7 +109,7 @@ diffview.setup {
       -- tabpage is a Diffview.
       { "n", "<tab>", actions.select_next_entry, { desc = "Open the diff for the next file" } },
       { "n", "<s-tab>", actions.select_prev_entry, { desc = "Open the diff for the previous file" } },
-      { "n", "gf", actions.goto_file, { desc = "Open the file in the previous tabpage" } },
+      { "n", "gf", actions.goto_file_edit, { desc = "Open the file in the previous tabpage" } },
       { "n", "<C-w><C-f>", actions.goto_file_split, { desc = "Open the file in a new split" } },
       { "n", "<C-w>gf", actions.goto_file_tab, { desc = "Open the file in a new tabpage" } },
       { "n", "<leader>e", actions.focus_files, { desc = "Bring focus to the file panel" } },
@@ -134,6 +142,35 @@ diffview.setup {
         { desc = "Choose all the versions of a conflict" },
       },
       { "n", "dx", actions.conflict_choose "none", { desc = "Delete the conflict region" } },
+
+      -- Partial staging (':h diffview-partial-staging'). Works on the hunk
+      -- under the cursor in normal mode, and on the selected lines in visual
+      -- mode. Upstream puts these on '<leader>h*', which is nohlsearch here,
+      -- so they're mirrored onto the gitsigns bindings instead: the same keys
+      -- now stage a hunk in a regular buffer and in a diff.
+      { { "n", "x" }, "<leader>hs", false },
+      { { "n", "x" }, "<leader>hu", false },
+      { { "n", "x" }, "<leader>hr", false },
+      { { "n", "x" }, "<leader>gs", actions.stage_hunk, { desc = "Stage the hunk / selection" } },
+      { { "n", "x" }, "<leader>gu", actions.unstage_hunk, { desc = "Unstage the hunk / selection" } },
+      { { "n", "x" }, "<leader>gr", actions.restore_hunk, { desc = "Discard the hunk / selection" } },
+
+      -- Jump between the changes of the whole view: unlike the built-in
+      -- motions these roll over into the next / previous file.
+      { "n", "]c", actions.next_change, { desc = "Next change in the view" } },
+      { "n", "[c", actions.prev_change, { desc = "Previous change in the view" } },
+
+      -- Display toggles. Upstream puts these on '<leader>d*', which is the
+      -- black-hole delete here.
+      { "n", "<leader>dw", false },
+      { "n", "<leader>du", false },
+      { "n", "<leader>di", false },
+      { "n", "<leader>gw", actions.toggle_ignore_whitespace, { desc = "Toggle ignoring whitespace changes" } },
+      { "n", "<leader>gz", actions.toggle_unchanged_regions, { desc = "Toggle hiding unchanged regions" } },
+      { "n", "<leader>gi", actions.toggle_inline_diff, { desc = "Toggle the inline (unified) diff" } },
+
+      -- Keep 'gy' as LSP type-definition in the diff buffers.
+      { "n", "gy", false },
     },
     diff1 = { -- Mappings in single window diff layouts
       { "n", "g?", actions.help { "view", "diff1" }, { desc = "Open the help panel" } },
@@ -180,7 +217,7 @@ diffview.setup {
       { "n", "<c-f>", actions.scroll_view(0.25), { desc = "Scroll the view down" } },
       { "n", "tab", actions.select_next_entry, { desc = "Open the diff for the next file" } },
       { "n", "<s-tab>", actions.select_prev_entry, { desc = "Open the diff for the previous file" } },
-      { "n", "gf", actions.goto_file, { desc = "Open the file in the previous tabpage" } },
+      { "n", "gf", actions.goto_file_edit, { desc = "Open the file in the previous tabpage" } },
       { "n", "<C-w><C-f>", actions.goto_file_split, { desc = "Open the file in a new split" } },
       { "n", "<C-w>gf", actions.goto_file_tab, { desc = "Open the file in a new tabpage" } },
       { "n", "i", actions.listing_style, { desc = "Toggle between 'list' and 'tree' views" } },
@@ -197,6 +234,29 @@ diffview.setup {
       { "n", "[x", actions.prev_conflict, { desc = "Go to the previous conflict" } },
       { "n", "]x", actions.next_conflict, { desc = "Go to the next conflict" } },
       { "n", "g?", actions.help "file_panel", { desc = "Open the help panel" } },
+
+      -- Commit what's staged without leaving the view. Opens a gitcommit
+      -- buffer: '<C-c><C-c>' or ':w' commits, 'q' aborts.
+      { "n", "cc", actions.commit, { desc = "Commit the staged changes" } },
+      { "n", "ca", actions.amend_commit, { desc = "Amend the last commit" } },
+
+      -- Only list the files whose path matches a string. An empty pattern
+      -- clears the filter. Use ':/' to search the panel buffer itself.
+      { "n", "/", actions.filter_files, { desc = "Filter the file list" } },
+
+      -- Same as nvim-tree: 'gy' copies the path of the entry.
+      { "n", "gy", actions.copy_file_path, { desc = "Copy the path of the entry" } },
+
+      { "n", "]c", actions.next_change, { desc = "Next change in the view" } },
+      { "n", "[c", actions.prev_change, { desc = "Previous change in the view" } },
+
+      -- Same remaps as the view group.
+      { "n", "<leader>dw", false },
+      { "n", "<leader>du", false },
+      { "n", "<leader>di", false },
+      { "n", "<leader>gw", actions.toggle_ignore_whitespace, { desc = "Toggle ignoring whitespace changes" } },
+      { "n", "<leader>gz", actions.toggle_unchanged_regions, { desc = "Toggle hiding unchanged regions" } },
+      { "n", "<leader>gi", actions.toggle_inline_diff, { desc = "Toggle the inline (unified) diff" } },
     },
     file_history_panel = {
       { "n", "g!", actions.options, { desc = "Open the options panel" } },
@@ -216,13 +276,27 @@ diffview.setup {
       { "n", "<c-f>", actions.scroll_view(0.25), { desc = "Scroll the view down" } },
       { "n", "tab", actions.select_next_entry, { desc = "Open the diff for the next file" } },
       { "n", "<s-tab>", actions.select_prev_entry, { desc = "Open the diff for the previous file" } },
-      { "n", "gf", actions.goto_file, { desc = "Open the file in the previous tabpage" } },
+      { "n", "gf", actions.goto_file_edit, { desc = "Open the file in the previous tabpage" } },
       { "n", "<C-w><C-f>", actions.goto_file_split, { desc = "Open the file in a new split" } },
-      { "n", "<C-w>gf", actions.goto_file_split, { desc = "Open the file in a new tabpage" } },
+      { "n", "<C-w>gf", actions.goto_file_tab, { desc = "Open the file in a new tabpage" } },
       { "n", "<leader>e", actions.focus_files, { desc = "Bring focus to the file panel" } },
       { "n", "<leader>b", actions.toggle_files, { desc = "Toggle the file panel" } },
       { "n", "g<C-x>", actions.cycle_layout, { desc = "Cycle available layouts" } },
       { "n", "g?", actions.help "file_history_panel", { desc = "Open the help panel" } },
+
+      -- 'y' copies the commit hash (above), 'gy' the path of the entry.
+      { "n", "gy", actions.copy_file_path, { desc = "Copy the path of the entry" } },
+
+      { "n", "]c", actions.next_change, { desc = "Next change in the view" } },
+      { "n", "[c", actions.prev_change, { desc = "Previous change in the view" } },
+
+      -- Same remaps as the view group.
+      { "n", "<leader>dw", false },
+      { "n", "<leader>du", false },
+      { "n", "<leader>di", false },
+      { "n", "<leader>gw", actions.toggle_ignore_whitespace, { desc = "Toggle ignoring whitespace changes" } },
+      { "n", "<leader>gz", actions.toggle_unchanged_regions, { desc = "Toggle hiding unchanged regions" } },
+      { "n", "<leader>gi", actions.toggle_inline_diff, { desc = "Toggle the inline (unified) diff" } },
     },
     option_panel = {
       { "n", "<tab>", actions.select_entry, { desc = "Open the diff for the selected entry" } },
