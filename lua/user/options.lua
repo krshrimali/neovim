@@ -58,7 +58,8 @@ opt.foldmethod = "manual"
 opt.diffopt:append "linematch:60"
 
 -- Misc
-opt.fillchars = { eob = " ", vert = " " }
+-- Separator glyphs are set in `user.window_separators` (which also colors them).
+opt.fillchars = { eob = " " }
 opt.whichwrap:append "<>[]hl"
 opt.iskeyword:append "-"
 
