@@ -4,6 +4,51 @@ All notable changes to this Neovim configuration will be documented in this file
 
 [Unreleased]
 
+### Diffview: hunk staging, committing, and de-duplicated git keys
+
+- **Partial staging in a diff** (`user/diffview.lua`) - with the cursor on a hunk,
+  or lines selected in visual mode:
+  - `,gs` stage the hunk / selection
+  - `,gu` unstage the hunk / selection
+  - `,gr` discard the hunk / selection in the working tree
+  These mirror the gitsigns bindings, so the same keys do the same thing in a
+  regular buffer and in a diff. Upstream's defaults are `<leader>h*`, which is
+  `nohlsearch` here, so they're disabled in favour of these.
+- **Commit from the file panel**: `cc` commits the staged changes, `ca` amends.
+  Opens a gitcommit buffer - `<C-c><C-c>` or `:w` commits, `q` aborts.
+- **Filter the file panel** with `/`, copy the path of an entry with `gy`
+  (matching nvim-tree). `gy` stays LSP type-definition inside the diff buffers.
+- **`]c` / `[c`** jump between changes across the whole view, rolling over into
+  the next / previous file instead of stopping at the end of the current one.
+- **Display toggles**: `,gw` ignore whitespace changes, `,gz` hide/show
+  unchanged regions. Upstream puts these on `<leader>d*`, which is the
+  black-hole delete here, so they're remapped.
+- **Better diff alignment**: `diffopt` now gets `algorithm:histogram` and
+  `linematch:60` while a view is open, restored on close.
+- **Removed duplicate git mappings**:
+  - `<leader>gd` was both a which-key group and a mapping - the group wins, use
+    `,gdo` to open a Diffview.
+  - The diffview lazy spec defined `<leader>gd`, `<leader>gu` and `<leader>gf`,
+    colliding with the which-key git group and with gitsigns' `<leader>gu`. The
+    keys now live only in which-key; the plugin still lazy-loads on its commands.
+  - `<leader>gu` had pointed at `DiffviewOpen --view=diff1_plain`, which isn't a
+    real flag.
+- **New which-key entries**: `,gds` (staged changes), `,gdm` (changes vs the
+  default branch), `,gdr` (refresh the file list).
+- **`gf` from a diff no longer splits your layout**: it was mapped to
+  `goto_file` (always `:sp`), which duplicated `<C-w><C-f>` and, when the file
+  was already open, left you with the same file in two windows. It's now
+  `goto_file_edit` (upstream's default), and the plugin focuses an existing
+  window for that file instead of opening a second view of it.
+- Fixed `<C-w>gf` in the file history panel: it was wired to `goto_file_split`
+  while described as "new tabpage".
+- **Inline (unified) diff**: `,gi` collapses the side-by-side diff into a single
+  window showing the file with the removed lines spliced back in - VSCode's
+  inline view. Hunk staging, `]c` / `[c`, and the display toggles all work
+  there. `g<C-x>` now cycles side-by-side → stacked → inline. Upstream puts the
+  toggle on `<leader>di`, which is the black-hole delete here, so it's remapped
+  like the other toggles.
+
 ## [0.2.0]
 
 - Added snacks for main features like GitBrowse (copy URL).
