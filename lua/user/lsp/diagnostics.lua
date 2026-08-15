@@ -96,8 +96,8 @@ function M.setup()
   )
   hl(0, "Search", { fg = is_light and "#100f0f" or "#1e1e2e", bg = is_light and "#e8cca7" or "#f5c2e7" })
 
-  -- Window split separator
-  hl(0, "WinSeparator", { fg = is_light and "#b7b5ac" or "#45475a" })
+  -- Window split separators are owned by `user.window_separators` so they stay
+  -- derived from the active colorscheme.
 
   -- Floating windows
   hl(0, "NormalFloat", { bg = float_bg })

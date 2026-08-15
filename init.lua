@@ -7,6 +7,7 @@ require "user.keymaps"
 require "user.functions"
 require "user.autocommands"
 require("user.remote_mode").setup()
+require("user.window_separators").setup()
 
 -- -- Terminal config (deferred)
 vim.defer_fn(function() require "user.terminal" end, 100)
