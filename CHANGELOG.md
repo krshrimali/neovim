@@ -4,6 +4,27 @@ All notable changes to this Neovim configuration will be documented in this file
 
 [Unreleased]
 
+### Visible, theme-aware window separators
+
+- **Split borders are actually drawn now** (`user/window_separators.lua`).
+  `fillchars` had `vert:` set to a space, so a vertical split had no glyph to
+  color - every theme's `WinSeparator` foreground was there but never rendered.
+  Separators now use the box-drawing glyphs, including the junction characters
+  so crossings between horizontal and vertical splits connect.
+- **The color is derived from the active colorscheme** instead of hardcoded per
+  theme: `Normal`'s foreground is blended into its background (45% on dark, 38%
+  on light). Nothing pins a colorscheme in this config, so this follows whatever
+  is loaded - the bundled themes in `user/themes`, and plugin ones too. It
+  re-applies on `ColorScheme`, `VimEnter`, and `background` changes, with a
+  deferred second pass to land after the theme modules' own timers.
+  The themes' `border` values were only a few steps from the background
+  (`#464647` on `#1e1e1e` in cursor-dark, now `#707070`).
+- `NvimTreeWinSeparator` and the Diffview separator groups are linked to
+  `WinSeparator`, so the sidebar border doesn't fade out mid-layout.
+- Dropped the hardcoded `WinSeparator` override in `user/lsp/diagnostics.lua`,
+  which ran on LSP setup and clobbered the derived color.
+- Tune the contrast with `BLEND_DARK` / `BLEND_LIGHT` at the top of the module.
+
 ### Diffview: hunk staging, committing, and de-duplicated git keys
 
 - **Partial staging in a diff** (`user/diffview.lua`) - with the cursor on a hunk,
