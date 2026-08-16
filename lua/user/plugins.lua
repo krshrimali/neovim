@@ -216,6 +216,21 @@ require("lazy").setup({
               end,
             },
             "diagnostics",
+            -- pending sidekick review comments waiting to be sent to Claude
+            {
+              function()
+                local ok, review = pcall(require, "sidekick.review")
+                return ok and review.status() or ""
+              end,
+              cond = function()
+                local ok, review = pcall(require, "sidekick.review")
+                return ok and review.pending() > 0
+              end,
+              color = function()
+                local hl = vim.api.nvim_get_hl(0, { name = "DiagnosticWarn", link = false })
+                return { fg = hl.fg and string.format("#%06x", hl.fg) or "#ff9e64", gui = "bold" }
+              end,
+            },
             {
               c.lsp_status,
               color = function()
@@ -486,7 +501,7 @@ require("lazy").setup({
 
   -- Sidekick.nvim - AI CLI integration & Copilot NES
   {
-    "krshrimali/sidekick.nvim",
+    dir = "/home/krshrimali/Documents/sidekick.nvim",
     event = "VeryLazy",
     opts = {
       nes = { enabled = false },
@@ -576,6 +591,23 @@ require("lazy").setup({
         "<leader>sc",
         function() require("sidekick.cli").toggle { name = "claude", focus = true } end,
         desc = "Sidekick Toggle Claude",
+      },
+      -- Review agent turns like pull requests.
+      -- `<leader>sr` is yours for grug-far, so the review lives on <leader>sT.
+      {
+        "<leader>sT",
+        function() require("sidekick.review").toggle { layout = "tab" } end,
+        desc = "Sidekick Review (own tab)",
+      },
+      {
+        "<leader>sR",
+        function() require("sidekick.review").submit() end,
+        desc = "Sidekick Submit Review Comments",
+      },
+      {
+        "<leader>sg",
+        function() require("sidekick.review").open_at() end,
+        desc = "Sidekick Review Comment Under Cursor",
       },
     },
   },
