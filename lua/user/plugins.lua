@@ -102,13 +102,18 @@ require("lazy").setup({
   },
 
   {
-    "sindrets/diffview.nvim",
-    cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewClose" },
-    keys = {
-      { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Git diff (split)" },
-      { "<leader>gu", "<cmd>DiffviewOpen --view=diff1_plain<cr>", desc = "Git diff (unified)" },
-      { "<leader>gf", "<cmd>DiffviewFileHistory %<cr>", desc = "File history" },
+    "krshrimali/diffview.nvim",
+    cmd = {
+      "DiffviewOpen",
+      "DiffviewFileHistory",
+      "DiffviewClose",
+      "DiffviewRefresh",
+      "DiffviewToggleFiles",
+      "DiffviewFocusFiles",
+      "DiffviewLog",
     },
+    -- The keys live in the '<leader>gd' group in `user.whichkey` - keeping
+    -- them in one place. The commands above still lazy-load the plugin.
     config = function() require "user.diffview" end,
   },
 
@@ -659,6 +664,27 @@ require("lazy").setup({
   },
 
   { "nvim-mini/mini.map", version = false, event = "VeryLazy" },
+
+  -- Smooth animations for cursor movement, scroll, resize, window open/close
+  -- (Neovide-style smoothness, works in plain terminal Neovim)
+  {
+    "nvim-mini/mini.animate",
+    version = false,
+    event = "VeryLazy",
+    opts = function()
+      local animate = require "mini.animate"
+      return {
+        cursor = { enable = true, timing = animate.gen_timing.linear { duration = 100, unit = "total" } },
+        -- Disabled: conflicts with the <C-d>zz / <C-u>zz recenter mapping in
+        -- keymaps.lua — animating the `zz` correction as a second scroll
+        -- causes a visible double-scroll, especially on rapid repeats.
+        scroll = { enable = false },
+        resize = { enable = true, timing = animate.gen_timing.linear { duration = 100, unit = "total" } },
+        open = { enable = false },
+        close = { enable = false },
+      }
+    end,
+  },
 
   -- Align text by delimiter (e.g. `|` for markdown tables)
   -- Usage: select lines in visual, press `ga` then the delimiter (e.g. `|`)

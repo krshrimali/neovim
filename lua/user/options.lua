@@ -79,12 +79,25 @@ opt.foldmethod = "manual"
 opt.diffopt:append "linematch:60"
 
 -- Misc
-opt.fillchars = { eob = " ", vert = " " }
+-- Separator glyphs are set in `user.window_separators` (which also colors them).
+opt.fillchars = { eob = " " }
 opt.whichwrap:append "<>[]hl"
 opt.iskeyword:append "-"
 
 -- Disable nerd fonts
 vim.g.use_nerd_fonts = false
+
+-- Neovide: match the terminal font (kitty: Fira Code Nerd Font SemiBold, size 14)
+if vim.g.neovide then
+  vim.o.guifont = "Fira Code Nerd Font SemiBold:h14"
+
+  -- Cursor trail/smear effect
+  vim.g.neovide_cursor_animation_length = 0.13
+  vim.g.neovide_cursor_trail_size = 0.8
+  vim.g.neovide_cursor_animate_in_insert_mode = true
+  vim.g.neovide_cursor_animate_command_line = true
+  vim.g.neovide_cursor_smooth_blink = true
+end
 
 -- Auto-reload files
 vim.api.nvim_create_autocmd({ "FocusGained" }, {
