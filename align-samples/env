@@ -1,0 +1,11 @@
+# Try: select all, `ga` then `=`
+
+DB_HOST=localhost
+DB_PORT=5432
+DATABASE_NAME=myapp
+DATABASE_PASSWORD=secret
+API_KEY=abc123
+API_SECRET=xyz789
+MAX_WORKERS=4
+LOG_LEVEL=debug
+ENABLE_METRICS=true
