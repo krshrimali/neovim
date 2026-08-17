@@ -146,7 +146,21 @@ require("lazy").setup({
   -- ============================================
   -- UI: Minimal UI enhancements
   -- ============================================
-  -- Theme - flexoki
+  -- Theme - gruvbox (default)
+  {
+    "ellisonleao/gruvbox.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = {
+      transparent_mode = false,
+    },
+    config = function(_, opts)
+      require("gruvbox").setup(opts)
+      vim.cmd.colorscheme "gruvbox"
+    end,
+  },
+
+  -- Theme - flexoki (available via :colorscheme flexoki)
   {
     "kepano/flexoki-neovim",
     name = "flexoki",
@@ -168,7 +182,6 @@ require("lazy").setup({
     config = function(_, opts)
       require("transparent").setup(opts)
       require("transparent").clear_prefix "BufferLine"
-      vim.cmd "TransparentEnable"
     end,
   },
 
@@ -487,11 +500,16 @@ require("lazy").setup({
   -- Sidekick.nvim - AI CLI integration & Copilot NES
   {
     "krshrimali/sidekick.nvim",
+    branch = "feat/review-pr-ui",
     event = "VeryLazy",
     opts = {
       nes = { enabled = false },
       cli = {
         tab_scoped = true,
+        tools = {
+          claude = { cmd = { "claude" } },
+          codex = { cmd = { "codex" } },
+        },
         win = {
           keys = {
             interrupt = {
@@ -576,6 +594,27 @@ require("lazy").setup({
         "<leader>sc",
         function() require("sidekick.cli").toggle { name = "claude", focus = true } end,
         desc = "Sidekick Toggle Claude",
+      },
+      -- Review: read agent turns like pull requests (:Sidekick review)
+      {
+        "<leader>sT",
+        function() require("sidekick.review").toggle() end,
+        desc = "Sidekick Review Toggle",
+      },
+      {
+        "<leader>sR",
+        function() require("sidekick.review").open() end,
+        desc = "Sidekick Review Open",
+      },
+      {
+        "<leader>sO",
+        function() require("sidekick.review").pick() end,
+        desc = "Sidekick Review Sessions",
+      },
+      {
+        "<leader>sX",
+        function() require("sidekick.review").clear() end,
+        desc = "Sidekick Review Clear",
       },
     },
   },
