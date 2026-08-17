@@ -102,7 +102,7 @@ require("lazy").setup({
   },
 
   {
-    dir = "/home/krshrimali/Documents/diffview.nvim",
+    dir = "/Users/krshrimali/Documents/diffview.nvim",
     cmd = {
       "DiffviewOpen",
       "DiffviewFileHistory",
@@ -120,7 +120,7 @@ require("lazy").setup({
   {
     "NeogitOrg/neogit",
     cmd = "Neogit",
-    dependencies = { "nvim-lua/plenary.nvim", "sindrets/diffview.nvim" },
+    dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
       integrations = { diffview = true },
       signs = { section = { ">", "v" }, item = { ">", "v" } },
@@ -486,7 +486,7 @@ require("lazy").setup({
 
   -- Sidekick.nvim - AI CLI integration & Copilot NES
   {
-    "krshrimali/sidekick.nvim",
+    dir = "/Users/krshrimali/Documents/sidekick.nvim",
     event = "VeryLazy",
     opts = {
       nes = { enabled = false },
@@ -576,6 +576,21 @@ require("lazy").setup({
         "<leader>sc",
         function() require("sidekick.cli").toggle { name = "claude", focus = true } end,
         desc = "Sidekick Toggle Claude",
+      },
+      {
+        "<leader>su",
+        function() require("sidekick.review").toggle() end,
+        desc = "Sidekick Toggle Review UI",
+      },
+      {
+        "<leader>sU",
+        function() require("sidekick.review").pick() end,
+        desc = "Sidekick Pick Review Session",
+      },
+      {
+        "<leader>so",
+        function() require("sidekick.review").open_at() end,
+        desc = "Sidekick Open Review Comment",
       },
     },
   },
