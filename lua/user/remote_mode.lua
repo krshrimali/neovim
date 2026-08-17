@@ -12,7 +12,9 @@ local defaults = {
   options = {
     cursorline = false,
     cursorcolumn = false,
-    termguicolors = false,
+    -- NOTE: do not disable termguicolors here. The colorschemes in colors/ define
+    -- only GUI (hex) colors, no cterm fallbacks, so turning this off drops nearly
+    -- all highlighting. 24-bit color is not a meaningful bandwidth cost over SSH.
     lazyredraw = true,
     updatetime = 500,
     signcolumn = "yes:1",

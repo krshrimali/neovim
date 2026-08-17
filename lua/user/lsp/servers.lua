@@ -35,8 +35,8 @@ local function on_attach(client, bufnr)
     })
   end, opts)
 
-  -- Hover documentation (matching CoC's K)
-  vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+  -- Hover documentation (matching CoC's K). People-aware: shows employee details
+  -- for a known @username, otherwise the normal LSP hover.
 
   -- Diagnostics navigation (matching CoC's [g / ]g)
   vim.keymap.set("n", "[g", function() vim.diagnostic.jump { count = -1, float = true } end, opts)

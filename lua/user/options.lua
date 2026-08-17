@@ -7,6 +7,27 @@ opt.swapfile = false
 opt.undofile = true
 opt.writebackup = false
 opt.clipboard = "unnamedplus"
+
+-- Over SSH, neovim would use xclip (present here) which writes to the *forwarded*
+-- remote X clipboard, not your local machine. Force OSC 52 so yanks tunnel through
+-- the terminal (zellij passes it through) to the local system clipboard.
+if vim.env.SSH_TTY ~= nil or vim.env.SSH_CONNECTION ~= nil then
+  local ok, osc52 = pcall(require, "vim.ui.clipboard.osc52")
+  if ok then
+    -- Paste from nvim's own unnamed register instead of querying the terminal
+    -- over OSC 52. The OSC 52 read (ESC]52;c;?) blocks waiting for a terminal
+    -- reply that most terminals/zellij never send, hanging on "Waiting for
+    -- OSC 52 response". Copy still tunnels out; paste stays local and instant.
+    local function paste()
+      return { vim.fn.split(vim.fn.getreg "", "\n"), vim.fn.getregtype "" }
+    end
+    vim.g.clipboard = {
+      name = "OSC 52",
+      copy = { ["+"] = osc52.copy "+", ["*"] = osc52.copy "*" },
+      paste = { ["+"] = paste, ["*"] = paste },
+    }
+  end
+end
 opt.fileencoding = "utf-8"
 opt.mouse = "a"
 opt.mousemodel = "popup_setpos"
