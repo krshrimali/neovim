@@ -500,7 +500,6 @@ require("lazy").setup({
   -- Sidekick.nvim - AI CLI integration & Copilot NES
   {
     "krshrimali/sidekick.nvim",
-    branch = "feat/review-pr-ui",
     event = "VeryLazy",
     opts = {
       nes = { enabled = false },
@@ -595,26 +594,20 @@ require("lazy").setup({
         function() require("sidekick.cli").toggle { name = "claude", focus = true } end,
         desc = "Sidekick Toggle Claude",
       },
-      -- Review: read agent turns like pull requests (:Sidekick review)
       {
-        "<leader>sT",
+        "<leader>su",
         function() require("sidekick.review").toggle() end,
-        desc = "Sidekick Review Toggle",
+        desc = "Sidekick Toggle Review UI",
       },
       {
-        "<leader>sR",
-        function() require("sidekick.review").open() end,
-        desc = "Sidekick Review Open",
-      },
-      {
-        "<leader>sO",
+        "<leader>sU",
         function() require("sidekick.review").pick() end,
-        desc = "Sidekick Review Sessions",
+        desc = "Sidekick Pick Review Session",
       },
       {
-        "<leader>sX",
-        function() require("sidekick.review").clear() end,
-        desc = "Sidekick Review Clear",
+        "<leader>so",
+        function() require("sidekick.review").open_at() end,
+        desc = "Sidekick Open Review Comment",
       },
     },
   },
