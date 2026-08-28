@@ -136,6 +136,8 @@ require("lazy").setup({
       "ReviewRefresh",
       "ReviewChat",
       "ReviewPrompt",
+      "ReviewImport",
+      "ReviewQuickfix",
       "ReviewClean",
     },
     keys = {
@@ -148,6 +150,8 @@ require("lazy").setup({
       { "<leader>ps", "<cmd>ReviewSessions<cr>", desc = "Review: agent sessions" },
       { "<leader>pl", "<cmd>ReviewList<cr>", desc = "Review: pick PR/branch" },
       { "<leader>px", "<cmd>ReviewClean<cr>", desc = "Review: clean worktrees" },
+      { "<leader>pi", "<cmd>ReviewImport<cr>", desc = "Review: import GitHub comments" },
+      { "<leader>pq", "<cmd>ReviewQuickfix<cr>", desc = "Review: threads in quickfix" },
     },
     config = function()
       require("review").setup {
@@ -164,7 +168,7 @@ require("lazy").setup({
   {
     "NeogitOrg/neogit",
     cmd = "Neogit",
-    dependencies = { "nvim-lua/plenary.nvim", "sindrets/diffview.nvim" },
+    dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
       integrations = { diffview = true },
       signs = { section = { ">", "v" }, item = { ">", "v" } },
@@ -649,9 +653,14 @@ require("lazy").setup({
         desc = "Sidekick Submit Review Comments",
       },
       {
-        "<leader>sg",
+        "<leader>sU",
+        function() require("sidekick.review").pick() end,
+        desc = "Sidekick Pick Review Session",
+      },
+      {
+        "<leader>so",
         function() require("sidekick.review").open_at() end,
-        desc = "Sidekick Review Comment Under Cursor",
+        desc = "Sidekick Open Review Comment",
       },
     },
   },
