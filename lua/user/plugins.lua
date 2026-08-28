@@ -103,6 +103,7 @@ require("lazy").setup({
 
   {
     dir = "/home/krshrimali/Documents/diffview.nvim",
+    name = "diffview.nvim",
     cmd = {
       "DiffviewOpen",
       "DiffviewFileHistory",
@@ -115,6 +116,49 @@ require("lazy").setup({
     -- The keys live in the '<leader>gd' group in `user.whichkey` - keeping
     -- them in one place. The commands above still lazy-load the plugin.
     config = function() require "user.diffview" end,
+  },
+
+  -- PR/branch review workflow backed by Diffview + Sidekick. <leader>p opens
+  -- the contextual menu; the longer mappings are optional direct fast paths.
+  {
+    dir = "/home/krshrimali/Documents/research-reviews",
+    name = "review.nvim",
+    dependencies = {
+      "diffview.nvim",
+      "sidekick.nvim",
+    },
+    cmd = {
+      "Review",
+      "ReviewList",
+      "ReviewClaude",
+      "ReviewSessions",
+      "ReviewComments",
+      "ReviewRefresh",
+      "ReviewChat",
+      "ReviewPrompt",
+      "ReviewClean",
+    },
+    keys = {
+      { "<leader>p", desc = "Review: contextual actions" },
+      { "<leader>pc", "<cmd>ReviewClaude<cr>", desc = "Review: Claude review" },
+      { "<leader>ph", "<cmd>ReviewChat<cr>", desc = "Review: Claude chat" },
+      { "<leader>pr", "<cmd>ReviewRefresh<cr>", desc = "Review: refresh PR" },
+      { "<leader>pe", "<cmd>ReviewPrompt<cr>", desc = "Review: edit/copy/run prompt" },
+      { "<leader>pt", "<cmd>ReviewComments<cr>", desc = "Review: comments/threads" },
+      { "<leader>ps", "<cmd>ReviewSessions<cr>", desc = "Review: agent sessions" },
+      { "<leader>pl", "<cmd>ReviewList<cr>", desc = "Review: pick PR/branch" },
+      { "<leader>px", "<cmd>ReviewClean<cr>", desc = "Review: clean worktrees" },
+    },
+    config = function()
+      require("review").setup {
+        keymaps = {
+          menu = "<leader>p",
+          primary = "<CR>",
+          sort_commits = "s",
+          unfold_commit = "<Tab>",
+        },
+      }
+    end,
   },
 
   {
