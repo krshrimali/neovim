@@ -137,6 +137,7 @@ require("lazy").setup({
       "ReviewChat",
       "ReviewPrompt",
       "ReviewImport",
+      "ReviewSync",
       "ReviewQuickfix",
       "ReviewClean",
     },
@@ -151,6 +152,7 @@ require("lazy").setup({
       { "<leader>pl", "<cmd>ReviewList<cr>", desc = "Review: pick PR/branch" },
       { "<leader>px", "<cmd>ReviewClean<cr>", desc = "Review: clean worktrees" },
       { "<leader>pi", "<cmd>ReviewImport<cr>", desc = "Review: import GitHub comments" },
+      { "<leader>py", "<cmd>ReviewSync<cr>", desc = "Review: sync Claude findings" },
       { "<leader>pq", "<cmd>ReviewQuickfix<cr>", desc = "Review: threads in quickfix" },
     },
     config = function()

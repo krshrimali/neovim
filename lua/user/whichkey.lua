@@ -238,6 +238,7 @@ which_key.add {
   { "<leader>pl", desc = "Pick PR/Branch" },
   { "<leader>px", desc = "Clean Worktrees" },
   { "<leader>pi", desc = "Import GitHub Comments" },
+  { "<leader>py", desc = "Sync Claude Findings" },
   { "<leader>pq", desc = "Threads in Quickfix" },
   { "<leader>o", group = "Octo (GitHub)" },
 
