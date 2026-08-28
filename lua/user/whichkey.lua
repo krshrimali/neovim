@@ -228,6 +228,15 @@ which_key.add {
   { "<leader>kv", "<cmd>vsplit<cr>", desc = "Vertical Split" },
 
   -- Octo (GitHub) - comprehensive keymaps
+  { "<leader>p", group = "PR Review" },
+  { "<leader>pc", desc = "Claude Review" },
+  { "<leader>ph", desc = "Claude Chat" },
+  { "<leader>pr", desc = "Refresh PR" },
+  { "<leader>pe", desc = "Edit/Copy/Run Prompt" },
+  { "<leader>pt", desc = "Comments/Threads" },
+  { "<leader>ps", desc = "Agent Sessions" },
+  { "<leader>pl", desc = "Pick PR/Branch" },
+  { "<leader>px", desc = "Clean Worktrees" },
   { "<leader>o", group = "Octo (GitHub)" },
 
   -- Issues
