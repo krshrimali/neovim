@@ -1,0 +1,15 @@
+# Try: select lines in a section, `ga` then `=`
+
+[server]
+host = "localhost"
+port = 8080
+read_timeout = 30
+write_timeout = 30
+max_connections = 1000
+enable_tls = false
+
+[database]
+dsn = "postgres://localhost/mydb"
+max_open = 25
+max_idle = 5
+lifetime = 300

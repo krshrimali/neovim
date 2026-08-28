@@ -237,6 +237,8 @@ which_key.add {
   { "<leader>ps", desc = "Agent Sessions" },
   { "<leader>pl", desc = "Pick PR/Branch" },
   { "<leader>px", desc = "Clean Worktrees" },
+  { "<leader>pi", desc = "Import GitHub Comments" },
+  { "<leader>pq", desc = "Threads in Quickfix" },
   { "<leader>o", group = "Octo (GitHub)" },
 
   -- Issues
