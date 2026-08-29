@@ -130,6 +130,10 @@ require("lazy").setup({
     cmd = {
       "Review",
       "ReviewList",
+      "ReviewPRs",
+      "ReviewBranches",
+      "ReviewCommits",
+      "ReviewCurrent",
       "ReviewClaude",
       "ReviewSessions",
       "ReviewComments",
