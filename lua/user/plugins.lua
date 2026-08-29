@@ -140,6 +140,9 @@ require("lazy").setup({
       "ReviewSync",
       "ReviewQuickfix",
       "ReviewClean",
+      "ReviewHealth",
+      "ReviewProfile",
+      "ReviewHelp",
     },
     keys = {
       { "<leader>p", desc = "Review: contextual actions" },
