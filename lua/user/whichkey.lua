@@ -234,6 +234,7 @@ which_key.add {
   { "<leader>pr", desc = "Refresh PR" },
   { "<leader>pe", desc = "Edit/Copy/Run Prompt" },
   { "<leader>pt", desc = "Comments/Threads" },
+  { "<leader>pv", desc = "Review Workspace Views" },
   { "<leader>ps", desc = "Agent Sessions" },
   { "<leader>pl", desc = "Pick PR/Branch" },
   { "<leader>px", desc = "Clean Worktrees" },
