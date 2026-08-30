@@ -171,6 +171,13 @@ diffview.setup {
 
       -- Keep 'gy' as LSP type-definition in the diff buffers.
       { "n", "gy", false },
+      -- PR/review actions are explicit here so their availability does not
+      -- depend on default-keymap merge order.
+      { "n", "<leader>rC", actions.request_claude_review, { desc = "PR: request Claude review" } },
+      { "n", "gpc", actions.pr_tab_conversation, { desc = "PR: Conversation view" } },
+      { "n", "gpm", actions.pr_tab_commits, { desc = "PR: Commits view" } },
+      { "n", "gpt", actions.pr_toggle_threads, { desc = "PR: toggle comments panel" } },
+      { "n", "gpi", actions.pr_import_comments, { desc = "PR: refresh GitHub comments" } },
     },
     diff1 = { -- Mappings in single window diff layouts
       { "n", "g?", actions.help { "view", "diff1" }, { desc = "Open the help panel" } },
@@ -227,7 +234,16 @@ diffview.setup {
         actions.toggle_flatten_dirs,
         { desc = "Flatten empty subdirectories in tree listing style" },
       },
-      { "n", "R", actions.refresh_files, { desc = "Update stats of the files" } },
+      { "n", "<C-r>", actions.refresh_files, { desc = "Update stats of the files" } },
+      { "n", "R", actions.reply_review_comment, { desc = "Reply to selected local review comment" } },
+      { "n", "r", actions.toggle_review_resolved, { desc = "Resolve selected local review comment" } },
+      { "n", "e", actions.edit_review_comment, { desc = "Edit selected local review comment" } },
+      { "n", "dd", actions.delete_review_comment, { desc = "Delete selected local review comment" } },
+      { "n", "<space>", actions.toggle_comment_replies, { desc = "Fold/unfold selected review thread" } },
+      { "n", "Q", actions.review_comments_quickfix, { desc = "Review comments to quickfix" } },
+      { "n", "<leader>rC", actions.request_claude_review, { desc = "PR: request Claude review" } },
+      { "n", "gpt", actions.pr_toggle_threads, { desc = "PR: toggle comments panel" } },
+      { "n", "gpi", actions.pr_import_comments, { desc = "PR: refresh GitHub comments" } },
       { "n", "<leader>e", actions.focus_files, { desc = "Bring focus to the file panel" } },
       { "n", "<leader>b", actions.toggle_files, { desc = "Toggle the file panel" } },
       { "n", "g<C-x>", actions.cycle_layout, { desc = "Cycle available layouts" } },
