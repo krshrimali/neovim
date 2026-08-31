@@ -146,6 +146,15 @@ which_key.add {
   },
   { "<leader>gdr", "<cmd>DiffviewRefresh<cr>", desc = "Refresh File List" },
 
+  -- GitHub PR review (diffview.nvim)
+  { "<leader>gP", group = "PR Review" },
+  { "<leader>gPp", "<cmd>DiffviewPR<cr>", desc = "Browse Pull Requests" },
+  { "<leader>gPr", ":DiffviewReview ", desc = "Review a Branch" },
+  { "<leader>gPk", "<cmd>DiffviewPRCheckout<cr>", desc = "Checkout PR to Worktree" },
+  { "<leader>gPm", ":DiffviewPRCommit ", desc = "Commit PR Worktree" },
+  { "<leader>gPu", "<cmd>DiffviewPRPush<cr>", desc = "Push PR Worktree" },
+  { "<leader>gPs", "<cmd>DiffviewPRSession<cr>", desc = "Review Worktree Session" },
+
   -- Git Blame
   { "<leader>gl", group = "Git Blame" },
   { "<leader>gll", "<cmd>Gitsigns toggle_current_line_blame<cr>", desc = "Toggle Line Blame" },
@@ -332,6 +341,19 @@ which_key.add {
   { "<leader>rI", desc = "Inline Function" },
   { "<leader>rb", desc = "Extract Block" },
   { "<leader>rB", desc = "Extract Block To File" },
+
+  -- review.nvim (PR/branch review) -----------------------------------------
+  { "<leader>p", group = "PR Review (review.nvim)" },
+  { "<leader>pl", "<cmd>ReviewList<cr>", desc = "List PRs / branches" },
+  { "<leader>pc", desc = "Add comment (pcs = suggestion)" },
+  { "<leader>pr", desc = "Reply to thread" },
+  { "<leader>pt", desc = "Toggle comments panel" },
+  { "<leader>px", desc = "Resolve thread" },
+  { "<leader>pd", desc = "Delete thread" },
+  { "<leader>po", desc = "Open file @ commit (worktree)" },
+  { "<leader>pw", desc = "Toggle split/unified" },
+  { "<leader>pC", "<cmd>ReviewClaude<cr>", desc = "Claude review (async)" },
+  { "<leader>pS", "<cmd>ReviewSessions<cr>", desc = "Claude review sessions" },
 
   -- Search & Replace
   { "<leader>s", group = "Search/Replace/Sidekick" },
