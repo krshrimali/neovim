@@ -102,7 +102,7 @@ require("lazy").setup({
   },
 
   {
-    dir = "/home/krshrimali/Documents/diffview.nvim",
+    "krshrimali/diffview.nvim",
     name = "diffview.nvim",
     cmd = {
       "DiffviewOpen",
@@ -121,7 +121,7 @@ require("lazy").setup({
   -- PR/branch review workflow backed by Diffview + Sidekick. <leader>p opens
   -- the contextual menu; the longer mappings are optional direct fast paths.
   {
-    dir = "/home/krshrimali/Documents/research-reviews",
+    "krshrimali/research-reviews",
     name = "review.nvim",
     dependencies = {
       "diffview.nvim",
@@ -560,7 +560,7 @@ require("lazy").setup({
 
   -- Sidekick.nvim - AI CLI integration & Copilot NES
   {
-    dir = "/home/krshrimali/Documents/sidekick.nvim",
+    "krshrimali/sidekick.nvim",
     event = "VeryLazy",
     opts = {
       nes = { enabled = false },
