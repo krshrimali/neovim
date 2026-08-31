@@ -102,7 +102,7 @@ require("lazy").setup({
     },
 
     {
-        dir = "/path/to/diffview.nvim",
+        "krshrimali/diffview.nvim",
         name = "diffview.nvim",
         cmd = {
             "Diffview",
@@ -131,7 +131,8 @@ require("lazy").setup({
     -- Keymaps use the free <leader>p ("PR") namespace to avoid the <leader>r
     -- Rename/Refactor group. Commands + <leader>pl lazy-load it.
     {
-        dir = "/path/to/nvim-research",
+        "krshrimali/research-reviews",
+        name = "review.nvim",
         dependencies = { "diffview.nvim" },
         cmd = { "Review", "ReviewList", "ReviewClaude", "ReviewSessions", "ReviewComments", "ReviewClean" },
         keys = {
@@ -557,7 +558,7 @@ require("lazy").setup({
 
     -- Sidekick.nvim - AI CLI integration & Copilot NES
     {
-        dir = "/path/to/sidekick.nvim",
+        "krshrimali/sidekick.nvim",
         event = "VeryLazy",
         opts = {
             nes = { enabled = false },
