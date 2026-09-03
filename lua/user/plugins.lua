@@ -107,7 +107,7 @@ require("lazy").setup({
   },
 
   {
-    dir = "/path/to/diffview.nvim",
+    "krshrimali/diffview.nvim",
     name = "diffview.nvim",
     cmd = {
       "Diffview",
