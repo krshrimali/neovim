@@ -13,10 +13,7 @@ keymap("i", "jk", "<ESC>", opts)
 -- ============================================
 -- BASIC OPERATIONS
 -- ============================================
-keymap("n", "<leader>w", "<cmd>w<CR>", opts)
-keymap("n", "<leader>q", "<cmd>q<CR>", opts)
-keymap("n", "<leader>Q", "<cmd>q!<CR>", opts)
-keymap("n", "<leader>h", "<cmd>nohlsearch<CR>", opts)
+-- <leader>w, <leader>q, <leader>Q, <leader>h are defined in whichkey.lua
 keymap("n", "<leader>R", function()
   for name, _ in pairs(package.loaded) do
     package.loaded[name] = nil
@@ -81,7 +78,7 @@ keymap("n", "N", "Nzzzv", opts)
 -- ============================================
 -- GIT (like Helix <space>g)
 -- ============================================
-keymap("n", "<leader>gg", "<cmd>lua require('user.terminal').lazygit_float()<cr>", opts)
+-- <leader>gg (lazygit float) is defined in whichkey.lua
 keymap("n", "glb", "<cmd>Gitsigns blame_line<cr>", opts)
 -- <leader>gy is mapped in plugins.lua via snacks.nvim lazy keys
 
@@ -94,8 +91,7 @@ keymap("n", "glb", "<cmd>Gitsigns blame_line<cr>", opts)
 -- ============================================
 -- WINDOW SPLITS (like Helix <space>k)
 -- ============================================
-keymap("n", "<leader>ks", "<cmd>split<cr>", opts)
-keymap("n", "<leader>kv", "<cmd>vsplit<cr>", opts)
+-- <leader>ks / <leader>kv (splits) are defined in whichkey.lua
 
 -- Resize windows (Ctrl+arrows work in any terminal; Ctrl+Shift+HJKL do not)
 keymap("n", "<C-Right>", "<cmd>vertical resize +5<cr>", opts)

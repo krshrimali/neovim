@@ -178,6 +178,7 @@ which_key.add {
 
   -- LSP
   { "<leader>l", group = "LSP" },
+  { "<leader>lc", "<cmd>lua require('user.lsp.blink').toggle()<cr>", desc = "Toggle Completion" },
   { "<leader>la", "<cmd>lua vim.lsp.buf.code_action()<cr>", desc = "Code Action" },
   { "<leader>lf", "<cmd>lua vim.lsp.buf.format({ async = true })<cr>", desc = "Format" },
   { "<leader>li", "<cmd>lsp status<cr>", desc = "LSP Info" },
@@ -236,99 +237,11 @@ which_key.add {
   { "<leader>ks", "<cmd>split<cr>", desc = "Horizontal Split" },
   { "<leader>kv", "<cmd>vsplit<cr>", desc = "Vertical Split" },
 
-  -- Octo (GitHub) - comprehensive keymaps
-  { "<leader>o", group = "Octo (GitHub)" },
-
-  -- Issues
-  { "<leader>oi", group = "Issues" },
-  { "<leader>oi", "<CMD>Octo issue list<CR>", desc = "List Issues" },
-  { "<leader>oic", "<CMD>Octo issue create<CR>", desc = "Create Issue" },
-  { "<leader>oio", "<CMD>Octo issue browser<CR>", desc = "Open Issue in Browser" },
-  { "<leader>oix", "<CMD>Octo issue close<CR>", desc = "Close Issue" },
-  { "<leader>oir", "<CMD>Octo issue reopen<CR>", desc = "Reopen Issue" },
-  { "<leader>ois", "<CMD>Octo issue search<CR>", desc = "Search Issues" },
-
-  -- Pull Requests
-  { "<leader>op", group = "Pull Requests" },
-  { "<leader>op", "<CMD>Octo pr list<CR>", desc = "List PRs" },
-  { "<leader>opc", "<CMD>Octo pr create<CR>", desc = "Create PR" },
-  { "<leader>opo", "<CMD>Octo pr browser<CR>", desc = "Open PR in Browser" },
-  { "<leader>opx", "<CMD>Octo pr close<CR>", desc = "Close PR" },
-  { "<leader>opr", "<CMD>Octo pr reopen<CR>", desc = "Reopen PR" },
-  { "<leader>opm", "<CMD>Octo pr merge<CR>", desc = "Merge PR" },
-  { "<leader>opd", "<CMD>Octo pr diff<CR>", desc = "Show PR Diff" },
-  { "<leader>ops", "<CMD>Octo pr search<CR>", desc = "Search PRs" },
-  { "<leader>opp", "<CMD>Octo pr commits<CR>", desc = "PR Commits" },
-  { "<leader>opf", "<CMD>Octo pr changes<CR>", desc = "PR Changed Files" },
-  { "<leader>opk", "<CMD>Octo pr checkout<CR>", desc = "Checkout PR" },
-  { "<leader>ope", "<CMD>Octo pr ready<CR>", desc = "Mark PR Ready" },
-
-  -- Reviews
-  { "<leader>or", group = "Reviews" },
-  { "<leader>ors", "<CMD>Octo review start<CR>", desc = "Start Review" },
-  { "<leader>orr", "<CMD>Octo review resume<CR>", desc = "Resume Review" },
-  { "<leader>orc", "<CMD>Octo review comments<CR>", desc = "Review Comments" },
-  { "<leader>ord", "<CMD>Octo review discard<CR>", desc = "Discard Review" },
-  { "<leader>ora", "<CMD>Octo review submit<CR>", desc = "Submit Review (Approve)" },
-  { "<leader>orx", "<CMD>Octo review close<CR>", desc = "Close Review" },
-
-  -- Comments
-  { "<leader>oc", group = "Comments" },
-  { "<leader>oca", "<CMD>Octo comment add<CR>", desc = "Add Comment" },
-  { "<leader>ocd", "<CMD>Octo comment delete<CR>", desc = "Delete Comment" },
-
-  -- Threads
-  { "<leader>ot", group = "Threads" },
-  { "<leader>otr", "<CMD>Octo thread resolve<CR>", desc = "Resolve Thread" },
-  { "<leader>otu", "<CMD>Octo thread unresolve<CR>", desc = "Unresolve Thread" },
-
-  -- Reactions
-  { "<leader>oe", group = "Reactions" },
-  { "<leader>oe+", "<CMD>Octo reaction thumbs_up<CR>", desc = "👍" },
-  { "<leader>oe-", "<CMD>Octo reaction thumbs_down<CR>", desc = "👎" },
-  { "<leader>oeh", "<CMD>Octo reaction heart<CR>", desc = "❤️" },
-  { "<leader>oer", "<CMD>Octo reaction rocket<CR>", desc = "🚀" },
-  { "<leader>oee", "<CMD>Octo reaction eyes<CR>", desc = "👀" },
-  { "<leader>oel", "<CMD>Octo reaction laugh<CR>", desc = "😄" },
-  { "<leader>oec", "<CMD>Octo reaction confused<CR>", desc = "😕" },
-  { "<leader>oep", "<CMD>Octo reaction party<CR>", desc = "🎉" },
-
-  -- Labels
-  { "<leader>ol", group = "Labels" },
-  { "<leader>ola", "<CMD>Octo label add<CR>", desc = "Add Label" },
-  { "<leader>olr", "<CMD>Octo label remove<CR>", desc = "Remove Label" },
-  { "<leader>olc", "<CMD>Octo label create<CR>", desc = "Create Label" },
-
-  -- Assignees
-  { "<leader>oa", group = "Assignees" },
-  { "<leader>oaa", "<CMD>Octo assignee add<CR>", desc = "Add Assignee" },
-  { "<leader>oar", "<CMD>Octo assignee remove<CR>", desc = "Remove Assignee" },
-
-  -- Discussions
-  { "<leader>od", group = "Discussions" },
-  { "<leader>od", "<CMD>Octo discussion list<CR>", desc = "List Discussions" },
-  { "<leader>odc", "<CMD>Octo discussion create<CR>", desc = "Create Discussion" },
-  { "<leader>odo", "<CMD>Octo discussion browser<CR>", desc = "Open Discussion in Browser" },
-  { "<leader>odx", "<CMD>Octo discussion close<CR>", desc = "Close Discussion" },
-  { "<leader>odr", "<CMD>Octo discussion reopen<CR>", desc = "Reopen Discussion" },
-
-  -- Notifications
-  { "<leader>on", group = "Notifications" },
-  { "<leader>on", "<CMD>Octo notification list<CR>", desc = "List Notifications" },
-
-  -- Search
-  { "<leader>os", group = "Search" },
-  { "<leader>os", desc = "Search GitHub" },
-
-  -- Repo Operations
-  { "<leader>oR", group = "Repo" },
-  { "<leader>oRf", "<CMD>Octo repo fork<CR>", desc = "Fork Repo" },
-  { "<leader>oRb", "<CMD>Octo repo browser<CR>", desc = "Open Repo in Browser" },
-  { "<leader>oRl", "<CMD>Octo repo list<CR>", desc = "List User Repos" },
-
-  -- Gists
-  { "<leader>og", group = "Gists" },
-  { "<leader>ogl", "<CMD>Octo gist list<CR>", desc = "List Gists" },
+  -- Options / Toggles (actual mappings in keymaps.lua)
+  { "<leader>o", group = "Options" },
+  { "<leader>ow", desc = "Toggle Wrap" },
+  { "<leader>or", desc = "Toggle Relative Number" },
+  { "<leader>ol", desc = "Toggle Cursor Line" },
 
   -- Rename / Refactor
   { "<leader>r", group = "Rename/Refactor" },
@@ -367,16 +280,24 @@ which_key.add {
   { "<leader>Tv", "<cmd>lua _VERTICAL_TERM()<cr>", desc = "Vertical" },
   { "<leader>Th", "<cmd>lua _HORIZONTAL_TERM()<cr>", desc = "Horizontal" },
 
-  -- Telescope/FzfLua
-  { "<leader>t", group = "Telescope" },
-  { "<leader>tc", "<cmd>lua require('user.lsp.blink').toggle()<cr>", desc = "Toggle Completion" },
-  { "<leader>tgS", "<cmd>FzfLua git_stash<cr>", desc = "Git Stash" },
-  { "<leader>tC", "<cmd>FzfLua command_history<cr>", desc = "Command History" },
-  { "<leader>tj", "<cmd>FzfLua jumps<cr>", desc = "Jumps" },
-  { "<leader>th", "<cmd>FzfLua search_history<cr>", desc = "Search History" },
-  { "<leader>tb", "<cmd>FzfLua builtin<cr>", desc = "Builtin" },
-  { "<leader>tS", "<cmd>FzfLua blines<cr>", desc = "Buffer Lines" },
-  { "<leader>tp", "<cmd>FzfLua files<cr>", desc = "Project Files" },
+  -- Tabs (actual mappings in keymaps.lua)
+  { "<leader>t", group = "Tabs" },
+  { "<leader>tn", desc = "New Tab" },
+  { "<leader>tc", desc = "Close Tab" },
+  { "<leader>tf", desc = "First Tab" },
+  { "<leader>tl", desc = "Last Tab" },
+  { "<leader>tth", desc = "Prev Tab" },
+  { "<leader>ttl", desc = "Next Tab" },
+
+  -- Fuzzy Finder (FzfLua)
+  { "<leader>F", group = "Find (FzfLua)" },
+  { "<leader>Fs", "<cmd>FzfLua git_stash<cr>", desc = "Git Stash" },
+  { "<leader>Fc", "<cmd>FzfLua command_history<cr>", desc = "Command History" },
+  { "<leader>Fj", "<cmd>FzfLua jumps<cr>", desc = "Jumps" },
+  { "<leader>Fh", "<cmd>FzfLua search_history<cr>", desc = "Search History" },
+  { "<leader>Fb", "<cmd>FzfLua builtin<cr>", desc = "Builtin" },
+  { "<leader>Fl", "<cmd>FzfLua blines<cr>", desc = "Buffer Lines" },
+  { "<leader>Fp", "<cmd>FzfLua files<cr>", desc = "Project Files" },
 
   -- Trouble
   { "<leader>x", group = "Trouble" },

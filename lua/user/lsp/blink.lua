@@ -101,9 +101,9 @@ function M.setup()
       default = { "lsp", "path" },
     },
 
-    -- Use Rust fuzzy matcher if available
+    -- Use Rust fuzzy matcher (built locally from source via `build` in plugin spec)
     fuzzy = {
-      implementation = "prefer_rust_with_warning",
+      implementation = "prefer_rust",
     },
   }
 end

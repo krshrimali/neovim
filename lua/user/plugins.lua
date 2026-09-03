@@ -30,7 +30,7 @@ require("lazy").setup({
                 config = true,
             },
             { "williamboman/mason-lspconfig.nvim" },
-            { "saghen/blink.cmp",                 version = "1.*", dependencies = { "rafamadriz/friendly-snippets" } },
+            { "saghen/blink.cmp",                 version = "1.*", build = "cargo build --release", dependencies = { "rafamadriz/friendly-snippets" } },
             { "folke/neodev.nvim",                config = true },
             { "b0o/schemastore.nvim",             lazy = true },
         },
@@ -102,7 +102,7 @@ require("lazy").setup({
     },
 
     {
-        "krshrimali/diffview.nvim",
+        dir = "/path/to/diffview.nvim",
         name = "diffview.nvim",
         cmd = {
             "Diffview",
@@ -461,7 +461,7 @@ require("lazy").setup({
             },
             { "<C-]>",  "<Plug>(copilot-next)",    mode = "i", desc = "Next Copilot suggestion" },
             { "<C-p>",  "<Plug>(copilot-prev)",    mode = "i", desc = "Prev Copilot suggestion" },
-            { "<C-\\>", "<Plug>(copilot-dismiss)", mode = "i", desc = "Dismiss Copilot suggestion" },
+            -- <C-\> is reserved for the centered floating terminal (user.terminal)
         },
     },
 
@@ -856,23 +856,6 @@ require("lazy").setup({
         end,
     },
 
-    -- Octo.nvim (GitHub Issues/PRs in Neovim)
-    {
-        "pwntester/octo.nvim",
-        cmd = "Octo",
-        keys = {
-            { "<leader>oi", "<cmd>Octo issue list<cr>", desc = "Octo: Issues" },
-            { "<leader>op", "<cmd>Octo pr list<cr>",    desc = "Octo: PRs" },
-        },
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "ibhagwan/fzf-lua",
-        },
-        opts = {
-            picker = "fzf-lua",
-            enable_builtin = true,
-        },
-    },
     {
         "justinmk/guh.nvim",
     },
@@ -997,13 +980,6 @@ require("lazy").setup({
         opts = {
             icons = { enabled = false },
         },
-    },
-
-    {
-        dir = "/path/to/difit-claude/nvim",
-        name = "difit-review",
-        event = "VeryLazy",
-        cmd = { "DifitComment", "DifitResolve", "DifitDelete", "DifitComments", "DifitPrompt", "DifitSend", "DifitHelp" },
     },
 }, {
     -- Lazy.nvim performance options

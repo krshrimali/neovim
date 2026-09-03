@@ -22,21 +22,8 @@ end
 local function on_attach(client, bufnr)
   local opts = { noremap = true, silent = true, buffer = bufnr }
 
-  -- Navigation (matching CoC keymaps)
-  vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-  vim.keymap.set("n", "gy", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
-  vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-  vim.keymap.set("n", "gr", function()
-    vim.lsp.buf.references(nil, {
-      on_list = function(options)
-        vim.fn.setqflist({}, " ", options)
-        vim.cmd "copen"
-      end,
-    })
-  end, opts)
-
-  -- Hover documentation (matching CoC's K). People-aware: shows employee details
-  -- for a known @username, otherwise the normal LSP hover.
+  -- Navigation (gd/gy/gi/gr) is mapped globally in keymaps.lua and hover (K) in
+  -- people/init.lua, so they are not duplicated here.
 
   -- Diagnostics navigation (matching CoC's [g / ]g)
   vim.keymap.set("n", "[g", function() vim.diagnostic.jump { count = -1, float = true } end, opts)
@@ -46,9 +33,8 @@ local function on_attach(client, bufnr)
   -- Rename (matching CoC's <leader>rn)
   vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
 
-  -- Format (matching CoC's <leader>f) - both normal and visual mode
-  vim.keymap.set("n", "<leader>f", function() vim.lsp.buf.format { async = true } end, opts)
-
+  -- Format selection (visual mode only). Normal-mode <leader>f is the Find prefix
+  -- (which-key); use <leader>lf to format the whole buffer.
   vim.keymap.set("v", "<leader>f", function()
     local start_row, _ = unpack(vim.api.nvim_buf_get_mark(0, "<"))
     local end_row, _ = unpack(vim.api.nvim_buf_get_mark(0, ">"))
