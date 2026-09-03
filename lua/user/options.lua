@@ -18,9 +18,7 @@ if vim.env.SSH_TTY ~= nil or vim.env.SSH_CONNECTION ~= nil then
     -- over OSC 52. The OSC 52 read (ESC]52;c;?) blocks waiting for a terminal
     -- reply that most terminals/zellij never send, hanging on "Waiting for
     -- OSC 52 response". Copy still tunnels out; paste stays local and instant.
-    local function paste()
-      return { vim.fn.split(vim.fn.getreg "", "\n"), vim.fn.getregtype "" }
-    end
+    local function paste() return { vim.fn.split(vim.fn.getreg "", "\n"), vim.fn.getregtype "" } end
     vim.g.clipboard = {
       name = "OSC 52",
       copy = { ["+"] = osc52.copy "+", ["*"] = osc52.copy "*" },
