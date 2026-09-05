@@ -335,7 +335,7 @@ which_key.add {
   { "<leader>pS", "<cmd>ReviewSessions<cr>", desc = "Claude review sessions" },
 
   -- Search & Replace
-  { "<leader>s", group = "Search/Replace" },
+  { "<leader>s", group = "Search/Replace/Sidekick" },
 
   -- Zen Mode
   { "<leader>z", desc = "Zen Mode" },

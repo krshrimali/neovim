@@ -278,6 +278,21 @@ require("lazy").setup({
               end,
             },
             "diagnostics",
+            -- pending sidekick review comments waiting to be sent to Claude
+            {
+              function()
+                local ok, review = pcall(require, "sidekick.review")
+                return ok and review.status() or ""
+              end,
+              cond = function()
+                local ok, review = pcall(require, "sidekick.review")
+                return ok and review.pending() > 0
+              end,
+              color = function()
+                local hl = vim.api.nvim_get_hl(0, { name = "DiagnosticWarn", link = false })
+                return { fg = hl.fg and string.format("#%06x", hl.fg) or "#ff9e64", gui = "bold" }
+              end,
+            },
             {
               c.lsp_status,
               color = function()
@@ -545,6 +560,134 @@ require("lazy").setup({
 
   -- Better quickfix
   { "kevinhwang91/nvim-bqf", ft = "qf", config = function() require "user.bqf" end },
+
+  -- Sidekick.nvim - AI CLI integration & Copilot NES
+  {
+    "krshrimali/sidekick.nvim",
+    event = "VeryLazy",
+    opts = {
+      nes = { enabled = false },
+      cli = {
+        tab_scoped = true,
+        tools = {
+          claude = { cmd = { "claude" } },
+          codex = { cmd = { "codex" } },
+        },
+        win = {
+          layout = "tab",
+          keys = {
+            interrupt = {
+              "<C-c>",
+              function(terminal)
+                if terminal.job and terminal:is_running() then vim.api.nvim_chan_send(terminal.job, "\x03") end
+              end,
+              mode = "t",
+              desc = "interrupt (SIGINT)",
+            },
+            normal_mode = { "jk", "stopinsert", mode = "t", desc = "enter normal mode" },
+          },
+        },
+      },
+    },
+    keys = {
+      {
+        "<tab>",
+        function()
+          if not require("sidekick").nes_jump_or_apply() then return "<Tab>" end
+        end,
+        expr = true,
+        desc = "Goto/Apply Next Edit Suggestion",
+      },
+      {
+        "<leader>sk",
+        function() require("sidekick.cli").toggle() end,
+        desc = "Sidekick Toggle CLI",
+        mode = { "n", "t", "i", "x" },
+      },
+      {
+        "<leader>ss",
+        function() require("sidekick.cli").select() end,
+        desc = "Sidekick Select CLI",
+      },
+      {
+        "<leader>sd",
+        function() require("sidekick.cli").close() end,
+        desc = "Sidekick Detach CLI",
+      },
+      {
+        "<leader>st",
+        function() require("sidekick.cli").send { msg = "{this}" } end,
+        mode = { "x", "n" },
+        desc = "Sidekick Send This",
+      },
+      {
+        "<leader>sf",
+        function() require("user.ai_context").send_function_with_context() end,
+        desc = "Sidekick Send Function (with type + diagnostics)",
+      },
+      {
+        "<leader>sl",
+        function() require("sidekick.cli").send { msg = "{file}" } end,
+        desc = "Sidekick Send File",
+      },
+      {
+        "<leader>sv",
+        function() require("sidekick.cli").send { msg = "{selection}" } end,
+        mode = { "x" },
+        desc = "Sidekick Send Selection",
+      },
+      {
+        "<leader>sy",
+        function()
+          local clip = vim.fn.getreg "+"
+          if clip == "" then
+            vim.notify("Clipboard is empty", vim.log.levels.WARN)
+            return
+          end
+          require("sidekick.cli").send { msg = clip }
+        end,
+        desc = "Sidekick Send Clipboard",
+      },
+      {
+        "<leader>sp",
+        function() require("sidekick.cli").prompt() end,
+        mode = { "n", "x" },
+        desc = "Sidekick Select Prompt",
+      },
+      {
+        "<leader>sc",
+        function() require("sidekick.cli").toggle { name = "claude", focus = true } end,
+        desc = "Sidekick Toggle Claude",
+      },
+      {
+        "<leader>su",
+        function() require("sidekick.review").toggle() end,
+        desc = "Sidekick Toggle Review UI",
+      },
+      -- Review agent turns like pull requests.
+      -- `<leader>sr` is yours for grug-far, so the review lives on <leader>sT.
+      {
+        "<leader>sT",
+        function() require("sidekick.review").toggle { layout = "tab" } end,
+        desc = "Sidekick Review (own tab)",
+      },
+      {
+        "<leader>sR",
+        function() require("sidekick.review").submit() end,
+        desc = "Sidekick Submit Review Comments",
+      },
+      {
+        "<leader>sU",
+        function() require("sidekick.review").pick() end,
+        desc = "Sidekick Pick Review Session",
+      },
+      {
+        "<leader>so",
+        function() require("sidekick.review").open_at() end,
+        desc = "Sidekick Open Review Comment",
+      },
+    },
+  },
 
   {
     "Isrothy/neominimap.nvim",
