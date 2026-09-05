@@ -546,7 +546,6 @@ require("lazy").setup({
   -- Better quickfix
   { "kevinhwang91/nvim-bqf", ft = "qf", config = function() require "user.bqf" end },
 
-
   {
     "Isrothy/neominimap.nvim",
     version = "v3.x.x",
