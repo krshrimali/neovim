@@ -860,6 +860,20 @@ require("lazy").setup({
     end,
   },
 
+  -- Octo.nvim (GitHub issues / PRs inside Neovim)
+  {
+    "pwntester/octo.nvim",
+    cmd = "Octo",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "ibhagwan/fzf-lua",
+    },
+    opts = {
+      picker = "fzf-lua",
+      enable_builtin = true,
+    },
+  },
+
   {
     "justinmk/guh.nvim",
   },

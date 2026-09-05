@@ -98,6 +98,11 @@ keymap("n", "<C-Right>", "<cmd>vertical resize +5<cr>", opts)
 keymap("n", "<C-Left>", "<cmd>vertical resize -5<cr>", opts)
 keymap("n", "<C-Up>", "<cmd>resize +5<cr>", opts)
 keymap("n", "<C-Down>", "<cmd>resize -5<cr>", opts)
+-- Same resizes on Ctrl-Shift-HJKL, for terminals that cannot send Ctrl-Arrow
+keymap("n", "<C-S-L>", "<cmd>vertical resize +5<cr>", opts)
+keymap("n", "<C-S-H>", "<cmd>vertical resize -5<cr>", opts)
+keymap("n", "<C-S-K>", "<cmd>resize +5<cr>", opts)
+keymap("n", "<C-S-J>", "<cmd>resize -5<cr>", opts)
 
 -- ============================================
 -- TOGGLES (like Helix <space>o)
