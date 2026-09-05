@@ -151,10 +151,6 @@
     "branch": "main",
     "commit": "6a1a2daf151dd742d5ff2f64eb2cc049d7e5ab4a"
   },
-  "sidekick.nvim": {
-    "branch": "main",
-    "commit": "6190fd0c33e9bd798f7876020be282dd4dfa04a8"
-  },
   "snacks.nvim": {
     "branch": "main",
     "commit": "882c996cf28183f4d63640de0b4c02ec886d01f2"
