@@ -117,6 +117,7 @@ keymap("i", "<M-[>", "<Plug>(copilot-previous)", { silent = true })
 -- ============================================
 -- LSP NAVIGATION (global, no on_attach dependency)
 -- ============================================
+keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<cr>", opts)
 keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<cr>", opts)
 keymap("n", "gy", "<cmd>lua vim.lsp.buf.type_definition()<cr>", opts)
 keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", opts)

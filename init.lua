@@ -13,4 +13,3 @@ require("user.window_separators").setup()
 vim.defer_fn(function() require "user.terminal" end, 100)
 
 -- vim.g.clipboard = "osc52"
-dofile(vim.fn.expand "~/.config/zellij/plugins/zj-annotate/nvim/zj-annotate.nvim.lua")

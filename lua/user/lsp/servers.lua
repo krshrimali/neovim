@@ -22,8 +22,8 @@ end
 local function on_attach(client, bufnr)
   local opts = { noremap = true, silent = true, buffer = bufnr }
 
-  -- Navigation (gd/gy/gi/gr) is mapped globally in keymaps.lua and hover (K) in
-  -- people/init.lua, so they are not duplicated here.
+  -- Navigation (gd/gy/gi/gr) is mapped globally in keymaps.lua, so it is not
+  -- duplicated here.
 
   -- Diagnostics navigation (matching CoC's [g / ]g)
   vim.keymap.set("n", "[g", function() vim.diagnostic.jump { count = -1, float = true } end, opts)
