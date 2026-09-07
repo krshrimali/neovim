@@ -106,32 +106,6 @@ require("lazy").setup({
     },
   },
 
-  {
-    "krshrimali/diffview.nvim",
-    name = "diffview.nvim",
-    cmd = {
-      "Diffview",
-      "DiffviewOpen",
-      "DiffviewFileHistory",
-      "DiffviewClose",
-      "DiffviewRefresh",
-      "DiffviewToggleFiles",
-      "DiffviewFocusFiles",
-      "DiffviewLog",
-      "DiffviewPR",
-      "DiffviewPRList",
-      "DiffviewReviews",
-      "DiffviewReview",
-      "DiffviewPRCheckout",
-      "DiffviewPRCommit",
-      "DiffviewPRPush",
-      "DiffviewPRSession",
-    },
-    -- The keys live in the '<leader>gd' group in `user.whichkey` - keeping
-    -- them in one place. The commands above still lazy-load the plugin.
-    config = function() require "user.diffview" end,
-  },
-
   -- review.nvim: PR/branch review + async Claude reviews (local dev plugin).
   -- Keymaps use the free <leader>p ("PR") namespace to avoid the <leader>r
   -- Rename/Refactor group. Commands + <leader>pl lazy-load it.
