@@ -36,14 +36,14 @@ require("lazy").setup({
         build = "cargo build --release",
         dependencies = { "rafamadriz/friendly-snippets" },
       },
-      { "folke/neodev.nvim", config = true },
-      { "b0o/schemastore.nvim", lazy = true },
+      { "folke/neodev.nvim",                config = true },
+      { "b0o/schemastore.nvim",             lazy = true },
     },
     config = function() require("user.lsp").setup() end,
   },
 
   -- LSP progress (minimal UI)
-  { "j-hui/fidget.nvim", event = "LspAttach", opts = {} },
+  { "j-hui/fidget.nvim",     event = "LspAttach",   opts = {} },
 
   -- ============================================
   -- SYNTAX: Treesitter (essential)
@@ -109,36 +109,35 @@ require("lazy").setup({
   -- review.nvim: PR/branch review + async Claude reviews (local dev plugin).
   -- Keymaps use the free <leader>p ("PR") namespace to avoid the <leader>r
   -- Rename/Refactor group. Commands + <leader>pl lazy-load it.
-  {
-    "krshrimali/research-reviews",
-    name = "review.nvim",
-    dependencies = { "diffview.nvim" },
-    cmd = { "Review", "ReviewList", "ReviewClaude", "ReviewSessions", "ReviewComments", "ReviewClean" },
-    keys = {
-      { "<leader>pl", "<cmd>ReviewList<cr>", desc = "Review: list PRs/branches" },
-    },
-    config = function()
-      require("review").setup {
-        keymaps = {
-          open_list = "<leader>pl",
-          add_comment = "<leader>pc", -- suggestion variant is <leader>pcs
-          reply = "<leader>pr",
-          toggle_comments_panel = "<leader>pt",
-          resolve = "<leader>px",
-          delete_comment = "<leader>pd",
-          open_at_commit = "<leader>po",
-          toggle_view = "<leader>pw",
-          claude_review = "<leader>pC",
-          claude_sessions = "<leader>pS",
-          expand_up = "<leader>pk",
-          expand_down = "<leader>pj",
-          expand_all = "<leader>pa",
-          sort_commits = "s", -- overview buffer-local only
-          unfold_commit = "<Tab>",
-        },
-      }
-    end,
-  },
+  -- {
+  --   "krshrimali/research-reviews",
+  --   name = "review.nvim",
+  --   cmd = { "Review", "ReviewList", "ReviewClaude", "ReviewSessions", "ReviewComments", "ReviewClean" },
+  --   keys = {
+  --     { "<leader>pl", "<cmd>ReviewList<cr>", desc = "Review: list PRs/branches" },
+  --   },
+  --   config = function()
+  --     require("review").setup {
+  --       keymaps = {
+  --         open_list = "<leader>pl",
+  --         add_comment = "<leader>pc", -- suggestion variant is <leader>pcs
+  --         reply = "<leader>pr",
+  --         toggle_comments_panel = "<leader>pt",
+  --         resolve = "<leader>px",
+  --         delete_comment = "<leader>pd",
+  --         open_at_commit = "<leader>po",
+  --         toggle_view = "<leader>pw",
+  --         claude_review = "<leader>pC",
+  --         claude_sessions = "<leader>pS",
+  --         expand_up = "<leader>pk",
+  --         expand_down = "<leader>pj",
+  --         expand_all = "<leader>pa",
+  --         sort_commits = "s", -- overview buffer-local only
+  --         unfold_commit = "<Tab>",
+  --       },
+  --     }
+  --   end,
+  -- },
 
   {
     "NeogitOrg/neogit",
@@ -161,7 +160,7 @@ require("lazy").setup({
     config = true,
   },
 
-  { "tpope/vim-sleuth", event = "VeryLazy" },
+  { "tpope/vim-sleuth",       event = "VeryLazy" },
 
   -- Word motions that respect snake_case and kebab-case boundaries
   { "chaoren/vim-wordmotion", event = "VeryLazy" },
@@ -296,6 +295,19 @@ require("lazy").setup({
     end,
   },
 
+  {
+    dir = "/home/krshrimali/Documents/pdf.nvim",
+    dependencies = { "3rd/image.nvim" },
+  },
+
+  {
+    "3rd/image.nvim",
+    opts = {
+      backend = "kitty",
+      processor = "magick_cli",
+    },
+  },
+
   -- Snacks for picker and gitbrowse
   {
     "folke/snacks.nvim",
@@ -303,19 +315,19 @@ require("lazy").setup({
     priority = 900,
     keys = {
       -- Picker keymaps
-      { "<C-p>", function() Snacks.picker.files() end, desc = "Find Files" },
-      { "<leader>ff", function() Snacks.picker.files() end, desc = "Find Files" },
-      { "<leader>fr", function() Snacks.picker.recent() end, desc = "Recent Files" },
-      { "<leader>/", function() Snacks.picker.grep() end, desc = "Live Grep" },
-      { "<leader>b", function() Snacks.picker.buffers() end, desc = "Buffers" },
-      { "<leader>fh", function() Snacks.picker.help() end, desc = "Help Tags" },
-      { "<leader>fk", function() Snacks.picker.keymaps() end, desc = "Keymaps" },
+      { "<C-p>",      function() Snacks.picker.files() end,       desc = "Find Files" },
+      { "<leader>ff", function() Snacks.picker.files() end,       desc = "Find Files" },
+      { "<leader>fr", function() Snacks.picker.recent() end,      desc = "Recent Files" },
+      { "<leader>/",  function() Snacks.picker.grep() end,        desc = "Live Grep" },
+      { "<leader>b",  function() Snacks.picker.buffers() end,     desc = "Buffers" },
+      { "<leader>fh", function() Snacks.picker.help() end,        desc = "Help Tags" },
+      { "<leader>fk", function() Snacks.picker.keymaps() end,     desc = "Keymaps" },
       { "<leader>fs", function() Snacks.picker.lsp_symbols() end, desc = "LSP Symbols" },
       { "<leader>fd", function() Snacks.picker.diagnostics() end, desc = "Diagnostics" },
-      { "<leader>fc", function() Snacks.picker.commands() end, desc = "Commands" },
-      { "<leader>fw", function() Snacks.picker.grep_word() end, desc = "Grep Word", mode = { "n", "x" } },
-      { "<leader>fp", function() Snacks.picker.projects() end, desc = "Projects" },
-      { "<leader>f.", function() Snacks.picker.resume() end, desc = "Resume last picker" },
+      { "<leader>fc", function() Snacks.picker.commands() end,    desc = "Commands" },
+      { "<leader>fw", function() Snacks.picker.grep_word() end,   desc = "Grep Word",         mode = { "n", "x" } },
+      { "<leader>fp", function() Snacks.picker.projects() end,    desc = "Projects" },
+      { "<leader>f.", function() Snacks.picker.resume() end,      desc = "Resume last picker" },
       -- Git
       {
         "<leader>gy",
@@ -364,7 +376,7 @@ require("lazy").setup({
             { win = "input", height = 1, border = "bottom" },
             {
               box = "horizontal",
-              { win = "list", border = "none" },
+              { win = "list",    border = "none" },
               { win = "preview", title = "{preview}", border = "left", width = 0.5 },
             },
           },
@@ -452,7 +464,7 @@ require("lazy").setup({
     "folke/trouble.nvim",
     cmd = "Trouble",
     keys = {
-      { "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics" },
+      { "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>",              desc = "Diagnostics" },
       { "<leader>xd", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Buffer Diagnostics" },
     },
     opts = {
@@ -663,6 +675,43 @@ require("lazy").setup({
     },
   },
 
+  -- Reusable, placeholder-driven prompt templates for sidekick's CLI tools.
+  -- Local dev plugin: ~/Documents/nvim-plugins/promptbank.nvim
+  {
+    dir = vim.fn.expand "~/Documents/nvim-plugins/promptbank.nvim",
+    name = "promptbank.nvim",
+    cmd = { "PromptBank", "PromptBankSend", "PromptBankNew", "PromptBankEdit" },
+    keys = {
+      { "<leader>sb", function() require("promptbank").pick_and_send() end, desc = "Prompt Bank" },
+    },
+    opts = {},
+  },
+
+  -- Agent- or hand-authored walkable code tours, saved under .tours/.
+  -- Local dev plugin: ~/Documents/nvim-plugins/codetours.nvim
+  {
+    dir = vim.fn.expand "~/Documents/nvim-plugins/codetours.nvim",
+    name = "codetours.nvim",
+    dependencies = { "promptbank.nvim" },
+    cmd = {
+      "CodeTourList",
+      "CodeTourStart",
+      "CodeTourGenerate",
+      "CodeTourRegenerate",
+      "CodeTourShowNote",
+      "CodeTourRecord",
+      "CodeTourAddStop",
+      "CodeTourFinish",
+      "CodeTourCancel",
+    },
+    keys = {
+      { "<leader>ct", "<cmd>CodeTourList<cr>", desc = "Code Tour: list/start" },
+      { "<leader>cg", ":CodeTourGenerate ", desc = "Code Tour: generate" },
+      { "<leader>cR", "<cmd>CodeTourRegenerate<cr>", desc = "Code Tour: regenerate" },
+    },
+    opts = {},
+  },
+
   {
     "Isrothy/neominimap.nvim",
     version = "v3.x.x",
@@ -670,33 +719,33 @@ require("lazy").setup({
     -- Optional. You can also set your own keybindings
     keys = {
       -- Global Minimap Controls
-      { "<leader>nm", "<cmd>Neominimap Toggle<cr>", desc = "Toggle global minimap" },
-      { "<leader>no", "<cmd>Neominimap Enable<cr>", desc = "Enable global minimap" },
-      { "<leader>nc", "<cmd>Neominimap Disable<cr>", desc = "Disable global minimap" },
-      { "<leader>nr", "<cmd>Neominimap Refresh<cr>", desc = "Refresh global minimap" },
+      { "<leader>nm",  "<cmd>Neominimap Toggle<cr>",      desc = "Toggle global minimap" },
+      { "<leader>no",  "<cmd>Neominimap Enable<cr>",      desc = "Enable global minimap" },
+      { "<leader>nc",  "<cmd>Neominimap Disable<cr>",     desc = "Disable global minimap" },
+      { "<leader>nr",  "<cmd>Neominimap Refresh<cr>",     desc = "Refresh global minimap" },
 
       -- Window-Specific Minimap Controls
-      { "<leader>nwt", "<cmd>Neominimap WinToggle<cr>", desc = "Toggle minimap for current window" },
-      { "<leader>nwr", "<cmd>Neominimap WinRefresh<cr>", desc = "Refresh minimap for current window" },
-      { "<leader>nwo", "<cmd>Neominimap WinEnable<cr>", desc = "Enable minimap for current window" },
-      { "<leader>nwc", "<cmd>Neominimap WinDisable<cr>", desc = "Disable minimap for current window" },
+      { "<leader>nwt", "<cmd>Neominimap WinToggle<cr>",   desc = "Toggle minimap for current window" },
+      { "<leader>nwr", "<cmd>Neominimap WinRefresh<cr>",  desc = "Refresh minimap for current window" },
+      { "<leader>nwo", "<cmd>Neominimap WinEnable<cr>",   desc = "Enable minimap for current window" },
+      { "<leader>nwc", "<cmd>Neominimap WinDisable<cr>",  desc = "Disable minimap for current window" },
 
       -- Tab-Specific Minimap Controls
-      { "<leader>ntt", "<cmd>Neominimap TabToggle<cr>", desc = "Toggle minimap for current tab" },
-      { "<leader>ntr", "<cmd>Neominimap TabRefresh<cr>", desc = "Refresh minimap for current tab" },
-      { "<leader>nto", "<cmd>Neominimap TabEnable<cr>", desc = "Enable minimap for current tab" },
-      { "<leader>ntc", "<cmd>Neominimap TabDisable<cr>", desc = "Disable minimap for current tab" },
+      { "<leader>ntt", "<cmd>Neominimap TabToggle<cr>",   desc = "Toggle minimap for current tab" },
+      { "<leader>ntr", "<cmd>Neominimap TabRefresh<cr>",  desc = "Refresh minimap for current tab" },
+      { "<leader>nto", "<cmd>Neominimap TabEnable<cr>",   desc = "Enable minimap for current tab" },
+      { "<leader>ntc", "<cmd>Neominimap TabDisable<cr>",  desc = "Disable minimap for current tab" },
 
       -- Buffer-Specific Minimap Controls
-      { "<leader>nbt", "<cmd>Neominimap BufToggle<cr>", desc = "Toggle minimap for current buffer" },
-      { "<leader>nbr", "<cmd>Neominimap BufRefresh<cr>", desc = "Refresh minimap for current buffer" },
-      { "<leader>nbo", "<cmd>Neominimap BufEnable<cr>", desc = "Enable minimap for current buffer" },
-      { "<leader>nbc", "<cmd>Neominimap BufDisable<cr>", desc = "Disable minimap for current buffer" },
+      { "<leader>nbt", "<cmd>Neominimap BufToggle<cr>",   desc = "Toggle minimap for current buffer" },
+      { "<leader>nbr", "<cmd>Neominimap BufRefresh<cr>",  desc = "Refresh minimap for current buffer" },
+      { "<leader>nbo", "<cmd>Neominimap BufEnable<cr>",   desc = "Enable minimap for current buffer" },
+      { "<leader>nbc", "<cmd>Neominimap BufDisable<cr>",  desc = "Disable minimap for current buffer" },
 
       ---Focus Controls
-      { "<leader>nf", "<cmd>Neominimap Focus<cr>", desc = "Focus on minimap" },
-      { "<leader>nu", "<cmd>Neominimap Unfocus<cr>", desc = "Unfocus minimap" },
-      { "<leader>ns", "<cmd>Neominimap ToggleFocus<cr>", desc = "Switch focus on minimap" },
+      { "<leader>nf",  "<cmd>Neominimap Focus<cr>",       desc = "Focus on minimap" },
+      { "<leader>nu",  "<cmd>Neominimap Unfocus<cr>",     desc = "Unfocus minimap" },
+      { "<leader>ns",  "<cmd>Neominimap ToggleFocus<cr>", desc = "Switch focus on minimap" },
     },
     init = function()
       -- NOTE: sidescrolloff = 36 is recommended when minimap layout == "float",
@@ -739,9 +788,9 @@ require("lazy").setup({
     "krshrimali/gh.nvim",
     cmd = { "Github", "GithubIssues", "GithubPRs", "GithubAssigned", "GithubRefresh" },
     keys = {
-      { "<leader>gh", "<cmd>Github<cr>", desc = "GitHub" },
+      { "<leader>gh",  "<cmd>Github<cr>",       desc = "GitHub" },
       { "<leader>ghi", "<cmd>GithubIssues<cr>", desc = "GitHub Issues" },
-      { "<leader>ghp", "<cmd>GithubPRs<cr>", desc = "GitHub PRs" },
+      { "<leader>ghp", "<cmd>GithubPRs<cr>",    desc = "GitHub PRs" },
     },
     config = function() require("github").setup {} end,
   },
@@ -801,9 +850,9 @@ require("lazy").setup({
     "rmagatti/goto-preview",
     dependencies = { "rmagatti/logger.nvim" },
     keys = {
-      { "gpd", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>", desc = "Preview definition" },
+      { "gpd", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>",     desc = "Preview definition" },
       { "gpi", "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>", desc = "Preview implementation" },
-      { "gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>", desc = "Preview references" },
+      { "gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>",     desc = "Preview references" },
       {
         "gpt",
         "<cmd>lua require('goto-preview').goto_preview_type_definition()<CR>",
